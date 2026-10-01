@@ -1,0 +1,916 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>लयपुर layapur — City of Spaces</title>
+
+    <style>
+        :root {
+            --bg: #fdfdfb;
+            --text: #2b2b2b;
+            --muted: #666;
+            --line: #deded8;
+            --accent: #a65f3b;
+            --shadow: rgba(0, 0, 0, 0.12);
+        }
+
+        * { box-sizing: border-box; }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            background:
+                radial-gradient(circle at top, rgba(255,255,255,0.9), rgba(253,253,251,0.96) 30%, rgba(244,242,237,1) 100%);
+            color: var(--text);
+            font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+            font-weight: 300;
+            text-align: center;
+        }
+
+        a { color: inherit; }
+
+        section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 40px 20px;
+            box-sizing: border-box;
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            background: rgba(255,255,255,0.42);
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .hero > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: auto 0 0 0;
+            height: 38vh;
+            background: url("bg.jpg") no-repeat center bottom / cover;
+            mix-blend-mode: multiply;
+            -webkit-mask-image: linear-gradient(to bottom, transparent, #000 45%);
+            mask-image: linear-gradient(to bottom, transparent, #000 45%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(#aaa 1px, transparent 1px),
+                linear-gradient(90deg, #aaa 1px, transparent 1px),
+                radial-gradient(circle at center, transparent 0 150px, #aaa 151px, transparent 152px),
+                radial-gradient(circle at center, transparent 0 300px, #aaa 301px, transparent 302px);
+            background-size: 80px 80px, 80px 80px, 100% 100%, 100% 100%;
+            opacity: 0;
+            transform: scale(1.08);
+            animation: architecturalReveal 3s ease-out forwards;
+            animation-delay: 1.5s;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .url {
+            font-size: 14px;
+            letter-spacing: 4px;
+            color: #555;
+            margin-top: 45px;
+        }
+
+        .welcome {
+            font-size: 26px;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+
+        h1 {
+            font-family: "Nirmala UI", "Noto Sans Devanagari", sans-serif;
+            font-size: clamp(80px, 18vw, 170px);
+            font-weight: 600;
+            margin: 10px 0;
+            line-height: 1.1;
+        }
+
+        h2 {
+            font-size: 34px;
+            font-weight: 300;
+            letter-spacing: 3px;
+            margin: 0;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin: 26px 0;
+        }
+
+        .divider span {
+            width: 70px;
+            height: 1px;
+            background: #bbb;
+        }
+
+        .divider i {
+            width: 8px;
+            height: 8px;
+            border: 1px solid #999;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .role {
+            font-size: 16px;
+            letter-spacing: 3px;
+            margin: 0 0 14px;
+        }
+
+        .scroll {
+            font-size: 13px;
+            letter-spacing: 3px;
+            color: #888;
+            text-decoration: none;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+
+        .scroll:hover {
+            color: var(--text);
+            transform: translateY(-2px);
+        }
+
+        .phases {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding-top: 20px;
+            padding-bottom: 40px;
+        }
+
+        .phases .sub {
+            font-family: "Nirmala UI", "Noto Sans Devanagari", sans-serif;
+            font-size: 28px;
+            font-weight: 500;
+            letter-spacing: 4px;
+            color: #555;
+            margin: 0 0 45px;
+            line-height: 1.2;
+        }
+
+        .phase-list {
+            width: min(850px, 100%);
+            margin: 0 auto;
+        }
+
+        .phase {
+            width: 100%;
+            padding: 52px 25px;
+            border-top: 1px solid var(--line);
+            box-sizing: border-box;
+            text-align: center;
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, background 0.2s ease;
+            animation: phaseReveal 1.2s ease both;
+            background: rgba(255,255,255,0.18);
+        }
+
+        .phase:last-child {
+            border-bottom: 1px solid var(--line);
+        }
+
+        .phase:hover {
+            transform: translateX(4px);
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.02);
+        }
+
+        .phase .num {
+            font-size: 11px;
+            letter-spacing: 4px;
+            color: var(--accent);
+            margin: 0 0 12px;
+            font-weight: 400;
+        }
+
+        .phase .laya {
+            font-family: "Nirmala UI", "Noto Sans Devanagari", "Segoe UI", sans-serif;
+            font-size: clamp(22px, 4vw, 30px);
+            font-weight: 500;
+            letter-spacing: 1px;
+            margin: 0 0 10px;
+            line-height: 1.3;
+            position: relative;
+            display: inline-block;
+            color: #2d2d2d;
+        }
+
+        .phase .laya::after {
+            content: "";
+            display: block;
+            width: 35px;
+            height: 1px;
+            background: var(--accent);
+            margin: 10px auto 0;
+        }
+
+        .phase .desc {
+            margin: 8px 0;
+            color: #444;
+            letter-spacing: 0.5px;
+        }
+
+        .phase .blog-post {
+            text-align: left;
+            line-height: 1.5;
+            max-width: 720px;
+            margin: 20px auto 0;
+            padding: 20px 18px;
+            background: rgba(255,255,255,0.38);
+            border: 1px solid rgba(0,0,0,0.04);
+            border-radius: 18px;
+        }
+
+        .phase .blog-post p {
+            margin: 4px 0;
+        }
+
+        .poster {
+            display: block;
+            width: min(240px, 70vw);
+            height: auto;
+            margin: 24px auto 0;
+            border-radius: 6px;
+            box-shadow: 0 4px 18px var(--shadow);
+        }
+
+        .gallery {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 28px auto 0;
+        }
+
+        .gallery a {
+            display: inline-block;
+        }
+
+        .gallery img {
+            width: 140px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .gallery img:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+        }
+
+        .soon {
+            font-family: "Dancing Script", cursive;
+            font-size: clamp(32px, 5vw, 44px);
+            font-weight: 500;
+            letter-spacing: 1px;
+            color: #584197;
+            padding: 40px 0 12px;
+            margin-top: 20px;
+        }
+
+        .soon::before {
+            content: "";
+            display: block;
+            width: min(500px, 85vw);
+            height: 1px;
+            background: var(--accent);
+            margin: 0 auto 26px;
+        }
+
+        .krishnalaya-image,
+        .kalalaya-image,
+        .yatri-image {
+            display: block;
+            width: min(220px, 70vw);
+            height: auto;
+            margin: 20px auto 0;
+        }
+
+        .sanjh-schedule {
+            margin-top: 20px;
+            text-align: left;
+            max-width: 700px;
+            margin-inline: auto;
+        }
+
+        .sanjh-schedule p {
+            margin: 8px 0;
+            color: #444;
+        }
+
+        .sanjh-time {
+            text-align: center;
+            margin-top: 18px !important;
+            font-weight: 500;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        @keyframes phaseReveal {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes architecturalReveal {
+            from {
+                opacity: 0;
+                transform: scale(0.85);
+            }
+            to {
+                opacity: 0.18;
+                transform: scale(1);
+            }
+        }
+
+        .url,
+        .welcome,
+        h1,
+        h2,
+        .divider,
+        .role,
+        .name {
+            animation: fadeUp 1.2s ease both;
+        }
+
+        .welcome { animation-delay: 0.2s; }
+        h1 { animation-delay: 0.5s; }
+        h2 { animation-delay: 0.9s; }
+        .divider { animation-delay: 1.2s; }
+        .role { animation-delay: 1.4s; }
+
+        .contact {
+            min-height: 100vh;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 20px;
+            padding: 80px 20px 40px;
+            box-sizing: border-box;
+        }
+
+        .contact h3 {
+            font-size: clamp(20px, 3vw, 26px);
+            font-weight: 300;
+            letter-spacing: 4px;
+            margin: 0;
+        }
+
+        .socials {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 14px;
+            max-width: 780px;
+        }
+
+        .socials a {
+            display: inline-block;
+            padding: 10px 14px;
+            border: 1px solid #d8d8d3;
+            border-radius: 999px;
+            text-decoration: none;
+            color: var(--text);
+            background: rgba(255,255,255,0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+
+        .socials a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.06);
+            background: rgba(255,255,255,0.5);
+        }
+
+        .footer {
+            font-size: 15px;
+            letter-spacing: 4px;
+            color: #777;
+        }
+
+        .top {
+            font-size: 13px;
+            letter-spacing: 3px;
+            color: #888;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 700px) {
+            section {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .contact {
+                padding-top: 60px;
+            }
+
+            .phase {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .gallery img {
+                width: 110px;
+            }
+        }
+    </style>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <section id="home" class="hero">
+        <div class="url">www.deudalaya.com</div>
+
+        <div>
+            <p class="welcome">Welcome to</p>
+            <h1>लयपुर</h1>
+            <h2>City of Spaces</h2>
+
+            <div class="divider"><span></span><i></i><span></span></div>
+
+            <p class="role">Architect / Founder / CEO / Bharat Thakuri</p>
+        </div>
+
+        <a class="scroll" href="#phases">SCROLL ↓</a>
+    </section>
+
+    <section id="phases" class="phases">
+        <p class="sub">लयपुर</p>
+
+        <div class="phase-list">
+            <article class="phase">
+                <p class="num">PHASE 1</p>
+                <p class="laya">सुदूर कर्णाली सांस्कृतिक तथा देउडालय समाज</p>
+                <p class="desc">देउडासाँझ, Every Friday at Shankhamul Park. 🎶</p>
+                <p class="desc">Non-Profit Organization 🤝</p>
+                <p class="desc">Phase 2 coming soon...</p>
+
+                <div class="gallery">
+                    <a href="sudurkarnali.jpg" target="_blank"><img src="sudurkarnali.jpg" alt="Sudur Karnali"></a>
+                    <a href="deudalaya-poster.jpg" target="_blank"><img src="deudalaya-poster.jpg" alt="Deudalaya poster"></a>
+                    <a href="nonprofit.jpg" target="_blank"><img src="nonprofit.jpg" alt="Nonprofit"></a>
+                </div>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 2</p>
+                <p class="laya">शब्दालय</p>
+                <p class="desc">Welcome to my blog....gies ✍️</p>
+
+                <div class="blog-post">
+                    <p><strong>BLOG 01</strong></p>
+                    <p>INT. IN FRONT OF MY PC - NIGHT</p>
+                    <p>4:05 AM world is finally silence</p>
+                    <p>welcome to bloglaya</p>
+                    <p>1 October 2026 · Bharat Thakuri</p>
+                    <p>Hi Darsan, my name is Bharat Thakuri.</p>
+                    <p>If you are reading this, you are one of us, one of me.</p>
+                    <p>One of a person.</p>
+                    <p>One of a human being who feels, who is alive, maybe.</p>
+                    <p>Maybe AI.</p>
+                    <p>Thanks for stopping by.</p>
+                    <p>If you are looking for something special in my blog, I am sorry...</p>
+                    <p>I don't think there is something special here...</p>
+                    <p>That search for something special has gone from me...</p>
+                    <p>If you don't like what I write, then I will understand if you do not visit next time...</p>
+                    <p>It just that sometimes I find peace and sweetness in expressing my experience of being in this universe...</p>
+                    <p>Thanks for stopping by again. I will be writing whenever I can...</p>
+                    <p>See you on the next blog.</p>
+                    <p>- -Bharat Thakuri (2002 - 2074 - +)</p>
+                    <p>I was here.</p>
+                </div>
+            </article>
+
+            <article class="phase">
+                <div class="soon">Coming soon</div>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 3</p>
+                <p class="laya">देउडालय + चियालय</p>
+                <p class="desc">Deuda and chiya together, at Shankhamul. 🍵</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 4</p>
+                <p class="laya">अन्नालय</p>
+                <p class="desc">A place for food. 🍲</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 5</p>
+                <p class="laya">हाटालय</p>
+                <p class="desc">Market: water, T-shirts, hoodi. 🛍️</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 6</p>
+                <p class="laya">कलाकारालय</p>
+                <p class="desc">Deuda artists of Sudur Karnali. 🎨</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 7</p>
+                <p class="laya">PodCastलय</p>
+                <p class="desc">Sudur Karnali conversations. YouTube: deudalaya. 🎙️</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 8</p>
+                <p class="laya">किताबालय</p>
+                <p class="desc">The history of Deuda. 📚</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 9</p>
+                <p class="laya">साहित्यालय</p>
+                <p class="desc">A home for literature of Sudur Karnali and more. ✍️</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 10</p>
+                <p class="laya">देउडालय / Deuda Theatre</p>
+                <p class="desc">Deuda on stage. 🎭</p>
+
+                <div class="gallery">
+                    <a href="model.jpg" target="_blank"><img src="model.jpg" alt="Deuda Theatre"></a>
+                    <a href="deudalayathreatre.jpg" target="_blank"><img src="deudalayathreatre.jpg" alt="Deudalaya Theatre"></a>
+                </div>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 11</p>
+                <p class="laya">Appaलय</p>
+                <p class="desc">All of deudalaya.com in one app. 📱</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 12</p>
+                <p class="laya">कवितालय</p>
+                <p class="desc">A space for poetry. 📖</p>
+                <p class="desc">a girl / my poem collection (Rs. 300). 📖</p>
+
+                <div class="gallery">
+                    <a href="kavitalaya.jpg" target="_blank"><img src="kavitalaya.jpg" alt="कवितालय poster"></a>
+                    <a href="agirl.jpg" target="_blank"><img src="agirl.jpg" alt="A girl"></a>
+                </div>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 13</p>
+                <p class="laya">रचनालय</p>
+                <p class="desc">A place for creation. 🛠️</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 14</p>
+                <p class="laya">ध्यानालय</p>
+                <p class="desc">A place for meditation. 🧘</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 15</p>
+                <p class="laya">गणितालय</p>
+                <p class="desc">A place for mathematics. ➗</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 16</p>
+                <p class="laya">Websiteलय</p>
+                <p class="desc">We build website for you. 💻</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 17</p>
+                <p class="laya">मौनालय</p>
+                <p class="desc">A space for silence — to pause, reflect, listen, and simply be. 🤫</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 18</p>
+                <p class="laya">भावालय</p>
+                <p class="desc">A space to align emotions toward sweetness. 🍃</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 19</p>
+                <p class="laya">कलालय</p>
+                <p class="desc">A space for art. 🎨</p>
+
+                <div class="gallery">
+                    <img class="kalalaya-image" src="art.png" alt="Art">
+                    <img class="kalalaya-image" src="art2.png" alt="Art">
+                </div>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 20</p>
+                <p class="laya">कपासालय</p>
+                <p class="desc">A space for local clothing from Sudur Karnali. 🧵</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 21</p>
+                <p class="laya">IDEAलय</p>
+                <p class="desc">An online conversation of ideas to move Sudur Karnali forward. 💡</p>
+                <img class="poster" src="idealaya.jpg" alt="IDEAलय poster">
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 22</p>
+                <p class="laya">शिखरालय / Everest – Pokhara</p>
+                <p class="desc">A space for the peaks. 🏔️</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 23</p>
+                <p class="laya">चित्रालय</p>
+                <p class="desc">A space for pictures and visual stories. 🖼️</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 24</p>
+                <p class="laya">Crochetलय</p>
+                <p class="desc">A space for crochet and handmade work. 🧶</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 25</p>
+                <p class="laya">AIलय</p>
+                <p class="desc">A space for artificial intelligence. 🤖</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 26</p>
+                <p class="laya">AI शिक्षालय</p>
+                <p class="desc">A space to learn AI. 🎓</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 27</p>
+                <p class="laya">अङ्ग्रेजी शिक्षालय</p>
+                <p class="desc">A space to learn English. 🔤</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 28</p>
+                <p class="laya">K-लय / K-Theory</p>
+                <p class="desc">A space for K-Theory. 🔬</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 29</p>
+                <p class="laya">देउडालय / Poetea</p>
+                <p class="desc">Poetry and tea together. ☕</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 30</p>
+                <p class="laya">कल्पनालय</p>
+                <p class="desc">A space for imagination. ✨</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 31</p>
+                <p class="laya">साइपाल हिमाल + अन्तरिक्षालय</p>
+                <p class="desc">A space for the Himalaya and the sky. 🌌</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 32</p>
+                <p class="laya">देउडालय + चियालय / Kirtipur</p>
+                <p class="desc">Deuda and chiya together, in Kirtipur. 🍵</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 33</p>
+                <p class="laya">देउडालय + NDL</p>
+                <p class="desc">National Deuda League. 🏆 ⏳</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 34</p>
+                <p class="laya">रारा ध्यानलय</p>
+                <p class="desc">A space for meditation. 🌿</p>
+            </article>
+
+            <article class="phase chalchitra-phase">
+                <p class="num">PHASE 35</p>
+                <p class="laya">चलचित्रालय</p>
+                <p class="desc">A space for films and stories from Sudur Karnali. 🎬</p>
+                <img class="yatri-image" src="yatri.png" alt="यात्री">
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 36</p>
+                <p class="laya">स्मृतिलय</p>
+                <p class="desc">I was here. / my photo blog.</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 37</p>
+                <p class="laya">आवाजालय</p>
+                <p class="desc">Welcome to my audio blog. 🎧</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 38</p>
+                <p class="laya">दृश्यालय</p>
+                <p class="desc">Welcome to Dhrishlaya / my video blog / vlog. 🎥</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 39</p>
+                <p class="laya">साँझलय</p>
+                <p class="desc">A Week of Evening Sweetness. 🌙</p>
+
+                <div class="sanjh-schedule">
+                    <p><strong>शुक्रबार</strong> — देउडा साँझ 🎶</p>
+                    <p><strong>शनिबार</strong> — कमेडी साँझ 🎭</p>
+                    <p><strong>आइतबार</strong> — सङ्गीत तथा कीर्तन साँझ 🎵</p>
+                    <p><strong>सोमबार</strong> — विज्ञान, गणित, सिद्धान्त तथा पोडकास्ट साँझ 🎙️</p>
+                    <p><strong>मंगलबार</strong> — कला तथा नाटक साँझ 🎨</p>
+                    <p><strong>बुधबार</strong> — साहित्य तथा कविता साँझ 📖</p>
+                    <p><strong>बिहीबार</strong> — चलचित्र, खस संस्कृति तथा खुला मञ्च साँझ 🎬</p>
+                    <p class="sanjh-time">बेलुका ५:००–७:०० बजे 🌙</p>
+                </div>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 41</p>
+                <p class="laya">कृष्णालय</p>
+                <p class="desc">A Being...</p>
+                <img class="krishnalaya-image" src="krishnalaya.jpg" alt="कृष्णालय">
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 42</p>
+                <p class="laya">ज्ञानलय</p>
+                <p class="desc">A space for knowledge, learning, wisdom, and discovery. 📚</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 43</p>
+                <p class="laya">त्रिनेत्रलय</p>
+                <p class="desc">A space for reflection / indirect / research space. 👁️✨</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 44</p>
+                <p class="laya">बासुलय</p>
+                <p class="desc">A space for flute / my home / ठकुरी निवास 🏡</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 45</p>
+                <p class="laya">Graffitiलय</p>
+                <p class="desc">Graffity / Street Art / Throughout the Valley / देउडालय / लयपुर 🎨🏙️</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 46</p>
+                <p class="laya">पुष्पलय</p>
+                <p class="desc">A garden / my garden / a shop. 🌱🌸</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 47</p>
+                <p class="laya">झुम्कालय</p>
+                <p class="desc">My photo collection of her झुम्का / my झुम्का पसल at Shankhamul. ✨</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 48</p>
+                <p class="laya">वर्षालय</p>
+                <p class="desc">Element Water / A space far from the Valley / to experience rain and bathe in nature. 🌧️💧🌿</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 49</p>
+                <p class="laya">Adiyogiलय</p>
+                <p class="desc">A window into the reality of Adiyogi / a Shivalingam. 🕉️</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 50</p>
+                <p class="laya">the Mallलय</p>
+                <p class="desc">लयपुर / the Mall / my Thesis Project 🛍️🏙️</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 51</p>
+                <p class="laya">खस सभ्यतालय</p>
+                <p class="desc">My roots / A Museum of Khas Civilization / history, culture, language, and heritage. 🏛️📜</p>
+                <p class="desc">Past / Present / Future</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 52</p>
+                <p class="laya">नारायणालय</p>
+                <p class="desc">Narayanalaya / The Phenomenon of Creation — Reality & Universe 🌌</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 53</p>
+                <p class="laya">यात्रालय</p>
+                <p class="desc">Yatralaya / My Bike • The Musafir 🏍️</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 54</p>
+                <p class="laya">विज्ञानालय</p>
+                <p class="desc">Bigyanalaya / A Window into the Reality of Science 🔬🌌</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 55</p>
+                <p class="laya">Gen-Z सहिदालय</p>
+                <p class="desc">Gen-Z Sahidyalaya / A Space for Memory & Legacy 🇳🇵</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 56</p>
+                <p class="laya">तस्बिरालय</p>
+                <p class="desc">Tasbiralaya / My Collection of Her 📸</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 57</p>
+                <p class="laya">UNIVERSEलय</p>
+                <p class="desc">Uni + Me / Rest of Our Life Together 🌌</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 58</p>
+                <p class="laya">गन्तव्यालय</p>
+                <p class="desc">Gantabyalaya / Destinations of Sudur & Karnali 🏔️🛣️</p>
+            </article>
+
+            <article class="phase">
+                <p class="num">PHASE 59</p>
+                <p class="laya">ड्रोनालय</p>
+                <p class="desc">Dronelaya / Emergency Medical Service for Sudur & Karnali 🚁🏥</p>
+            </article>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <h3>सम्पर्कालय / CONTACT / 9747704316</h3>
+
+        <div class="socials">
+            <a href="mailto:deudalay@gmail.com">📧 Gmail</a>
+            <a href="#">📘 Facebook</a>
+            <a href="#">📸 Instagram</a>
+            <a href="#">🎵 TikTok</a>
+            <a href="#">▶️ YouTube</a>
+            <a href="https://deudalaya.com">🌐 Website</a>
+        </div>
+
+        <div class="footer">Deuda Laya Pvt. Ltd.</div>
+        <a class="top" href="#home">↑ BACK TO TOP</a>
+        <p style="font-size:12px; color:#999; letter-spacing:2px; margin:150px 0 0;">© 2026 Deuda Laya Pvt. Ltd. All rights reserved.</p>
+    </section>
+</body>
+</html>
