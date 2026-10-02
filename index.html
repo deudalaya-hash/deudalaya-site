@@ -510,39 +510,41 @@
         .divider { animation-delay: 1.2s; }
         .role { animation-delay: 1.4s; }
 
-        .contact {
-            min-height: auto;
-            justify-content: flex-start;
-            align-items: center;
-            gap: 20px;
-            padding: 80px 20px 40px;
-            box-sizing: border-box;
-        }
-
-        .contact h3 {
-            font-size: clamp(20px, 3vw, 26px);
-            font-weight: 300;
-            letter-spacing: 4px;
-            margin: 0;
-        }
-
         .socials {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 14px;
             max-width: 780px;
+            margin-bottom: 24px;
         }
 
         .socials a {
-            display: inline-block;
-            padding: 10px 14px;
+            display: grid;
+            place-items: center;
+            width: 44px;
+            height: 44px;
+            padding: 0;
             border: 1px solid #d8d8d3;
-            border-radius: 999px;
+            border-radius: 50%;
             text-decoration: none;
             color: var(--text);
             background: rgba(255,255,255,0.2);
             transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+
+        .social-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            min-width: 72px;
+        }
+
+        .social-label {
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.2;
         }
 
         .socials a:hover {
@@ -557,22 +559,26 @@
             color: #777;
         }
 
+        .copyright {
+            font-size: 12px;
+            color: #999;
+            letter-spacing: 2px;
+            margin: 32px 0 0;
+        }
+
         .top {
+            display: inline-block;
             font-size: 13px;
             letter-spacing: 3px;
             color: #888;
             text-decoration: none;
-            margin-top: 20px;
+            margin-top: 32px;
         }
 
         @media (max-width: 700px) {
             section {
                 padding-left: 16px;
                 padding-right: 16px;
-            }
-
-            .contact {
-                padding-top: 60px;
             }
 
             .phase {
@@ -1103,28 +1109,48 @@
             </article>
 
             <div class="phase">
-    <p class="num">PHASE 59</p>
-    <p class="laya">नयाँलय</p>
-    <p class="desc">नयाँलय / नयाँ अवधारणा ✨</p>
-</div>
+                <p class="num">PHASE 59</p>
+                <p class="laya">नयाँलय</p>
+                <p class="desc">नयाँलय / नयाँ अवधारणा ✨</p>
+            </div>
+
+            <article class="phase" id="contact">
+                <p class="num">PHASE 60</p>
+                <p class="laya">सम्पर्कालय</p>
+                <p class="desc">CONTACT / 9747704316</p>
+
+                <div class="socials">
+                    <div class="social-item">
+                        <a href="mailto:deudalay@gmail.com" aria-label="Gmail" title="Gmail">📧</a>
+                        <span class="social-label">Gmail</span>
+                    </div>
+                    <div class="social-item">
+                        <a href="#" aria-label="Facebook" title="Facebook">📘</a>
+                        <span class="social-label">Facebook</span>
+                    </div>
+                    <div class="social-item">
+                        <a href="#" aria-label="Instagram" title="Instagram">📸</a>
+                        <span class="social-label">Instagram</span>
+                    </div>
+                    <div class="social-item">
+                        <a href="#" aria-label="TikTok" title="TikTok">🎵</a>
+                        <span class="social-label">TikTok</span>
+                    </div>
+                    <div class="social-item">
+                        <a href="#" aria-label="YouTube" title="YouTube">▶️</a>
+                        <span class="social-label">YouTube</span>
+                    </div>
+                    <div class="social-item">
+                        <a href="https://deudalaya.com" aria-label="Website" title="Website">🌐</a>
+                        <span class="social-label">Website</span>
+                    </div>
+                </div>
+
+                <div class="footer">Deuda Laya Pvt. Ltd.</div>
+                <a class="top" href="#home">↑ BACK TO TOP</a>
+                <p class="copyright">© 2026 Deuda Laya Pvt. Ltd. All rights reserved.</p>
+            </article>
         </div>
-    </section>
-
-    <section id="contact" class="contact">
-        <h3>सम्पर्कालय / CONTACT / 9747704316</h3>
-
-        <div class="socials">
-            <a href="mailto:deudalay@gmail.com">📧 Gmail</a>
-            <a href="#">📘 Facebook</a>
-            <a href="#">📸 Instagram</a>
-            <a href="#">🎵 TikTok</a>
-            <a href="#">▶️ YouTube</a>
-            <a href="https://deudalaya.com">🌐 Website</a>
-        </div>
-
-        <div class="footer">Deuda Laya Pvt. Ltd.</div>
-        <a class="top" href="#home">↑ BACK TO TOP</a>
-        <p style="font-size:12px; color:#999; letter-spacing:2px; margin:150px 0 0;">© 2026 Deuda Laya Pvt. Ltd. All rights reserved.</p>
     </section>
     <script>
         const phaseIndex = document.querySelector(".phase-index");
@@ -1139,7 +1165,7 @@
 
             if (!number) return;
 
-            phase.id = `phase-${number}`;
+            if (!phase.id) phase.id = `phase-${number}`;
 
             const link = document.createElement("a");
             link.href = `#${phase.id}`;
