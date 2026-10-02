@@ -22,6 +22,8 @@
         }
 
         body {
+            position: relative;
+            isolation: isolate;
             margin: 0;
             background:
                 radial-gradient(circle at top, rgba(255,255,255,0.9), rgba(253,253,251,0.96) 30%, rgba(244,242,237,1) 100%);
@@ -29,6 +31,16 @@
             font-family: "Segoe UI", Helvetica, Arial, sans-serif;
             font-weight: 300;
             text-align: center;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: url("layapurtextonly.jpg") center / clamp(330px, 74vw, 700px) auto no-repeat;
+            opacity: 0.1;
+            pointer-events: none;
         }
 
         a { color: inherit; }
@@ -156,11 +168,28 @@
         }
 
         .phases {
+            position: relative;
+            isolation: isolate;
             width: 100%;
             max-width: 1000px;
             margin: 0 auto;
             padding-top: 20px;
             padding-bottom: 40px;
+        }
+
+        .phases::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(166,95,59,0.07) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(166,95,59,0.07) 1px, transparent 1px);
+            background-size: 72px 72px;
+            opacity: 0.55;
+            -webkit-mask-image: linear-gradient(90deg, #000 0%, transparent 30%, transparent 70%, #000 100%);
+            mask-image: linear-gradient(90deg, #000 0%, transparent 30%, transparent 70%, #000 100%);
         }
 
         .phases .sub {
@@ -178,14 +207,70 @@
             margin: 0 auto;
         }
 
+        html:not(.has-phase-index) .phase-index {
+            display: none;
+        }
+
+        .phase-index {
+            width: min(850px, 100%);
+            margin: 0 auto 28px;
+            border-block: 1px solid var(--line);
+            background: rgba(255,255,255,0.24);
+            text-align: left;
+        }
+
+        .phase-index summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 14px 18px;
+            color: var(--accent);
+            cursor: pointer;
+            font-size: 12px;
+            letter-spacing: 2px;
+        }
+
+        .phase-index-count {
+            color: var(--muted);
+            font-size: 11px;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+
+        .phase-index-links {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 4px 20px;
+            max-height: min(56vh, 500px);
+            overflow-y: auto;
+            padding: 0 18px 18px;
+        }
+
+        .phase-index-links a {
+            display: block;
+            padding: 8px 4px;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            color: var(--text);
+            font-size: 14px;
+            line-height: 1.4;
+            text-align: left;
+            text-decoration: none;
+        }
+
+        .phase-index-links a:hover,
+        .phase-index-links a:focus-visible {
+            color: var(--accent);
+            background: rgba(166,95,59,0.06);
+        }
+
         .phase {
             width: 100%;
             padding: 52px 25px;
             border-top: 1px solid var(--line);
             box-sizing: border-box;
             text-align: center;
-            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, background 0.2s ease;
-            animation: phaseReveal 1.2s ease both;
+            transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1), opacity 450ms ease-out, box-shadow 0.2s ease, background 0.2s ease;
             background: rgba(255,255,255,0.18);
         }
 
@@ -196,6 +281,14 @@
         .phase:hover {
             transform: translateX(4px);
             box-shadow: inset 0 0 0 1px rgba(0,0,0,0.02);
+        }
+
+        html.has-scroll-reveal .phase {
+            opacity: 0;
+        }
+
+        html.has-scroll-reveal .phase.is-visible {
+            opacity: 1;
         }
 
         .phase .num {
@@ -233,15 +326,56 @@
             letter-spacing: 0.5px;
         }
 
+        .phase-images {
+            margin-top: 18px;
+        }
+
+        .phase-images summary {
+            display: inline-block;
+            padding: 8px 12px;
+            border: 1px solid var(--line);
+            color: var(--accent);
+            cursor: pointer;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .phase-images .gallery {
+            margin-top: 14px;
+        }
+
+        .phase-images .blog-posts {
+            margin-top: 14px;
+        }
+
         .phase .blog-post {
             text-align: left;
             line-height: 1.5;
-            max-width: 720px;
-            margin: 20px auto 0;
+            margin: 0;
             padding: 20px 18px;
             background: rgba(255,255,255,0.38);
             border: 1px solid rgba(0,0,0,0.04);
             border-radius: 18px;
+        }
+
+        .phase .blog-posts {
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: 76%;
+            gap: 18px;
+            width: min(720px, 100%);
+            margin: 20px auto 0;
+            align-items: start;
+            overflow-x: auto;
+            overscroll-behavior-x: contain;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent) var(--line);
+            padding-bottom: 10px;
+        }
+
+        .phase .blog-post {
+            scroll-snap-align: start;
         }
 
         .phase .blog-post p {
@@ -257,6 +391,16 @@
             box-shadow: 0 4px 18px var(--shadow);
         }
 
+        .poster-link {
+            display: block;
+            width: fit-content;
+            margin: 24px auto 0;
+        }
+
+        .poster-link .poster {
+            margin: 0;
+        }
+
         .gallery {
             display: flex;
             justify-content: center;
@@ -264,6 +408,14 @@
             flex-wrap: wrap;
             gap: 20px;
             margin: 28px auto 0;
+        }
+
+        .kalalaya-gallery {
+            gap: 12px;
+        }
+
+        .kalalaya-gallery .kalalaya-image {
+            margin: 0;
         }
 
         .gallery a {
@@ -275,11 +427,11 @@
             height: auto;
             border-radius: 10px;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
         }
 
         .gallery img:hover {
-            transform: translateY(-3px);
+            transform: translateY(-4px) scale(1.035);
             box-shadow: 0 12px 25px rgba(0,0,0,0.12);
         }
 
@@ -293,15 +445,6 @@
             margin-top: 20px;
         }
 
-        .soon::before {
-            content: "";
-            display: block;
-            width: min(500px, 85vw);
-            height: 1px;
-            background: var(--accent);
-            margin: 0 auto 26px;
-        }
-
         .krishnalaya-image,
         .kalalaya-image,
         .yatri-image {
@@ -313,7 +456,7 @@
 
         .sanjh-schedule {
             margin-top: 20px;
-            text-align: left;
+            text-align: center;
             max-width: 700px;
             margin-inline: auto;
         }
@@ -337,17 +480,6 @@
             to {
                 opacity: 1;
                 transform: none;
-            }
-        }
-
-        @keyframes phaseReveal {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
             }
         }
 
@@ -379,7 +511,7 @@
         .role { animation-delay: 1.4s; }
 
         .contact {
-            min-height: 100vh;
+            min-height: auto;
             justify-content: flex-start;
             align-items: center;
             gap: 20px;
@@ -451,6 +583,30 @@
             .gallery img {
                 width: 110px;
             }
+
+            .phase .blog-posts {
+                grid-auto-columns: 88%;
+            }
+
+            .phase-index-links {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-delay: 0ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
         }
     </style>
 
@@ -479,6 +635,14 @@
     <section id="phases" class="phases">
         <p class="sub">लयपुर</p>
 
+        <details class="phase-index">
+            <summary>
+                <span>CONTENTS / PHASE INDEX</span>
+                <span class="phase-index-count"></span>
+            </summary>
+            <nav class="phase-index-links" aria-label="Phase contents"></nav>
+        </details>
+
         <div class="phase-list">
             <article class="phase">
                 <p class="num">PHASE 1</p>
@@ -487,40 +651,54 @@
                 <p class="desc">Non-Profit Organization 🤝</p>
                 <p class="desc">Phase 2 coming soon...</p>
 
-                <div class="gallery">
-                    <a href="sudurkarnali.jpg" target="_blank"><img src="sudurkarnali.jpg" alt="Sudur Karnali"></a>
-                    <a href="deudalaya-poster.jpg" target="_blank"><img src="deudalaya-poster.jpg" alt="Deudalaya poster"></a>
-                    <a href="nonprofit.jpg" target="_blank"><img src="nonprofit.jpg" alt="Nonprofit"></a>
-                </div>
+                <details class="phase-images">
+                    <summary>View images</summary>
+                    <div class="gallery">
+                        <a href="sudurkarnali.jpg" target="_blank"><img src="sudurkarnali.jpg" alt="Sudur Karnali"></a>
+                        <a href="deudalaya-poster.jpg" target="_blank"><img src="deudalaya-poster.jpg" alt="Deudalaya poster"></a>
+                        <a href="nonprofit.jpg" target="_blank"><img src="nonprofit.jpg" alt="Nonprofit"></a>
+                    </div>
+                </details>
             </article>
 
             <article class="phase">
                 <p class="num">PHASE 2</p>
-                <p class="laya">शब्दालय</p>
+                <p class="laya">शब्दलय</p>
                 <p class="desc">Welcome to my blog....gies ✍️</p>
 
-                <div class="blog-post">
-                    <p><strong>BLOG 01</strong></p>
-                    <p>INT. IN FRONT OF MY PC - NIGHT</p>
-                    <p>4:05 AM world is finally silence</p>
-                    <p>welcome to bloglaya</p>
-                    <p>1 October 2026 · Bharat Thakuri</p>
-                    <p>Hi Darsan, my name is Bharat Thakuri.</p>
-                    <p>If you are reading this, you are one of us, one of me.</p>
-                    <p>One of a person.</p>
-                    <p>One of a human being who feels, who is alive, maybe.</p>
-                    <p>Maybe AI.</p>
-                    <p>Thanks for stopping by.</p>
-                    <p>If you are looking for something special in my blog, I am sorry...</p>
-                    <p>I don't think there is something special here...</p>
-                    <p>That search for something special has gone from me...</p>
-                    <p>If you don't like what I write, then I will understand if you do not visit next time...</p>
-                    <p>It just that sometimes I find peace and sweetness in expressing my experience of being in this universe...</p>
-                    <p>Thanks for stopping by again. I will be writing whenever I can...</p>
-                    <p>See you on the next blog.</p>
-                    <p>- -Bharat Thakuri (2002 - 2074 - +)</p>
-                    <p>I was here.</p>
-                </div>
+                <details class="phase-images blog-details">
+                    <summary>View blog posts</summary>
+                    <div class="blog-posts" role="region" aria-label="Blog posts" tabindex="0">
+                        <div class="blog-post">
+                            <p><strong>BLOG 01</strong></p>
+                            <p>INT. IN FRONT OF MY PC - NIGHT</p>
+                            <p>4:05 AM world is finally silence</p>
+                            <p>welcome to bloglaya</p>
+                            <p>1 October 2026 · Bharat Thakuri</p>
+                            <p>Hi Darsan, my name is Bharat Thakuri.</p>
+                            <p>If you are reading this, you are one of us, one of me.</p>
+                            <p>One of a person.</p>
+                            <p>One of a human being who feels, who is alive, maybe.</p>
+                            <p>Maybe AI.</p>
+                            <p>Thanks for stopping by.</p>
+                            <p>If you are looking for something special in my blog, I am sorry...</p>
+                            <p>I don't think there is something special here...</p>
+                            <p>That search for something special has gone from me...</p>
+                            <p>If you don't like what I write, then I will understand if you do not visit next time...</p>
+                            <p>It just that sometimes I find peace and sweetness in expressing my experience of being in this universe...</p>
+                            <p>Thanks for stopping by again. I will be writing whenever I can...</p>
+                            <p>See you on the next blog.</p>
+                            <p>- -Bharat Thakuri (2002 - 2074 - +)</p>
+                            <p>I was here.</p>
+                        </div>
+                        <div class="blog-post">
+                            <p><strong>BLOG 02</strong></p>
+                            <p>New Baneshwor</p>
+                            <p>Hi guys, welcome back to my blog.</p>
+                            <p>There was a city; its name was Layapur...</p>
+                        </div>
+                    </div>
+                </details>
             </article>
 
             <article class="phase">
@@ -531,6 +709,12 @@
                 <p class="num">PHASE 3</p>
                 <p class="laya">देउडालय + चियालय</p>
                 <p class="desc">Deuda and chiya together, at Shankhamul. 🍵</p>
+                <details class="phase-images">
+                    <summary>View image</summary>
+                    <a class="poster-link" href="chiyalaya.png" target="_blank" rel="noopener noreferrer">
+                        <img class="poster" src="chiyalaya.png" alt="चियालय">
+                    </a>
+                </details>
             </article>
 
             <article class="phase">
@@ -574,10 +758,13 @@
                 <p class="laya">देउडालय / Deuda Theatre</p>
                 <p class="desc">Deuda on stage. 🎭</p>
 
-                <div class="gallery">
-                    <a href="model.jpg" target="_blank"><img src="model.jpg" alt="Deuda Theatre"></a>
-                    <a href="deudalayathreatre.jpg" target="_blank"><img src="deudalayathreatre.jpg" alt="Deudalaya Theatre"></a>
-                </div>
+                <details class="phase-images">
+                    <summary>View images</summary>
+                    <div class="gallery">
+                        <a href="model.jpg" target="_blank"><img src="model.jpg" alt="Deuda Theatre"></a>
+                        <a href="deudalayathreatre.jpg" target="_blank"><img src="deudalayathreatre.jpg" alt="Deudalaya Theatre"></a>
+                    </div>
+                </details>
             </article>
 
             <article class="phase">
@@ -592,10 +779,13 @@
                 <p class="desc">A space for poetry. 📖</p>
                 <p class="desc">a girl / my poem collection (Rs. 300). 📖</p>
 
-                <div class="gallery">
-                    <a href="kavitalaya.jpg" target="_blank"><img src="kavitalaya.jpg" alt="कवितालय poster"></a>
-                    <a href="agirl.jpg" target="_blank"><img src="agirl.jpg" alt="A girl"></a>
-                </div>
+                <details class="phase-images">
+                    <summary>View images</summary>
+                    <div class="gallery">
+                        <a href="kavitalaya.jpg" target="_blank"><img src="kavitalaya.jpg" alt="कवितालय poster"></a>
+                        <a href="agirl.jpg" target="_blank"><img src="agirl.jpg" alt="A girl"></a>
+                    </div>
+                </details>
             </article>
 
             <article class="phase">
@@ -639,10 +829,16 @@
                 <p class="laya">कलालय</p>
                 <p class="desc">A space for art. 🎨</p>
 
-                <div class="gallery">
-                    <img class="kalalaya-image" src="art.png" alt="Art">
-                    <img class="kalalaya-image" src="art2.png" alt="Art">
-                </div>
+                <details class="phase-images">
+                    <summary>View images</summary>
+                    <div class="gallery kalalaya-gallery">
+                        <img class="kalalaya-image" src="art.png" alt="Art">
+                        <img class="kalalaya-image" src="art2.png" alt="Art">
+                        <a href="astrnoutpainting.jpg" target="_blank" rel="noopener noreferrer">
+                            <img class="kalalaya-image" src="astrnoutpainting.jpg" alt="Astronaut painting">
+                        </a>
+                    </div>
+                </details>
             </article>
 
             <article class="phase">
@@ -655,7 +851,10 @@
                 <p class="num">PHASE 21</p>
                 <p class="laya">IDEAलय</p>
                 <p class="desc">An online conversation of ideas to move Sudur Karnali forward. 💡</p>
-                <img class="poster" src="idealaya.jpg" alt="IDEAलय poster">
+                <details class="phase-images">
+                    <summary>View image</summary>
+                    <img class="poster" src="idealaya.jpg" alt="IDEAलय poster">
+                </details>
             </article>
 
             <article class="phase">
@@ -740,7 +939,10 @@
                 <p class="num">PHASE 35</p>
                 <p class="laya">चलचित्रालय</p>
                 <p class="desc">A space for films and stories from Sudur Karnali. 🎬</p>
-                <img class="yatri-image" src="yatri.png" alt="यात्री">
+                <details class="phase-images">
+                    <summary>View image</summary>
+                    <img class="yatri-image" src="yatri.png" alt="यात्री">
+                </details>
             </article>
 
             <article class="phase">
@@ -766,23 +968,29 @@
                 <p class="laya">साँझलय</p>
                 <p class="desc">A Week of Evening Sweetness. 🌙</p>
 
-                <div class="sanjh-schedule">
-                    <p><strong>शुक्रबार</strong> — देउडा साँझ 🎶</p>
-                    <p><strong>शनिबार</strong> — कमेडी साँझ 🎭</p>
-                    <p><strong>आइतबार</strong> — सङ्गीत तथा कीर्तन साँझ 🎵</p>
-                    <p><strong>सोमबार</strong> — विज्ञान, गणित, सिद्धान्त तथा पोडकास्ट साँझ 🎙️</p>
-                    <p><strong>मंगलबार</strong> — कला तथा नाटक साँझ 🎨</p>
-                    <p><strong>बुधबार</strong> — साहित्य तथा कविता साँझ 📖</p>
-                    <p><strong>बिहीबार</strong> — चलचित्र, खस संस्कृति तथा खुला मञ्च साँझ 🎬</p>
-                    <p class="sanjh-time">बेलुका ५:००–७:०० बजे 🌙</p>
-                </div>
+                <details class="phase-images">
+                    <summary>View weekly schedule</summary>
+                    <div class="sanjh-schedule">
+                        <p><strong>शुक्रबार</strong> — देउडा साँझ 🎶</p>
+                        <p><strong>शनिबार</strong> — कमेडी साँझ 🎭</p>
+                        <p><strong>आइतबार</strong> — सङ्गीत तथा कीर्तन साँझ 🎵</p>
+                        <p><strong>सोमबार</strong> — विज्ञान, गणित, सिद्धान्त तथा पोडकास्ट साँझ 🎙️</p>
+                        <p><strong>मंगलबार</strong> — कला तथा नाटक साँझ 🎨</p>
+                        <p><strong>बुधबार</strong> — साहित्य तथा कविता साँझ 📖</p>
+                        <p><strong>बिहीबार</strong> — चलचित्र, खस संस्कृति तथा खुला मञ्च साँझ 🎬</p>
+                        <p class="sanjh-time">बेलुका ५:००–७:०० बजे 🌙</p>
+                    </div>
+                </details>
             </article>
 
             <article class="phase">
                 <p class="num">PHASE 40</p>
                 <p class="laya">कृष्णालय</p>
                 <p class="desc">A Being...</p>
-                <img class="krishnalaya-image" src="krishnalaya.jpg" alt="कृष्णालय">
+                <details class="phase-images">
+                    <summary>View image</summary>
+                    <img class="krishnalaya-image" src="krishnalaya.jpg" alt="कृष्णालय">
+                </details>
             </article>
 
             <article class="phase">
@@ -918,5 +1126,68 @@
         <a class="top" href="#home">↑ BACK TO TOP</a>
         <p style="font-size:12px; color:#999; letter-spacing:2px; margin:150px 0 0;">© 2026 Deuda Laya Pvt. Ltd. All rights reserved.</p>
     </section>
+    <script>
+        const phaseIndex = document.querySelector(".phase-index");
+        const phaseIndexLinks = phaseIndex.querySelector(".phase-index-links");
+        const numberedPhases = document.querySelectorAll(".phase-list > .phase");
+        let phaseCount = 0;
+
+        numberedPhases.forEach((phase) => {
+            const numberElement = phase.querySelector(".num");
+            const titleElement = phase.querySelector(".laya");
+            const number = numberElement?.textContent.match(/\d+/)?.[0];
+
+            if (!number) return;
+
+            phase.id = `phase-${number}`;
+
+            const link = document.createElement("a");
+            link.href = `#${phase.id}`;
+            link.textContent = `${number}. ${titleElement?.textContent.trim() || "Phase"}`;
+            phaseIndexLinks.append(link);
+            phaseCount += 1;
+        });
+
+        phaseIndex.querySelector(".phase-index-count").textContent = `${phaseCount} PHASES`;
+        document.documentElement.classList.add("has-phase-index");
+
+        phaseIndexLinks.addEventListener("click", (event) => {
+            if (event.target.closest("a")) phaseIndex.open = false;
+        });
+
+        const blogPosts = document.querySelector(".blog-posts");
+        if (blogPosts) {
+            const blogDetails = blogPosts.closest("details");
+            const showLatestPost = () => {
+                blogPosts.scrollLeft = blogPosts.scrollWidth;
+            };
+
+            if (blogDetails) {
+                blogDetails.addEventListener("toggle", () => {
+                    if (blogDetails.open) requestAnimationFrame(showLatestPost);
+                });
+            } else {
+                showLatestPost();
+            }
+        }
+
+        if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches && "IntersectionObserver" in window) {
+            document.documentElement.classList.add("has-scroll-reveal");
+
+            const phaseObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("is-visible");
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.15,
+                rootMargin: "0px 0px -40px 0px"
+            });
+
+            document.querySelectorAll(".phase").forEach((phase) => phaseObserver.observe(phase));
+        }
+    </script>
 </body>
 </html>
