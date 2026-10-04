@@ -229,6 +229,9 @@ h2{font:300 clamp(20px,6.2vw,34px) var(--sans);letter-spacing:3px;margin:0}
 .next span{display:block;color:var(--desc);position:relative}
 .next .ne{font:500 20px/1.4 var(--serif);color:var(--text);margin-bottom:6px}
 
+.contact-info{margin:12px auto 8px;max-width:420px}
+.contact-info .desc{font-size:15px;letter-spacing:1px;color:var(--text);margin:4px 0}
+.cta{margin-top:10px}
 .btn{display:inline-block;margin:6px;padding:12px 22px;border:1px solid var(--accent);border-radius:999px;color:var(--accent);font-size:14px;text-decoration:none;
  transition:background-color .25s,color .25s,box-shadow .25s,transform .2s}
 .btn:hover{background:var(--accent);color:var(--bg);box-shadow:0 6px 22px var(--glow);transform:translateY(-2px)}
@@ -238,9 +241,10 @@ h2{font:300 clamp(20px,6.2vw,34px) var(--sans);letter-spacing:3px;margin:0}
 .social a{display:grid;place-items:center;width:46px;height:46px;border:1px solid var(--line);border-radius:50%;text-decoration:none;
  transition:transform .25s,border-color .25s,box-shadow .25s}
 .social a:hover{transform:translateY(-3px) scale(1.06);border-color:var(--accent);box-shadow:0 6px 18px var(--glow)}
-.footer{font:300 15px var(--sans);letter-spacing:3px;color:var(--muted)}
-.copyright{font-size:12px;color:var(--muted);letter-spacing:1.5px;margin:32px 0 0}
-.flourish{display:flex;justify-content:center;align-items:center;gap:8px;margin:28px 0 8px;opacity:.5}
+.site-footer{width:100%;max-width:780px;margin:0 auto;padding:40px 20px 48px;text-align:center}
+.footer{font:300 15px var(--sans);letter-spacing:3px;color:var(--muted);margin-top:8px}
+.copyright{font-size:12px;color:var(--muted);letter-spacing:1.5px;margin:20px 0 0}
+.flourish{display:flex;justify-content:center;align-items:center;gap:8px;margin:0 0 12px;opacity:.5}
 .flourish span{width:28px;height:1px;background:var(--rule)}
 .flourish i{width:7px;height:7px;border:1px solid var(--accent);border-radius:50%;animation:ringPulse 3s ease-in-out infinite}
 
@@ -320,6 +324,12 @@ html{scroll-behavior:auto}
   <div class="phase-list" id="list"></div>
 </section>
 
+<footer class="site-footer">
+  <div class="flourish" aria-hidden="true"><span></span><i></i><span></span></div>
+  <a class="top" href="#home">↑ BACK TO TOP</a>
+  <p class="copyright">© <span id="year"></span> Deuda Laya Pvt. Ltd. All rights reserved.</p>
+</footer>
+
 <script>
 /* ============ CONTENT ============ */
 const PHASES = [
@@ -394,7 +404,7 @@ const PHASES = [
   { n: 57, t: "गन्तव्यालय", d: ["Gantabyalaya / Destinations of Sudur & Karnali 🏔️🛣️"] },
   { n: 58, t: "ड्रोनालय", d: ["Dronelaya / Emergency Medical Service for Sudur & Karnali 🚁🏥"] },
   { n: 59, t: "नयाँलय", d: ["नयाँलय / नयाँ अवधारणा ✨"] },
-  { n: 60, t: "सम्पर्कालय", d: ["CONTACT / 9747704316"], id: "contact", contact: true }
+  { n: 60, t: "सम्पर्कालय", d: ["Get in touch"], id: "contact", contact: true }
 ];
 
 const BLOG = [
@@ -481,20 +491,25 @@ function render(p) {
   }
 
   if (p.contact) {
+    const info = $("div", "contact-info");
+    info.append($("p", "desc", "9747704316"));
+    info.append($("p", "desc", "deudalay@gmail.com"));
+    el.append(info);
+
     const cta = $("div", "cta");
     [["📞 Call", "tel:+9779747704316"], ["💬 WhatsApp", "https://wa.me/9779747704316"], ["📧 Email", "mailto:deudalay@gmail.com"]]
       .forEach(([label, href]) => { const a = $("a", "btn", label); a.href = href; cta.append(a); });
+    el.append(cta);
+
+    // only show non-email socials (Gmail already covered by Email button)
     const wrap = $("div", "socials");
-    SOCIALS.filter(s => s[2] !== "#").forEach(([icon, name, href]) => {
+    SOCIALS.filter(s => s[2] !== "#" && !s[2].startsWith("mailto:")).forEach(([icon, name, href]) => {
       const item = $("div", "social"), a = $("a", null, icon);
       a.href = href; a.title = name; a.setAttribute("aria-label", name);
       item.append(a, $("span", null, name)); wrap.append(item);
     });
-    const top = $("a", "top", "↑ BACK TO TOP"); top.href = "#home";
-    const flour = $("div", "flourish");
-    flour.innerHTML = "<span></span><i></i><span></span>";
-    el.append(cta, wrap, $("div", "footer", "Deuda Laya Pvt. Ltd."), flour, top,
-      $("p", "copyright", "© " + new Date().getFullYear() + " Deuda Laya Pvt. Ltd. All rights reserved."));
+    if (wrap.children.length) el.append(wrap);
+    el.append($("div", "footer", "Deuda Laya Pvt. Ltd."));
   }
   return el;
 }
@@ -516,6 +531,8 @@ PHASES.forEach(p => {
 const idx = document.querySelector(".phase-index");
 idx.hidden = false;
 document.getElementById("count").textContent = count + " PHASES";
+const yearEl = document.getElementById("year");
+if (yearEl) yearEl.textContent = new Date().getFullYear();
 nav.addEventListener("click", e => { if (e.target.closest("a")) idx.open = false; });
 
 /* sync background लयपुर with the big title */
