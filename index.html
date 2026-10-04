@@ -15,7 +15,7 @@
 <meta property="og:url" content="https://deudalaya.com/">
 <meta property="og:image" content="https://deudalaya.com/deudalaya-logo.png">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Deuda Laya Pvt. Ltd.","url":"https://deudalaya.com/","email":"deudalay@gmail.com","telephone":"+977-9747704316","address":{"@type":"PostalAddress","addressLocality":"Kathmandu","addressCountry":"NP"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Deuda Laya Pvt. Ltd.","url":"https://deudalaya.com/","email":"deudalaya@gmail.com","sameAs":["https://www.tiktok.com/@deudalaya"],"telephone":"+977-9747704316","address":{"@type":"PostalAddress","addressLocality":"Kathmandu","addressCountry":"NP"}}</script>
 <meta name="theme-color" content="#fdfdfb" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#17140f" media="(prefers-color-scheme: dark)">
 <script>
@@ -298,7 +298,7 @@ html{scroll-behavior:auto}
 </head>
 <body>
 <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark mode"></button>
-<noscript><p style="padding:24px">Please turn on JavaScript to see लयपुर. Contact: 9747704316 · deudalay@gmail.com</p></noscript>
+<noscript><p style="padding:24px">Please turn on JavaScript to see लयपुर. Contact: 9747704316 · deudalaya@gmail.com</p></noscript>
 <img class="mark" id="mark" src="layapurtextonly.jpg" alt="" aria-hidden="true">
 
 <section id="home" class="hero">
@@ -420,7 +420,8 @@ const PHASES = [
   { n: 64, t: "काष्ठलय", d: ["Wood carving 🪵"] },
   { n: 65, t: "शिलालय", d: ["Stone carving 🪨"] },
   { n: 66, t: "गृहलय", d: ["We build your dream home 🏡"] },
-  { n: 67, t: "सम्पर्कालय", d: ["Get in touch"], id: "contact", contact: true }
+  { n: 67, t: "बाध्यालय", d: ["A space for musical instruments of Sudur Karnali 🎵"], inst: true },
+  { n: 68, t: "सम्पर्कालय", d: ["Get in touch"], id: "contact", contact: true }
 ];
 
 const DESTINATIONS = [
@@ -434,6 +435,19 @@ const DESTINATIONS = [
   ["Sinja Valley", "Jumla", "Karnali", "A historic valley connected to the roots of the Nepali language."],
   ["Panchakoshi", "Dailekh", "Karnali", "A sacred heritage landscape rich in history and tradition."],
   ["Kakrebihar", "Surkhet", "Karnali", "An archaeological treasure nestled in a woodland setting."]
+];
+
+const INSTRUMENTS = [
+  ["हुड्को", "Hudko", "🥁", "डमरु आकारको सानो हाते बाजा, लोकगीत र गाथासँगै बजाइन्छ।"],
+  ["दमाहा", "Damaha", "🥁", "कचौरा आकारको ठूलो नगरा, दुई लट्ठीले बजाइन्छ; गहिरो र गम्भीर आवाज दिन्छ।"],
+  ["ट्याम्को", "Tyamko", "🥁", "लट्ठीले बजाइने सानो नगरा, दमाहासँग तीखो र चम्किलो आवाज थप्छ।"],
+  ["सनाई / सहनाई", "Sanai", "🎺", "तीखो स्वर भएको सुषिर बाजा, विवाह तथा शुभ कार्यमा बजाइन्छ।"],
+  ["नरसिंगा", "Narsingha", "📯", "पित्तलको लामो घुमाउरो तुरही, जुलुस, पूजा र चाडपर्वमा फुकिन्छ।"],
+  ["झ्याली / झ्याम्टा", "Jhyali", "🔔", "पित्तलका चकती एकआपसमा ठोकेर ताल दिइने बाजा।"],
+  ["ढोलक / ढोलकी", "Dholak", "🥁", "दुवैतिर छाला भएको हाते बाजा, लोकगीत र नाचसँगै बजाइन्छ।"],
+  ["मादल", "Madal", "🥁", "बेलनाकार दोहोरो छालाको बाजा, नेपाली लोकसङ्गीतको मुटुको धड्कन।"],
+  ["बाँसुरी / मुरली", "Bansuri / Murali", "🪈", "बाँसबाट बनेको सरल बाजा, कोमल र मिठो स्वर।"],
+  ["कर्नाल", "Karnal", "📯", "पित्तलको लामो सिधा तुरही, समारोह र भेलामा बजाइन्छ।"]
 ];
 
 const BLOG = [
@@ -456,8 +470,8 @@ const SANJH = [
 ];
 
 const SOCIALS = [
-  ["📧", "Gmail", "mailto:deudalay@gmail.com"], ["📘", "Facebook", "#"], ["📸", "Instagram", "#"],
-  ["🎵", "TikTok", "#"], ["▶️", "YouTube", "#"], ["🌐", "Website", "https://deudalaya.com"]
+  ["📧", "Gmail", "mailto:deudalaya@gmail.com"], ["📘", "Facebook", "#"], ["📸", "Instagram", "#"],
+  ["🎵", "TikTok", "https://www.tiktok.com/@deudalaya"], ["▶️", "YouTube", "#"], ["🌐", "Website", "https://deudalaya.com"]
 ];
 
 /* ============ RENDER ============ */
@@ -518,6 +532,16 @@ function render(p) {
     d.append(grid); el.append(d);
   }
 
+  if (p.inst) {
+    const d = details("top 10 instruments"), grid = $("div", "dest-grid");
+    INSTRUMENTS.forEach(([ne, en, ico, txt], i) => {
+      const c = $("div", "dest-card");
+      c.append($("small", "dest-no", String(i + 1).padStart(2, "0") + " / " + en.toUpperCase()), $("h3", null, ne + " " + ico), $("p", null, txt));
+      grid.append(c);
+    });
+    d.append(grid); el.append(d);
+  }
+
   if (p.next) { const n = $("div", "next"); n.id = "next"; n.hidden = true; el.append(n); }
 
   if (p.bloglink) { const a = $("a", "btn", "Open blog page"); a.href = "blog.html"; el.append(a); }
@@ -536,7 +560,7 @@ function render(p) {
     el.append(info);
 
     const cta = $("div", "cta");
-    [["📞 Call", "tel:+9779747704316"], ["💬 WhatsApp", "https://wa.me/9779747704316"], ["📧 Email", "mailto:deudalay@gmail.com"]]
+    [["📞 Call", "tel:+9779747704316"], ["💬 WhatsApp", "https://wa.me/9779747704316"], ["📧 Email", "mailto:deudalaya@gmail.com"]]
       .forEach(([label, href]) => { const a = $("a", "btn", label); a.href = href; cta.append(a); });
     el.append(cta);
 
