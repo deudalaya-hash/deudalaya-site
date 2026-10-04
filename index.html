@@ -150,6 +150,7 @@ h2{font:300 clamp(20px,6.2vw,34px) var(--sans);letter-spacing:3px;margin:0}
 .sub::before{right:calc(100% + 14px);background:linear-gradient(90deg,var(--accent),transparent)}
 .sub::after{left:calc(100% + 14px)}
 
+.sub-desc{margin:-14px 0 28px;padding:0 16px;font:500 17px/1.4 "Dancing Script",cursive;letter-spacing:1px;color:var(--muted)}
 .phase-list{width:min(780px,100%);margin:0 auto}
 .phase-index{width:min(850px,100%);margin:0 auto 28px;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--surface);text-align:left;
  transition:border-color .3s,box-shadow .3s}
@@ -326,6 +327,7 @@ html{scroll-behavior:auto}
 
 <section id="phases" class="phases">
   <p class="sub">लयपुर</p>
+  <p class="sub-desc">Most beautiful city in my Universe / multiverse</p>
   <details class="phase-index" hidden>
     <summary><span>CONTENTS / PHASE INDEX</span><span id="count"></span></summary>
     <nav id="index-links" aria-label="Phase contents"></nav>
@@ -351,78 +353,83 @@ const PHASES = [
   { soon: "Coming soon" },
   { n: 4, t: "देउडालय + चियालय", d: ["Deuda and chiya together, at Shankhamul. 🍵"],
     gal: { label: "image", open: true, kind: "poster", items: [["chiyalaya.png","चियालय"],["chipyalaya2d.png","चियालय floor plan"]] } },
-  { n: 5, t: "अन्नालय", d: ["Annalaya / सुदूर कर्णालीको रातो चामल राजधानीमा", "Online order & delivery. 🍲"] },
+  { n: 5, t: "अन्नालय", d: ["Annalaya / सुदूर कर्णालीको रातो चामल राजधानीमा", "Online order & delivery. 🍲", "सुदूर कर्णालीको खाद्यान्न राजधानीमा, अर्डर अनुसार सप्लाई 🚚"], food: true, order: true },
   { n: 6, t: "हाटालय", d: ["Market: water, T-shirts, hoodi. 🛍️"] },
   { n: 7, t: "देउडालय + चियालय / Kirtipur", d: ["Deuda and chiya together, in Kirtipur. 🍵"],
     gal: { label: "image", open: true, kind: "poster", items: [["deudalayakirtipur.jpg","देउडालय Kirtipur"]] } },
-  { n: 8, t: "PodCastलय", d: ["Sudur Karnali conversations. YouTube: deudalaya. 🎙️"] },
-  { n: 9, t: "किताबालय", d: ["The history of Deuda. 📚"] },
-  { n: 10, t: "साहित्यालय", d: ["A home for literature of Sudur Karnali and more. ✍️"], poster: ["sahityalaya.jpg","साहित्यालय poster"] },
-  { n: 11, t: "देउडालय / Deuda Theatre", d: ["Deuda on stage. 🎭"],
+  { n: 8, t: "देउडालय + चियालय", d: ["Deuda and chiya together — Chitlang / Resort. 🍵"],
+    gal: { label: "image", open: true, kind: "poster", items: [["chitlangresort.jpg","देउडालय Chitlang resort"]] } },
+  { n: 9, t: "देउडालय + चियालय / Surkhet", d: ["Deuda and chiya together, in Surkhet. 🍵"],
+    gal: { label: "image", open: true, kind: "poster", items: [["surkhet.jpg","देउडालय Surkhet"]] } },
+  { n: 10, t: "PodCastलय", d: ["Sudur Karnali conversations. YouTube: deudalaya. 🎙️"], poster: ["podcastlaya.png","PodCastलय poster"] },
+  { n: 11, t: "किताबालय", d: ["The history of Deuda. 📚"] },
+  { n: 12, t: "साहित्यालय", d: ["A home for literature of Sudur Karnali and more. ✍️"], poster: ["sahityalaya.jpg","साहित्यालय poster"] },
+  { n: 13, t: "देउडालय / Deuda Theatre", d: ["Deuda on stage. 🎭"],
     gal: { label: "images", open: true, kind: "thumb", items: [["model.jpg","Deuda Theatre"],["deudalayathreatre.jpg","Deudalaya Theatre"]] } },
-  { n: 12, t: "Appaलय", d: ["All of deudalaya.com in one app. 📱"] },
-  { n: 13, t: "कवितालय", d: ["A space for poetry. 📖", "a girl / my poem collection (Rs. 300). 📖"],
+  { n: 14, t: "Appaलय", d: ["All of deudalaya.com in one app. 📱"] },
+  { n: 15, t: "कवितालय", d: ["A space for poetry. 📖", "a girl / my poem collection (Rs. 300). 📖"],
     gal: { label: "images", open: true, kind: "thumb", items: [["kavitalaya.jpg","कवितालय poster"],["agirl.jpg","A girl"]] } },
-  { n: 14, t: "रचनालय", d: ["A place for creation. 🛠️"] },
-  { n: 15, t: "ध्यानालय", d: ["A place for meditation. 🧘"] },
-  { n: 16, t: "गणितालय", d: ["A place for mathematics. ➗"] },
-  { n: 17, t: "मौनालय", d: ["A space for silence — to pause, reflect, listen, and simply be. 🤫"] },
-  { n: 18, t: "भावालय", d: ["A space to align emotions toward sweetness. 🍃"] },
-  { n: 19, t: "कलालय", d: ["A space for art. 🎨"],
+  { n: 16, t: "रचनालय", d: ["A place for creation. 🛠️"] },
+  { n: 17, t: "ध्यानालय", d: ["A place for meditation. 🧘"] },
+  { n: 18, t: "गणितालय", d: ["A place for mathematics. ➗"] },
+  { n: 19, t: "मौनालय", d: ["A space for silence — to pause, reflect, listen, and simply be. 🤫"] },
+  { n: 20, t: "भावालय", d: ["A space to align emotions toward sweetness. 🍃"] },
+  { n: 21, t: "कलालय", d: ["A space for art. 🎨"],
     gal: { label: "images", open: true, kind: "thumb", items: [["art.png","Art"],["art2.png","Art"],["astrnoutpainting.jpg","Astronaut painting"]] } },
-  { n: 20, t: "कपासालय", d: ["A space for local clothing from Sudur Karnali. 🧵"] },
-  { n: 21, t: "IDEAलय", d: ["An online conversation of ideas to move Sudur Karnali forward. 💡"],
+  { n: 22, t: "कपासालय", d: ["A space for local clothing from Sudur Karnali. 🧵"], wool: true },
+  { n: 23, t: "IDEAलय", d: ["An online conversation of ideas to move Sudur Karnali forward. 💡"],
     gal: { label: "image", open: true, kind: "poster", items: [["idealaya.jpg","IDEAलय poster"]] } },
-  { n: 22, t: "शिखरालय / Everest – Pokhara", d: ["A space for the peaks. 🏔️"] },
-  { n: 23, t: "चित्रालय", d: ["A space for pictures and visual stories. 🖼️"] },
-  { n: 24, t: "Crochetलय", d: ["A space for crochet and handmade work. 🧶"] },
-  { n: 25, t: "AIलय", d: ["A space for artificial intelligence. 🤖"] },
-  { n: 26, t: "AI शिक्षालय", d: ["A space to learn AI. 🎓"] },
-  { n: 27, t: "अङ्ग्रेजी शिक्षालय", d: ["A space to learn English. 🔤"] },
-  { n: 28, t: "K-लय / K-Theory", d: ["A space for K-Theory. 🔬"] },
-  { n: 29, t: "देउडालय / Poetea", d: ["Poetry and tea together. ☕"] },
-  { n: 30, t: "कल्पनालय", d: ["A space for imagination. ✨"] },
-  { n: 31, t: "साइपाल हिमाल + अन्तरिक्षालय", d: ["A space for the Himalaya and the sky. 🌌"] },
-  { n: 32, t: "कलाकारालय", d: ["Deuda artists of Sudur Karnali. 🎨"] },
-  { n: 33, t: "देउडालय + NDL", d: ["National Deuda League. 🏆 ⏳"] },
-  { n: 34, t: "रारा ध्यानलय", d: ["A space for meditation. 🌿"] },
-  { n: 35, t: "चलचित्रालय", d: ["A space for films and stories from Sudur Karnali. 🎬"],
+  { n: 24, t: "शिखरालय / Everest – Pokhara", d: ["A space for the peaks. 🏔️"] },
+  { n: 25, t: "चित्रालय", d: ["A space for pictures and visual stories. 🖼️"] },
+  { n: 26, t: "Crochetलय", d: ["A space for crochet and handmade work. 🧶"] },
+  { n: 27, t: "AIलय", d: ["A space for artificial intelligence. 🤖"] },
+  { n: 28, t: "AI शिक्षालय", d: ["A space to learn AI. 🎓"] },
+  { n: 29, t: "अङ्ग्रेजी शिक्षालय", d: ["A space to learn English. 🔤"] },
+  { n: 30, t: "K-लय / K-Theory", d: ["A space for K-Theory. 🔬"] },
+  { n: 31, t: "देउडालय / Poetea", d: ["Poetry and tea together. ☕"] },
+  { n: 32, t: "कल्पनालय", d: ["A space for imagination. ✨"] },
+  { n: 33, t: "साइपाल हिमाल + अन्तरिक्षालय", d: ["A space for the Himalaya and the sky. 🌌"] },
+  { n: 34, t: "कलाकारालय", d: ["Deuda artists of Sudur Karnali. 🎨"] },
+  { n: 35, t: "देउडालय + NDL", d: ["National Deuda League. 🏆 ⏳"] },
+  { n: 36, t: "रारा ध्यानलय", d: ["A space for meditation. 🌿"] },
+  { n: 37, t: "चलचित्रालय", d: ["A space for films and stories from Sudur Karnali. 🎬"],
     gal: { label: "image", open: true, kind: "poster", items: [["yatri.png","यात्री"]] } },
-  { n: 36, t: "स्मृतिलय", d: ["I was here. / my photo blog."] },
-  { n: 37, t: "आवाजालय", d: ["Welcome to my audio blog. 🎧"] },
-  { n: 38, t: "दृश्यालय", d: ["Welcome to Dhrishlaya / my video blog / vlog. 🎥"] },
-  { n: 39, t: "साँझलय", d: ["A Week of Evening Sweetness. 🌙"], sanjh: true },
-  { n: 40, t: "कृष्णालय", d: ["A Being..."],
+  { n: 38, t: "स्मृतिलय", d: ["I was here. / my photo blog."] },
+  { n: 39, t: "आवाजालय", d: ["Welcome to my audio blog. 🎧"] },
+  { n: 40, t: "दृश्यालय", d: ["Welcome to Dhrishlaya / my video blog / vlog. 🎥"] },
+  { n: 41, t: "साँझलय", d: ["A Week of Evening Sweetness. 🌙"], sanjh: true },
+  { n: 42, t: "कृष्णालय", d: ["A Being..."],
     gal: { label: "image", open: true, kind: "poster", items: [["krishnalaya.jpg","कृष्णालय"]] } },
-  { n: 41, t: "ज्ञानलय", d: ["A space for knowledge, learning, wisdom, and discovery. 📚"] },
-  { n: 42, t: "त्रिनेत्रलय", d: ["A space for reflection / indirect / research space. 👁️✨"] },
-  { n: 43, t: "बासुलय", d: ["A space for flute / my home / ठकुरी निवास 🏡"] },
-  { n: 44, t: "Graffitiलय", d: ["Graffiti / Street Art / Throughout the Valley / देउडालय / लयपुर 🎨🏙️"] },
-  { n: 45, t: "पुष्पलय", d: ["A garden / my garden / a shop. 🌱🌸"] },
-  { n: 46, t: "झुम्कालय", d: ["My photo collection of her झुम्का / my झुम्का पसल at Shankhamul. ✨"] },
-  { n: 47, t: "वर्षालय", d: ["Element Water / A space far from the Valley / to experience rain and bathe in nature. 🌧️💧🌿"] },
-  { n: 48, t: "Adiyogiलय", d: ["A window into the reality of Adiyogi / a Shivalingam. 🕉️"] },
-  { n: 49, t: "the Mallलय", d: ["लयपुर / the Mall / my Thesis Project 🛍️🏙️"] },
-  { n: 50, t: "खस सभ्यतालय", d: ["My roots / A Museum of Khas Civilization / history, culture, language, and heritage. 🏛️📜", "Past / Present / Future"] },
-  { n: 51, t: "नारायणालय", d: ["Narayanalaya / The Phenomenon of Creation — Reality & Universe 🌌"] },
-  { n: 52, t: "यात्रालय", d: ["Yatralaya / My Bike • The Musafir 🏍️"] },
-  { n: 53, t: "विज्ञानालय", d: ["Bigyanalaya / A Window into the Reality of Science 🔬🌌"] },
-  { n: 54, t: "Gen-Z सहिदालय", d: ["Gen-Z Sahidyalaya / A Space for Memory & Legacy 🇳🇵"] },
-  { n: 55, t: "तस्बिरालय", d: ["Tasbiralaya / My Collection of Her 📸"] },
-  { n: 56, t: "UNIVERSEलय", d: ["Uni + Me / Rest of Our Life Together 🌌"] },
-  { n: 57, t: "गन्तव्यालय", d: ["Gantabyalaya / Destinations of Sudur & Karnali 🏔️🛣️"], dest: true },
-  { n: 58, t: "ड्रोनालय", d: ["Dronelaya / Emergency Medical Service for Sudur & Karnali 🚁🏥"] },
-  { n: 59, t: "बाँसुरिलय / धुनालय", d: ["My flute vlog 🪈"] },
-  { n: 60, t: "प्रतिबिम्बालय", d: ["My art gallery at Patan 🎨"] },
-  { n: 61, t: "AI शिक्षालय", d: ["AI learning space in villages of Sudur Karnali 🤖"] },
-  { n: 62, t: "लयपुरलय", d: ["Architectural studio for creating Layapur 🏛️"] },
-  { n: 63, t: "माटोलय", d: ["Pottery space 🏺"] },
-  { n: 64, t: "काष्ठलय", d: ["Wood carving 🪵"] },
-  { n: 65, t: "शिलालय", d: ["Stone carving 🪨"] },
-  { n: 66, t: "गृहलय", d: ["We build your dream home 🏡"] },
-  { n: 67, t: "बाध्यालय", d: ["A space for musical instruments of Sudur Karnali 🎵"], inst: true },
-  { n: 68, t: "नाटकालय", d: ["सुदूर कर्णालीका कथाका लागि राजधानीको आँगनमा आफ्नै घर 🎭"], poster: ["natakalaya.jpg","नाटकालय poster"] },
-  { n: 69, t: "सम्पर्कालय", d: ["Get in touch"], id: "contact", contact: true }
+  { n: 43, t: "ज्ञानलय", d: ["A space for knowledge, learning, wisdom, and discovery. 📚"] },
+  { n: 44, t: "त्रिनेत्रलय", d: ["A space for reflection / indirect / research space. 👁️✨"] },
+  { n: 45, t: "बासुलय", d: ["A space for flute / my home / ठकुरी निवास 🏡"] },
+  { n: 46, t: "Graffitiलय", d: ["Graffiti / Street Art / Throughout the Valley / देउडालय / लयपुर 🎨🏙️"] },
+  { n: 47, t: "पुष्पलय", d: ["A garden / my garden / a shop. 🌱🌸"] },
+  { n: 48, t: "झुम्कालय", d: ["My photo collection of her झुम्का / my झुम्का पसल at Shankhamul. ✨", "सुदूर कर्णालीका गहनाको राजधानीमा आफ्नै घर 💍"], gahana: true },
+  { n: 49, t: "वर्षालय", d: ["Element Water / A space far from the Valley / to experience rain and bathe in nature. 🌧️💧🌿"] },
+  { n: 50, t: "Adiyogiलय", d: ["A window into the reality of Adiyogi / a Shivalingam. 🕉️"] },
+  { n: 51, t: "the Mallलय", d: ["लयपुर / the Mall / my Thesis Project 🛍️🏙️"] },
+  { n: 52, t: "खस सभ्यतालय", d: ["My roots / A Museum of Khas Civilization / history, culture, language, and heritage. 🏛️📜", "Past / Present / Future"] },
+  { n: 53, t: "नारायणालय", d: ["Narayanalaya / The Phenomenon of Creation — Reality & Universe 🌌"] },
+  { n: 54, t: "यात्रालय", d: ["Yatralaya / My Bike • The Musafir 🏍️"] },
+  { n: 55, t: "विज्ञानालय", d: ["Bigyanalaya / A Window into the Reality of Science 🔬🌌"] },
+  { n: 56, t: "Gen-Z सहिदालय", d: ["Gen-Z Sahidyalaya / A Space for Memory & Legacy 🇳🇵"] },
+  { n: 57, t: "तस्बिरालय", d: ["Tasbiralaya / My Collection of Her 📸"] },
+  { n: 58, t: "UNIVERSEलय", d: ["Uni + Me / Rest of Our Life Together 🌌"] },
+  { n: 59, t: "गन्तव्यालय", d: ["Gantabyalaya / Destinations of Sudur & Karnali 🏔️🛣️"], dest: true },
+  { n: 60, t: "ड्रोनालय", d: ["Dronelaya / Emergency Medical Service for Sudur & Karnali 🚁🏥"] },
+  { n: 61, t: "बाँसुरिलय / धुनालय", d: ["My flute vlog 🪈"] },
+  { n: 62, t: "प्रतिबिम्बालय", d: ["My art gallery at Patan 🎨"] },
+  { n: 63, t: "AI शिक्षालय", d: ["AI learning space in villages of Sudur Karnali 🤖"] },
+  { n: 64, t: "लयपुरलय", d: ["Architectural studio for creating Layapur 🏛️"] },
+  { n: 65, t: "माटोलय", d: ["Pottery space 🏺"] },
+  { n: 66, t: "काष्ठलय", d: ["Wood carving 🪵"] },
+  { n: 67, t: "शिलालय", d: ["Stone carving 🪨"] },
+  { n: 68, t: "गृहलय", d: ["We build your dream home 🏡"] },
+  { n: 69, t: "बाध्यालय", d: ["A space for musical instruments of Sudur Karnali 🎵"], inst: true },
+  { n: 70, t: "नाटकालय", d: ["सुदूर कर्णालीका कथाका लागि राजधानीको आँगनमा आफ्नै घर 🎭"], poster: ["natakalaya.jpg","नाटकालय poster"] },
+  { n: 71, t: "HOMESTAYलय", d: ["A space to stay inside the hills, homes and living culture of Sudur Karnali. 🏔️🏠"], stay: true },
+  { n: 72, t: "सम्पर्कालय", d: ["Get in touch"], id: "contact", contact: true }
 ];
 
 const DESTINATIONS = [
@@ -449,6 +456,57 @@ const INSTRUMENTS = [
   ["मादल", "Madal", "🥁", "बेलनाकार दोहोरो छालाको बाजा, नेपाली लोकसङ्गीतको मुटुको धड्कन।"],
   ["बाँसुरी / मुरली", "Bansuri / Murali", "🪈", "बाँसबाट बनेको सरल बाजा, कोमल र मिठो स्वर।"],
   ["कर्नाल", "Karnal", "📯", "पित्तलको लामो सिधा तुरही, समारोह र भेलामा बजाइन्छ।"]
+];
+
+const WOOL = [
+  ["राडी", "Radi", "परम्परागत ऊनी कपडा।"],
+  ["पाखी", "Pakhi", "जिउमा लपेट्ने ऊनी ओढ्ने।"],
+  ["लिउँ / लिउ", "Liu", "परम्परागत ऊनी पहिरन।"],
+  ["फेरुवा / फेर्‍या", "Pheruwa", "परम्परागत ऊनी पहिरन।"],
+  ["काम्लो", "Kamlo", "ऊनी ओढ्ने कम्बल।"],
+  ["कम्बल", "Kambal", "स्थानीय ऊनबाट हातले बुनिएको कम्बल।"],
+  ["कोट", "Coat", "स्थानीय ऊनबाट बनेको ऊनी कोट।"],
+  ["इस्टकोट", "Waistcoat", "ऊनी इस्टकोट।"],
+  ["गलैँचा", "Galaincha", "हातले बुनिएको ऊनी गलैँचा।"]
+];
+
+const GAHANA = [
+  ["फुली", "Phuli", "नाकमा लगाउने गहना।"],
+  ["बुलाकी", "Bulaki", "नाकमा झुन्ड्याउने गहना।"],
+  ["किलो", "Kilo", "नाकमा लगाउने गहना।"],
+  ["मुदड़ा", "Mudra", "कानमा लगाउने गहना।"],
+  ["मडेरी", "Maderi", "कानको गहना।"],
+  ["ढुंग्री", "Dhungri", "घाँटीमा लगाउने गहना।"],
+  ["सुता", "Suta", "चाँदीको घाँटीको गहना।"],
+  ["ठोका", "Thoka", "चाँदीको हातको गहना।"],
+  ["झुमझुमी", "Jhumjhumi", "टाउको र कान आसपास लगाउने गहना।"],
+  ["पैडा", "Paida", "खुट्टामा लगाउने चाँदीको गहना।"]
+];
+
+const STAYS = [
+  ["Achham", "Kailashbesi Agro Homestay", "Mangalsen"],
+  ["Doti", "Khaptad Homestay", "Purbichauki"],
+  ["Baitadi", "Sushila Homestay", "Dogada Kedar"],
+  ["Baitadi", "Bisna Homestay", "Dogada Kedar"],
+  ["Darchula", "Dallek Homestay", "Nawagadh"],
+  ["Darchula", "Apihimal area homestays", ""],
+  ["Bajhang", "Khaptad-area village homestays", ""],
+  ["Bajura", "Khaptad-area village homestays", ""],
+  ["Bajura", "Badimalika-area village homestays", ""],
+  ["Achham", "Ramaroshan-area village homestays", ""]
+];
+
+const FOODS = [
+  ["धान / स्थानीय चामल 🍚", "Local rice"],
+  ["कोदो", "Finger millet"],
+  ["फापर", "Buckwheat"],
+  ["कागुनो", "Foxtail millet"],
+  ["उवा / जौ", "Barley"],
+  ["स्थानीय सिमी", "Local beans"],
+  ["मकै", "Maize"],
+  ["गहत / स्थानीय दाल", "Horse gram & local pulses"],
+  ["सिस्नु 🌿", "Stinging nettle"],
+  ["तिल / स्थानीय तेलहन", "Sesame & traditional oilseeds"]
 ];
 
 const BLOG = [
@@ -528,6 +586,54 @@ function render(p) {
     DESTINATIONS.forEach(([name, place, prov, text], i) => {
       const c = $("div", "dest-card");
       c.append($("small", "dest-no", String(i + 1).padStart(2, "0") + " / " + place.toUpperCase()), $("h3", null, name), $("p", null, text), $("small", "dest-prov", prov.toUpperCase()));
+      grid.append(c);
+    });
+    d.append(grid); el.append(d);
+  }
+
+  if (p.food) {
+    const d = details("local foods"), grid = $("div", "dest-grid");
+    FOODS.forEach(([ne, en], i) => {
+      const c = $("div", "dest-card");
+      c.append($("small", "dest-no", String(i + 1).padStart(2, "0") + " / " + en.toUpperCase()), $("h3", null, ne));
+      grid.append(c);
+    });
+    d.append(grid); el.append(d);
+  }
+
+  if (p.order) {
+    const a = $("a", "btn", "🛒 Order now");
+    a.href = "https://wa.me/9779747704316?text=" + encodeURIComponent("नमस्ते, खाद्यालयबाट अर्डर गर्न चाहन्छु।");
+    a.target = "_blank"; a.rel = "noopener noreferrer";
+    const wrap = $("div", "cta"); wrap.append(a); el.append(wrap);
+  }
+
+  if (p.stay) {
+    const d = details("places to stay"), grid = $("div", "dest-grid");
+    STAYS.forEach(([dist, name, place], i) => {
+      const c = $("div", "dest-card");
+      c.append($("small", "dest-no", String(i + 1).padStart(2, "0") + " / " + dist.toUpperCase()), $("h3", null, name));
+      if (place) c.append($("p", null, place));
+      grid.append(c);
+    });
+    d.append(grid); el.append(d);
+  }
+
+  if (p.gahana) {
+    const d = details("top 10 ornaments"), grid = $("div", "dest-grid");
+    GAHANA.forEach(([ne, en, text], i) => {
+      const c = $("div", "dest-card");
+      c.append($("small", "dest-no", String(i + 1).padStart(2, "0") + " / " + en.toUpperCase()), $("h3", null, ne), $("p", null, text));
+      grid.append(c);
+    });
+    d.append(grid); el.append(d);
+  }
+
+  if (p.wool) {
+    const d = details("wool & clothing"), grid = $("div", "dest-grid");
+    WOOL.forEach(([ne, en, text], i) => {
+      const c = $("div", "dest-card");
+      c.append($("small", "dest-no", String(i + 1).padStart(2, "0") + " / " + en.toUpperCase()), $("h3", null, ne), $("p", null, text));
       grid.append(c);
     });
     d.append(grid); el.append(d);
