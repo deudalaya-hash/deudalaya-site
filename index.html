@@ -157,8 +157,8 @@ h2{font:300 clamp(20px,6.2vw,34px) var(--sans);letter-spacing:3px;margin:0}
 .phase.bare{padding:0;border:0;border-radius:0;background:none}
 .phase.bare::before{display:none}
 @media(hover:hover){.phase.bare:hover{transform:none;box-shadow:none}}
-.has-reveal .phase{opacity:0}
-.has-reveal .phase.seen{opacity:1}
+.has-reveal .phase{opacity:0;transform:translateY(18px)}
+.has-reveal .phase.seen{opacity:1;transform:none}
 
 /* phase number with circle graphic */
 .num{font-size:12px;letter-spacing:3px;color:var(--accent);margin:0 0 8px;font-weight:500;display:block;text-align:center}
@@ -251,7 +251,8 @@ h1{font-size:76px}
 }
 @media(prefers-reduced-motion:reduce){
 html{scroll-behavior:auto}
-*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+.phase,.url,.welcome,h1,h2,.divider,.role{animation:none!important;opacity:1!important;transform:none!important}
+.hero::before{animation:none!important;opacity:.12!important;transform:none!important}
 }
 </style>
 </head>
@@ -551,14 +552,29 @@ const setTheme = (t, save) => {
 setTheme(document.documentElement.dataset.theme, false);
 tbtn.addEventListener("click", () => setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark", true));
 
-/* scroll reveal */
-if (!matchMedia("(prefers-reduced-motion: reduce)").matches && "IntersectionObserver" in window) {
+/* scroll reveal – iOS-friendly */
+(function () {
+  const phases = document.querySelectorAll(".phase");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce || !("IntersectionObserver" in window)) {
+    phases.forEach(el => el.classList.add("seen"));
+    return;
+  }
   document.documentElement.classList.add("has-reveal");
-  const io = new IntersectionObserver((entries, obs) => entries.forEach(e => {
-    if (e.isIntersecting) { e.target.classList.add("seen"); obs.unobserve(e.target); }
-  }), { threshold: .15, rootMargin: "0px 0px -40px 0px" });
-  document.querySelectorAll(".phase").forEach(el => io.observe(el));
-}
+  const io = new IntersectionObserver((entries, obs) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add("seen");
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: "0px 0px -20px 0px" });
+  phases.forEach(el => io.observe(el));
+  // safety: force visible after 2s if observer never fired (iOS quirk)
+  setTimeout(() => {
+    phases.forEach(el => { if (!el.classList.contains("seen")) el.classList.add("seen"); });
+  }, 2000);
+})();
 </script>
 </body>
 </html>
