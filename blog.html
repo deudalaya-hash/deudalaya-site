@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>शब्दलय — Blog | Deuda Laya</title>
+<meta name="description" content="शब्दलय, the blog of Bharat Thakuri. Thoughts, scenes and quiet writing from Kathmandu.">
+<link rel="canonical" href="https://deudalaya.com/blog.html">
+<link rel="icon" type="image/png" href="/backgoundlogo.png">
+<script>(function(){var t;try{t=localStorage.getItem("theme")}catch(e){}
+if(!t)t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();</script>
+<style>
+:root{--bg:#fdfdfb;--text:#2b2b2b;--desc:#444;--muted:#666;--line:#deded8;--accent:#a65f3b;--surface:rgba(255,255,255,.5);--r:22px;color-scheme:light}
+:root[data-theme="dark"]{--bg:#17140f;--text:#ece7de;--desc:#cfc8bc;--muted:#a39b8f;--line:#352f27;--accent:#dd9068;--surface:rgba(255,255,255,.03);color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;padding:env(safe-area-inset-top) 16px env(safe-area-inset-bottom);background:var(--bg);color:var(--text);font:300 17px/1.7 "Segoe UI",Helvetica,Arial,sans-serif}
+main{max-width:720px;margin:0 auto;padding:32px 0 60px}
+a{color:var(--accent)}
+h1{font:600 clamp(48px,12vw,84px)/1.2 "Nirmala UI","Noto Sans Devanagari",sans-serif;margin:24px 0 4px;text-align:center}
+.lead{text-align:center;color:var(--muted);margin:0 0 36px}
+article{padding:26px 22px;margin:0 0 18px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+article h2{margin:0 0 4px;font-weight:500;font-size:26px}
+.meta{margin:0 0 16px;color:var(--muted);font-size:14px}
+.scene{font-family:Consolas,monospace;font-size:14px;color:var(--muted);margin:0 0 14px}
+article p{margin:6px 0;color:var(--desc)}
+</style>
+</head>
+<body>
+<main>
+  <a href="/">← लयपुर</a>
+  <h1>शब्दलय</h1>
+  <p class="lead">Blog / Bharat Thakuri</p>
+  <div id="posts"></div>
+</main>
+<script>
+// Add new posts at the TOP of this list (newest first).
+const POSTS = [
+  { scene: ["INT. IN FRONT OF MY PC - NIGHT", "4:05 AM world is finally silence"],
+    title: "welcome to bloglaya", date: "1 October 2026 · Bharat Thakuri",
+    body: ["Hi Darsan, my name is Bharat Thakuri.", "If you are reading this, you are one of us, one of me.", "One of a person.",
+      "One of a human being who feels, who is alive, maybe.", "Maybe AI.", "Thanks for stopping by.",
+      "If you are looking for something special in my blog, I am sorry...", "I don't think there is something special here...",
+      "That search for something special has gone from me...",
+      "If you don't like what I write, then I will understand if you do not visit next time...",
+      "It just that sometimes I find peace and sweetness in expressing my experience of being in this universe...",
+      "Thanks for stopping by again. I will be writing whenever I can...", "See you on the next blog.",
+      "- -Bharat Thakuri (2002 - 2074 - +)", "I was here."] }
+];
+const root = document.getElementById("posts");
+const el = (t, c, x) => { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; };
+POSTS.forEach(p => {
+  const a = el("article");
+  p.scene.forEach(l => a.append(el("p", "scene", l)));
+  a.append(el("h2", null, p.title), el("p", "meta", p.date));
+  p.body.forEach(l => a.append(el("p", null, l)));
+  root.append(a);
+});
+</script>
+</body>
+</html>

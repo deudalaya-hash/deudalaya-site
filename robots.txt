@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://deudalaya.com/sitemap.xml
