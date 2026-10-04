@@ -430,7 +430,14 @@ const PHASES = [
   { n: 70, t: "नाटकालय", d: ["सुदूर कर्णालीका कथाका लागि राजधानीको आँगनमा आफ्नै घर 🎭"], poster: ["natakalaya.jpg","नाटकालय poster"] },
   { n: 71, t: "HOMESTAYलय", d: ["A space to stay inside the hills, homes and living culture of Sudur Karnali. 🏔️🏠"], stay: true },
   { n: 72, t: "HELLOलय", d: ["A simple push for immediate help. 🆘", "Sudur Karnali's life-saving network. 🏔️", "सुदूर कर्णालीका प्रत्येक गाउँगाउँमा HELLOलय 🆘"], poster: ["hellolaya.jpg","HELLOलय poster"] },
-  { n: 73, t: "सम्पर्कालय", d: ["Get in touch"], id: "contact", contact: true }
+  { n: 73, t: "NEW YEAR 2027 देउडालय CONCERT", d: [
+      "राजधानीको आँगनमा सुदूर-कर्णालीको देउडा कन्सर्ट 🎆",
+      "📅 Friday, January 1, 2027 · 📍 Chyasal Stadium Ground, Lalitpur",
+      "Experience a powerful night of Deuda, music, energy and celebration as Sudur-Karnali's musical spirit comes alive in the heart of the Valley.",
+      "सुदूर-कर्णालीको आवाज, राजधानीको आँगनमा ❤️",
+      "🎟️ Tickets, artist lineup and event updates coming soon."
+    ], concert: true, site: "https://www.deudalaya.com" },
+  { n: 74, t: "सम्पर्कालय", d: ["Get in touch"], id: "contact", contact: true }
 ];
 
 const DESTINATIONS = [
@@ -508,6 +515,11 @@ const FOODS = [
   ["गहत / स्थानीय दाल", "Horse gram & local pulses"],
   ["सिस्नु 🌿", "Stinging nettle"],
   ["तिल / स्थानीय तेलहन", "Sesame & traditional oilseeds"]
+];
+
+const CONCERT = [
+  "Live Deuda Performances 🎶", "High-Energy Live Concert 🔥", "1,000-Person Deuda Khel ⭕",
+  "Traditional & Modern Folk Sound 🥁", "Live Deuda Battle 🎤", "New Year 2027 Celebration 🎆"
 ];
 
 const BLOG = [
@@ -600,6 +612,22 @@ function render(p) {
       grid.append(c);
     });
     d.append(grid); el.append(d);
+  }
+
+  if (p.concert) {
+    const d = details("what to expect"), grid = $("div", "dest-grid");
+    CONCERT.forEach((t, i) => {
+      const c = $("div", "dest-card");
+      c.append($("small", "dest-no", String(i + 1).padStart(2, "0")), $("h3", null, t));
+      grid.append(c);
+    });
+    d.append(grid); el.append(d);
+  }
+
+  if (p.site) {
+    const a = $("a", "btn", "🌐 www.deudalaya.com");
+    a.href = p.site; a.target = "_blank"; a.rel = "noopener noreferrer";
+    const wrap = $("div", "cta"); wrap.append(a); el.append(wrap);
   }
 
   if (p.order) {
