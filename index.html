@@ -303,6 +303,20 @@ html{scroll-behavior:auto}
 .hero::before{animation:none!important;opacity:.12!important;transform:none!important}
 .hero-dots span,.hero-rings circle,.soon,.next,.flourish i{animation:none!important}
 }
+
+/* stronger, darker hover effects */
+.dest-card:hover{transform:translateY(-6px);border-color:var(--accent);box-shadow:0 16px 34px rgba(0,0,0,.32),0 0 0 2px var(--accent),0 0 26px var(--glow)}
+.gallery img:hover,.poster-solo img:hover{box-shadow:0 18px 44px rgba(0,0,0,.45),0 0 0 2px var(--accent),0 0 26px var(--glow)}
+.btn:hover{box-shadow:0 10px 26px rgba(0,0,0,.35),0 0 22px var(--glow)}
+@media(hover:hover){
+  .phase:not(.bare):hover{border-color:var(--accent);transform:translateX(6px) translateY(-4px);box-shadow:0 20px 48px rgba(0,0,0,.34),0 0 0 2px var(--accent),0 0 34px var(--glow)}
+}
+
+/* dropdown buttons: arrow only (label kept for tooltip / screen readers) */
+.imgs>summary{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;padding:0;border-radius:50%;font-size:0;line-height:0;letter-spacing:0;list-style:none}
+.imgs>summary::-webkit-details-marker{display:none}
+.imgs>summary::before,.imgs[open]>summary::before{content:"";display:block;width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);margin:-3px 0 0}
+.imgs[open]>summary::before{transform:rotate(-135deg);margin:3px 0 0}
 </style>
 </head>
 <body>
@@ -429,7 +443,7 @@ const PHASES = [
   { n: 57, t: "तस्बिरालय", d: ["Tasbiralaya / My Collection of Her 📸"] },
   { n: 58, t: "UNIVERSEलय", d: ["Uni + Me / Rest of Our Life Together 🌌"] },
   { n: 59, t: "गन्तव्यालय", d: ["Gantabyalaya / Destinations of Sudur & Karnali 🏔️🛣️"], dest: true },
-  { n: 60, t: "Droneलय", d: ["Dronelaya / Emergency Medical Service for Sudur & Karnali 🚁🏥", "सुदूर र कर्णालीका लागि आकस्मिक चिकित्सा सेवा 🚁"],
+  { n: 60, t: "ड्रोनालय", d: ["Dronelaya / Emergency Medical Service for Sudur & Karnali 🚁🏥", "सुदूर र कर्णालीका लागि आकस्मिक चिकित्सा सेवा 🚁"],
     gal: { label: "image", open: true, kind: "wide", items: [["dronelaya.jpg","ड्रोनालय"]] }, services: true },
   { n: 61, t: "बाँसुरिलय / धुनालय", d: ["My flute vlog 🪈"] },
   { n: 62, t: "प्रतिबिम्बालय", d: ["My art gallery at Patan 🎨"] },
@@ -575,7 +589,9 @@ const img = (src, alt) => { const i = $("img"); i.src = src; i.alt = alt; i.load
 const link = (href, child) => { const a = $("a"); a.href = href; a.target = "_blank"; a.rel = "noopener noreferrer"; a.append(child); return a; };
 const details = (label, open) => {
   const d = $("details", "imgs"); d.open = !!open;
-  d.append($("summary", null, label));
+  const sm = $("summary", null, label);
+  sm.title = label; sm.setAttribute("aria-label", label);
+  d.append(sm);
   return d;
 };
 
