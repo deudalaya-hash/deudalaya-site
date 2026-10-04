@@ -217,6 +217,7 @@ h2{font:300 clamp(20px,6.2vw,34px) var(--sans);letter-spacing:3px;margin:0}
 }
 .gallery.thumb img{width:140px}
 .gallery.poster img{width:min(240px,70vw);border-radius:14px}
+.gallery.wide img{width:min(520px,90vw);border-radius:14px}
 .poster-solo{display:block;width:fit-content;margin:24px auto 0;position:relative;z-index:1}
 .poster-solo img{display:block;width:min(240px,70vw);height:auto;border-radius:14px;box-shadow:0 4px 18px var(--shadow);
  transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .3s}
@@ -428,20 +429,20 @@ const PHASES = [
   { n: 57, t: "तस्बिरालय", d: ["Tasbiralaya / My Collection of Her 📸"] },
   { n: 58, t: "UNIVERSEलय", d: ["Uni + Me / Rest of Our Life Together 🌌"] },
   { n: 59, t: "गन्तव्यालय", d: ["Gantabyalaya / Destinations of Sudur & Karnali 🏔️🛣️"], dest: true },
-  { n: 60, t: "ड्रोनालय", d: ["Dronelaya / Emergency Medical Service for Sudur & Karnali 🚁🏥"] },
+  { n: 60, t: "ड्रोनालय", d: ["Dronelaya / Emergency Medical Service for Sudur & Karnali 🚁🏥", "सुदूर र कर्णालीका लागि आकस्मिक चिकित्सा सेवा 🚁"],
+    gal: { label: "image", open: true, kind: "wide", items: [["dronelaya.jpg","ड्रोनालय"]] }, services: true },
   { n: 61, t: "बाँसुरिलय / धुनालय", d: ["My flute vlog 🪈"] },
   { n: 62, t: "प्रतिबिम्बालय", d: ["My art gallery at Patan 🎨"] },
-  { n: 63, t: "AI शिक्षालय", d: ["AI learning space in villages of Sudur Karnali 🤖"] },
-  { n: 64, t: "लयपुरलय", d: ["Architectural studio for creating Layapur 🏛️"] },
-  { n: 65, t: "माटोलय", d: ["Pottery space 🏺"] },
-  { n: 66, t: "काष्ठलय", d: ["Wood carving 🪵"] },
-  { n: 67, t: "शिलालय", d: ["Stone carving 🪨"] },
-  { n: 68, t: "गृहलय", d: ["We build your dream home 🏡"] },
-  { n: 69, t: "बाध्यालय", d: ["A space for musical instruments of Sudur Karnali 🎵"], inst: true },
-  { n: 70, t: "नाटकालय", d: ["सुदूर कर्णालीका कथाका लागि राजधानीको आँगनमा आफ्नै घर 🎭"], poster: ["natakalaya.jpg","नाटकालय poster"] },
-  { n: 71, t: "HOMESTAYलय", d: ["A space to stay inside the hills, homes and living culture of Sudur Karnali. 🏔️🏠"], stay: true },
-  { n: 72, t: "HELLOलय", d: ["A simple push for immediate help. 🆘", "Sudur Karnali's life-saving network. 🏔️", "सुदूर कर्णालीका प्रत्येक गाउँगाउँमा HELLOलय 🆘"], poster: ["hellolaya.jpg","HELLOलय poster"] },
-  { n: 73, t: "सम्पर्कालय", d: ["Get in touch"], id: "contact", contact: true }
+  { n: 63, t: "लयपुरलय", d: ["Architectural studio for creating Layapur 🏛️"] },
+  { n: 64, t: "माटोलय", d: ["Pottery space 🏺"] },
+  { n: 65, t: "काष्ठलय", d: ["Wood carving 🪵"] },
+  { n: 66, t: "शिलालय", d: ["Stone carving 🪨"] },
+  { n: 67, t: "गृहलय", d: ["We build your dream home 🏡"] },
+  { n: 68, t: "बाध्यालय", d: ["A space for musical instruments of Sudur Karnali 🎵"], inst: true },
+  { n: 69, t: "नाटकालय", d: ["सुदूर कर्णालीका कथाका लागि राजधानीको आँगनमा आफ्नै घर 🎭"], poster: ["natakalaya.jpg","नाटकालय poster"] },
+  { n: 70, t: "HOMESTAYलय", d: ["A space to stay inside the hills, homes and living culture of Sudur Karnali. 🏔️🏠"], stay: true },
+  { n: 71, t: "HELLOलय", d: ["A simple push for immediate help. 🆘", "Sudur Karnali's life-saving network. 🏔️", "सुदूर कर्णालीका प्रत्येक गाउँगाउँमा HELLOलय 🆘"], poster: ["hellolaya.jpg","HELLOलय poster"] },
+  { n: 72, t: "सम्पर्कालय", d: ["Get in touch"], id: "contact", contact: true }
 ];
 
 const DESTINATIONS = [
@@ -531,6 +532,12 @@ const EVENTS = [
   ["JAN 1, 2027", "🎆 NEW YEAR 2027 DEUDALAYA CONCERT", "राजधानीको आँगनमा सुदूर-कर्णालीको देउडा कन्सर्ट 🔥", "📍 Chyasal Stadium Ground, Lalitpur", "📅 Friday, January 1, 2027",
     ["🎤 Live Deuda Concert · ⭕ 1,000-Person Deuda Khel · 🔥 High-Energy Live Music · 🥁 Traditional & Modern Folk Sound · 🎆 New Year 2027 Celebration",
      "❤️ सुदूर-कर्णालीको संस्कृति, संगीत र ऊर्जा — राजधानीको आँगनमा।"]]
+];
+
+const DRONE_SERVICES = [
+  ["Medicine delivery", "औषधि ढुवानी 💊", "ड्रोनमार्फत औषधि पुर्‍याउने सेवा।"],
+  ["Hill to hill", "पहाडदेखि पहाडसम्म 🏔️", "पहाडबाट पहाडमा उडेर सञ्चालन हुने ड्रोन सेवा।"],
+  ["Emergency medical service", "आकस्मिक चिकित्सा सेवा 🏥", "सुदूर र कर्णालीका लागि आकस्मिक चिकित्सा सहयोग।"]
 ];
 
 const BLOG = [
@@ -630,6 +637,16 @@ function render(p) {
     a.href = "https://wa.me/9779747704316?text=" + encodeURIComponent("नमस्ते, खाद्यालयबाट अर्डर गर्न चाहन्छु।");
     a.target = "_blank"; a.rel = "noopener noreferrer";
     const wrap = $("div", "cta"); wrap.append(a); el.append(wrap);
+  }
+
+  if (p.services) {
+    const d = details("सेवाहरू", true), grid = $("div", "dest-grid");
+    DRONE_SERVICES.forEach(([en, ne, text], i) => {
+      const c = $("div", "dest-card");
+      c.append($("small", "dest-no", String(i + 1).padStart(2, "0") + " / " + en.toUpperCase()), $("h3", null, ne), $("p", null, text));
+      grid.append(c);
+    });
+    d.append(grid); el.append(d);
   }
 
   if (p.stay) {
