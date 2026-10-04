@@ -279,6 +279,15 @@ h1{font-size:76px}
 .laya{font-size:21px}
 .gallery.thumb img{width:130px}
 }
+.dest-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;max-width:700px;margin:20px auto 0;text-align:left}
+.dest-card{padding:20px 18px;border:1px solid var(--line);border-radius:18px;background:var(--surface);transition:transform .3s,border-color .3s,box-shadow .3s}
+.dest-card:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 0 24px var(--glow)}
+.dest-card h3{margin:14px 0 8px;font-size:21px;font-weight:500;color:var(--text)}
+.dest-card p{margin:0;font-size:14px;line-height:1.7;color:var(--muted)}
+.dest-card small{display:block;font-size:10px;letter-spacing:2px}
+.dest-no{color:var(--accent)}
+.dest-prov{margin-top:16px;color:var(--text)}
+@media(max-width:600px){.dest-grid{grid-template-columns:1fr;gap:12px}.dest-card{padding:18px 14px}}
 @media(prefers-reduced-motion:reduce){
 html{scroll-behavior:auto}
 .phase,.url,.welcome,h1,h2,.divider,.role{animation:none!important;opacity:1!important;transform:none!important}
@@ -348,7 +357,7 @@ const PHASES = [
     gal: { label: "image", open: true, kind: "poster", items: [["deudalayakirtipur.jpg","देउडालय Kirtipur"]] } },
   { n: 8, t: "PodCastलय", d: ["Sudur Karnali conversations. YouTube: deudalaya. 🎙️"] },
   { n: 9, t: "किताबालय", d: ["The history of Deuda. 📚"] },
-  { n: 10, t: "साहित्यालय", d: ["A home for literature of Sudur Karnali and more. ✍️"] },
+  { n: 10, t: "साहित्यालय", d: ["A home for literature of Sudur Karnali and more. ✍️"], poster: ["sahityalaya.jpg","साहित्यालय poster"] },
   { n: 11, t: "देउडालय / Deuda Theatre", d: ["Deuda on stage. 🎭"],
     gal: { label: "images", open: true, kind: "thumb", items: [["model.jpg","Deuda Theatre"],["deudalayathreatre.jpg","Deudalaya Theatre"]] } },
   { n: 12, t: "Appaलय", d: ["All of deudalaya.com in one app. 📱"] },
@@ -401,10 +410,30 @@ const PHASES = [
   { n: 54, t: "Gen-Z सहिदालय", d: ["Gen-Z Sahidyalaya / A Space for Memory & Legacy 🇳🇵"] },
   { n: 55, t: "तस्बिरालय", d: ["Tasbiralaya / My Collection of Her 📸"] },
   { n: 56, t: "UNIVERSEलय", d: ["Uni + Me / Rest of Our Life Together 🌌"] },
-  { n: 57, t: "गन्तव्यालय", d: ["Gantabyalaya / Destinations of Sudur & Karnali 🏔️🛣️"] },
+  { n: 57, t: "गन्तव्यालय", d: ["Gantabyalaya / Destinations of Sudur & Karnali 🏔️🛣️"], dest: true },
   { n: 58, t: "ड्रोनालय", d: ["Dronelaya / Emergency Medical Service for Sudur & Karnali 🚁🏥"] },
-  { n: 59, t: "नयाँलय", d: ["नयाँलय / नयाँ अवधारणा ✨"] },
-  { n: 60, t: "सम्पर्कालय", d: ["Get in touch"], id: "contact", contact: true }
+  { n: 59, t: "बाँसुरिलय / धुनालय", d: ["My flute vlog 🪈"] },
+  { n: 60, t: "प्रतिबिम्बालय", d: ["My art gallery at Patan 🎨"] },
+  { n: 61, t: "AI शिक्षालय", d: ["AI learning space in villages of Sudur Karnali 🤖"] },
+  { n: 62, t: "लयपुरलय", d: ["Architectural studio for creating Layapur 🏛️"] },
+  { n: 63, t: "माटोलय", d: ["Pottery space 🏺"] },
+  { n: 64, t: "काष्ठलय", d: ["Wood carving 🪵"] },
+  { n: 65, t: "शिलालय", d: ["Stone carving 🪨"] },
+  { n: 66, t: "गृहलय", d: ["We build your dream home 🏡"] },
+  { n: 67, t: "सम्पर्कालय", d: ["Get in touch"], id: "contact", contact: true }
+];
+
+const DESTINATIONS = [
+  ["Rara Lake", "Mugu", "Karnali", "Nepal's largest lake, embraced by forests and magnificent Himalayan scenery."],
+  ["Shey Phoksundo", "Dolpa", "Karnali", "A turquoise lake surrounded by dramatic mountains and Himalayan culture."],
+  ["Khaptad", "Khaptad Region", "Sudurpaschim", "Green meadows, quiet forests, wildlife and spiritual heritage."],
+  ["Badimalika", "Bajura", "Sudurpaschim", "A sacred highland landscape with sweeping mountain views."],
+  ["Ramaroshan", "Achham", "Sudurpaschim", "A beautiful collection of lakes, green hills and peaceful landscapes."],
+  ["Shuklaphanta", "Kanchanpur", "Sudurpaschim", "Vast grasslands, wildlife and remarkable biodiversity."],
+  ["Api Himal", "Darchula", "Sudurpaschim", "An extraordinary Himalayan region of mountains and adventure."],
+  ["Sinja Valley", "Jumla", "Karnali", "A historic valley connected to the roots of the Nepali language."],
+  ["Panchakoshi", "Dailekh", "Karnali", "A sacred heritage landscape rich in history and tradition."],
+  ["Kakrebihar", "Surkhet", "Karnali", "An archaeological treasure nestled in a woodland setting."]
 ];
 
 const BLOG = [
@@ -477,6 +506,16 @@ function render(p) {
     BLOG.forEach((line, i) => { const row = $("p"); row.append(i ? line : Object.assign($("strong"), { textContent: line })); post.append(row); });
     wrap.append(post); d.append(wrap); el.append(d);
     d.addEventListener("toggle", () => { if (d.open) requestAnimationFrame(() => wrap.scrollLeft = wrap.scrollWidth); });
+  }
+
+  if (p.dest) {
+    const d = details("top 10 destinations"), grid = $("div", "dest-grid");
+    DESTINATIONS.forEach(([name, place, prov, text], i) => {
+      const c = $("div", "dest-card");
+      c.append($("small", "dest-no", String(i + 1).padStart(2, "0") + " / " + place.toUpperCase()), $("h3", null, name), $("p", null, text), $("small", "dest-prov", prov.toUpperCase()));
+      grid.append(c);
+    });
+    d.append(grid); el.append(d);
   }
 
   if (p.next) { const n = $("div", "next"); n.id = "next"; n.hidden = true; el.append(n); }
