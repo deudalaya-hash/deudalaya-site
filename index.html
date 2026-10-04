@@ -117,6 +117,13 @@ section{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;al
 
 .url{font-size:14px;letter-spacing:3px;color:var(--muted);margin-top:45px}
 .welcome{font-size:26px;letter-spacing:2px;margin:0}
+.brand-block{display:flex;flex-direction:column;align-items:center;margin-top:-14px}
+.brand{display:block;margin:0 auto;width:130px;height:90px;object-fit:cover;object-position:center;mix-blend-mode:multiply}
+[data-theme="dark"] .brand{mix-blend-mode:normal;border-radius:12px;background:#fff}
+.brand + .url{margin-top:4px}
+@media(max-width:600px){.brand-block{margin-top:-18px}.brand{width:100px;height:69px}}
+.region{margin:22px 0 -22px;font-size:15px;line-height:1.2;font-weight:600;letter-spacing:1px;color:var(--accent)}
+@media(max-width:600px){.region{font-size:13px;margin:18px 0 -12px}}
 h1{font:600 clamp(80px,18vw,170px)/1.1 var(--display);margin:10px 0;color:var(--text);
  animation:up 1.2s ease .5s both,titleGlow 5s ease-in-out 2s infinite}
 h2{font:300 clamp(20px,6.2vw,34px) var(--sans);letter-spacing:3px;margin:0}
@@ -314,9 +321,13 @@ html{scroll-behavior:auto}
     <circle class="r4" cx="410" cy="410" r="430"/>
   </svg>
 
-  <div class="url">www.deudalaya.com</div>
+  <div class="brand-block">
+    <img class="brand" src="deudalaya-logo.png" alt="Deudalaya logo" width="130" height="90">
+    <div class="url">www.deudalaya.com</div>
+  </div>
   <div class="title-block">
     <p class="welcome">Welcome to</p>
+    <p class="region">सुदूर-कर्णालीको</p>
     <h1>लयपुर</h1>
     <h2>City of Spaces</h2>
     <div class="divider"><span></span><i></i><span></span></div>
@@ -513,11 +524,11 @@ const FOODS = [
 const EVENTS = [
   ["EVERY FRIDAY · 5:00–7:00 PM", "🕺 देउडासाँझ", "हरेक शुक्रबार शंखमूल पार्कमा देउडासाँझ ❤️", "📍 Shankhamul Park, Kathmandu", "📅 Every Friday",
     ["🎶 मौलिक देउडा • 🕺 देउडा नाच • ❤️ संस्कृति • 🔥 ऊर्जा", "हरेक शुक्रबार, शंखमूलमा देउडासँगै भेटौँला!"]],
-  ["OCT 21, 2026", "🕺 दशैं देउडा नाच", "दशैंमा राजधानीमा देउडानाच ❤️", "📍 Shankhamul Park, Kathmandu", "📅 Wednesday, October 21, 2026 — Dashain Tika Day",
+  ["OCT 21, 2026", "🕺 दशैं देउडा नाच", "दशैंमा राजधानीमा देउडा नाच ❤️", "📍 Shankhamul Park, Kathmandu", "📅 Wednesday, October 21, 2026 — Dashain Tika Day",
     ["🎶 मौलिक देउडा • 🕺 देउडा नाच • ❤️ संस्कृति • 🔥 ऊर्जा"]],
-  ["NOV 11, 2026", "🪔 तिहार देउडानाच", "तिहारमा टुँडिखेलमा सुदूर-कर्णालीको देउडा 🎶", "📍 Tundikhel Ground, Kathmandu", "📅 Wednesday, November 11, 2026 — Bhai Tika Day",
+  ["NOV 11, 2026", "🪔 तिहार देउडा नाच", "तिहारमा टुँडिखेलमा सुदूर-कर्णालीको देउडा 🎶", "📍 Tundikhel Ground, Kathmandu", "📅 Wednesday, November 11, 2026 — Bhai Tika Day",
     ["🎶 मौलिक देउडा • 🕺 देउडा नाच • ❤️ संस्कृति • 🔥 ऊर्जा"]],
-  ["JAN 1, 2027", "🎆 NEW YEAR 2027 देउडालय + CONCERT", "राजधानीको आँगनमा सुदूर-कर्णालीको देउडा कन्सर्ट 🔥", "📍 Chyasal Stadium Ground, Lalitpur", "📅 Friday, January 1, 2027",
+  ["JAN 1, 2027", "🎆 NEW YEAR 2027 DEUDALAYA CONCERT", "राजधानीको आँगनमा सुदूर-कर्णालीको देउडा कन्सर्ट 🔥", "📍 Chyasal Stadium Ground, Lalitpur", "📅 Friday, January 1, 2027",
     ["🎤 Live Deuda Concert · ⭕ 1,000-Person Deuda Khel · 🔥 High-Energy Live Music · 🥁 Traditional & Modern Folk Sound · 🎆 New Year 2027 Celebration",
      "❤️ सुदूर-कर्णालीको संस्कृति, संगीत र ऊर्जा — राजधानीको आँगनमा।"]]
 ];
@@ -666,7 +677,6 @@ function render(p) {
 
   if (p.events) {
     const d = details("आगामी कार्यक्रमहरू"), grid = $("div", "dest-grid");
-    d.open = true;
     grid.style.gridTemplateColumns = "1fr";
     EVENTS.forEach(([tag, name, line, place, date, extra]) => {
       const c = $("div", "dest-card");
