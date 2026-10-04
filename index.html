@@ -341,6 +341,26 @@
             letter-spacing: 1px;
         }
 
+        .phase-images .image-toggle-label::before {
+            content: "View ";
+        }
+
+        .phase-images[open] .image-toggle-label::before {
+            content: "Hide ";
+        }
+
+        .phase-images .image-toggle-arrow::before {
+            content: "↓";
+            display: inline-block;
+            margin-left: 5px;
+            font-size: 10px;
+            transition: transform 0.2s ease;
+        }
+
+        .phase-images[open] .image-toggle-arrow::before {
+            content: "↑";
+        }
+
         .phase-images .gallery {
             margin-top: 14px;
         }
@@ -675,8 +695,8 @@
                 <p class="desc">Non-Profit Organization 🤝</p>
                 <!-- <p class="desc">Phase 2 coming soon...</p> -->
 
-                <details class="phase-images">
-                    <summary>View images</summary>
+                <details class="phase-images" open>
+                    <summary><span class="image-toggle-label">images</span><span class="image-toggle-arrow" aria-hidden="true"></span></summary>
                     <div class="gallery">
                         <a href="sudurkarnali.jpg" target="_blank"><img src="sudurkarnali.jpg" alt="Sudur Karnali"></a>
                         <a href="deudalaya-poster.jpg" target="_blank"><img src="deudalaya-poster.jpg" alt="Deudalaya poster"></a>
@@ -739,8 +759,8 @@
                 <p class="num">PHASE 4</p>
                 <p class="laya">देउडालय + चियालय</p>
                 <p class="desc">Deuda and chiya together, at Shankhamul. 🍵</p>
-                <details class="phase-images">
-                    <summary>View image</summary>
+                <details class="phase-images" open>
+                    <summary><span class="image-toggle-label">image</span><span class="image-toggle-arrow" aria-hidden="true"></span></summary>
                     <a class="poster-link" href="chiyalaya.png" target="_blank" rel="noopener noreferrer">
                         <img class="poster" src="chiyalaya.png" alt="चियालय">
                     </a>
@@ -789,8 +809,8 @@
                 <p class="laya">देउडालय / Deuda Theatre</p>
                 <p class="desc">Deuda on stage. 🎭</p>
 
-                <details class="phase-images">
-                    <summary>View images</summary>
+                <details class="phase-images" open>
+                    <summary><span class="image-toggle-label">images</span><span class="image-toggle-arrow" aria-hidden="true"></span></summary>
                     <div class="gallery">
                         <a href="model.jpg" target="_blank"><img src="model.jpg" alt="Deuda Theatre"></a>
                         <a href="deudalayathreatre.jpg" target="_blank"><img src="deudalayathreatre.jpg" alt="Deudalaya Theatre"></a>
@@ -810,8 +830,8 @@
                 <p class="desc">A space for poetry. 📖</p>
                 <p class="desc">a girl / my poem collection (Rs. 300). 📖</p>
 
-                <details class="phase-images">
-                    <summary>View images</summary>
+                <details class="phase-images" open>
+                    <summary><span class="image-toggle-label">images</span><span class="image-toggle-arrow" aria-hidden="true"></span></summary>
                     <div class="gallery">
                         <a href="kavitalaya.jpg" target="_blank"><img src="kavitalaya.jpg" alt="कवितालय poster"></a>
                         <a href="agirl.jpg" target="_blank"><img src="agirl.jpg" alt="A girl"></a>
@@ -854,8 +874,8 @@
                 <p class="laya">कलालय</p>
                 <p class="desc">A space for art. 🎨</p>
 
-                <details class="phase-images">
-                    <summary>View images</summary>
+                <details class="phase-images" open>
+                    <summary><span class="image-toggle-label">images</span><span class="image-toggle-arrow" aria-hidden="true"></span></summary>
                     <div class="gallery kalalaya-gallery">
                         <img class="kalalaya-image" src="art.png" alt="Art">
                         <img class="kalalaya-image" src="art2.png" alt="Art">
@@ -876,8 +896,8 @@
                 <p class="num">PHASE 21</p>
                 <p class="laya">IDEAलय</p>
                 <p class="desc">An online conversation of ideas to move Sudur Karnali forward. 💡</p>
-                <details class="phase-images">
-                    <summary>View image</summary>
+                <details class="phase-images" open>
+                    <summary><span class="image-toggle-label">image</span><span class="image-toggle-arrow" aria-hidden="true"></span></summary>
                     <img class="poster" src="idealaya.jpg" alt="IDEAलय poster">
                 </details>
             </article>
@@ -964,8 +984,8 @@
                 <p class="num">PHASE 35</p>
                 <p class="laya">चलचित्रालय</p>
                 <p class="desc">A space for films and stories from Sudur Karnali. 🎬</p>
-                <details class="phase-images">
-                    <summary>View image</summary>
+                <details class="phase-images" open>
+                    <summary><span class="image-toggle-label">image</span><span class="image-toggle-arrow" aria-hidden="true"></span></summary>
                     <img class="yatri-image" src="yatri.png" alt="यात्री">
                 </details>
             </article>
@@ -1012,8 +1032,8 @@
                 <p class="num">PHASE 40</p>
                 <p class="laya">कृष्णालय</p>
                 <p class="desc">A Being...</p>
-                <details class="phase-images">
-                    <summary>View image</summary>
+                <details class="phase-images" open>
+                    <summary><span class="image-toggle-label">image</span><span class="image-toggle-arrow" aria-hidden="true"></span></summary>
                     <img class="krishnalaya-image" src="krishnalaya.jpg" alt="कृष्णालय">
                 </details>
             </article>
