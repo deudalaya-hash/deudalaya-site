@@ -347,7 +347,7 @@ const PHASES = [
   { soon: "Ongoing", bare: true },
   { n: 1, t: "सुदूर कर्णाली सांस्कृतिक तथा देउडालय समाज",
     d: ["देउडासाँझ, Every Friday at Shankhamul Park. 🎶", "Non-Profit Organization 🤝"],
-    gal: { label: "images", open: true, kind: "thumb", items: [["sudurkarnali.jpg","Sudur Karnali"],["deudalaya-poster.jpg","Deudalaya poster"],["nonprofit.jpg","Nonprofit"]] }, next: true },
+    gal: { label: "images", open: true, kind: "thumb", items: [["sudurkarnali.jpg","Sudur Karnali"],["deudalaya-poster.jpg","Deudalaya poster"],["nonprofit.jpg","Nonprofit"]] }, next: true, events: true },
   { n: 2, t: "शब्दलय", d: ["Welcome to my blog. ✍️"], poster: ["sabdalaya%20(2).jpg","शब्दलय poster"], blog: true, bloglink: true },
   { n: 3, t: "Websiteलय", d: ["सुदूर कर्णालीका Website बनाउने आफ्नै घर 🌐"], poster: ["websitelaya.jpg","Websiteलय poster"] },
   { soon: "Coming soon" },
@@ -430,14 +430,7 @@ const PHASES = [
   { n: 70, t: "नाटकालय", d: ["सुदूर कर्णालीका कथाका लागि राजधानीको आँगनमा आफ्नै घर 🎭"], poster: ["natakalaya.jpg","नाटकालय poster"] },
   { n: 71, t: "HOMESTAYलय", d: ["A space to stay inside the hills, homes and living culture of Sudur Karnali. 🏔️🏠"], stay: true },
   { n: 72, t: "HELLOलय", d: ["A simple push for immediate help. 🆘", "Sudur Karnali's life-saving network. 🏔️", "सुदूर कर्णालीका प्रत्येक गाउँगाउँमा HELLOलय 🆘"], poster: ["hellolaya.jpg","HELLOलय poster"] },
-  { n: 73, t: "NEW YEAR 2027 देउडालय CONCERT", d: [
-      "राजधानीको आँगनमा सुदूर-कर्णालीको देउडा कन्सर्ट 🎆",
-      "📅 Friday, January 1, 2027 · 📍 Chyasal Stadium Ground, Lalitpur",
-      "Experience a powerful night of Deuda, music, energy and celebration as Sudur-Karnali's musical spirit comes alive in the heart of the Valley.",
-      "सुदूर-कर्णालीको आवाज, राजधानीको आँगनमा ❤️",
-      "🎟️ Tickets, artist lineup and event updates coming soon."
-    ], concert: true, site: "https://www.deudalaya.com" },
-  { n: 74, t: "सम्पर्कालय", d: ["Get in touch"], id: "contact", contact: true }
+  { n: 73, t: "सम्पर्कालय", d: ["Get in touch"], id: "contact", contact: true }
 ];
 
 const DESTINATIONS = [
@@ -517,9 +510,16 @@ const FOODS = [
   ["तिल / स्थानीय तेलहन", "Sesame & traditional oilseeds"]
 ];
 
-const CONCERT = [
-  "Live Deuda Performances 🎶", "High-Energy Live Concert 🔥", "1,000-Person Deuda Khel ⭕",
-  "Traditional & Modern Folk Sound 🥁", "Live Deuda Battle 🎤", "New Year 2027 Celebration 🎆"
+const EVENTS = [
+  ["EVERY FRIDAY · 5:00–7:00 PM", "🕺 देउडासाँझ", "हरेक शुक्रबार शंखमूल पार्कमा देउडासाँझ ❤️", "📍 Shankhamul Park, Kathmandu", "📅 Every Friday",
+    ["🎶 मौलिक देउडा • 🕺 देउडा नाच • ❤️ संस्कृति • 🔥 ऊर्जा", "हरेक शुक्रबार, शंखमूलमा देउडासँगै भेटौँला!"]],
+  ["OCT 21, 2026", "🕺 दशैं देउडा नाच", "दशैंमा राजधानीमा देउडानाच ❤️", "📍 Shankhamul Park, Kathmandu", "📅 Wednesday, October 21, 2026 — Dashain Tika Day",
+    ["🎶 मौलिक देउडा • 🕺 देउडा नाच • ❤️ संस्कृति • 🔥 ऊर्जा"]],
+  ["NOV 11, 2026", "🪔 तिहार देउडानाच", "तिहारमा टुँडिखेलमा सुदूर-कर्णालीको देउडा 🎶", "📍 Tundikhel Ground, Kathmandu", "📅 Wednesday, November 11, 2026 — Bhai Tika Day",
+    ["🎶 मौलिक देउडा • 🕺 देउडा नाच • ❤️ संस्कृति • 🔥 ऊर्जा"]],
+  ["JAN 1, 2027", "🎆 NEW YEAR 2027 देउडालय + CONCERT", "राजधानीको आँगनमा सुदूर-कर्णालीको देउडा कन्सर्ट 🔥", "📍 Chyasal Stadium Ground, Lalitpur", "📅 Friday, January 1, 2027",
+    ["🎤 Live Deuda Concert · ⭕ 1,000-Person Deuda Khel · 🔥 High-Energy Live Music · 🥁 Traditional & Modern Folk Sound · 🎆 New Year 2027 Celebration",
+     "❤️ सुदूर-कर्णालीको संस्कृति, संगीत र ऊर्जा — राजधानीको आँगनमा।"]]
 ];
 
 const BLOG = [
@@ -614,22 +614,6 @@ function render(p) {
     d.append(grid); el.append(d);
   }
 
-  if (p.concert) {
-    const d = details("what to expect"), grid = $("div", "dest-grid");
-    CONCERT.forEach((t, i) => {
-      const c = $("div", "dest-card");
-      c.append($("small", "dest-no", String(i + 1).padStart(2, "0")), $("h3", null, t));
-      grid.append(c);
-    });
-    d.append(grid); el.append(d);
-  }
-
-  if (p.site) {
-    const a = $("a", "btn", "🌐 www.deudalaya.com");
-    a.href = p.site; a.target = "_blank"; a.rel = "noopener noreferrer";
-    const wrap = $("div", "cta"); wrap.append(a); el.append(wrap);
-  }
-
   if (p.order) {
     const a = $("a", "btn", "🛒 Order now");
     a.href = "https://wa.me/9779747704316?text=" + encodeURIComponent("नमस्ते, खाद्यालयबाट अर्डर गर्न चाहन्छु।");
@@ -679,6 +663,24 @@ function render(p) {
   }
 
   if (p.next) { const n = $("div", "next"); n.id = "next"; n.hidden = true; el.append(n); }
+
+  if (p.events) {
+    const d = details("आगामी कार्यक्रमहरू"), grid = $("div", "dest-grid");
+    d.open = true;
+    grid.style.gridTemplateColumns = "1fr";
+    EVENTS.forEach(([tag, name, line, place, date, extra]) => {
+      const c = $("div", "dest-card");
+      c.append($("small", "dest-no", tag), $("h3", null, name), $("p", null, line), $("p", null, place), $("p", null, date));
+      extra.forEach(t => c.append($("p", null, t)));
+      grid.append(c);
+    });
+    d.append(grid);
+    d.append($("p", "time", "#Deudalaya #DeudaSaanjh #DashainDeudaNach #TiharDeudaNach #NewYear2027 #Deuda #SudurKarnali #देउडालय #देउडा"));
+    el.append(d);
+    const a = $("a", "btn", "🌐 www.deudalaya.com");
+    a.href = "https://www.deudalaya.com"; a.target = "_blank"; a.rel = "noopener noreferrer";
+    const wrap = $("div", "cta"); wrap.append(a); el.append(wrap);
+  }
 
   if (p.bloglink) { const a = $("a", "btn", "Open blog page"); a.href = "blog.html"; el.append(a); }
 
