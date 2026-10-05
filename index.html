@@ -324,6 +324,15 @@ html{scroll-behavior:auto}
   .phase.lit::before,.phase:active::before,.phase.lit::after,.phase:active::after{opacity:1}
   .phase.lit .laya::after{width:55px}
 }
+/* update notification */
+.update-toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translate(-50%,24px);z-index:60;width:min(440px,calc(100% - 28px));
+ display:flex;align-items:center;gap:12px;padding:12px 14px 12px 18px;border:1px solid var(--accent);border-radius:16px;background:var(--surface);color:var(--text);
+ box-shadow:0 14px 40px rgba(0,0,0,.4),0 0 24px var(--glow);opacity:0;pointer-events:none;transition:opacity .35s,transform .35s cubic-bezier(.16,1,.3,1)}
+.update-toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.update-toast p{margin:0;flex:1;font-size:14px;line-height:1.4}
+.update-toast p small{display:block;color:var(--muted);font-size:12px}
+.update-toast button{font:inherit;font-size:13px;cursor:pointer;border-radius:999px;border:1px solid var(--accent);padding:8px 14px;background:var(--accent);color:var(--bg)}
+.update-toast .x{background:none;color:var(--muted);border-color:var(--line);padding:6px 10px}
 </style>
 </head>
 <body>
@@ -914,6 +923,34 @@ tbtn.addEventListener("click", () => setTheme(document.documentElement.dataset.t
     }, { rootMargin: "-42% 0px -42% 0px", threshold: 0 });
     document.querySelectorAll(".phase:not(.bare)").forEach(el => lit.observe(el));
   }
+})();
+/* update notification: checks if a newer version of this page is online */
+(function () {
+  if (!("fetch" in window) || location.protocol === "file:") return;
+  const hash = t => { let h = 5381; for (let i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) | 0; return h; };
+  const url = location.pathname + location.search;
+  let base = null, shown = false, dismissed = false;
+  const get = async () => { const r = await fetch(url, { cache: "no-store" }); return r.ok ? hash(await r.text()) : null; };
+  function toast() {
+    if (shown || dismissed) return; shown = true;
+    const t = document.createElement("div"); t.className = "update-toast"; t.setAttribute("role", "status");
+    const p = document.createElement("p"); p.textContent = "🔔 New update available";
+    const sm = document.createElement("small"); sm.textContent = "नयाँ अपडेट आएको छ — refresh गर्नुहोस्"; p.append(sm);
+    const go = document.createElement("button"); go.type = "button"; go.textContent = "Refresh"; go.onclick = () => location.reload();
+    const x = document.createElement("button"); x.type = "button"; x.className = "x"; x.textContent = "✕"; x.setAttribute("aria-label", "Dismiss");
+    x.onclick = () => { dismissed = true; t.classList.remove("show"); };
+    t.append(p, go, x); document.body.append(t);
+    requestAnimationFrame(() => requestAnimationFrame(() => t.classList.add("show")));
+  }
+  async function check() {
+    try {
+      const h = await get(); if (h === null) return;
+      if (base === null) base = h; else if (h !== base) toast();
+    } catch (e) { /* offline – try again later */ }
+  }
+  check();
+  setInterval(check, 5 * 60 * 1000);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) check(); });
 })();
 </script>
 </body>
