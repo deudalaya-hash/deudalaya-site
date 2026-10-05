@@ -382,7 +382,8 @@ const PHASES = [
     d: ["देउडासाँझ, Every Friday at Shankhamul Park. 🎶", "Non-Profit Organization 🤝"],
     gal: { label: "images", open: true, kind: "thumb", items: [["sudurkarnali.jpg","Sudur Karnali"],["deudalaya-poster.jpg","Deudalaya poster"],["nonprofit.jpg","Nonprofit"]] }, next: true, events: true },
   { n: 2, t: "शब्दलय", d: ["Welcome to my blog. ✍️"], poster: ["sabdalaya%20(2).jpg","शब्दलय poster"], blog: true, bloglink: true },
-  { n: 3, t: "Websiteलय", d: ["सुदूर कर्णालीका Website बनाउने आफ्नै घर 🌐"], poster: ["websitelaya.jpg","Websiteलय poster"] },
+  { n: 3, t: "Websiteलय", d: ["सुदूर कर्णालीका Website बनाउने आफ्नै घर 🌐"], poster: ["websitelaya.jpg","Websiteलय poster"],
+    gal: { label: "my first website", open: false, kind: "poster", caption: "my first website", items: [["myfirstwebsite.jpg","my first website"]] } },
   { soon: "Coming soon" },
   { n: 4, t: "देउडालय + चियालय", d: ["Deuda and chiya together, at Shankhamul. 🍵"],
     gal: { label: "image", open: true, kind: "poster", items: [["chiyalaya.png","चियालय"],["chipyalaya2d.png","चियालय floor plan"]] } },
@@ -646,6 +647,7 @@ function render(p) {
   if (p.gal) {
     const d = details(p.gal.label, p.gal.open), g = $("div", "gallery " + p.gal.kind);
     p.gal.items.forEach(([s, a]) => g.append(link(s, img(s, a))));
+    if (p.gal.caption) d.append($("p", "time", p.gal.caption));
     d.append(g); el.append(d);
   }
 
