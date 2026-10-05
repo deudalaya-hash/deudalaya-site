@@ -317,6 +317,13 @@ html{scroll-behavior:auto}
 .imgs>summary::-webkit-details-marker{display:none}
 .imgs>summary::before,.imgs[open]>summary::before{content:"";display:block;width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);margin:-3px 0 0}
 .imgs[open]>summary::before{transform:rotate(-135deg);margin:3px 0 0}
+/* touch devices (iPhone/iPad): no hover, so lift the phase in focus / being tapped */
+@media(hover:none){
+  .phase:not(.bare){box-shadow:0 4px 16px var(--shadow)}
+  .has-reveal .phase.seen:not(.bare).lit,.phase:not(.bare).lit,.phase:not(.bare):active{border-color:var(--accent);transform:translateY(-5px);box-shadow:0 18px 40px rgba(0,0,0,.34),0 0 0 2px var(--accent),0 0 30px var(--glow)}
+  .phase.lit::before,.phase:active::before,.phase.lit::after,.phase:active::after{opacity:1}
+  .phase.lit .laya::after{width:55px}
+}
 </style>
 </head>
 <body>
@@ -471,7 +478,15 @@ const PHASES = [
   { n: 70, t: "नाटकालय", d: ["सुदूर कर्णालीका कथाका लागि राजधानीको आँगनमा आफ्नै घर 🎭"], poster: ["natakalaya.jpg","नाटकालय poster"] },
   { n: 71, t: "HOMESTAYलय", d: ["A space to stay inside the hills, homes and living culture of Sudur Karnali. 🏔️🏠"], stay: true },
   { n: 72, t: "HELLOलय", d: ["A simple push for immediate help. 🆘", "Sudur Karnali's life-saving network. 🏔️", "सुदूर कर्णालीका प्रत्येक गाउँगाउँमा HELLOलय 🆘"], poster: ["hellolaya.jpg","HELLOलय poster"] },
-  { n: 73, t: "सम्पर्कालय", d: ["Get in touch"], id: "contact", contact: true,
+  { n: 73, t: "NEW YEAR 2027 DEUDALAYA CONCERT", d: [
+    "🎆 JAN 1, 2027",
+    "राजधानीको आँगनमा सुदूर-कर्णालीको देउडा कन्सर्ट 🔥",
+    "📍 Chyasal Stadium Ground, Lalitpur",
+    "📅 Friday, January 1, 2027",
+    "🎤 Live Deuda Concert · ⭕ 1,000-Person Deuda Khel · 🔥 High-Energy Live Music · 🥁 Traditional & Modern Folk Sound · 🎆 New Year 2027 Celebration",
+    "❤️ सुदूर-कर्णालीको संस्कृति, संगीत र ऊर्जा — राजधानीको आँगनमा।"
+  ] },
+  { n: 74, t: "सम्पर्कालय", d: ["Get in touch"], id: "contact", contact: true,
     gal: { label: "image", open: true, kind: "poster", items: [["introduction.jpeg","i was here — Bharat Thakuri"]] } }
 ];
 
@@ -891,6 +906,13 @@ tbtn.addEventListener("click", () => setTheme(document.documentElement.dataset.t
       card.style.setProperty("--my", (e.clientY - r.top) + "px");
     });
   });
+  // touch devices: raise the phase nearest the middle of the screen
+  if (matchMedia("(hover: none)").matches) {
+    const lit = new IntersectionObserver(entries => {
+      entries.forEach(e => e.target.classList.toggle("lit", e.isIntersecting));
+    }, { rootMargin: "-42% 0px -42% 0px", threshold: 0 });
+    document.querySelectorAll(".phase:not(.bare)").forEach(el => lit.observe(el));
+  }
 })();
 </script>
 </body>
