@@ -498,8 +498,8 @@ html{scroll-behavior:auto}
 div.contact-link:hover{transform:none;box-shadow:none;border-color:var(--line)}
 .cl-foot{line-height:1.6;letter-spacing:.3px!important;font-size:12px!important}
 /* language switch */
-.lang-toggle{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));right:calc(64px + env(safe-area-inset-right,0px));z-index:20;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0 14px;border:1px solid var(--accent);border-radius:999px;
- background:var(--surface);color:var(--text);font:600 12px/1 var(--sans);letter-spacing:.3px;cursor:pointer;box-shadow:0 4px 14px var(--shadow);-webkit-tap-highlight-color:transparent;transition:transform .2s,box-shadow .2s}
+.lang-toggle{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));right:calc(64px + env(safe-area-inset-right,0px));z-index:20;height:34px;width:34px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:1px solid var(--accent);border-radius:50%;
+ background:var(--surface);color:var(--text);font:600 13px/1 var(--sans);letter-spacing:0;cursor:pointer;box-shadow:0 4px 14px var(--shadow);-webkit-tap-highlight-color:transparent;transition:transform .2s,box-shadow .2s}
 .lang-toggle:hover{box-shadow:0 6px 18px var(--glow)}
 .lang-toggle:active{transform:scale(.94)}
 .brand-block .tagline{font-size:11px;letter-spacing:3px;color:var(--accent);margin-top:6px;opacity:.9}
@@ -1707,7 +1707,7 @@ tbtn.addEventListener("click", () => setTheme(document.documentElement.dataset.t
   const btn = document.createElement("button");
   btn.type = "button"; btn.className = "lang-toggle";
   const paint = () => {
-    btn.textContent = LANG === "ne" ? "English ⇄" : "नेपाली ⇄";
+    btn.textContent = LANG === "ne" ? "E" : "N";
     btn.setAttribute("aria-label", LANG === "ne" ? "Switch to English" : "Switch to Nepali");
   };
   document.body.append(btn);
