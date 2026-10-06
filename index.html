@@ -601,10 +601,11 @@ div.contact-link:hover{transform:none;box-shadow:none;border-color:var(--line)}
 .citymap-body .legend b{color:var(--accent);font-weight:600}
 .est{margin:10px 0 0;font-size:11px;letter-spacing:4px;color:var(--muted)}
 /* door-opening entrance */
-.door{position:fixed;inset:0;z-index:90;display:flex;pointer-events:none}
+.door{position:fixed;inset:0;z-index:90;display:flex;pointer-events:auto;cursor:pointer}
+.door-hint{position:absolute;left:0;right:0;bottom:8%;margin:0;text-align:center;color:#c9a24b;font:500 12px/1.4 var(--sans);letter-spacing:4px;pointer-events:none;text-shadow:0 2px 10px rgba(0,0,0,.7)}
 .door span{flex:1;background:linear-gradient(180deg,#7c2626 0%,#5a1818 50%,#7c2626 100%);transition:transform 1.4s cubic-bezier(.7,0,.2,1);position:relative}
-.door span:nth-child(1){transform:translateX(0);border-right:4px solid #c9a24b;border-top-left-radius:60% 8%}
-.door span:nth-child(2){transform:translateX(0);border-left:4px solid #c9a24b;border-top-right-radius:60% 8%}
+.door span:nth-child(1){transform:translateX(0);border-right:4px solid #c9a24b;border-radius:0}
+.door span:nth-child(2){transform:translateX(0);border-left:4px solid #c9a24b;border-radius:0}
 /* ornate inner panel (Newari/Venetian-style) */
 .door span::after{content:"";position:absolute;inset:18px 14px;border:2px solid rgba(220,180,110,.55);border-radius:6px;box-shadow:inset 0 0 40px rgba(0,0,0,.4), 0 0 0 6px rgba(60,15,15,.5)}
 /* ornate brass door knocker near the center */
@@ -626,7 +627,7 @@ div.contact-link:hover{transform:none;box-shadow:none;border-color:var(--line)}
 </style>
 </head>
 <body>
-<div class="door" id="door" aria-hidden="true"><span></span><span></span></div>
+<div class="door" id="door" aria-hidden="true"><span></span><span></span><p class="door-hint" aria-hidden="true">KNOCK TWICE TO ENTER</p></div>
 <div class="progress" id="progress" aria-hidden="true"></div>
 <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Open laya menu" aria-expanded="false" aria-controls="menu-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
 <div class="menu-backdrop" id="menu-backdrop"></div>
@@ -1881,11 +1882,27 @@ document.addEventListener("click", e => {
   }, { passive: true });
 })();
 
-/* door-opening entrance */
-window.addEventListener("load", () => {
+/* hero content stays still until the door opens */
+body:not(.entered) .hero *, body:not(.entered) .hero::before, body:not(.entered) .hero::after{animation-play-state:paused!important}
+
+/* door-opening entrance — needs two knocks (double tap/click) */
+(function () {
   const d = document.getElementById("door");
-  if (d) { d.classList.add("open"); setTimeout(() => { d.style.display = "none"; }, 1600); }
-});
+  if (!d) return;
+  const open = () => {
+    d.classList.add("open");
+    setTimeout(() => { d.style.display = "none"; }, 1600);
+  };
+  let last = 0;
+  const knock = () => {
+    const now = Date.now();
+    if (now - last < 450) open();
+    last = now;
+  };
+  d.addEventListener("click", knock);
+  d.addEventListener("touchstart", knock, { passive: true });
+  d.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") open(); });
+})();
 
 /* ============ LAYA MENU (top-left) ============ */
 (function(){
