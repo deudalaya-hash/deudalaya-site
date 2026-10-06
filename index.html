@@ -623,6 +623,37 @@ div.contact-link:hover{transform:none;box-shadow:none;border-color:var(--line)}
 body:not(.entered) .hero *, body:not(.entered) .hero::before, body:not(.entered) .hero::after{animation-play-state:paused!important}
 .door.open span:nth-child(1){transform:translateX(-100%)}
 .door.open span:nth-child(2){transform:translateX(100%)}
+/* lock + key + password */
+.door-lock,.door-key,.door-pass{display:none}
+.door.locked .door-lock{display:block}
+.door.locked .door-key{display:flex}
+.door-lock{position:absolute;left:50%;top:calc(50% + 5px);transform:translate(-50%,-50%);z-index:3;pointer-events:none;filter:drop-shadow(0 2px 6px rgba(0,0,0,.7))}
+.door-lock svg{width:30px;height:38px;display:block;overflow:visible}
+.door-lock .shackle{transition:transform .45s ease;transform-box:fill-box;transform-origin:100% 100%}
+.door.unlocking .door-lock .shackle{transform:translateY(-5px) rotate(-35deg)}
+.door-key{position:absolute;left:50%;top:calc(50% + 66px);transform:translateX(-50%);z-index:3;flex-direction:column;align-items:center;gap:3px;background:none;border:0;padding:6px;color:#e8c98a;font:600 12px/1 var(--serif);cursor:pointer;text-shadow:0 2px 8px rgba(0,0,0,.7)}
+.door-key svg{width:30px;height:30px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.7))}
+.door.open .door-lock,.door.open .door-key{opacity:0;transition:opacity .4s}
+.door-pass{position:absolute;inset:0;z-index:5;place-items:center;background:rgba(20,5,5,.72);cursor:default}
+.door-pass.show{display:grid}
+.pass-card{width:min(86vw,300px);box-sizing:border-box;padding:18px;border:2px solid #c9a24b;border-radius:10px;background:linear-gradient(180deg,#5a1818,#3a0e0e);color:#e8c98a;text-align:center;font-family:var(--serif);box-shadow:0 10px 30px rgba(0,0,0,.7)}
+.pass-card h3{margin:0 0 12px;font-size:18px}
+.pass-card input[data-pw]{width:100%;margin-top:8px;box-sizing:border-box;padding:10px;border-radius:6px;border:1px solid #c9a24b;background:#2b1414;color:#fff;font-size:16px;text-align:center;letter-spacing:2px}
+.pass-note{margin:0 0 4px;font-size:12px;line-height:1.4;opacity:.9}
+.pw-show{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;font-size:13px;cursor:pointer}
+.pw-show input{width:auto;margin:0}
+.pass-err{min-height:18px;margin-top:6px;color:#ff9a9a;font-size:13px}
+.pass-ok{color:#9be29b!important}
+.pass-btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.pass-btns button{flex:1 1 90px;padding:9px 6px;border-radius:6px;border:1px solid #c9a24b;background:#2b1414;color:#e8c98a;font:600 14px var(--serif);cursor:pointer}
+.pass-btns button[type=submit]{background:#c9a24b;color:#2b1414}
+.pass-card.shake{animation:passShake .4s}
+@keyframes passShake{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.lock-dlg{position:fixed;inset:0;z-index:200;display:none;place-items:center;background:rgba(10,5,5,.6)}
+.lock-dlg.show{display:grid}
+.menu-foot{padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line)}
+.menu-foot button{width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:transparent;color:var(--text);font:inherit;font-size:14px;text-align:left;cursor:pointer;transition:border-color .2s,color .2s}
+.menu-foot button:hover,.menu-foot button:focus-visible{border-color:var(--accent);color:var(--accent)}
 .enter-note{margin-top:6px;font:500 13px/1.4 var(--sans);letter-spacing:3px;color:var(--accent)}
 .lb{position:fixed;inset:0;z-index:80;background:rgba(10,8,6,.86);display:none;align-items:center;justify-content:center;padding:24px;cursor:zoom-out}
 .lb.show{display:flex}
@@ -636,7 +667,8 @@ body:not(.entered) .hero *, body:not(.entered) .hero::before, body:not(.entered)
 </style>
 </head>
 <body>
-<div class="door" id="door" aria-hidden="true"><span><b class="door-inner" style="font-size:18px">देउडा</b></span><span><b class="door-inner">लय</b></span></div>
+<div class="door" id="door" aria-hidden="true"><span><b class="door-inner" style="font-size:18px">देउडा</b></span><span><b class="door-inner">लय</b></span><div class="door-lock"><svg viewBox="0 0 30 38" aria-hidden="true"><defs><linearGradient id="lkg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3d889"/><stop offset="1" stop-color="#b98a2f"/></linearGradient></defs><path class="shackle" d="M8 17V11a7 7 0 0 1 14 0v6" fill="none" stroke="#e8c98a" stroke-width="3.5" stroke-linecap="round"/><rect x="3" y="16" width="24" height="20" rx="4" fill="url(#lkg)" stroke="#5a3a10" stroke-width="1.5"/><circle cx="15" cy="24.5" r="3" fill="#3a0e0e"/><rect x="13.7" y="25.5" width="2.6" height="6" rx="1" fill="#3a0e0e"/></svg></div><button class="door-key" type="button" aria-label="Unlock with key"><svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="#e8c98a" stroke-width="3" stroke-linecap="round"><circle cx="9" cy="9" r="6"/><path d="M13.5 13.5L27 27M21 21l3.5-3.5M25 25l3.5-3.5"/></svg><small>चाबी</small></button><div class="door-pass" id="door-pass" role="dialog" aria-label="Enter key"><form class="pass-card" id="pass-form" autocomplete="off"><h3>🔑 चाबी हाल्नुस्</h3><input data-pw type="password" id="pass-input" placeholder="Password" aria-label="Password" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"><label class="pw-show"><input type="checkbox"> पासवर्ड देखाउनुस् / Show password</label><div class="pass-err" id="pass-err" role="alert"></div><div class="pass-btns"><button type="submit">खोल्नुस् / Unlock</button><button type="button" id="pass-cancel">रद्द</button></div></form></div></div>
+<div class="lock-dlg" id="lock-dlg" role="dialog" aria-label="Door lock"><form class="pass-card" id="lock-form" autocomplete="off"><h3>🔒 ताला / Door lock</h3><p class="pass-note" id="lk-note"></p><input data-pw type="password" id="lk-cur" placeholder="Current password" aria-label="Current password" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"><input data-pw type="password" id="lk-new" placeholder="New password" aria-label="New password" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"><label class="pw-show"><input type="checkbox"> पासवर्ड देखाउनुस् / Show password</label><div class="pass-err" id="lk-err" role="alert"></div><div class="pass-btns"><button type="submit">सेभ / Save lock</button><button type="button" id="lk-remove">हटाउनुस् / Remove</button><button type="button" id="lk-cancel">रद्द</button></div></form></div>
 <div class="progress" id="progress" aria-hidden="true"></div>
 <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Open laya menu" aria-expanded="false" aria-controls="menu-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
 <div class="menu-backdrop" id="menu-backdrop"></div>
@@ -647,6 +679,7 @@ body:not(.entered) .hero *, body:not(.entered) .hero::before, body:not(.entered)
   </div>
   <p class="menu-empty" id="menu-empty">No matching लय — try another word.</p>
   <nav class="menu-list" id="menu-list"></nav>
+  <div class="menu-foot"><button type="button" id="menu-lock"></button></div>
 </aside>
 <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark mode"></button>
 <button class="search-fab" id="search-fab" type="button" aria-label="Search all layas"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg></button>
@@ -1891,47 +1924,153 @@ document.addEventListener("click", e => {
   }, { passive: true });
 })();
 
-/* door-opening entrance — needs two knocks (double tap/click); double tap on the landing page locks it again */
+/* door-opening entrance — two knocks open it; double tap on the landing page closes it.
+   Lock is OFF by default. Menu → "ताला / Set lock" sets a password; then the closed door needs the key (password). */
 (function () {
+  const LS = "layapur_lock";
+  /* saved in localStorage AND a cookie (backup, in case the browser blocks one of them) */
+  const getCookie = () => { const m = document.cookie.match(/(?:^|; )layapur_lock=([^;]*)/); try { return m ? decodeURIComponent(m[1]) : ""; } catch (e) { return ""; } };
+  const getLock = () => { let v = ""; try { v = localStorage.getItem(LS) || ""; } catch (e) {} return v || getCookie(); };
+  const saveLock = v => {
+    try { if (v) localStorage.setItem(LS, v); else localStorage.removeItem(LS); } catch (e) {}
+    try { document.cookie = "layapur_lock=" + (v ? encodeURIComponent(v) + "; max-age=31536000" : "; max-age=0") + "; path=/; SameSite=Lax"; } catch (e) {}
+    return getLock() === v;            /* read it back — true only if it really stuck */
+  };
+  const same = (a, b) => a.trim().toLowerCase() === b.trim().toLowerCase();
+
   const d = document.getElementById("door");
   if (!d) return;
-  let hideTimer = null;
+  const pass = document.getElementById("door-pass"), form = document.getElementById("pass-form"),
+        input = document.getElementById("pass-input"), err = document.getElementById("pass-err");
+  let hideTimer = null, last = 0;
+  const isLocked = () => d.classList.contains("locked");
+  const setLocked = on => {
+    d.classList.toggle("locked", on);
+    if (on) d.removeAttribute("aria-hidden"); else d.setAttribute("aria-hidden", "true");
+  };
   const open = () => {
+    setLocked(false);
     d.classList.add("open");
     document.body.classList.add("entered");
     clearTimeout(hideTimer);
     hideTimer = setTimeout(() => { d.style.display = "none"; }, 1600);
   };
-  const lock = () => {
+  const close = () => {               /* close the door; locked only if a lock is set */
     clearTimeout(hideTimer);
     d.style.display = "flex";
-    void d.offsetWidth; /* restart the slide animation */
+    void d.offsetWidth;               /* restart the slide animation */
     d.classList.remove("open");
     document.body.classList.remove("entered");
+    closePass();
+    setLocked(!!getLock());
     last = 0;
   };
-  let last = 0;
+  const resetShow = f => { f.querySelectorAll("input[data-pw]").forEach(i => i.type = "password"); const c = f.querySelector(".pw-show input"); if (c) c.checked = false; };
+  const openPass = () => {
+    resetShow(form);
+    pass.classList.add("show");
+    input.value = ""; err.textContent = "";
+    setTimeout(() => input.focus(), 50);
+  };
+  const closePass = () => pass.classList.remove("show");
+
   const knock = () => {
+    if (isLocked()) return;
     const now = Date.now();
     if (now - last < 450) open();
     last = now;
   };
   d.addEventListener("click", knock);
   d.addEventListener("touchstart", knock, { passive: true });
-  d.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") open(); });
+  d.addEventListener("keydown", e => {
+    if (isLocked()) { if (e.key === "Escape") closePass(); return; }
+    if (e.key === "Enter" || e.key === " ") open();
+  });
+
+  d.querySelector(".door-key").addEventListener("click", openPass);
+  document.getElementById("pass-cancel").addEventListener("click", closePass);
+  pass.addEventListener("click", e => { if (e.target === pass) closePass(); });
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    if (same(input.value, getLock())) {
+      closePass();
+      d.classList.add("unlocking");
+      setTimeout(() => { d.classList.remove("unlocking"); open(); }, 500);
+    } else {
+      err.textContent = "गलत चाबी / Wrong key";
+      input.value = "";
+      form.classList.remove("shake"); void form.offsetWidth; form.classList.add("shake");
+      input.focus();
+    }
+  });
+
+  /* show / hide password while typing (both dialogs) */
+  document.querySelectorAll(".pw-show input").forEach(cb => cb.addEventListener("change", () => {
+    cb.closest("form").querySelectorAll("input[data-pw]").forEach(i => { i.type = cb.checked ? "text" : "password"; });
+  }));
+
+  /* ---- menu: set / change / remove the lock ---- */
+  const mbtn = document.getElementById("menu-lock"), dlg = document.getElementById("lock-dlg"),
+        lf = document.getElementById("lock-form"), cur = document.getElementById("lk-cur"),
+        nw = document.getElementById("lk-new"), lerr = document.getElementById("lk-err"),
+        note = document.getElementById("lk-note"), rem = document.getElementById("lk-remove");
+  const refreshMenu = () => {
+    if (mbtn) mbtn.textContent = getLock() ? "🔒 ताला चालु छ / Lock ON — change" : "🔓 ताला सेट गर्नुस् / Set lock";
+  };
+  const closeDlg = () => dlg.classList.remove("show");
+  const openDlg = () => {
+    const has = !!getLock();
+    resetShow(lf);
+    cur.value = nw.value = ""; lerr.textContent = ""; lerr.classList.remove("pass-ok");
+    cur.style.display = rem.style.display = has ? "" : "none";
+    nw.placeholder = has ? "New password (to change)" : "Choose a password";
+    note.textContent = has
+      ? "Lock is ON. Enter your current password to change or remove it."
+      : "Lock is OFF. Set a password — the door will need it as the key after you close it or reload.";
+    dlg.classList.add("show");
+    setTimeout(() => (has ? cur : nw).focus(), 400);
+  };
+  const done = msg => {
+    lerr.classList.add("pass-ok"); lerr.textContent = msg;
+    refreshMenu();
+    setTimeout(closeDlg, 1100);
+  };
+  const bad = msg => { lerr.classList.remove("pass-ok"); lerr.textContent = msg; lf.classList.remove("shake"); void lf.offsetWidth; lf.classList.add("shake"); };
+  if (mbtn) {
+    refreshMenu();
+    mbtn.addEventListener("click", () => { const c = document.getElementById("menu-close"); if (c) c.click(); openDlg(); });
+    lf.addEventListener("submit", e => {
+      e.preventDefault();
+      const has = !!getLock();
+      if (has && !same(cur.value, getLock())) return bad("Wrong current password");
+      const v = nw.value.trim();
+      if (!v) return bad("Type a password");
+      if (!saveLock(v)) return bad("Browser blocked saving — try Chrome / Safari, not in-app or private mode");
+      done("✔ ताला सेट भयो / Lock saved");
+    });
+    rem.addEventListener("click", () => {
+      if (!same(cur.value, getLock())) return bad("Wrong current password");
+      saveLock("");
+      done("✔ ताला हटियो / Lock removed");
+    });
+    document.getElementById("lk-cancel").addEventListener("click", closeDlg);
+    dlg.addEventListener("click", e => { if (e.target === dlg) closeDlg(); });
+    document.addEventListener("keydown", e => { if (e.key === "Escape") closeDlg(); });
+  }
+
+  if (getLock()) setLocked(true);   /* lock set earlier on this browser → door starts locked */
 
   /* double tap/click on the landing page (hero) closes the door again */
   const home = document.getElementById("home");
   if (home) {
     let lastTap = 0;
-    const tap = e => {
+    home.addEventListener("click", e => {
       if (!document.body.classList.contains("entered")) return;
       if (e.target.closest("a, button, input, summary, details, select, textarea, label")) return;
       const now = Date.now();
-      if (now - lastTap < 450) { lastTap = 0; lock(); }
+      if (now - lastTap < 450) { lastTap = 0; close(); }
       else lastTap = now;
-    };
-    home.addEventListener("click", tap);
+    });
   }
 })();
 
