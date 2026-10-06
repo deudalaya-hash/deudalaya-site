@@ -1891,6 +1891,7 @@ body:not(.entered) .hero *, body:not(.entered) .hero::before, body:not(.entered)
   if (!d) return;
   const open = () => {
     d.classList.add("open");
+    document.body.classList.add("entered");
     setTimeout(() => { d.style.display = "none"; }, 1600);
   };
   let last = 0;
