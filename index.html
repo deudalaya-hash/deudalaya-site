@@ -1243,6 +1243,9 @@ function sendView(n) {
     method: "POST",
     headers: { "Content-Type": "text/plain;charset=utf-8" },
     body: JSON.stringify({ visitor: visitorId, phase: n, liked: false, type: "view" })
+  }).then(r => r.json()).then(d => {
+    const v = d && (d.viewCounts || d.views);
+    if (v && typeof v === "object") { Object.keys(v).forEach(k => globalViews[k] = v[k]); viewPaints.forEach(fn => fn()); }
   }).catch(() => {});
 }
 function setLiked(n, on) {
@@ -1324,9 +1327,21 @@ try { viewStore = JSON.parse(localStorage.getItem("layapur-views")) || {}; } cat
 const saveViews = () => { try { localStorage.setItem("layapur-views", JSON.stringify(viewStore)); } catch (e) {} };
 const viewPaints = [];
 const fmtViews = n => n >= 1e6 ? (n / 1e6).toFixed(1).replace(/\.0$/, "") + "M" : n >= 1e3 ? (n / 1e3).toFixed(1).replace(/\.0$/, "") + "K" : String(n);
+const globalViews = {}; // phase number -> global views from the sheet
+function fetchViewCounts() {
+  if (!LIKE_API) return;
+  fetch(LIKE_API, { cache: "no-store" }).then(r => r.json()).then(d => {
+    const v = d && (d.viewCounts || d.views);
+    if (v && typeof v === "object") { Object.keys(globalViews).forEach(k => delete globalViews[k]); Object.keys(v).forEach(k => globalViews[k] = v[k]); viewPaints.forEach(fn => fn()); }
+  }).catch(() => {});
+}
 function viewsChip(p) {
   const v = $("span", "views");
-  const paint = () => { v.textContent = "👁 " + fmtViews(viewStore["phase-" + p.n] || 0); };
+  const paint = () => {
+    const local = viewStore["phase-" + p.n] || 0;
+    const g = globalViews[p.n];
+    v.textContent = "👁 " + fmtViews(typeof g === "number" ? g : local);
+  };
   viewPaints.push(paint); paint();
   v.setAttribute("aria-label", "Views for phase " + p.n);
   return v;
@@ -1939,6 +1954,7 @@ document.addEventListener("click", e => {
   upd();
 })();
 fetchLikeCounts();
+fetchViewCounts();
 const yearEl = document.getElementById("year");
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
