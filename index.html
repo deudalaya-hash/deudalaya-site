@@ -57,18 +57,18 @@ section{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;al
 
 /* theme toggle */
 .theme-toggle{position:fixed;top:calc(env(safe-area-inset-top) + 12px);right:calc(env(safe-area-inset-right) + 12px);z-index:20;
- width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--text);font-size:18px;line-height:1;cursor:pointer;
+ width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--text);font-size:17px;line-height:1;cursor:pointer;
  display:grid;place-items:center;box-shadow:0 4px 18px var(--shadow);transition:transform .25s,border-color .25s,box-shadow .25s}
 .theme-toggle:hover{transform:rotate(22deg) scale(1.06);border-color:var(--accent);box-shadow:0 0 20px var(--glow)}
 /* search icon (next to the menu, transparent) */
-.search-fab{position:fixed;top:calc(env(safe-area-inset-top) + 12px);left:calc(env(safe-area-inset-left) + 58px);z-index:20;
- width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--accent);font-size:19px;
+.search-fab{position:fixed;top:calc(env(safe-area-inset-top) + 12px);left:calc(env(safe-area-inset-left) + 62px);z-index:20;
+ width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--accent);font-size:18px;
  cursor:pointer;display:grid;place-items:center;box-shadow:none;transition:transform .25s,box-shadow .25s}
 .search-fab:hover{transform:scale(1.12);box-shadow:none}
 
 /* laya menu (top-left) */
 .menu-toggle{position:fixed;top:calc(env(safe-area-inset-top) + 12px);left:calc(env(safe-area-inset-left) + 12px);z-index:20;
- width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--text);cursor:pointer;
+ width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--text);cursor:pointer;
  display:grid;place-items:center;box-shadow:0 4px 18px var(--shadow);transition:transform .25s,border-color .25s,box-shadow .25s}
 .menu-toggle:hover{transform:scale(1.06);border-color:var(--accent);box-shadow:0 0 20px var(--glow)}
 .menu-toggle svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none}
@@ -557,8 +557,8 @@ html{scroll-behavior:auto}
 div.contact-link:hover{transform:none;box-shadow:none;border-color:var(--line)}
 .cl-foot{line-height:1.6;letter-spacing:.3px!important;font-size:12px!important}
 /* language switch */
-.lang-toggle{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));right:calc(64px + env(safe-area-inset-right,0px));z-index:20;height:34px;width:34px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:1px solid var(--accent);border-radius:50%;
- background:var(--surface);color:var(--text);font:600 13px/1 var(--sans);letter-spacing:0;cursor:pointer;box-shadow:0 4px 14px var(--shadow);-webkit-tap-highlight-color:transparent;transition:transform .2s,box-shadow .2s}
+.lang-toggle{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));right:calc(62px + env(safe-area-inset-right,0px));z-index:20;height:40px;width:40px;display:inline-flex;align-items:center;justify-content:center;padding:0;border:1px solid var(--line);border-radius:50%;
+ background:var(--bg);color:var(--text);font:600 14px/1 var(--sans);letter-spacing:0;cursor:pointer;box-shadow:0 4px 18px var(--shadow);-webkit-tap-highlight-color:transparent;transition:transform .2s,box-shadow .2s}
 .lang-toggle:hover{box-shadow:0 6px 18px var(--glow)}
 .lang-toggle:active{transform:scale(.94)}
 .brand-block .tagline{font-size:11px;letter-spacing:3px;color:var(--accent);margin-top:6px;opacity:.9}
@@ -601,6 +601,13 @@ div.contact-link:hover{transform:none;box-shadow:none;border-color:var(--line)}
 .citymap-body .legend{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 16px;max-width:720px;font-size:12px;color:var(--muted);letter-spacing:1px}
 .citymap-body .legend b{color:var(--accent);font-weight:600}
 .est{margin:10px 0 0;font-size:11px;letter-spacing:4px;color:var(--muted)}
+/* door-opening entrance */
+.door{position:fixed;inset:0;z-index:90;display:flex;pointer-events:none}
+.door span{flex:1;background:var(--bg);transition:transform 1.4s cubic-bezier(.7,0,.2,1)}
+.door span:nth-child(1){transform:translateX(0);border-right:1px solid var(--line)}
+.door span:nth-child(2){transform:translateX(0);border-left:1px solid var(--line)}
+.door.open span:nth-child(1){transform:translateX(-100%)}
+.door.open span:nth-child(2){transform:translateX(100%)}
 .enter-note{margin-top:6px;font:500 13px/1.4 var(--sans);letter-spacing:3px;color:var(--accent)}
 .lb{position:fixed;inset:0;z-index:80;background:rgba(10,8,6,.86);display:none;align-items:center;justify-content:center;padding:24px;cursor:zoom-out}
 .lb.show{display:flex}
@@ -614,6 +621,7 @@ div.contact-link:hover{transform:none;box-shadow:none;border-color:var(--line)}
 </style>
 </head>
 <body>
+<div class="door" id="door" aria-hidden="true"><span></span><span></span></div>
 <div class="progress" id="progress" aria-hidden="true"></div>
 <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Open laya menu" aria-expanded="false" aria-controls="menu-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
 <div class="menu-backdrop" id="menu-backdrop"></div>
@@ -655,8 +663,7 @@ div.contact-link:hover{transform:none;box-shadow:none;border-color:var(--line)}
     <div class="divider"><span></span><i></i><span></span></div>
     <p class="role">Architect / Founder / CEO / Bharat Thakuri</p>
   </div>
-  <a class="scroll" href="#phases">ENTER LAYAPUR ↓</a>
-  <p class="est">EST. 2026 · CITY OF SPACES · सुदूर कर्णाली</p>
+  <p class="est">▼ ENTER LAYAPUR ▼</p>
 </section>
 
 <!-- city plan is hidden by default; opens with the arrow -->
@@ -1868,6 +1875,12 @@ document.addEventListener("click", e => {
     last = y;
   }, { passive: true });
 })();
+
+/* door-opening entrance */
+window.addEventListener("load", () => {
+  const d = document.getElementById("door");
+  if (d) { d.classList.add("open"); setTimeout(() => { d.style.display = "none"; }, 1600); }
+});
 
 /* ============ LAYA MENU (top-left) ============ */
 (function(){
