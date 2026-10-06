@@ -52,6 +52,9 @@ a{color:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 section{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:40px 20px}
 
+/* thin architectural scroll-progress line */
+.progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:40;pointer-events:none;background:var(--accent);opacity:.8;transform:scaleX(0);transform-origin:0 50%}
+
 /* theme toggle */
 .theme-toggle{position:fixed;top:calc(env(safe-area-inset-top) + 12px);right:calc(env(safe-area-inset-right) + 12px);z-index:20;
  width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--text);font-size:18px;line-height:1;cursor:pointer;
@@ -76,7 +79,17 @@ body.menu-open{overflow:hidden}
 .menu-head small{color:var(--muted);font-size:12px;letter-spacing:1px}
 .menu-close{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--text);font-size:20px;line-height:1;cursor:pointer}
 .menu-close:hover{border-color:var(--accent);color:var(--accent)}
+/* search field in the laya menu */
+.menu-search{padding:12px 14px 4px}
+.menu-search input{width:100%;padding:9px 4px;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--text);
+ font:400 14px/1.4 var(--sans);letter-spacing:.5px;outline:none;appearance:none;-webkit-appearance:none;border-radius:0;transition:border-color .2s}
+.menu-search input::placeholder{color:var(--muted);letter-spacing:1px}
+.menu-search input:focus{border-bottom-color:var(--accent)}
+.menu-search input::-webkit-search-cancel-button{-webkit-appearance:none}
+.menu-empty{display:none;margin:0;padding:14px 18px;color:var(--muted);font-size:13px;letter-spacing:.5px}
+.menu-empty.show{display:block}
 .menu-list{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:8px 10px 18px}
+.menu-list a[hidden]{display:none}
 .menu-list a{display:flex;gap:10px;align-items:baseline;padding:10px 12px;border-radius:12px;font-size:15px;line-height:1.4;text-decoration:none;transition:background .2s,color .2s}
 .menu-list a b{flex:0 0 2.2em;font-weight:400;color:var(--muted);font-size:12px;letter-spacing:1px}
 .menu-list a:hover,.menu-list a:focus-visible{color:var(--accent);background:var(--tint)}
@@ -150,7 +163,7 @@ body.menu-open{overflow:hidden}
 .region{margin:22px 0 -22px;font-size:15px;line-height:1.2;font-weight:600;letter-spacing:1px;color:var(--accent)}
 @media(max-width:600px){.region{font-size:13px;margin:18px 0 -12px}}
 h1{font:600 clamp(80px,18vw,170px)/1.1 var(--display);margin:10px 0;color:var(--text);
- animation:up 1.2s ease .5s both,titleGlow 5s ease-in-out 2s infinite}
+ animation:up 1.2s ease .5s both,titleGlow 5s ease-in-out 2s 3 both}
 h2{font:300 clamp(20px,6.2vw,34px) var(--sans);letter-spacing:3px;margin:0}
 .divider{display:flex;align-items:center;justify-content:center;gap:12px;margin:26px 0}
 .divider span{width:70px;height:1px;background:var(--rule);transform-origin:center;animation:lineGrow 1.4s ease 1.3s both}
@@ -165,8 +178,8 @@ h2{font:300 clamp(20px,6.2vw,34px) var(--sans);letter-spacing:3px;margin:0}
 .scroll,.top{font-size:13px;letter-spacing:3px;color:var(--muted);text-decoration:none;transition:color .25s,transform .25s,text-shadow .25s}
 .scroll:hover,.top:hover{color:var(--accent);transform:translateY(-3px);text-shadow:0 0 12px var(--glow)}
 .top{display:inline-block;margin-top:32px}
-.url,.welcome,h2,.divider,.role{animation:up 1.2s ease both}
-.welcome{animation-delay:.2s}h2{animation-delay:.9s}.divider{animation-delay:1.15s}.role{animation-delay:1.35s}
+.url,.welcome,.title-block h2,.divider,.role{animation:up 1.2s ease both}
+.welcome{animation-delay:.2s}.title-block h2{animation-delay:.9s}.divider{animation-delay:1.15s}.role{animation-delay:1.35s}
 
 /* ========== PHASES ========== */
 .phases{position:relative;isolation:isolate;width:100%;max-width:1000px;margin:0 auto;padding:20px 20px 40px;justify-content:flex-start}
@@ -193,7 +206,7 @@ h2{font:300 clamp(20px,6.2vw,34px) var(--sans);letter-spacing:3px;margin:0}
 .phase-index nav a{padding:12px;border-radius:12px;font-size:15px;line-height:1.4;text-decoration:none;transition:background .2s,color .2s,transform .2s}
 .phase-index nav a:hover,.phase-index nav a:focus-visible{color:var(--accent);background:var(--tint);transform:translateX(4px)}
 
-.phase{width:100%;margin:0 0 10px;padding:28px 18px;border:1px solid var(--line);border-radius:18px;background:var(--surface);
+.phase{width:100%;margin:0 0 10px;padding:28px 18px;scroll-margin-top:76px;border:1px solid var(--line);border-radius:18px;background:var(--surface);
  transition:transform .3s cubic-bezier(.16,1,.3,1),border-color .3s,opacity .5s ease-out,box-shadow .35s;
  position:relative;overflow:hidden}
 .phase::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,transparent,var(--accent),transparent);
@@ -236,7 +249,17 @@ h2{font:300 clamp(20px,6.2vw,34px) var(--sans);letter-spacing:3px;margin:0}
 
 /* ========== LIKE HEART (TikTok style) ========== */
 .phase{touch-action:manipulation}
-.like-row{display:flex;justify-content:center;margin-top:18px}
+.like-row{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:18px}
+.wa-plus{position:relative;display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--muted);font:400 18px/1 var(--sans);text-decoration:none;
+ transition:transform .2s,border-color .2s,color .2s,box-shadow .2s}
+.wa-plus::before{content:"";position:absolute;inset:-5px;border-radius:50%} /* 44px touch target, 34px look */
+.wa-plus:hover,.wa-plus:focus-visible{color:var(--accent);border-color:var(--accent);box-shadow:0 0 14px var(--glow);transform:translateY(-2px)}
+.wa-plus:active{transform:scale(.92)}
+.wa-plus{position:relative}
+.wa-plus::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%) translateY(4px);white-space:nowrap;background:var(--text);color:var(--bg);font:500 11px/1 var(--sans);letter-spacing:.6px;padding:7px 11px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;box-shadow:0 6px 18px var(--shadow)}
+.wa-plus::before{content:"";position:absolute;bottom:calc(100% + 3px);left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--text);opacity:0;transition:opacity .2s}
+.wa-plus:hover::after,.wa-plus:focus-visible::after,.wa-plus:active::after{opacity:1;transform:translateX(-50%) translateY(0)}
+.wa-plus:hover::before,.wa-plus:focus-visible::before,.wa-plus:active::before{opacity:1}
 .like-btn{display:inline-flex;flex-direction:column;align-items:center;gap:2px;min-width:44px;min-height:44px;padding:6px 10px;border:0;border-radius:14px;
  background:none;color:var(--muted);cursor:pointer;font:600 12px/1 var(--sans);letter-spacing:.5px;-webkit-tap-highlight-color:transparent;transition:color .2s,transform .15s}
 .like-btn svg{width:30px;height:30px;fill:currentColor;filter:drop-shadow(0 2px 4px var(--shadow));transition:color .2s}
@@ -246,6 +269,7 @@ h2{font:300 clamp(20px,6.2vw,34px) var(--sans);letter-spacing:3px;margin:0}
 .like-btn.liked{color:#fe2c55}
 .like-btn.liked svg{animation:likePop .45s cubic-bezier(.17,.89,.32,1.4)}
 .like-count{min-height:12px}
+.views{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--muted);font:600 12px/1 var(--sans);letter-spacing:.5px}
 @keyframes likePop{0%{transform:scale(.6)}50%{transform:scale(1.35)}100%{transform:scale(1)}}
 .float-heart{position:fixed;z-index:9999;pointer-events:none;color:#fe2c55;line-height:1;margin:-.5em 0 0 -.5em;
  animation:floatHeart var(--dur,.9s) ease-out forwards}
@@ -278,6 +302,8 @@ h2{font:300 clamp(20px,6.2vw,34px) var(--sans);letter-spacing:3px;margin:0}
 .poster-solo{display:block;width:fit-content;margin:24px auto 0;position:relative;z-index:1}
 .poster-solo img{display:block;width:min(240px,70vw);height:auto;border-radius:14px;box-shadow:0 4px 18px var(--shadow);
  transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .3s}
+/* subtle architectural frame — keeps images visible in dark mode, never distorts them */
+.img-item img,.poster-solo img,.gallery img{border:1px solid var(--line)}
 .blog-posts{border-radius:18px;display:grid;grid-auto-flow:column;grid-auto-columns:76%;gap:18px;width:min(720px,100%);margin:20px auto 0;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:thin;scrollbar-color:var(--accent) var(--line);padding-bottom:10px}
 .blog-post{scroll-snap-align:start;text-align:left;line-height:1.55;padding:20px 18px;background:var(--surface);border:1px solid var(--line);border-radius:18px}
 .blog-post p{margin:4px 0}
@@ -488,6 +514,14 @@ html{scroll-behavior:auto}
   .hrow>*,.hrow>.img-item img,.next{transition:none!important}
   .hrow>*:hover,.next:hover{transform:none!important}
 }
+/* contribution call-to-action — small dashed pill, matches the architectural lines */
+.phase-cta{display:inline-flex;align-items:center;gap:6px;margin:14px 0 2px;padding:7px 14px;border:1px dashed var(--accent);border-radius:999px;
+ color:var(--accent);font:500 12px/1 var(--sans);letter-spacing:1px;text-decoration:none;background:var(--tint);
+ transition:background .2s,color .2s,transform .2s,box-shadow .2s}
+.phase-cta::after{content:"→";font-size:13px;transition:transform .2s}
+.phase-cta:hover,.phase-cta:focus-visible{background:var(--accent);color:var(--bg);box-shadow:0 0 16px var(--glow)}
+.phase-cta:hover::after{transform:translateX(3px)}
+.phase-cta:active{transform:scale(.96)}
 /* ===== stall card: + add your business here ===== */
 .stall{flex:0 0 min(150px,46vw);align-self:flex-start;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 8px;
  border:2px dashed var(--accent);border-radius:14px;background:var(--surface);text-align:center;transition:transform .3s,border-color .3s,box-shadow .3s}
@@ -520,13 +554,64 @@ div.contact-link:hover{transform:none;box-shadow:none;border-color:var(--line)}
 .lang-toggle:hover{box-shadow:0 6px 18px var(--glow)}
 .lang-toggle:active{transform:scale(.94)}
 .brand-block .tagline{font-size:11px;letter-spacing:3px;color:var(--accent);margin-top:6px;opacity:.9}
+
+/* ===== LAYAPUR CITY SYSTEM ===== */
+.card-meta{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 10px;margin:2px 0 8px;font-size:10.5px;letter-spacing:1.6px;color:var(--muted);text-transform:uppercase}
+.card-meta b{font-weight:600;color:var(--accent)}
+.card-meta .dist{color:var(--text);border:1px solid var(--line);border-radius:999px;padding:1px 8px;background:var(--surface)}
+.laya::before{content:"";display:block;width:44px;height:1px;background:var(--rule);margin:0 auto 10px}
+.district-mark{position:absolute;top:16px;right:18px;margin:0;padding:0;border:0;background:none;font-size:9px;letter-spacing:1.8px;color:var(--muted);opacity:.55;text-transform:uppercase}
+.card-nav{display:flex;justify-content:space-between;gap:10px;margin:16px auto 0;max-width:420px;font-size:11px;letter-spacing:2px;color:var(--muted)}
+.card-nav a{color:inherit;text-decoration:none;transition:color .2s}
+.card-nav a:hover{color:var(--accent)}
+.filter-bar{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:18px auto 26px;max-width:1000px}
+.filter-bar button{padding:8px 16px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--muted);font:500 12px/1 var(--sans);letter-spacing:1.5px;cursor:pointer;transition:all .2s}
+.filter-bar button:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+.filter-bar button.on{background:var(--accent);color:var(--bg);border-color:var(--accent);box-shadow:0 0 16px var(--glow)}
+.whereami{position:fixed;left:calc(env(safe-area-inset-left,0px) + 12px);bottom:calc(env(safe-area-inset-bottom,0px) + 12px);z-index:20;padding:8px 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--muted);font:500 11px/1.4 var(--sans);letter-spacing:1.8px;text-transform:uppercase;box-shadow:0 4px 18px var(--shadow);transition:border-color .3s}
+.whereami b{color:var(--accent);font-weight:600}
+.citymap{justify-content:center;gap:18px}
+.citymap svg{width:min(88vw,560px);height:auto;color:var(--accent);opacity:.9}
+.citymap svg .ring{fill:none;stroke:currentColor;opacity:.35}
+.citymap svg .st{stroke:currentColor;opacity:.18}
+.citymap svg text{fill:var(--muted);font:600 11px var(--sans);letter-spacing:2px}
+.citymap svg .center{fill:var(--accent);font:700 13px var(--sans);letter-spacing:3px}
+.citymap .legend{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 16px;max-width:720px;font-size:12px;color:var(--muted);letter-spacing:1px}
+.citymap .legend b{color:var(--accent);font-weight:600}
+.citymap-toggle{width:min(780px,100%);margin:0 auto 10px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);transition:border-color .3s,box-shadow .3s}
+.citymap-toggle:hover{border-color:var(--accent);box-shadow:0 0 24px var(--glow)}
+.citymap-toggle summary{display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 18px;color:var(--accent);font-size:13px;letter-spacing:2px;cursor:pointer;list-style:none}
+.citymap-toggle summary::-webkit-details-marker{display:none}
+.citymap-toggle .arr{display:inline-block;transition:transform .3s}
+.citymap-toggle[open] .arr{transform:rotate(180deg)}
+.citymap-body{display:flex;flex-direction:column;align-items:center;gap:14px;padding:0 18px 22px}
+.citymap-body svg{width:min(88vw,560px);height:auto;color:var(--accent);opacity:.9}
+.citymap-body svg .ring{fill:none;stroke:currentColor;opacity:.35}
+.citymap-body svg .st{stroke:currentColor;opacity:.18}
+.citymap-body svg text{fill:var(--muted);font:600 11px var(--sans);letter-spacing:2px}
+.citymap-body svg .center{fill:var(--accent);font:700 13px var(--sans);letter-spacing:3px}
+.citymap-body .legend{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 16px;max-width:720px;font-size:12px;color:var(--muted);letter-spacing:1px}
+.citymap-body .legend b{color:var(--accent);font-weight:600}
+.est{margin:10px 0 0;font-size:11px;letter-spacing:4px;color:var(--muted)}
+.enter-note{margin-top:6px;font:500 13px/1.4 var(--sans);letter-spacing:3px;color:var(--accent)}
+.lb{position:fixed;inset:0;z-index:80;background:rgba(10,8,6,.86);display:none;align-items:center;justify-content:center;padding:24px;cursor:zoom-out}
+.lb.show{display:flex}
+.lb img{max-width:92vw;max-height:88vh;border-radius:12px;box-shadow:0 20px 80px rgba(0,0,0,.6)}
+.lb p{position:absolute;bottom:18px;left:0;right:0;text-align:center;color:#eee;font-size:13px;letter-spacing:1px}
+@media(max-width:600px){.whereami{font-size:10px;letter-spacing:1.2px;padding:6px 10px}}
+
 </style>
 </head>
 <body>
+<div class="progress" id="progress" aria-hidden="true"></div>
 <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Open laya menu" aria-expanded="false" aria-controls="menu-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
 <div class="menu-backdrop" id="menu-backdrop"></div>
 <aside class="menu-panel" id="menu-panel" aria-label="All layas">
   <div class="menu-head"><span>सबै लय <small id="menu-count"></small></span><button class="menu-close" id="menu-close" type="button" aria-label="Close menu">×</button></div>
+  <div class="menu-search" role="search">
+    <input type="search" id="menu-search-input" placeholder="Search लय…" aria-label="Search laya sections" autocomplete="off">
+  </div>
+  <p class="menu-empty" id="menu-empty">No matching लय — try another word.</p>
   <nav class="menu-list" id="menu-list"></nav>
 </aside>
 <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark mode"></button>
@@ -558,16 +643,42 @@ div.contact-link:hover{transform:none;box-shadow:none;border-color:var(--line)}
     <div class="divider"><span></span><i></i><span></span></div>
     <p class="role">Architect / Founder / CEO / Bharat Thakuri</p>
   </div>
-  <a class="scroll" href="#phases">SCROLL ↓</a>
+  <a class="scroll" href="#phases">ENTER LAYAPUR ↓</a>
+  <p class="est">EST. 2026 · CITY OF SPACES · सुदूर कर्णाली</p>
 </section>
 
+<!-- city plan is hidden by default; opens with the arrow -->
+
 <section id="phases" class="phases">
-  <p class="sub">लयपुर</p>
+  <h2 class="sub">लयपुर</h2>
   <p class="sub-desc">Most beautiful city in my Universe / multiverse</p>
-  <details class="phase-index" hidden>
-    <summary><span>CONTENTS / PHASE INDEX</span><span id="count"></span></summary>
-    <nav id="index-links" aria-label="Phase contents"></nav>
+  <details class="citymap-toggle" id="citymap">
+    <summary aria-label="Open city plan">⭕ लयपुर · शहर योजना <span class="arr">▾</span></summary>
+    <div class="citymap-body">
+      <p class="sub-desc">A city plan of every लय — distances are part of Layapur's story, not real-world maps</p>
+      <svg viewBox="0 0 640 640" aria-hidden="true">
+        <circle class="ring" cx="320" cy="320" r="60"/>
+        <circle class="ring" cx="320" cy="320" r="140"/>
+        <circle class="ring" cx="320" cy="320" r="230"/>
+        <circle class="ring" cx="320" cy="320" r="300"/>
+        <line class="st" x1="320" y1="20" x2="320" y2="620"/>
+        <line class="st" x1="20" y1="320" x2="620" y2="320"/>
+        <line class="st" x1="110" y1="110" x2="530" y2="530"/>
+        <line class="st" x1="530" y1="110" x2="110" y2="530"/>
+        <text class="center" x="320" y="316" text-anchor="middle">⭕ DEUDALAYA</text>
+        <text x="320" y="112" text-anchor="middle">CULTURAL · NORTH</text>
+        <text x="320" y="556" text-anchor="middle">JOURNEY · SOUTH</text>
+        <text x="548" y="324" text-anchor="middle">SERVICE · EAST</text>
+        <text x="92" y="324" text-anchor="middle">KNOWLEDGE · WEST</text>
+        <text x="470" y="140" text-anchor="middle">ART</text>
+        <text x="170" y="140" text-anchor="middle">COMMUNITY</text>
+        <text x="470" y="512" text-anchor="middle">NATURE</text>
+        <text x="170" y="512" text-anchor="middle">MEMORY</text>
+      </svg>
+      <div class="legend" id="city-legend"></div>
+    </div>
   </details>
+  <div class="filter-bar" id="filter-bar" role="group" aria-label="Random plot"></div>
   <div class="phase-list" id="list"></div>
 </section>
 
@@ -992,6 +1103,62 @@ const actionBtn = (p, name) => {
   return a;
 };
 
+/* ============ LAYAPUR CITY SYSTEM ============ */
+/* district + conceptual distance + compass direction per laya (conceptual, not real-world) */
+const DISTRICTS = ["CULTURAL DISTRICT","ART DISTRICT","KNOWLEDGE DISTRICT","COMMUNITY DISTRICT","SERVICE DISTRICT","MEMORY DISTRICT","NATURE DISTRICT","JOURNEY DISTRICT"];
+const CITY = {
+  1:["CULTURAL","CITY CENTER","NORTH"], 2:["MEMORY","NORTH","NE"], 3:["SERVICE","EAST","E"],
+  4:["CULTURAL","CITY CENTER","CENTER"], 5:["COMMUNITY","EAST","E"], 6:["COMMUNITY","CENTER","C"],
+  7:["CULTURAL","WEST","W"], 8:["KNOWLEDGE","WEST","W"], 9:["KNOWLEDGE","NORTH","N"],
+  10:["CULTURAL","NORTH","N"], 11:["SERVICE","EAST","E"], 12:["ART","WEST","W"],
+  13:["ART","WEST","W"], 14:["NATURE","NORTH","N"], 15:["NATURE","NORTH","N"],
+  16:["KNOWLEDGE","WEST","W"], 17:["COMMUNITY","CENTER","C"], 18:["COMMUNITY","CENTER","C"],
+  19:["ART","WEST","W"], 20:["ART","WEST","W"], 21:["KNOWLEDGE","WEST","W"], 22:["JOURNEY","SOUTH","S"],
+  23:["ART","WEST","W"], 24:["ART","WEST","W"], 25:["KNOWLEDGE","NORTH","N"], 26:["SERVICE","EAST","E"],
+  27:["KNOWLEDGE","NORTH","N"], 28:["KNOWLEDGE","NORTH","N"], 29:["CULTURAL","CENTER","C"], 30:["ART","WEST","W"],
+  31:["NATURE","NORTH","N"], 32:["ART","WEST","W"], 33:["CULTURAL","NORTH","N"], 34:["NATURE","NORTH","N"],
+  35:["MEMORY","SOUTH","S"], 36:["MEMORY","SOUTH","S"], 37:["MEMORY","SOUTH","S"], 38:["MEMORY","SOUTH","S"],
+  39:["CULTURAL","CENTER","C"], 40:["CULTURAL","CENTER","C"], 41:["KNOWLEDGE","WEST","W"], 42:["KNOWLEDGE","WEST","W"],
+  43:["CULTURAL","CENTER","C"], 44:["ART","WEST","W"], 45:["NATURE","SOUTH","S"], 46:["ART","WEST","W"],
+  47:["NATURE","SOUTH","S"], 48:["CULTURAL","NORTH","N"], 49:["COMMUNITY","CENTER","C"], 50:["MEMORY","SOUTH","S"],
+  51:["KNOWLEDGE","NORTH","N"], 52:["JOURNEY","SOUTH","S"], 53:["KNOWLEDGE","NORTH","N"], 54:["MEMORY","SOUTH","S"],
+  55:["MEMORY","SOUTH","S"], 56:["CULTURAL","CENTER","C"], 57:["JOURNEY","SOUTH","S"], 58:["SERVICE","EAST","E"],
+  59:["CULTURAL","CENTER","C"], 60:["ART","WEST","W"], 61:["ART","WEST","W"], 62:["ART","WEST","W"],
+  63:["ART","WEST","W"], 64:["ART","WEST","W"], 65:["SERVICE","EAST","E"], 66:["CULTURAL","CENTER","C"],
+  67:["CULTURAL","NORTH","N"], 68:["JOURNEY","SOUTH","S"], 69:["SERVICE","EAST","E"], 70:["CULTURAL","NORTH","N"],
+  71:["COMMUNITY","CENTER","C"], 72:["KNOWLEDGE","WEST","W"], 73:["SERVICE","EAST","E"], 74:["COMMUNITY","CENTER","C"],
+  75:["SERVICE","EAST","E"], 76:["SERVICE","EAST","E"], 77:["MEMORY","SOUTH","S"], 78:["SERVICE","EAST","E"], 79:["COMMUNITY","CENTER","C"]
+};
+const cityFor = n => CITY[n] || ["COMMUNITY","CENTER","C"];
+const KM_STEP = 0.4;
+const kmFor = n => n === 1 ? "0.0" : ((n - 1) * KM_STEP).toFixed(1);
+
+/* ============ CITIZEN CONTRIBUTION ============ *
+   Every laya has its own contribution action — what a citizen can add to this space.
+   label = button text shown in the "YOUR SPACE IN LAYAPUR" card. */
+const CONTRIB = {
+  1:"Join the Circle", 2:"Publish Your Story", 3:"Request a Website", 4:"List Your Tea House",
+  5:"Order Rice", 6:"Add Your Product", 7:"Suggest a Guest", 8:"Suggest a Book",
+  9:"Publish Your Writing", 10:"Book the Stage", 11:"Get the App", 12:"Publish Your Poem",
+  13:"Share Your Creation", 14:"Plan Your Trip", 15:"Plan Your Trip", 16:"Join a Class",
+  17:"Join the Silence", 18:"Share Your Feeling", 19:"Add Your Art", 20:"List Your Clothing",
+  21:"Share an Idea", 22:"Add a View", 23:"Add Your Art", 24:"List Your Crochet",
+  25:"Join a Class", 26:"Get a Pass", 27:"Join a Class", 28:"Join the Debate",
+  29:"Read Your Poem", 30:"Share Your Fantasy", 31:"Contribute a Story", 32:"Join as Artist",
+  33:"Join the League", 34:"Join a Session", 35:"Submit Your Film", 36:"Add Your Memory",
+  37:"Share Your Voice", 38:"Submit Your Video", 39:"Join the Evening", 40:"Share Your Story",
+  41:"Share Knowledge", 42:"Contribute a Thought", 43:"Share Your Melody", 44:"Add Your Wall Art",
+  45:"List Your Plants", 46:"Add Your Jewelry", 47:"Share Your Rain", 48:"Share a Reflection",
+  49:"Share Your Design", 50:"Contribute History", 51:"Share a Thought", 52:"Share Your Journey",
+  53:"Share Knowledge", 54:"Add a Tribute", 55:"Add Your Photo", 56:"Share Your Universe",
+  57:"Add a Destination", 58:"Request Service", 59:"Share Your Tune", 60:"Add Your Art",
+  61:"Share Your Design", 62:"List Your Pottery", 63:"List Your Carving", 64:"List Your Sculpture",
+  65:"Design Your Home", 66:"List Your Instrument", 67:"Perform a Story", 68:"List Your Homestay",
+  69:"Get Help", 70:"Book Tickets", 71:"Add Your Business", 72:"Share Knowledge",
+  73:"List a Room", 74:"Plan Your Wedding", 75:"Ask for Help", 76:"Request Repair",
+  77:"Add Your Story", 78:"Submit News", 79:"Say Hello"
+};
+
 /* ============ RENDER ============ */
 const $ = (tag, cls, text) => {
   const el = document.createElement(tag);
@@ -1084,7 +1251,14 @@ function likeBtn(p) {
   const key = "phase-" + p.n, label = "Phase " + String(p.n).padStart(2, "0");
   const row = $("div", "like-row"), b = $("button", "like-btn"), cnt = $("span", "like-count");
   b.type = "button";
-  b.append(heartSvg(), cnt); row.append(b);
+  b.append(heartSvg(), cnt);
+  /* small WhatsApp "+" on the same line as the heart — same number, same destination */
+  const wa = $("a", "wa-plus", "+");
+  wa.href = "https://wa.me/9779747704316?text=" + encodeURIComponent("Hello, I want to add my business in " + p.t + " on the Deudalaya website.");
+  wa.target = "_blank"; wa.rel = "noopener noreferrer";
+  wa.setAttribute("aria-label", "WhatsApp — add on " + p.t);
+  wa.dataset.tip = "+ " + (CONTRIB[p.n] || "Add Your Place");
+  row.append(b, wa, viewsChip(p));
   const paint = () => {
     const on = !!likeStore[key], n = likeCounts[p.n] || 0;
     b.classList.toggle("liked", on);
@@ -1123,16 +1297,49 @@ function likeBtn(p) {
   });
 })();
 
-/* "+ add your business here" card, shown at the end of every phase */
+/* ============ VIEWS (local, per-visitor real count) ============ */
+let viewStore = {};
+try { viewStore = JSON.parse(localStorage.getItem("layapur-views")) || {}; } catch (e) {}
+const saveViews = () => { try { localStorage.setItem("layapur-views", JSON.stringify(viewStore)); } catch (e) {} };
+const viewPaints = [];
+const fmtViews = n => n >= 1e6 ? (n / 1e6).toFixed(1).replace(/\.0$/, "") + "M" : n >= 1e3 ? (n / 1e3).toFixed(1).replace(/\.0$/, "") + "K" : String(n);
+function viewsChip(p) {
+  const v = $("span", "views");
+  const paint = () => { v.textContent = "👁 " + fmtViews(viewStore["phase-" + p.n] || 0); };
+  viewPaints.push(paint); paint();
+  v.setAttribute("aria-label", "Views for phase " + p.n);
+  return v;
+}
+/* count a view once per page visit when the phase scrolls into view (started after render) */
+function watchViews() {
+  const seen = new Set();
+  if (!("IntersectionObserver" in window)) return;
+  const io = new IntersectionObserver(es => es.forEach(en => {
+    if (!en.isIntersecting || seen.has(en.target)) return;
+    seen.add(en.target);
+    const id = en.target.id;
+    if (id && id.startsWith("phase-")) {
+      viewStore[id] = (viewStore[id] || 0) + 1;
+      saveViews(); viewPaints.forEach(fn => fn());
+    }
+  }), { threshold: 0.4 });
+  document.querySelectorAll("#list .phase").forEach(el => io.observe(el));
+}
+
+/* "+ add your business here" card — now the CITIZEN CONTRIBUTION card, label per laya */
 const stallCard = p => {
   const c = $("div", "stall"), plus = $("span", "stall-plus", "+");
   plus.setAttribute("aria-hidden", "true");
-  const a = $("a", "btn order-mini", "Add your business");
-  a.href = "https://wa.me/9779747704316?text=" + encodeURIComponent("Hello, I want to add my business in " + p.t + " on the Deudalaya website.");
+  const label = CONTRIB[p.n] || "Add Your Place";
+  const a = $("a", "btn order-mini", "+ " + label.toUpperCase());
+  a.href = "https://wa.me/9779747704316?text=" + encodeURIComponent("Hello, I want to \"" + label + "\" for " + p.t + " on the Deudalaya website.");
   a.target = "_blank"; a.rel = "noopener noreferrer";
-  c.append(plus, $("h3", null, "तपाईंको व्यवसाय यहाँ थप्नुहोस्"), a);
+  c.append(plus, $("h3", null, "YOUR SPACE IN LAYAPUR"), a, $("p", "stall-en", "BUILD THIS SPACE WITH US"));
   return c;
 };
+
+/* subtle contribution calls-to-action, chosen to fit each laya's purpose */
+const CTA_BY_PHASE = { 1:"Join the Circle", 2:"Add Your Story", 8:"Explore", 19:"Add Your Art", 23:"Contribute", 36:"Share Your Memory", 41:"Learn More" };
 
 function render(p) {
   const el = $("article", "phase" + (p.bare ? " bare" : ""));
@@ -1148,9 +1355,27 @@ function render(p) {
   logo.alt = "";
   logo.setAttribute("aria-hidden", "true");
   numEl.append(logo, document.createTextNode("लय / Phase : " + String(p.n).padStart(2, "0")));
-  el.append(numEl, $("p", "laya", p.t));
+  el.append(numEl, $("h2", "laya", p.t));
+
+  /* city wayfinding meta: district · conceptual distance · direction */
+  if (p.n) {
+    const c = cityFor(p.n);
+    const meta = $("p", "card-meta");
+    meta.append($("b", null, "PLOT " + String(p.n).padStart(3, "0")), document.createTextNode("·"),
+      $("span", null, c[1] === "CITY CENTER" ? "CITY CENTER" : c[1] + " DISTRICT"), document.createTextNode("·"),
+      Object.assign($("span", "dist"), { textContent: (p.n === 1 || p.n === 4) ? "0.0 KM" : kmFor(p.n) + " KM" }),
+      document.createTextNode("·"), $("span", null, "🧭 " + c[2]));
+    el.append($("span", "district-mark", c[0] + " DISTRICT"), meta);
+  }
 
   (p.d || []).forEach(line => el.append($("p", "desc", line)));
+  const cta = p.n && CTA_BY_PHASE[p.n];
+  if (cta) {
+    const a = $("a", "phase-cta", cta);
+    a.href = "https://wa.me/9779747704316?text=" + encodeURIComponent("Hello, I want to \"" + cta + "\" for " + p.t + " on the Deudalaya website.");
+    a.target = "_blank"; a.rel = "noopener noreferrer";
+    el.append(a);
+  }
 
   if (p.bylaws) {                       // bylaws become cards at the start of phase 1's single scroll row
     const box = $("div", "shop-grid");
@@ -1474,24 +1699,126 @@ function render(p) {
     }
     hr.append(stallCard(p));
   }
-  if (p.n) el.append(likeBtn(p));
+  if (p.n) {
+    const nav = $("div", "card-nav");
+    const prev = p.n > 1 ? PHASES.find(x => x.n === p.n - 1) : null;
+    const next = PHASES.find(x => x.n === p.n + 1);
+    if (prev) { const a = $("a", null, "← PLOT " + String(prev.n).padStart(3, "0")); a.href = "#" + (prev.id || "phase-" + prev.n); nav.append(a); } else nav.append($("span"));
+    if (next) { const a = $("a", null, "PLOT " + String(next.n).padStart(3, "0") + " →"); a.href = "#" + (next.id || "phase-" + next.n); nav.append(a); } else nav.append($("span"));
+    el.append(nav);
+    el.append(likeBtn(p));
+  }
   return el;
 }
 
 const list = document.getElementById("list");
-const nav = document.getElementById("index-links");
-let count = 0;
 
 PHASES.forEach(p => {
   const el = render(p);
-  if (p.n) {
-    el.id = el.id || "phase-" + p.n;
-    const a = $("a", null, p.n + ". " + p.t);
-    a.href = "#" + el.id; nav.append(a); count++;
-  }
+  if (p.n) el.id = el.id || "phase-" + p.n;
   list.append(el);
 });
+watchViews();
 
+/* ============ CITY: district filter + legend + where-am-I + random ============ */
+(function () {
+  const bar = document.getElementById("filter-bar");
+  const counts = {};
+  PHASES.forEach(p => { if (p.n) { const d = cityFor(p.n)[0]; counts[d] = (counts[d] || 0) + 1; } });
+  const mk = (label, key, on) => {
+    const b = $("button", null, label); b.type = "button";
+    b.addEventListener("click", () => {
+      bar.querySelectorAll("button").forEach(x => x.classList.remove("on"));
+      b.classList.add("on");
+      document.querySelectorAll("#list .phase").forEach(el => {
+        if (key === "all") el.hidden = false;
+        else if (key === "soon") el.hidden = !el.querySelector(".soon");
+        else if (key === "open") el.hidden = !!el.querySelector(".soon");
+        else {
+          const mark = el.querySelector(".district-mark");
+          el.hidden = !mark || !mark.textContent.startsWith(key);
+        }
+      });
+    });
+    if (on) b.classList.add("on");
+    return b;
+  };
+  const dice = $("button", null, "🎲 RANDOM PLOT");
+  dice.type = "button";
+  dice.addEventListener("click", () => {
+    const open = PHASES.filter(p => p.n);
+    const p = open[Math.floor(Math.random() * open.length)];
+    const el = document.getElementById("phase-" + p.n);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+  bar.append(dice);
+
+  /* legend under the city-plan svg */
+  const legend = document.getElementById("city-legend");
+  if (legend) DISTRICTS.forEach(d => {
+    const name = d.replace(" DISTRICT", "");
+    if (counts[name]) {
+      const s = $("span"); s.append(Object.assign($("b"), { textContent: name }), document.createTextNode(" · " + counts[name] + " plots"));
+      legend.append(s);
+    }
+  });
+
+  /* wayfinding HUD: which district is on screen now */
+  const hud = $("div", "whereami");
+  hud.setAttribute("aria-live", "polite");
+  hud.innerHTML = "<b>NORTH ↑</b> · <span id='where-district'>CITY CENTER</span>";
+  document.body.append(hud);
+  const whereEl = hud.querySelector("#where-district");
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver(es => es.forEach(en => {
+      if (!en.isIntersecting) return;
+      const m = en.target.querySelector(".district-mark");
+      if (m && whereEl) whereEl.textContent = m.textContent;
+    }), { rootMargin: "-45% 0px -50% 0px" });
+    document.querySelectorAll("#list .phase").forEach(el => io.observe(el));
+  }
+})();
+
+/* lightbox for gallery images (no full-page navigation) */
+(function () {
+  const lb = $("div", "lb"); lb.setAttribute("role", "dialog"); lb.setAttribute("aria-label", "Image viewer");
+  lb.innerHTML = "<img alt=\"\"><p></p>";
+  document.body.append(lb);
+  const im = lb.querySelector("img"), cap = lb.querySelector("p");
+  document.addEventListener("click", e => {
+    const a = e.target.closest && e.target.closest("a");
+    if (!a) { if (e.target === lb) lb.classList.remove("show"); return; }
+    const imgEl = a.querySelector("img");
+    if (imgEl && (a.closest(".gallery") || a.closest(".poster-solo") || a.closest(".img-item"))) {
+      e.preventDefault();
+      im.src = imgEl.currentSrc || imgEl.src; im.alt = imgEl.alt || "";
+      cap.textContent = imgEl.alt || "";
+      lb.classList.add("show");
+    }
+  });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") lb.classList.remove("show"); });
+})();
+
+
+/* smooth in-page jump with an instant fallback — some environments stall smooth scrolling */
+const jumpTo = t => {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) { t.scrollIntoView({ behavior: "auto", block: "start" }); return; }
+  const y0 = scrollY;
+  t.scrollIntoView({ behavior: "smooth", block: "start" });
+  setTimeout(() => { if (Math.abs(scrollY - y0) < 4) t.scrollIntoView({ behavior: "instant", block: "start" }); }, 800);
+};
+/* every other in-page link (SCROLL ↓, back to top, phase index) uses the same resilient jump */
+document.addEventListener("click", e => {
+  const a = e.target.closest && e.target.closest("a[href^=\"#\"]");
+  if (!a || a.closest("#menu-list") || a.target === "_blank") return;
+  const id = a.getAttribute("href");
+  if (!id || id === "#") return;
+  let t = null; try { t = document.querySelector(id); } catch (err) { return; }
+  if (!t) return;
+  e.preventDefault();
+  jumpTo(t);
+  history.replaceState(null, "", id);
+});
 
 /* ============ LAYA MENU (top-left) ============ */
 (function(){
@@ -1503,7 +1830,28 @@ PHASES.forEach(p => {
   const links=new Map();
   PHASES.forEach(p=>{ if(p.n){ const id=document.getElementById("phase-"+p.n)?"phase-"+p.n:(p.id||"phase-"+p.n); links.set(id,add("#"+id,p.n,p.t)); } });
   document.getElementById("menu-count").textContent=links.size+" PHASES";
+  /* search — matches the raw data AND the live (translated) text of each section */
+  const si=document.getElementById("menu-search-input"), empty=document.getElementById("menu-empty");
+  const hay=new Map();
+  box.querySelectorAll("a").forEach(a=>{
+    const m=/#(\S+)/.exec(a.getAttribute("href")||"");
+    const p=m&&PHASES.find(x=>x.n&&("phase-"+x.n===m[1]||x.id===m[1]));
+    hay.set(a,{raw:p?[p.t,(p.d||[]).join(" "),((p.boxes||[]).map(b=>b.join(" ")).join(" "))].join(" "):"",
+               el:p?document.getElementById(p.id||"phase-"+p.n):null});
+  });
+  const filter=()=>{
+    const q=(si.value||"").trim().toLowerCase(); let n=0;
+    hay.forEach((o,a)=>{
+      const t=((o.raw||"")+" "+a.textContent+" "+(o.el?o.el.textContent:"")).toLowerCase();
+      const ok=!q||t.includes(q); a.hidden=!ok; if(ok)n++;
+    });
+    empty.classList.toggle("show",!!q&&n===0);
+    document.getElementById("menu-count").textContent=(q?n:links.size)+" PHASES";
+  };
+  si.addEventListener("input",filter);
+  si.addEventListener("keydown",e=>{if(e.key==="Enter"){const first=[...hay].find(([a])=>!a.hidden);if(first){e.preventDefault();first[0].click();si.value="";filter();}}});
   const open=on=>{document.body.classList.toggle("menu-open",on);btn.setAttribute("aria-expanded",on);
+    if(!on&&si.value){si.value="";filter();}
     if(on){panel.removeAttribute("inert");close.focus();}else{panel.setAttribute("inert","");btn.focus({preventScroll:true});}};
   panel.setAttribute("inert","");
   btn.addEventListener("click",()=>open(true));
@@ -1515,7 +1863,7 @@ PHASES.forEach(p => {
     e.preventDefault();
     const t=document.querySelector(a.getAttribute("href"));
     document.body.classList.remove("menu-open");panel.setAttribute("inert","");btn.setAttribute("aria-expanded","false");
-    if(t){t.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});history.replaceState(null,"",a.getAttribute("href"));}
+    if(t){jumpTo(t);history.replaceState(null,"",a.getAttribute("href"));}
   });
   /* highlight the phase currently on screen */
   if("IntersectionObserver" in window){
@@ -1526,13 +1874,22 @@ PHASES.forEach(p => {
     links.forEach((_,id)=>{const el=document.getElementById(id);el&&io.observe(el);});
   }
 })();
+/* thin architectural scroll-progress line */
+(() => {
+  const bar = document.getElementById("progress");
+  let raf = 0;
+  const upd = () => {
+    raf = 0;
+    const max = document.documentElement.scrollHeight - innerHeight;
+    bar.style.transform = "scaleX(" + (max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0) + ")";
+  };
+  addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(upd); }, { passive: true });
+  addEventListener("resize", upd);
+  upd();
+})();
 fetchLikeCounts();
-const idx = document.querySelector(".phase-index");
-idx.hidden = false;
-document.getElementById("count").textContent = count + " PHASES";
 const yearEl = document.getElementById("year");
 if (yearEl) yearEl.textContent = new Date().getFullYear();
-nav.addEventListener("click", e => { if (e.target.closest("a")) idx.open = false; });
 
 /* sync background लयपुर with the big title */
 const MARK_SCALE = 1.15;
