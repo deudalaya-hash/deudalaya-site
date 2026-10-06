@@ -1242,7 +1242,7 @@ function sendView(n) {
   fetch(LIKE_API, {
     method: "POST",
     headers: { "Content-Type": "text/plain;charset=utf-8" },
-    body: JSON.stringify({ visitor: visitorId, phase: n, type: "view" })
+    body: JSON.stringify({ visitor: visitorId, phase: n, liked: false, type: "view" })
   }).catch(() => {});
 }
 function setLiked(n, on) {
@@ -1342,6 +1342,7 @@ function watchViews() {
     if (id && id.startsWith("phase-")) {
       viewStore[id] = (viewStore[id] || 0) + 1;
       saveViews(); viewPaints.forEach(fn => fn());
+      const pn = Number(id.replace("phase-", "")); if (pn) sendView(pn);
     }
   }), { threshold: 0.4 });
   document.querySelectorAll("#list .phase").forEach(el => io.observe(el));
