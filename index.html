@@ -1891,14 +1891,24 @@ document.addEventListener("click", e => {
   }, { passive: true });
 })();
 
-/* door-opening entrance — needs two knocks (double tap/click) */
+/* door-opening entrance — needs two knocks (double tap/click); double tap on the landing page locks it again */
 (function () {
   const d = document.getElementById("door");
   if (!d) return;
+  let hideTimer = null;
   const open = () => {
     d.classList.add("open");
     document.body.classList.add("entered");
-    setTimeout(() => { d.style.display = "none"; }, 1600);
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => { d.style.display = "none"; }, 1600);
+  };
+  const lock = () => {
+    clearTimeout(hideTimer);
+    d.style.display = "flex";
+    void d.offsetWidth; /* restart the slide animation */
+    d.classList.remove("open");
+    document.body.classList.remove("entered");
+    last = 0;
   };
   let last = 0;
   const knock = () => {
@@ -1909,6 +1919,20 @@ document.addEventListener("click", e => {
   d.addEventListener("click", knock);
   d.addEventListener("touchstart", knock, { passive: true });
   d.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") open(); });
+
+  /* double tap/click on the landing page (hero) closes the door again */
+  const home = document.getElementById("home");
+  if (home) {
+    let lastTap = 0;
+    const tap = e => {
+      if (!document.body.classList.contains("entered")) return;
+      if (e.target.closest("a, button, input, summary, details, select, textarea, label")) return;
+      const now = Date.now();
+      if (now - lastTap < 450) { lastTap = 0; lock(); }
+      else lastTap = now;
+    };
+    home.addEventListener("click", tap);
+  }
 })();
 
 /* ============ LAYA MENU (top-left) ============ */
