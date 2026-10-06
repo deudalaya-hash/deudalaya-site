@@ -1237,6 +1237,14 @@ function sendLike(n, liked) {
     body: JSON.stringify({ visitor: visitorId, phase: n, liked: liked })
   }).then(r => r.json()).then(d => applyServerCounts(d.counts)).catch(() => {});
 }
+function sendView(n) {
+  if (!LIKE_API) return;
+  fetch(LIKE_API, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify({ visitor: visitorId, phase: n, type: "view" })
+  }).catch(() => {});
+}
 function setLiked(n, on) {
   const key = "phase-" + n;
   if (!!likeStore[key] === on) return;
@@ -2159,7 +2167,7 @@ tbtn.addEventListener("click", () => setTheme(document.documentElement.dataset.t
     btn.textContent = LANG === "ne" ? "E" : "N";
     btn.setAttribute("aria-label", LANG === "ne" ? "Switch to English" : "Switch to Nepali");
   };
-  document.body.append(btn);
+  /* floating language button removed (kept logic above) */
 
   let timer = null;
   const obs = new MutationObserver(() => {
