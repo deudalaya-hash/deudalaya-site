@@ -612,6 +612,8 @@ div.contact-link:hover{transform:none;box-shadow:none;border-color:var(--line)}
 .door span::before{content:"";position:absolute;top:50%;width:40px;height:40px;margin-top:-20px;border:5px solid #d4a24b;border-radius:50%;background:#2b1414;box-shadow:0 0 14px rgba(0,0,0,.7), inset 0 0 8px rgba(0,0,0,.8)}
 .door span:nth-child(1)::before{right:18px}
 .door span:nth-child(2)::before{left:18px}
+/* hero content stays still until the door opens */
+body:not(.entered) .hero *, body:not(.entered) .hero::before, body:not(.entered) .hero::after{animation-play-state:paused!important}
 .door.open span:nth-child(1){transform:translateX(-100%)}
 .door.open span:nth-child(2){transform:translateX(100%)}
 .enter-note{margin-top:6px;font:500 13px/1.4 var(--sans);letter-spacing:3px;color:var(--accent)}
@@ -627,7 +629,7 @@ div.contact-link:hover{transform:none;box-shadow:none;border-color:var(--line)}
 </style>
 </head>
 <body>
-<div class="door" id="door" aria-hidden="true"><span></span><span></span><p class="door-hint" aria-hidden="true">KNOCK TWICE TO ENTER</p></div>
+<div class="door" id="door" aria-hidden="true"><span><b class="door-word">लय</b></span><span><b class="door-word">पुर</b></span></div>
 <div class="progress" id="progress" aria-hidden="true"></div>
 <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Open laya menu" aria-expanded="false" aria-controls="menu-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
 <div class="menu-backdrop" id="menu-backdrop"></div>
@@ -1881,9 +1883,6 @@ document.addEventListener("click", e => {
     last = y;
   }, { passive: true });
 })();
-
-/* hero content stays still until the door opens */
-body:not(.entered) .hero *, body:not(.entered) .hero::before, body:not(.entered) .hero::after{animation-play-state:paused!important}
 
 /* door-opening entrance — needs two knocks (double tap/click) */
 (function () {
