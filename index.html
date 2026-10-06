@@ -198,6 +198,15 @@ h2{font:300 clamp(20px,6.2vw,34px) var(--sans);letter-spacing:3px;margin:0}
 .soon::before,.soon::after{content:"✦";font-size:14px;opacity:.55;margin:0 12px;vertical-align:middle}
 @keyframes soonGlow{0%,100%{text-shadow:0 0 0 transparent;opacity:.9}50%{text-shadow:0 0 18px var(--soon);opacity:1}}
 
+/* ========== BYLAWS (phase 1) ========== */
+.bylaws{margin:14px auto 10px;max-width:640px;text-align:left}
+.bylaws-h{margin:0 0 10px;text-align:center;font:500 13px/1.4 var(--sans);letter-spacing:2px;color:var(--accent)}
+.bylaw{padding:12px 14px;margin:0 0 8px;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;background:var(--surface)}
+.bylaw h3{margin:0 0 4px;font:500 15px/1.4 var(--serif);color:var(--text)}
+.bylaw p{margin:0;font-size:14px;line-height:1.7;color:var(--desc);overflow-wrap:anywhere}
+.bylaw small{display:block;margin-bottom:8px;font-size:10px;letter-spacing:2px;color:var(--accent)}
+.hrow>.bylaw{flex:0 0 min(270px,78vw);align-self:stretch;margin:0 0 8px}
+
 /* ========== LIKE HEART (TikTok style) ========== */
 .phase{touch-action:manipulation}
 .like-row{display:flex;justify-content:center;margin-top:18px}
@@ -354,10 +363,38 @@ html{scroll-behavior:auto}
 .update-toast p small{display:block;color:var(--muted);font-size:12px}
 .update-toast button{font:inherit;font-size:13px;cursor:pointer;border-radius:999px;border:1px solid var(--accent);padding:8px 14px;background:var(--accent);color:var(--bg)}
 .update-toast .x{background:none;color:var(--muted);border-color:var(--line);padding:6px 10px}
-/* gallery: wrap instead of side-scroll so no image is cut off on mobile */
-.gallery{flex-wrap:wrap;overflow:visible;scroll-snap-type:none;justify-content:center}
-.gallery img{max-width:100%;scroll-snap-align:none}
-@media(max-width:600px){.gallery.poster img{width:min(300px,86vw)}.gallery.thumb img{width:calc(50% - 8px);max-width:200px}}
+/* gallery: one horizontal scroll row (centered when it fits, scrollable when it does not) */
+.hblock{margin-top:14px}
+.shop-grid>:first-child{margin-left:auto}
+.shop-grid>:last-child{margin-right:auto}
+.poster-card{flex-basis:min(240px,70vw)!important}
+.poster-card img{aspect-ratio:auto!important;object-fit:contain!important;height:auto}
+.blog-link{display:flex;align-items:center;justify-content:center}
+/* one single horizontal row per phase: posters, images, cards, blog, everything */
+.hrow{display:flex;flex-wrap:nowrap;align-items:flex-start;gap:12px;width:100%;max-width:100%;margin:20px auto 0;padding:6px 2px 14px;
+ overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scroll-snap-type:x proximity;
+ scrollbar-width:thin;scrollbar-color:var(--accent) var(--line);text-align:left}
+.hrow>*{flex:0 0 auto;scroll-snap-align:start}
+.hrow>:first-child{margin-left:auto}
+.hrow>:last-child{margin-right:auto}
+.hrow>.dest-card{display:flex;flex-direction:column;flex:0 0 min(200px,64vw);align-self:stretch}
+.hrow>.shop-card{flex:0 0 150px}
+.hrow>.shop-card.branch{flex-basis:230px}
+.hrow>.shop-card.day-card{flex-basis:170px}
+.hrow>.shop-card.poster-card{flex-basis:min(240px,70vw)}
+.hrow>.blog-post{flex:0 0 min(520px,86vw);align-self:stretch}
+.hrow>.img-item{display:flex;flex-direction:column;align-items:center;gap:8px;width:140px}
+.hrow>.img-item.k-poster{width:min(240px,70vw)}
+.hrow>.img-item.k-wide{width:min(520px,90vw)}
+.hrow>.img-item img{display:block;width:100%;height:auto;border-radius:14px;box-shadow:0 8px 24px var(--shadow);transition:transform .3s,box-shadow .3s}
+.hrow>.img-item img:hover{transform:translateY(-5px) scale(1.04);box-shadow:0 14px 36px var(--shadow),0 0 20px var(--glow)}
+.gallery{justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity}
+.gallery>:first-child{margin-left:auto}
+.gallery>:last-child{margin-right:auto}
+.gallery img{scroll-snap-align:start}
+.day-card{flex-basis:170px!important;padding:14px 10px!important;text-align:center}
+.day-card h3{margin:2px 0 4px!important;font-size:15px!important}
+.day-card p{margin:0;font-size:13px;line-height:1.5;color:var(--desc)}
 /* हाटालय shop: one horizontal scroll row, small order buttons */
 .shop-grid{display:flex;flex-wrap:nowrap;gap:12px;margin:20px auto 0;max-width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;padding:4px 2px 12px;scrollbar-width:thin;scrollbar-color:var(--accent) var(--line);text-align:center}
 .shop-card{flex:0 0 150px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px;background:var(--surface);border:1px solid var(--line);border-radius:14px;scroll-snap-align:start}
@@ -441,6 +478,11 @@ html{scroll-behavior:auto}
 const PHASES = [
   { soon: "Ongoing", bare: true },
   { n: 1, t: "सुदूर कर्णाली सांस्कृतिक तथा देउडालय समाज",
+    bylaws: { h: "विधान / उद्देश्य", items: [
+      ["१. शुक्रबार — देउडा साँझ", "संस्थाको स्थापना भएको मितिदेखि पाँच वर्षको अवधिसम्म प्रत्येक शुक्रबार शंखमूल पार्कमा नियमित देउडा साँझ सञ्चालन गर्ने।"],
+      ["२. शनिबार — देउडा नाच", "संस्थाको स्थापना भएको मितिदेखि पाँच वर्षको अवधिसम्म प्रत्येक शनिबार काठमाडौं उपत्यकाका विभिन्न स्थानमा देउडा नाच सञ्चालन गर्ने।"],
+      ["३. विशेषबार — देउडा नाच तथा विशेष कार्यक्रम", "संस्थाको स्थापना भएको मितिदेखि पाँच वर्षको अवधिसम्म विभिन्न विशेष तथा राष्ट्रिय दिवसहरूमा देउडा नाच तथा सांस्कृतिक कार्यक्रम सञ्चालन गर्ने।"]
+    ] },
     d: ["देउडासाँझ, Every Friday at Shankhamul Park. 🎶", "Non-Profit Organization 🤝"],
     gal: { label: "images", open: true, kind: "thumb", items: [["sudurkarnali.jpg","Sudur Karnali"],["deudalaya-poster.jpg","Deudalaya poster"],["nonprofit.jpg","Nonprofit"]] }, next: true, events: true },
   { n: 2, t: "शब्दलय", d: ["Welcome to my blog. ✍️"], poster: ["sabdalaya%20(2).jpg","शब्दलय poster"], blog: true, bloglink: true },
@@ -791,11 +833,9 @@ const $ = (tag, cls, text) => {
 };
 const img = (src, alt) => { const i = $("img"); i.src = src; i.alt = alt; i.loading = "lazy"; i.decoding = "async"; return i; };
 const link = (href, child) => { const a = $("a"); a.href = href; a.target = "_blank"; a.rel = "noopener noreferrer"; a.append(child); return a; };
-const details = (label, open) => {
-  const d = $("details", "imgs"); d.open = !!open;
-  const sm = $("summary", null, label);
-  sm.title = label; sm.setAttribute("aria-label", label);
-  d.append(sm);
+const details = (label) => {          // plain always-visible block (no toggle), like हाटालय
+  const d = $("div", "hblock");
+  d.setAttribute("role", "group"); if (label) d.setAttribute("aria-label", label);
   return d;
 };
 
@@ -930,9 +970,24 @@ function render(p) {
   logo.setAttribute("aria-hidden", "true");
   numEl.append(logo, document.createTextNode("लय / Phase : " + String(p.n).padStart(2, "0")));
   el.append(numEl, $("p", "laya", p.t));
+
   (p.d || []).forEach(line => el.append($("p", "desc", line)));
 
-  if (p.poster) el.append(Object.assign(link(p.poster[0], img(...p.poster)), { className: "poster-solo" }));
+  if (p.bylaws) {                       // bylaws become cards at the start of phase 1's single scroll row
+    const box = $("div", "shop-grid");
+    p.bylaws.items.forEach(([h, t]) => {
+      const it = $("div", "bylaw");
+      it.append($("small", null, p.bylaws.h), $("h3", null, h), $("p", null, t));
+      box.append(it);
+    });
+    el.append(box);
+  }
+
+  if (p.poster) {                       // poster = a card inside a horizontal scroll row
+    const row = $("div", "shop-grid"), c = $("div", "shop-card poster-card");
+    c.append(link(p.poster[0], img(...p.poster)), actionBtn(p, p.poster[1] || p.t));
+    row.append(c); el.append(row);
+  }
 
   if (p.gal) {
     const d = details(p.gal.label, p.gal.open), g = $("div", "gallery " + p.gal.kind);
@@ -1105,13 +1160,20 @@ function render(p) {
     el.append(d);
   }
 
-  if (p.bloglink) { const a = $("a", "btn", "Open blog page"); a.href = "blog.html"; el.append(a); }
+  if (p.bloglink) {
+    const a = $("a", "btn", "Open blog page"); a.href = "blog.html";
+    const wrap = el.querySelector(".blog-posts");
+    if (wrap) { const c = $("div", "blog-post blog-link"); c.append(a); wrap.append(c); } else el.append(a);
+  }
 
   if (p.sanjh) {
-    const d = details("weekly schedule"), box = $("div", "sanjh");
-    SANJH.forEach(([day, what]) => { const row = $("p"); row.append(Object.assign($("strong"), { textContent: day }), " — " + what); box.append(row); });
-    box.append($("p", "time", "बेलुका ५:००–७:०० बजे 🌙"));
-    d.append(box); el.append(d);
+    const d = details("weekly schedule"), row = $("div", "shop-grid");
+    SANJH.forEach(([day, what]) => {
+      const c = $("div", "shop-card day-card");
+      c.append($("h3", null, day), $("p", null, what));
+      row.append(c);
+    });
+    d.append(row, $("p", "time", "बेलुका ५:००–७:०० बजे 🌙")); el.append(d);
   }
 
   if (p.contact) {
@@ -1154,6 +1216,23 @@ function render(p) {
     const h = c.querySelector("h3");
     c.append(actionBtn(p, h ? h.textContent : p.t));
   });
+  // merge every scroll section of this phase into ONE horizontal row
+  const rows = [...el.querySelectorAll(".gallery,.shop-grid,.dest-grid,.blog-posts")];
+  if (rows.length) {
+    const hr = $("div", "hrow");
+    hr.setAttribute("role", "region"); hr.setAttribute("aria-label", p.t); hr.tabIndex = 0;
+    (rows[0].closest(".hblock") || rows[0]).before(hr);
+    rows.forEach(r => {
+      const kind = ["thumb", "poster", "wide"].find(k => r.classList.contains(k));
+      [...r.children].forEach(c => {
+        if (kind && c.classList.contains("img-item")) c.classList.add("k-" + kind);
+        hr.append(c);
+      });
+      const h = r.closest(".hblock");
+      r.remove();
+      if (h && !h.children.length) h.remove();
+    });
+  }
   if (p.n) el.append(likeBtn(p));
   return el;
 }
