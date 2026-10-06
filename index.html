@@ -356,7 +356,8 @@ h1{font-size:76px}
 @media(max-width:600px){.dest-grid{grid-template-columns:1fr;gap:12px}.dest-card{padding:18px 14px}}
 @media(prefers-reduced-motion:reduce){
 html{scroll-behavior:auto}
-.phase,.url,.welcome,h1,h2,.divider,.role{animation:none!important;opacity:1!important;transform:none!important}
+.phase{animation:none!important;opacity:1!important}
+.url,.welcome,h1,h2,.divider,.role{animation:none!important;opacity:1!important;transform:none!important}
 .hero::before{animation:none!important;opacity:.12!important;transform:none!important}
 .hero-dots span,.hero-rings circle,.soon,.next,.flourish i{animation:none!important}
 }
@@ -374,13 +375,29 @@ html{scroll-behavior:auto}
 .imgs>summary::-webkit-details-marker{display:none}
 .imgs>summary::before,.imgs[open]>summary::before{content:"";display:block;width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);margin:-3px 0 0}
 .imgs[open]>summary::before{transform:rotate(-135deg);margin:3px 0 0}
-/* touch devices (iPhone/iPad): no hover, so lift the phase in focus / being tapped */
+/* touch devices (Android/iPhone): no hover — same lift + glow as desktop while pressed */
 @media(hover:none){
   .phase:not(.bare){box-shadow:0 4px 16px var(--shadow)}
-  .has-reveal .phase.seen:not(.bare).lit,.phase:not(.bare).lit,.phase:not(.bare):active{border-color:var(--accent);transform:translateY(-5px);box-shadow:0 18px 40px rgba(0,0,0,.34),0 0 0 2px var(--accent),0 0 30px var(--glow)}
-  .phase.lit::before,.phase:active::before,.phase.lit::after,.phase:active::after{opacity:1}
-  .phase.lit .laya::after{width:55px}
+  .phase:not(.bare):active{border-color:var(--accent);transform:translateY(-5px);box-shadow:0 18px 40px rgba(0,0,0,.34),0 0 0 2px var(--accent),0 0 30px var(--glow)}
+  .phase:active::before,.phase:active::after{opacity:1}
+  .phase:active .laya::after{width:55px}
+  .dest-card:active{transform:translateY(-6px);border-color:var(--accent);box-shadow:0 16px 34px rgba(0,0,0,.32),0 0 0 2px var(--accent),0 0 26px var(--glow)}
+  .gallery img:active,.poster-solo img:active{transform:translateY(-5px) scale(1.04);box-shadow:0 14px 36px var(--shadow),0 0 20px var(--glow);z-index:2}
+  .btn:active{box-shadow:0 10px 26px rgba(0,0,0,.35),0 0 22px var(--glow)}
+  .imgs>summary:active{background:var(--accent);color:var(--bg);box-shadow:0 4px 18px var(--glow);transform:translateY(-1px)}
 }
+/* touch / ?touch preview: the touch script adds .lit to the phase and the inner box nearest the
+   screen centre, so scrolling gives touch users the same effect hovering gives on desktop.
+   Kept outside the media query so ?touch can be previewed on desktop; .lit is never added
+   without the touch script. */
+.phase:not(.bare).lit{border-color:var(--accent);transform:translateX(5px) translateY(-2px);box-shadow:0 12px 36px var(--shadow),0 0 28px var(--glow)}
+.phase:not(.bare).lit::before,.phase:not(.bare).lit::after{opacity:1}
+.phase.lit .laya::after{width:55px}
+.hrow>.bylaw.lit,.hrow>.shop-card.lit,.hrow>.blog-post.lit,.hrow>.dest-card.lit,.dest-card.lit,.stall.lit,.next.lit{transform:translateY(-6px);border-color:var(--accent);box-shadow:0 16px 34px rgba(0,0,0,.32),0 0 0 2px var(--accent),0 0 26px var(--glow)}
+.stall.lit{border-style:solid}
+.gallery img.lit,.poster-solo img.lit{transform:translateY(-5px) scale(1.04);box-shadow:0 14px 36px var(--shadow),0 0 20px var(--glow);z-index:2}
+.imgs>summary.lit{background:var(--accent);color:var(--bg);box-shadow:0 4px 18px var(--glow);transform:translateY(-1px)}
+.next{transition:transform .3s,border-color .3s,box-shadow .3s}
 /* update notification */
 .update-toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translate(-50%,24px);z-index:60;width:min(440px,calc(100% - 28px));
  display:flex;align-items:center;gap:12px;padding:12px 14px 12px 18px;border:1px solid var(--accent);border-radius:16px;background:var(--surface);color:var(--text);
@@ -469,7 +486,7 @@ html{scroll-behavior:auto}
   transform:translateY(-4px);border-color:var(--accent);box-shadow:0 0 24px var(--glow)}
 @media(prefers-reduced-motion:reduce){
   .hrow>*,.hrow>.img-item img,.next{transition:none!important}
-  .hrow>*:hover,.hrow>*:active,.next:hover{transform:none!important}
+  .hrow>*:hover,.next:hover{transform:none!important}
 }
 /* ===== stall card: + add your business here ===== */
 .stall{flex:0 0 min(150px,46vw);align-self:flex-start;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 8px;
@@ -1616,13 +1633,46 @@ tbtn.addEventListener("click", () => setTheme(document.documentElement.dataset.t
       card.style.setProperty("--my", (e.clientY - r.top) + "px");
     });
   });
-  // touch devices: raise the phase nearest the middle of the screen
-  if (matchMedia("(hover: none)").matches) {
-    const lit = new IntersectionObserver(entries => {
-      entries.forEach(e => e.target.classList.toggle("lit", e.isIntersecting));
-    }, { rootMargin: "-42% 0px -42% 0px", threshold: 0 });
-    document.querySelectorAll(".phase:not(.bare)").forEach(el => lit.observe(el));
-  }
+})();
+/* touch devices (or ?touch preview): light the phase AND the inner box nearest the middle of
+   the screen, so scrolling gives touch users the effect hovering gives on desktop.
+   Own IIFE: must run even when prefers-reduced-motion skips the reveal script above. */
+(function () {
+  const TOUCH = matchMedia("(hover: none)").matches || new URLSearchParams(location.search).has("touch");
+  if (!TOUCH) return;
+  const selP = ".phase:not(.bare)";
+  const selB = ".dest-card,.stall,.next,.hrow>.bylaw,.hrow>.shop-card,.hrow>.blog-post,.hrow>.dest-card,.gallery img,.poster-solo img,.imgs>summary";
+  const ps = [...document.querySelectorAll(selP)], bs = [...document.querySelectorAll(selB)];
+  const vis = new Set();
+  let raf = 0, litP = null, litB = null;
+  const nearest = list => {
+    const cx = innerWidth / 2, cy = innerHeight / 2;
+    let best = null, bd = Infinity;
+    for (const el of list) {
+      if (!vis.has(el)) continue;
+      const r = el.getBoundingClientRect();
+      if (!r.width || !r.height) continue;
+      const d = Math.hypot(r.left + r.width / 2 - cx, r.top + r.height / 2 - cy);
+      if (d < bd) { bd = d; best = el; }
+    }
+    return best;
+  };
+  const upd = () => {
+    raf = 0;
+    const p = nearest(ps), b = nearest(bs);
+    if (p !== litP) { if (litP) litP.classList.remove("lit"); litP = p; if (p) p.classList.add("lit"); }
+    if (b !== litB) { if (litB) litB.classList.remove("lit"); litB = b; if (b) b.classList.add("lit"); }
+  };
+  const sched = () => { if (!raf) raf = requestAnimationFrame(upd); };
+  const vo = new IntersectionObserver(es => {
+    es.forEach(e => { e.isIntersecting ? vis.add(e.target) : vis.delete(e.target); });
+    sched();
+  }, { rootMargin: "20% 0px 20% 0px" });
+  [...ps, ...bs].forEach(el => vo.observe(el));
+  addEventListener("scroll", sched, { passive: true });
+  addEventListener("resize", sched, { passive: true });
+  addEventListener("load", sched);
+  upd();
 })();
 /* update notification: checks if a newer version of this page is online */
 (function () {

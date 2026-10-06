@@ -1,0 +1,12 @@
+# large binaries (GitHub rejects files > 100 MB — this blocked a push)
+*.exe
+*.crdownload
+*.msi
+*.zip
+
+# app-internal
+.freebuff/
+
+# Windows junk
+desktop.ini
+Thumbs.db
