@@ -58,6 +58,31 @@ section{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;al
  display:grid;place-items:center;box-shadow:0 4px 18px var(--shadow);transition:transform .25s,border-color .25s,box-shadow .25s}
 .theme-toggle:hover{transform:rotate(22deg) scale(1.06);border-color:var(--accent);box-shadow:0 0 20px var(--glow)}
 
+/* laya menu (top-left) */
+.menu-toggle{position:fixed;top:calc(env(safe-area-inset-top) + 12px);left:calc(env(safe-area-inset-left) + 12px);z-index:20;
+ width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--text);cursor:pointer;
+ display:grid;place-items:center;box-shadow:0 4px 18px var(--shadow);transition:transform .25s,border-color .25s,box-shadow .25s}
+.menu-toggle:hover{transform:scale(1.06);border-color:var(--accent);box-shadow:0 0 20px var(--glow)}
+.menu-toggle svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none}
+.menu-backdrop{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.45);opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.menu-panel{position:fixed;top:0;bottom:0;left:0;z-index:31;width:min(340px,88vw);display:flex;flex-direction:column;text-align:left;
+ padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom) env(safe-area-inset-left);
+ background:var(--bg);border-right:1px solid var(--line);box-shadow:8px 0 30px var(--shadow);
+ transform:translateX(-102%);visibility:hidden;transition:transform .3s ease,visibility .3s}
+body.menu-open .menu-backdrop{opacity:1;visibility:visible}
+body.menu-open .menu-panel{transform:none;visibility:visible}
+body.menu-open{overflow:hidden}
+.menu-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line);color:var(--accent);font-size:13px;letter-spacing:2px}
+.menu-head small{color:var(--muted);font-size:12px;letter-spacing:1px}
+.menu-close{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--text);font-size:20px;line-height:1;cursor:pointer}
+.menu-close:hover{border-color:var(--accent);color:var(--accent)}
+.menu-list{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:8px 10px 18px}
+.menu-list a{display:flex;gap:10px;align-items:baseline;padding:10px 12px;border-radius:12px;font-size:15px;line-height:1.4;text-decoration:none;transition:background .2s,color .2s}
+.menu-list a b{flex:0 0 2.2em;font-weight:400;color:var(--muted);font-size:12px;letter-spacing:1px}
+.menu-list a:hover,.menu-list a:focus-visible{color:var(--accent);background:var(--tint)}
+.menu-list a.active{color:var(--accent);background:var(--tint)}
+@media(prefers-reduced-motion:reduce){.menu-panel,.menu-backdrop{transition:none}}
+
 /* ========== HERO ========== */
 .hero{position:relative;overflow:hidden;background:var(--hero-bg);border-bottom:1px solid var(--line)}
 .hero>*{position:relative;z-index:2}
@@ -473,7 +498,7 @@ html{scroll-behavior:auto}
 div.contact-link:hover{transform:none;box-shadow:none;border-color:var(--line)}
 .cl-foot{line-height:1.6;letter-spacing:.3px!important;font-size:12px!important}
 /* language switch */
-.lang-toggle{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));right:10px;z-index:80;padding:6px 12px;border:1px solid var(--accent);border-radius:999px;
+.lang-toggle{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));right:calc(64px + env(safe-area-inset-right,0px));z-index:20;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0 14px;border:1px solid var(--accent);border-radius:999px;
  background:var(--surface);color:var(--text);font:600 12px/1 var(--sans);letter-spacing:.3px;cursor:pointer;box-shadow:0 4px 14px var(--shadow);-webkit-tap-highlight-color:transparent;transition:transform .2s,box-shadow .2s}
 .lang-toggle:hover{box-shadow:0 6px 18px var(--glow)}
 .lang-toggle:active{transform:scale(.94)}
@@ -481,6 +506,12 @@ div.contact-link:hover{transform:none;box-shadow:none;border-color:var(--line)}
 </style>
 </head>
 <body>
+<button class="menu-toggle" id="menu-toggle" type="button" aria-label="Open laya menu" aria-expanded="false" aria-controls="menu-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+<div class="menu-backdrop" id="menu-backdrop"></div>
+<aside class="menu-panel" id="menu-panel" aria-label="All layas">
+  <div class="menu-head"><span>सबै लय <small id="menu-count"></small></span><button class="menu-close" id="menu-close" type="button" aria-label="Close menu">×</button></div>
+  <nav class="menu-list" id="menu-list"></nav>
+</aside>
 <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark mode"></button>
 <noscript><p style="padding:24px">Please turn on JavaScript to see लयपुर. Contact: 9747704316 · deudalaya@gmail.com</p></noscript>
 <img class="mark" id="mark" src="layapurtextonly.jpg" alt="" aria-hidden="true">
@@ -732,7 +763,16 @@ const PHASES = [
         foot: "❤️ सुदूर-कर्णालीको संस्कृति, संगीत र ऊर्जा — राजधानीको आँगनमा।" }
     ],
     gal: { label: "image", open: true, kind: "poster", items: [["concert.png","New Year 2027 Deudalaya Concert poster"]] } },
-  { n: 71, t: "सम्पर्कालय", d: ["सम्पर्कमा रहनुहोस्"], id: "contact", contact: true,
+  { n: 71, t: "व्यापारालय", d: ["सुदूर कर्णालीका व्यवसायी तथा उद्यमीहरूका लागि राजधानीमा व्यवसाय, सहकार्य, बजार र नेटवर्किङको साझा स्थान। 🤝"] },
+  { n: 72, t: "कक्षालय", d: ["सुदूर कर्णालीका विद्यार्थीहरूका लागि विशेषज्ञ तथा सम्मानित व्यक्तिहरूसँग विभिन्न विषयका अनलाइन कक्षा र ज्ञान आदानप्रदानको माध्यम। 🎓"] },
+  { n: 73, t: "रूमलय", d: ["सुदूर कर्णालीका लागि राजधानीमा कोठा खोज्न, उपलब्ध कोठाको जानकारी पाउन र बसोबासको अवसर जोड्न सहयोग गर्ने स्थान। 🏠"] },
+  { n: 74, t: "शुभविवाहालय", d: ["विवाह समारोहको योजना, व्यवस्थापन र आवश्यक सेवाहरू जोड्ने अनलाइन प्लेटफर्म। 💍"] },
+  { n: 75, t: "औषधालय", d: ["सुदूर कर्णालीका लागि राजधानीमा आकस्मिक स्वास्थ्य सल्लाह, औषधि तथा आवश्यक स्वास्थ्य सेवामा पहुँच पुर्‍याउने सेवा। 💊"] },
+  { n: 76, t: "इलेक्ट्रोनिक्सालय", d: ["सुदूर कर्णालीका लागि राजधानीमा इलेक्ट्रोनिक्स सामग्री, मर्मत तथा आवश्यक प्राविधिक सेवामा पहुँच पुर्‍याउने सेवा। 🔌"] },
+  { n: 77, t: "फेसलय", d: ["सुदूर कर्णालीका मानिसहरूको अनुहार, परिचय, कथा र पहिचानको डिजिटल ग्यालेरी। 📸"] },
+  { n: 78, t: "प्रतिकालय", d: ["देउडालय समाचारको समाचार माध्यम। 📰"],
+    boxes: [["PHASE 1 — देउडालय समाचार — अनलाइन", "सुदूर कर्णालीको आफ्नै डिजिटल समाचार माध्यम।"], ["PHASE 2 — देउडालय समाचार — साप्ताहिक", "सुदूर कर्णालीको आफ्नै साप्ताहिक समाचारपत्र।"]] },
+  { n: 79, t: "सम्पर्कालय", d: ["सम्पर्कमा रहनुहोस्"], id: "contact", contact: true,
     gal: { label: "image", open: true, kind: "poster", items: [["introduction.jpeg","i was here — Bharat Thakuri"]] } }
 ];
 
@@ -1435,6 +1475,40 @@ PHASES.forEach(p => {
   list.append(el);
 });
 
+
+/* ============ LAYA MENU (top-left) ============ */
+(function(){
+  const btn=document.getElementById("menu-toggle"), panel=document.getElementById("menu-panel"),
+        back=document.getElementById("menu-backdrop"), close=document.getElementById("menu-close"),
+        box=document.getElementById("menu-list");
+  const add=(href,num,text)=>{const a=$("a");a.href=href;if(num)a.append($("b",null,String(num).padStart(2,"0")));a.append(document.createTextNode(text));box.append(a);return a;};
+  add("#home","","↑ मुख्य पृष्ठ / Home");
+  const links=new Map();
+  PHASES.forEach(p=>{ if(p.n){ const id=document.getElementById("phase-"+p.n)?"phase-"+p.n:(p.id||"phase-"+p.n); links.set(id,add("#"+id,p.n,p.t)); } });
+  document.getElementById("menu-count").textContent=links.size+" PHASES";
+  const open=on=>{document.body.classList.toggle("menu-open",on);btn.setAttribute("aria-expanded",on);
+    if(on){panel.removeAttribute("inert");close.focus();}else{panel.setAttribute("inert","");btn.focus({preventScroll:true});}};
+  panel.setAttribute("inert","");
+  btn.addEventListener("click",()=>open(true));
+  close.addEventListener("click",()=>open(false));
+  back.addEventListener("click",()=>open(false));
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&document.body.classList.contains("menu-open"))open(false);});
+  box.addEventListener("click",e=>{
+    const a=e.target.closest("a"); if(!a)return;
+    e.preventDefault();
+    const t=document.querySelector(a.getAttribute("href"));
+    document.body.classList.remove("menu-open");panel.setAttribute("inert","");btn.setAttribute("aria-expanded","false");
+    if(t){t.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});history.replaceState(null,"",a.getAttribute("href"));}
+  });
+  /* highlight the phase currently on screen */
+  if("IntersectionObserver" in window){
+    let cur=null;
+    const io=new IntersectionObserver(es=>es.forEach(en=>{
+      if(en.isIntersecting){cur&&cur.classList.remove("active");cur=links.get(en.target.id)||null;cur&&cur.classList.add("active");}
+    }),{rootMargin:"-40% 0px -55% 0px"});
+    links.forEach((_,id)=>{const el=document.getElementById(id);el&&io.observe(el);});
+  }
+})();
 fetchLikeCounts();
 const idx = document.querySelector(".phase-index");
 idx.hidden = false;
