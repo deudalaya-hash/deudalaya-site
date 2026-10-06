@@ -60,6 +60,11 @@ section{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;al
  width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--text);font-size:18px;line-height:1;cursor:pointer;
  display:grid;place-items:center;box-shadow:0 4px 18px var(--shadow);transition:transform .25s,border-color .25s,box-shadow .25s}
 .theme-toggle:hover{transform:rotate(22deg) scale(1.06);border-color:var(--accent);box-shadow:0 0 20px var(--glow)}
+/* search button (top center) */
+.search-fab{position:fixed;top:calc(env(safe-area-inset-top) + 12px);left:50%;transform:translateX(-50%);z-index:20;
+ width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--text);font-size:17px;
+ cursor:pointer;display:grid;place-items:center;box-shadow:0 4px 18px var(--shadow);transition:transform .25s,border-color .25s,box-shadow .25s}
+.search-fab:hover{border-color:var(--accent);box-shadow:0 0 20px var(--glow);transform:translateX(-50%) scale(1.06)}
 
 /* laya menu (top-left) */
 .menu-toggle{position:fixed;top:calc(env(safe-area-inset-top) + 12px);left:calc(env(safe-area-inset-left) + 12px);z-index:20;
@@ -618,6 +623,7 @@ div.contact-link:hover{transform:none;box-shadow:none;border-color:var(--line)}
   <nav class="menu-list" id="menu-list"></nav>
 </aside>
 <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark mode"></button>
+<button class="search-fab" id="search-fab" type="button" aria-label="Search all layas">🔍</button>
 <noscript><p style="padding:24px">Please turn on JavaScript to see लयपुर. Contact: 9747704316 · deudalaya@gmail.com</p></noscript>
 <img class="mark" id="mark" src="layapurtextonly.jpg" alt="" aria-hidden="true">
 
@@ -1837,11 +1843,26 @@ document.addEventListener("click", e => {
   document.getElementById("menu-count").textContent=links.size+" PHASES";
   /* search — matches the raw data AND the live (translated) text of each section */
   const si=document.getElementById("menu-search-input"), empty=document.getElementById("menu-empty");
+  /* romanize Nepali names so searching "kavitalaya" finds कवितालय */
+  const V={"अ":"a","आ":"a","इ":"i","ई":"i","उ":"u","ऊ":"u","ए":"e","ऐ":"ai","ओ":"o","औ":"au"};
+  const M={"ा":"a","ि":"i","ी":"i","ु":"u","ू":"u","े":"e","ै":"ai","ो":"o","ौ":"au","ं":"n","ः":"h"};
+  const C={"क":"k","ख":"kh","ग":"g","घ":"gh","ङ":"n","च":"ch","छ":"chh","ज":"j","झ":"jh","ञ":"n","ट":"t","ठ":"th","ड":"d","ढ":"dh","ण":"n","त":"t","थ":"th","द":"d","ध":"dh","न":"n","प":"p","फ":"ph","ब":"b","भ":"bh","म":"m","य":"y","र":"r","ल":"l","व":"w","श":"sh","ष":"sh","स":"s","ह":"h"};
+  const romanize = s => {
+    let out = "";
+    for (let i = 0; i < s.length; i++) {
+      const ch = s[i], nx = s[i + 1];
+      if (C[ch]) { out += C[ch]; if (M[nx]) { out += M[nx]; i++; } else if (nx === "्") { i++; } else if (nx && C[nx]) out += "a"; else if (nx && V[nx]) { out += V[nx]; i++; } else out += "a"; }
+      else if (V[ch]) out += V[ch];
+      else if (M[ch]) out += M[ch];
+      else out += ch;
+    }
+    return out.replace(/aa+/g, "a");
+  };
   const hay=new Map();
   box.querySelectorAll("a").forEach(a=>{
     const m=/#(\S+)/.exec(a.getAttribute("href")||"");
     const p=m&&PHASES.find(x=>x.n&&("phase-"+x.n===m[1]||x.id===m[1]));
-    hay.set(a,{raw:p?[p.t,(p.d||[]).join(" "),((p.boxes||[]).map(b=>b.join(" ")).join(" "))].join(" "):"",
+    hay.set(a,{raw:p?[p.t,romanize(p.t),(p.d||[]).join(" "),((p.boxes||[]).map(b=>b.join(" ")).join(" "))].join(" "):"",
                el:p?document.getElementById(p.id||"phase-"+p.n):null});
   });
   const filter=()=>{
@@ -1860,6 +1881,8 @@ document.addEventListener("click", e => {
     if(on){panel.removeAttribute("inert");close.focus();}else{panel.setAttribute("inert","");btn.focus({preventScroll:true});}};
   panel.setAttribute("inert","");
   btn.addEventListener("click",()=>open(true));
+  const fab=document.getElementById("search-fab");
+  if(fab) fab.addEventListener("click",()=>{open(true);setTimeout(()=>si.focus(),350);});
   close.addEventListener("click",()=>open(false));
   back.addEventListener("click",()=>open(false));
   document.addEventListener("keydown",e=>{if(e.key==="Escape"&&document.body.classList.contains("menu-open"))open(false);});
