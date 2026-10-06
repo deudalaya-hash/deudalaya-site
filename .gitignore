@@ -10,3 +10,6 @@
 # Windows junk
 desktop.ini
 Thumbs.db
+
+# local backups
+index.backup*.html

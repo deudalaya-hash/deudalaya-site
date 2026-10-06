@@ -243,6 +243,9 @@ h2{font:300 clamp(20px,6.2vw,34px) var(--sans);letter-spacing:3px;margin:0}
 .bylaw h3{margin:0 0 4px;font:500 15px/1.4 var(--serif);color:var(--text)}
 .bylaw p{margin:0;font-size:14px;line-height:1.7;color:var(--desc);overflow-wrap:anywhere}
 .bylaw small{display:block;margin-bottom:8px;font-size:10px;letter-spacing:2px;color:var(--accent)}
+.bylaws-grid{flex-direction:column;overflow:visible;scroll-snap-type:none}
+.bylaws-grid .bylaw{flex:0 0 auto;width:100%;max-width:720px;margin:0 auto 10px}
+.bylaws-grid .bylaw h3{font-size:16px}
 .hrow>.bylaw{flex:0 0 min(270px,78vw);align-self:stretch;margin:0 0 8px}
 .hrow>.bylaw.tiny{flex-basis:min(190px,60vw);display:flex;align-items:center;justify-content:center;text-align:center}
 .bylaw.info-card h3{margin:0 0 4px}
@@ -899,7 +902,8 @@ const PHASES = [
   { n: 76, t: "इलेक्ट्रोनिक्सालय", d: ["सुदूर कर्णालीका लागि राजधानीमा इलेक्ट्रोनिक्स सामग्री, मर्मत तथा आवश्यक प्राविधिक सेवामा पहुँच पुर्‍याउने सेवा। 🔌"] },
   { n: 77, t: "फेसलय", d: ["सुदूर कर्णालीका मानिसहरूको अनुहार, परिचय, कथा र पहिचानको डिजिटल ग्यालेरी। 📸"] },
   { n: 78, t: "प्रतिकालय", d: ["देउडालय समाचारको समाचार माध्यम। 📰"],
-    boxes: [["PHASE 1 — देउडालय समाचार — अनलाइन", "सुदूर कर्णालीको आफ्नै डिजिटल समाचार माध्यम।"], ["PHASE 2 — देउडालय समाचार — साप्ताहिक", "सुदूर कर्णालीको आफ्नै साप्ताहिक समाचारपत्र।"]] },
+    boxes: [["PHASE 1 — देउडालय समाचार — अनलाइन", "सुदूर कर्णालीको आफ्नै डिजिटल समाचार माध्यम।"], ["PHASE 2 — देउडालय समाचार — साप्ताहिक", "सुदूर कर्णालीको आफ्नै साप्ताहिक समाचारपत्र।"]],
+    gal: { label: "image", open: true, kind: "poster", items: [["pratikalaya.jpg","प्रतिकालय — देउडालय समाचार"]] } },
   { n: 79, t: "सम्पर्कालय", d: ["सम्पर्कमा रहनुहोस्"], id: "contact", contact: true,
     gal: { label: "image", open: true, kind: "poster", items: [["introduction.jpeg","i was here — Bharat Thakuri"]] } }
 ];
@@ -1378,10 +1382,11 @@ function render(p) {
   }
 
   if (p.bylaws) {                       // bylaws become cards at the start of phase 1's single scroll row
-    const box = $("div", "shop-grid");
+    el.append($("small", "bylaws-h", p.bylaws.h));
+    const box = $("div", "shop-grid bylaws-grid");
     p.bylaws.items.forEach(([h, t]) => {
       const it = $("div", "bylaw");
-      it.append($("small", null, p.bylaws.h), $("h3", null, h), $("p", null, t));
+      it.append($("h3", null, h), $("p", null, t));
       box.append(it);
     });
     el.append(box);
@@ -1671,7 +1676,7 @@ function render(p) {
     c.append(actionBtn(p, h ? h.textContent : p.t));
   });
   // merge every scroll section of this phase into ONE horizontal row
-  const rows = [...el.querySelectorAll(".gallery,.shop-grid,.dest-grid,.blog-posts")];
+  const rows = [...el.querySelectorAll(".gallery,.shop-grid:not(.bylaws-grid),.dest-grid,.blog-posts")];
   if (rows.length) {
     const hr = $("div", "hrow");
     hr.setAttribute("role", "region"); hr.setAttribute("aria-label", p.t); hr.tabIndex = 0;
