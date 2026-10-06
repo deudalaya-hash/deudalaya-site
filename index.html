@@ -605,7 +605,9 @@ div.contact-link:hover{transform:none;box-shadow:none;border-color:var(--line)}
 .door-word{position:absolute;top:50%;margin-top:-50px;width:52px;text-align:center;color:#e8c98a;font:600 16px/1.2 var(--serif);text-shadow:0 2px 8px rgba(0,0,0,.6)}
 .door span:nth-child(1) .door-word{right:18px}
 .door span:nth-child(2) .door-word{left:18px}
-.door-inner{position:absolute;top:50%;width:52px;height:52px;margin-top:-26px;display:grid;place-items:center;color:#e8c98a;font:600 20px/1 var(--serif);text-shadow:0 2px 8px rgba(0,0,0,.6)}
+.door-inner{position:absolute;top:50%;width:62px;height:62px;margin-top:-26px;display:grid;place-items:center;text-align:center;color:#e8c98a;font:600 20px/1 var(--serif);text-shadow:0 2px 8px rgba(0,0,0,.6)}
+.door-inner::before{content:"";position:absolute;left:50%;top:-17px;width:26px;height:20px;margin-left:-13px;border-radius:50% 50% 6px 6px;background:linear-gradient(180deg,#f3d889,#b98a2f 55%,#7a4f14);border:2px solid #5a3a10;box-shadow:0 3px 6px rgba(0,0,0,.6)}
+.door-inner::after{content:"";position:absolute;left:50%;bottom:-14px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f3d889,#b98a2f 60%,#7a4f14);border:2px solid #5a3a10;box-shadow:0 3px 6px rgba(0,0,0,.6)}
 .door span:nth-child(1) .door-inner{right:18px}
 .door span:nth-child(2) .door-inner{left:18px}
 .door span{flex:1;background:linear-gradient(180deg,#7c2626 0%,#5a1818 50%,#7c2626 100%);transition:transform 1.4s cubic-bezier(.7,0,.2,1);position:relative}
@@ -614,7 +616,7 @@ div.contact-link:hover{transform:none;box-shadow:none;border-color:var(--line)}
 /* ornate inner panel (Newari/Venetian-style) */
 .door span::after{content:"";position:absolute;inset:18px 14px;border:2px solid rgba(220,180,110,.55);border-radius:6px;box-shadow:inset 0 0 40px rgba(0,0,0,.4), 0 0 0 6px rgba(60,15,15,.5)}
 /* ornate brass door knocker near the center */
-.door span::before{content:"";position:absolute;top:50%;width:52px;height:52px;margin-top:-26px;border:5px solid #d4a24b;border-radius:50%;background:#2b1414;box-shadow:0 0 14px rgba(0,0,0,.7), inset 0 0 8px rgba(0,0,0,.8)}
+.door span::before{content:"";position:absolute;top:50%;width:52px;height:52px;margin-top:-26px;border:5px solid;border-color:#f3d889 #b98a2f #7a4f14 #cfa045;border-radius:50%;background:radial-gradient(circle at 50% 40%,#3a1c14 0%,#241010 100%);box-shadow:0 0 0 2px #5a3a10,0 6px 12px rgba(0,0,0,.7),inset 0 0 0 2px #8a5f1c,inset 0 0 12px rgba(0,0,0,.85)}
 .door span:nth-child(1)::before{right:18px}
 .door span:nth-child(2)::before{left:18px}
 /* hero content stays still until the door opens */
@@ -634,7 +636,7 @@ body:not(.entered) .hero *, body:not(.entered) .hero::before, body:not(.entered)
 </style>
 </head>
 <body>
-<div class="door" id="door" aria-hidden="true"><span><b class="door-word">देउडा</b><b class="door-inner">लय</b></span><span><b class="door-word">लय</b><b class="door-inner">पुर</b></span></div>
+<div class="door" id="door" aria-hidden="true"><span><b class="door-inner" style="font-size:18px">देउडा</b></span><span><b class="door-inner">लय</b></span></div>
 <div class="progress" id="progress" aria-hidden="true"></div>
 <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Open laya menu" aria-expanded="false" aria-controls="menu-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
 <div class="menu-backdrop" id="menu-backdrop"></div>
