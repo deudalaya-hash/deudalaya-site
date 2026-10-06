@@ -61,8 +61,8 @@ section{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;al
  display:grid;place-items:center;box-shadow:0 4px 18px var(--shadow);transition:transform .25s,border-color .25s,box-shadow .25s}
 .theme-toggle:hover{transform:rotate(22deg) scale(1.06);border-color:var(--accent);box-shadow:0 0 20px var(--glow)}
 /* search icon (next to the menu, transparent) */
-.search-fab{position:fixed;top:calc(env(safe-area-inset-top) + 12px);left:calc(env(safe-area-inset-left) + 64px);z-index:20;
- width:44px;height:44px;border-radius:50%;border:0;background:transparent;color:var(--accent);font-size:19px;
+.search-fab{position:fixed;top:calc(env(safe-area-inset-top) + 12px);left:calc(env(safe-area-inset-left) + 58px);z-index:20;
+ width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--accent);font-size:19px;
  cursor:pointer;display:grid;place-items:center;box-shadow:none;transition:transform .25s,box-shadow .25s}
 .search-fab:hover{transform:scale(1.12);box-shadow:none}
 
@@ -608,7 +608,7 @@ div.contact-link:hover{transform:none;box-shadow:none;border-color:var(--line)}
 .lb p{position:absolute;bottom:18px;left:0;right:0;text-align:center;color:#eee;font-size:13px;letter-spacing:1px}
 @media(max-width:600px){.whereami{font-size:10px;letter-spacing:1.2px;padding:6px 10px}}
 .theme-toggle,.menu-toggle,.search-fab{transition:transform .25s,border-color .25s,box-shadow .25s,opacity .3s}
-.theme-toggle.hide,.menu-toggle.hide,.search-fab.hide{opacity:0;pointer-events:none;transform:translateY(-12px) scale(.8)}
+.theme-toggle.hide,.menu-toggle.hide,.search-fab.hide,.lang-toggle.hide{opacity:0;pointer-events:none;transform:translateY(-12px) scale(.8)}
 .search-fab.hide{transform:translateY(-12px) scale(.8)}
 
 </style>
@@ -1847,7 +1847,7 @@ document.addEventListener("click", e => {
 (function () {
   let last = scrollY;
   addEventListener("scroll", () => {
-    const y = scrollY, els = document.querySelectorAll(".theme-toggle,.menu-toggle,.search-fab");
+    const y = scrollY, els = document.querySelectorAll(".theme-toggle,.menu-toggle,.search-fab,.lang-toggle");
     if (y > last + 8 && y > 90) els.forEach(el => el.classList.add("hide"));
     else if (y < last - 8) els.forEach(el => el.classList.remove("hide"));
     last = y;
@@ -2168,7 +2168,8 @@ tbtn.addEventListener("click", () => setTheme(document.documentElement.dataset.t
     btn.textContent = LANG === "ne" ? "E" : "N";
     btn.setAttribute("aria-label", LANG === "ne" ? "Switch to English" : "Switch to Nepali");
   };
-  /* floating language button removed (kept logic above) */
+  document.body.append(btn);
+  btn.classList.add("lang-toggle");
 
   let timer = null;
   const obs = new MutationObserver(() => {
