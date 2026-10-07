@@ -644,10 +644,10 @@ div.contact-link:hover{transform:none;box-shadow:none;border-color:var(--line)}
 .citymap-body .legend{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 16px;max-width:720px;font-size:12px;color:var(--muted);letter-spacing:1px}
 .citymap-body .legend b{color:var(--accent);font-weight:600}
 .est{margin:10px 0 0;font-size:11px;letter-spacing:4px;color:var(--muted)}
-.phase1-body{display:none}
-#phase-1.open .phase1-body{display:block}
-.phase1-arrow{border:0;background:none;cursor:pointer;color:var(--accent);font-size:18px;line-height:1;padding:0 0 0 6px;vertical-align:middle;transition:transform .2s}
-.phase1-arrow:hover{transform:scale(1.2)}
+.phase-body{display:none}
+.phase.open .phase-body{display:block}
+.phase-arrow{border:0;background:none;cursor:pointer;color:var(--accent);font-size:18px;line-height:1;padding:0 0 0 6px;vertical-align:middle;transition:transform .2s}
+.phase-arrow:hover{transform:scale(1.2)}
 
 /* door-opening entrance */
 .door{position:fixed;inset:0;z-index:90;display:flex;pointer-events:auto;cursor:pointer}
@@ -1927,29 +1927,30 @@ PHASES.forEach(p => {
   if (p.n) el.id = el.id || "phase-" + p.n;
   list.append(el);
 });
-/* Phase 1 starts collapsed — show only its title + a tiny arrow */
-(function () {
-  const el = document.getElementById("phase-1");
-  if (!el) return;
+/* Collapse/expand EVERY phase: title + tiny arrow visible, rest hidden when closed. */
+document.querySelectorAll("#list .phase").forEach(el => {
+  const title = el.querySelector(".laya");
+  if (!title) return;                                   // soon/bare phases: leave as-is
+  const numEl = el.querySelector(".num");
   const body = document.createElement("div");
-  body.className = "phase1-body";
-  const numEl = el.querySelector(".num"), titleEl = el.querySelector(".laya");
-  [...el.children].forEach(child => {
-    if (child !== numEl && child !== titleEl) body.appendChild(child);
-  });
+  body.className = "phase-body";
+  [...el.children].forEach(ch => { if (ch !== numEl && ch !== title) body.appendChild(ch); });
   el.appendChild(body);
   const arr = document.createElement("button");
   arr.type = "button";
-  arr.className = "phase1-arrow";
+  arr.className = "phase-arrow";
   arr.innerHTML = "›";
-  arr.setAttribute("aria-label", "Open phase 1");
-  titleEl.appendChild(arr);
-  arr.addEventListener("click", () => {
+  arr.setAttribute("aria-label", "Expand phase");
+  const toggle = () => {
     const open = el.classList.toggle("open");
     arr.innerHTML = open ? "⌄" : "›";
-    arr.setAttribute("aria-label", open ? "Close phase 1" : "Open phase 1");
-  });
-})();
+    arr.setAttribute("aria-label", open ? "Collapse phase" : "Expand phase");
+  };
+  arr.addEventListener("click", e => { e.stopPropagation(); toggle(); });
+  title.appendChild(arr);
+  title.addEventListener("click", toggle);
+  if (el.id === "phase-2") { el.classList.add("open"); arr.innerHTML = "⌄"; arr.setAttribute("aria-label", "Collapse phase"); }
+});
 watchViews();
 
 /* ============ CITY: district filter + legend + where-am-I + random ============ */
