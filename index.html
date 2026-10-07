@@ -835,7 +835,7 @@ const PHASES = [
     d: ["देउडासाँझ, प्रत्येक शुक्रबार शंखमूल पार्कमा। 🎶", "गैरनाफामूलक संस्था 🤝"],
     gal: { label: "images", open: true, kind: "thumb", items: [["sudurkarnali.jpg","Sudur Karnali"],["deudalaya-poster.jpg","Deudalaya poster"],["nonprofit.jpg","Nonprofit"]] }, next: true, events: true },
   { n: 2, t: "FACEलय", d: ["Faces of सुदूर - कर्णाली"], poster: ["facelaya.jpg","FACElay — Faces of सुदूर - कर्णाली"] },
-  { n: 3, t: "शब्दलय", d: ["सुदूर–कर्णालीका शब्दहरू"], poster: ["shabdalaya.jpg","शब्दलय poster"], blog: true, bloglink: true },
+  { n: 3, t: "शब्दलय", d: ["सुदूर–कर्णालीका शब्दहरू"], poster: ["shabdalaya.jpg","शब्दलय poster"], poster2: ["shabdalaya-live.jpg","शब्दलय — TikTok Live"], blog: true, bloglink: true },
   { n: 4, t: "Websiteलय", d: ["सुदूर कर्णालीका Website बनाउने आफ्नै घर 🌐"], poster: ["websitelaya.jpg","Websiteलय poster"],
     web: true },
   { soon: "Coming soon" },
@@ -1600,7 +1600,9 @@ function render(p) {
     } else {
       const row = $("div", "shop-grid"), c = $("div", "shop-card poster-card");
       c.append(link(p.poster[0], img(...p.poster)), actionBtn(p, p.poster[1] || p.t));
-      row.append(c); el.append(row);
+      row.append(c);
+      if (p.poster2) { const c2 = $("div", "shop-card poster-card"); c2.append(link(p.poster2[0], img(...p.poster2)), actionBtn(p, p.poster2[1] || p.t)); row.append(c2); }
+      el.append(row);
     }
   }
 
