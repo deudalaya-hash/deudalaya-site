@@ -234,14 +234,18 @@ h2{font:300 clamp(20px,6.2vw,34px) var(--sans);letter-spacing:3px;margin:0}
 .face-photo a{display:block;line-height:0}
 .face-photo img{display:block;width:min(280px,78vw);height:auto;margin:0 auto;border-radius:14px;border:1px solid var(--line);box-shadow:0 8px 24px var(--shadow)}
 .face-cta{position:absolute;right:0;top:50%;transform:translateY(-50%);z-index:2;margin:0;text-align:right;padding-right:4px}
-.face-add{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid var(--accent);border-radius:999px;background:var(--bg);color:var(--accent);font:500 12px/1.2 var(--sans);letter-spacing:.4px;text-decoration:none;box-shadow:0 4px 18px var(--shadow);transition:background-color .25s,color .25s,box-shadow .25s,transform .2s;white-space:nowrap}
-.face-add:hover{background:var(--accent);color:var(--bg);box-shadow:0 6px 22px var(--glow);transform:translateY(-2px)}
+.face-add{display:inline-flex;align-items:center;gap:8px;padding:6px;border:1px solid transparent;border-radius:999px;background:transparent;color:var(--accent);text-decoration:none;transition:all .25s;white-space:nowrap}
+.face-add:hover,.face-add.open{padding:9px 14px;border-color:var(--accent);background:var(--bg);box-shadow:0 6px 22px var(--glow)}
+.face-label{display:inline-block;max-width:0;opacity:0;overflow:hidden;white-space:nowrap;transition:max-width .3s,opacity .3s;font:500 12px/1.2 var(--sans);letter-spacing:.4px}
+.face-add:hover .face-label,.face-add.open .face-label{max-width:150px;opacity:1}
 .face-plus{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;border:1.5px solid currentColor;font:400 16px/1 var(--sans);flex-shrink:0}
-@media(max-width:600px){
-  .face-stage{min-height:auto;padding:4px 0 52px}
-  .face-photo img{width:min(260px,82vw)}
-  .face-cta{right:4px;top:auto;bottom:0;transform:none}
-  .face-add{padding:9px 12px;font-size:11px;gap:6px}
+@media(max-width:720px){
+  .face-stage{min-height:auto;padding:4px 0 10px;align-items:center}
+  .face-photo img{width:min(260px,72vw)}
+  .face-cta{position:static;transform:none;padding:0;margin:0 0 0 10px;text-align:left}
+  .face-add{padding:6px;border:1px solid transparent;background:transparent;box-shadow:none}
+  .face-add.open{padding:9px 14px;border-color:var(--accent);background:var(--bg)}
+  .face-add .face-plus{width:34px;height:34px;font-size:20px;border-color:var(--accent)}
 }
 
 
@@ -614,6 +618,7 @@ div.contact-link:hover{transform:none;box-shadow:none;border-color:var(--line)}
 .citymap svg .center{fill:var(--accent);font:700 13px var(--sans);letter-spacing:3px}
 .citymap .legend{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 16px;max-width:720px;font-size:12px;color:var(--muted);letter-spacing:1px}
 .citymap .legend b{color:var(--accent);font-weight:600}
+
 /* Layapur city intro — collapsed behind a small arrow only */
 .city-fold{width:100%;max-width:1000px;margin:0 auto 8px;border:0;background:transparent}
 .city-fold-sum{display:flex;align-items:center;justify-content:center;padding:6px 10px;cursor:pointer;list-style:none;color:var(--muted);user-select:none}
@@ -639,10 +644,15 @@ div.contact-link:hover{transform:none;box-shadow:none;border-color:var(--line)}
 .citymap-body .legend{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 16px;max-width:720px;font-size:12px;color:var(--muted);letter-spacing:1px}
 .citymap-body .legend b{color:var(--accent);font-weight:600}
 .est{margin:10px 0 0;font-size:11px;letter-spacing:4px;color:var(--muted)}
+.phase1-body{display:none}
+#phase-1.open .phase1-body{display:block}
+.phase1-arrow{border:0;background:none;cursor:pointer;color:var(--accent);font-size:18px;line-height:1;padding:0 0 0 6px;vertical-align:middle;transition:transform .2s}
+.phase1-arrow:hover{transform:scale(1.2)}
+
 /* door-opening entrance */
 .door{position:fixed;inset:0;z-index:90;display:flex;pointer-events:auto;cursor:pointer}
 .door-word{position:absolute;top:50%;margin-top:-50px;width:52px;text-align:center;color:#e8c98a;font:600 16px/1.2 var(--serif);text-shadow:0 2px 8px rgba(0,0,0,.6)}
-.door span:nth-child(1) .door-word{right:18px}
+.door span:nth-child(1) .door-word{right:40px}
 .door span:nth-child(2) .door-word{left:18px}
 .door-inner{position:absolute;top:50%;width:62px;height:62px;margin-top:-26px;display:grid;place-items:center;text-align:center;color:#e8c98a;font:600 20px/1 var(--serif);text-shadow:0 2px 8px rgba(0,0,0,.6)}
 .door-inner::before{content:"";position:absolute;left:50%;top:-17px;width:26px;height:20px;margin-left:-13px;border-radius:50% 50% 6px 6px;background:linear-gradient(180deg,#ff6b6b,#d62828 55%,#8f1414);border:2px solid #4a0d0d;box-shadow:0 3px 6px rgba(0,0,0,.6)}
@@ -1567,7 +1577,11 @@ function render(p) {
       btn.href = "https://wa.me/9779747704316?text=" + encodeURIComponent("नमस्ते, FACEलय मा आफ्नो अनुहार जोड्न चाहन्छु / I want to Add My Face to FACElay");
       btn.target = "_blank";
       btn.rel = "noopener noreferrer";
-      btn.innerHTML = "<span class=\"face-plus\">+</span> Add Your Face Here";
+      btn.innerHTML = "<span class=\"face-plus\">+</span><span class=\"face-label\">Add Your Face Here</span>";
+      btn.addEventListener("click", e => {
+        if (btn.classList.contains("open") || matchMedia("(hover:hover)").matches) return;
+        e.preventDefault(); btn.classList.add("open");
+      });
       face.append(btn);
       wrap.append(photo, face);
       el.append(wrap);
@@ -1913,6 +1927,29 @@ PHASES.forEach(p => {
   if (p.n) el.id = el.id || "phase-" + p.n;
   list.append(el);
 });
+/* Phase 1 starts collapsed — show only its title + a tiny arrow */
+(function () {
+  const el = document.getElementById("phase-1");
+  if (!el) return;
+  const body = document.createElement("div");
+  body.className = "phase1-body";
+  const numEl = el.querySelector(".num"), titleEl = el.querySelector(".laya");
+  [...el.children].forEach(child => {
+    if (child !== numEl && child !== titleEl) body.appendChild(child);
+  });
+  el.appendChild(body);
+  const arr = document.createElement("button");
+  arr.type = "button";
+  arr.className = "phase1-arrow";
+  arr.innerHTML = "›";
+  arr.setAttribute("aria-label", "Open phase 1");
+  titleEl.appendChild(arr);
+  arr.addEventListener("click", () => {
+    const open = el.classList.toggle("open");
+    arr.innerHTML = open ? "⌄" : "›";
+    arr.setAttribute("aria-label", open ? "Close phase 1" : "Open phase 1");
+  });
+})();
 watchViews();
 
 /* ============ CITY: district filter + legend + where-am-I + random ============ */
@@ -1984,7 +2021,7 @@ watchViews();
     const a = e.target.closest && e.target.closest("a");
     if (!a) { if (e.target === lb) lb.classList.remove("show"); return; }
     const imgEl = a.querySelector("img");
-    if (imgEl && (a.closest(".gallery") || a.closest(".poster-solo") || a.closest(".img-item"))) {
+    if (imgEl && (a.closest(".gallery") || a.closest(".poster-solo") || a.closest(".img-item") || a.closest(".face-photo"))) {
       e.preventDefault();
       im.src = imgEl.currentSrc || imgEl.src; im.alt = imgEl.alt || "";
       cap.textContent = imgEl.alt || "";
