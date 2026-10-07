@@ -505,6 +505,13 @@ html{scroll-behavior:auto}
 @media(max-width:600px){.gallery.thumb .img-item{width:calc(50% - 8px);max-width:200px}.gallery.poster .img-item{width:min(300px,86vw)}}
 .img-item .order-mini,.cta .order-mini,.shop-card.branch .order-mini{margin:0;padding:5px 12px;font-size:11px;letter-spacing:.3px}
 .poster-solo+.cta{margin-top:10px;text-align:center}
+.concert-phase .poster-solo img{width:min(340px,88vw)!important;border-radius:18px}
+.concert-phase .laya{font-size:clamp(15px,3vw,20px)}
+.concert-phase .num{font-size:10px}
+.concert-phase .desc{font-size:12px}
+.concert-phase .facts-card{font-size:12px;padding:10px 12px}
+.concert-phase .fact-row{padding:4px 0}
+.concert-phase .fact-foot{font-size:11px}
 .dest-card img{display:block;width:100%;height:auto;border-radius:12px;margin-top:10px}
 /* ===== hover animation on EVERY box (same lift + glow as the older cards) ===== */
 .hrow{padding-top:14px}
@@ -1444,7 +1451,7 @@ const stallCard = p => {
 const CTA_BY_PHASE = { 1:"Join the Circle", 2:"Add Your Story", 8:"Explore", 19:"Add Your Art", 23:"Contribute", 36:"Share Your Memory", 41:"Learn More" };
 
 function render(p) {
-  const el = $("article", "phase" + (p.bare ? " bare" : ""));
+  const el = $("article", "phase" + (p.bare ? " bare" : "") + (p.n === 4 ? " concert-phase" : ""));
   if (p.id) el.id = p.id;
   if (p.gap) {
     el.style.cssText = "height:40px;background:none;border:none;box-shadow:none;margin:0;padding:0";
