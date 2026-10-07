@@ -619,6 +619,7 @@ div.contact-link:hover{transform:none;box-shadow:none;border-color:var(--line)}
 .citymap .legend{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 16px;max-width:720px;font-size:12px;color:var(--muted);letter-spacing:1px}
 .citymap .legend b{color:var(--accent);font-weight:600}
 
+#phase-2 .like-row{flex-direction:column;align-items:center;gap:8px;justify-content:center;margin:0}
 /* Layapur city intro — collapsed behind a small arrow only */
 .city-fold{width:100%;max-width:1000px;margin:0 auto 8px;border:0;background:transparent}
 .city-fold-sum{display:flex;align-items:center;justify-content:center;padding:6px 10px;cursor:pointer;list-style:none;color:var(--muted);user-select:none}
@@ -1582,9 +1583,14 @@ function render(p) {
         if (btn.classList.contains("open") || matchMedia("(hover:hover)").matches) return;
         e.preventDefault(); btn.classList.add("open");
       });
-      face.append(btn);
       wrap.append(photo, face);
       el.append(wrap);
+      const row = likeBtn(p);
+      const waEl = row.querySelector(".wa-plus");
+      if (waEl) waEl.remove();
+      const chip = row.querySelector(".views");
+      if (chip) row.insertBefore(btn, chip); else row.append(btn);
+      face.append(row);
     } else {
       const row = $("div", "shop-grid"), c = $("div", "shop-card poster-card");
       c.append(link(p.poster[0], img(...p.poster)), actionBtn(p, p.poster[1] || p.t));
@@ -1897,7 +1903,7 @@ function render(p) {
     if (prev) { const a = $("a", null, "← PLOT " + String(prev.n).padStart(3, "0")); a.href = "#" + (prev.id || "phase-" + prev.n); nav.append(a); } else nav.append($("span"));
     if (next) { const a = $("a", null, "PLOT " + String(next.n).padStart(3, "0") + " →"); a.href = "#" + (next.id || "phase-" + next.n); nav.append(a); } else nav.append($("span"));
     el.append(nav);
-    el.append(likeBtn(p));
+    if (p.n && p.n !== 2) el.append(likeBtn(p));
   }
 
   /* Phase 1 collapsed by default: only title visible until user opens */
