@@ -306,7 +306,7 @@ h2{font:300 clamp(20px,6.2vw,34px) var(--sans);letter-spacing:3px;margin:0}
 .share-wrap{position:relative;display:inline-flex}
 .share-btn{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:50%;border:0;background:var(--surface);color:var(--muted);cursor:pointer;transition:transform .18s,background .18s,color .18s;position:relative}
 @media(max-width:720px){ .share-btn{width:44px;height:44px} .share-btn svg{width:22px;height:22px}
- .face-stage{overflow:visible} #phase-2 .like-row,#phase-3 .like-row,#phase-4 .like-row,#phase-5 .like-row{overflow:visible} .phase.open .phase-body-inner{overflow:visible}}
+ .face-stage{overflow:visible} #phase-2 .like-row,#phase-3 .like-row,#phase-4 .like-row,#phase-5 .like-row,#phase-6 .like-row{overflow:visible} .phase.open .phase-body-inner{overflow:visible}}
 .share-btn svg{width:18px;height:18px}
 .share-btn:hover{background:var(--tint);color:var(--accent);transform:scale(1.12)}
 .share-btn:active{transform:scale(.92)}
@@ -657,17 +657,17 @@ div.contact-link:hover{transform:none;box-shadow:none;border-color:var(--line)}
 .citymap .legend{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 16px;max-width:720px;font-size:12px;color:var(--muted);letter-spacing:1px}
 .citymap .legend b{color:var(--accent);font-weight:600}
 
-#phase-2 .like-row,#phase-4 .like-row,#phase-5 .like-row{flex-direction:column;align-items:center;gap:8px;justify-content:center;margin:0}
+#phase-2 .like-row,#phase-4 .like-row,#phase-5 .like-row,#phase-6 .like-row{flex-direction:column;align-items:center;gap:8px;justify-content:center;margin:0}
 #phase-3 .like-row{flex-direction:column;align-items:center;gap:8px;justify-content:center}
 #phase-3 .face-photo{flex-direction:column;align-items:center;gap:12px}
 #phase-3.open .phase-body{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;justify-content:center}
 #phase-3 .hrow{flex:1 1 auto}
 #phase-3 .face-cta{position:static;transform:none;align-self:center;margin:0 0 0 16px}
 /* Clean poster phases: hide the PLOT meta row and prev/next card-nav */
-#phase-2 .card-meta,#phase-2 .card-nav,#phase-4 .card-meta,#phase-4 .card-nav,#phase-5 .card-meta,#phase-5 .card-nav{display:none}
+#phase-2 .card-meta,#phase-2 .card-nav,#phase-4 .card-meta,#phase-4 .card-nav,#phase-5 .card-meta,#phase-5 .card-nav,#phase-6 .card-meta,#phase-6 .card-nav{display:none}
 /* phase 3: card row stays hidden until the same arrow toggle opens the second image */
 #phase-3 .card-nav{display:none}
-#phase-4 .hrow,#phase-5 .hrow{display:none}
+#phase-4 .hrow,#phase-5 .hrow,#phase-6 .hrow{display:none}
 .cards-toggle{display:inline-grid;place-items:center;width:30px;height:30px;margin:6px auto;border:1px solid var(--line);background:var(--surface);color:var(--accent);border-radius:50%;font:18px/1 var(--sans);cursor:pointer;vertical-align:middle}
 .cards-toggle:hover{border-color:var(--accent)}
 
@@ -911,8 +911,8 @@ const PHASES = [
         foot: "❤️ सुदूर-कर्णालीको संस्कृति, संगीत र ऊर्जा — राजधानीको आँगनमा।" }
     ] },
   { n: 6, t: "देउडालय + चियालय", d: ["देउडा र चिया सँगसँगै — ४ स्थानमा। 🍵"],
+    poster: ["chiyalaya.png", "चियालय शंखमूल"],
     branches: [
-      ["chiyalaya.png", "चियालय शंखमूल", "Shankhamul"],
       ["deudalayakirtipur.jpg", "चियालय कीर्तिपुर", "Kirtipur"],
       ["chitlangresort.jpg", "चियालय चितलाङ", "Chitlang / Resort"],
       ["surkhet.jpg", "चियालय सुर्खेत", "Surkhet"]
@@ -1367,7 +1367,7 @@ const $ = (tag, cls, text) => {
 };
 /* ===== VERSION — change this number every time you upload a new index.html or replace any image.
    It (1) makes phones re-download images and (2) triggers the "Update available" banner for visitors. ===== */
-const APP_VERSION = "9";
+const APP_VERSION = "10";
 const IMG_V = APP_VERSION;
 const img = (src, alt) => { const i = $("img"); i.src = /^(https?:|data:)/.test(src) ? src : src + "?v=" + IMG_V; i.alt = alt; i.loading = "lazy"; i.decoding = "async"; return i; };
 const link = (href, child) => { const a = $("a"); a.href = href; a.target = "_blank"; a.rel = "noopener noreferrer"; a.append(child); return a; };
@@ -2027,7 +2027,7 @@ function render(p) {
     if (prev) { const a = $("a", null, "← PLOT " + String(prev.n).padStart(3, "0")); a.href = "#" + (prev.id || "phase-" + prev.n); nav.append(a); } else nav.append($("span"));
     if (next) { const a = $("a", null, "PLOT " + String(next.n).padStart(3, "0") + " →"); a.href = "#" + (next.id || "phase-" + next.n); nav.append(a); } else nav.append($("span"));
     el.append(nav);
-    if (p.n && p.n !== 2 && p.n !== 3 && p.n !== 4 && p.n !== 5) el.append(likeBtn(p));
+    if (p.n && p.n !== 2 && p.n !== 3 && p.n !== 4 && p.n !== 5 && p.n !== 6) el.append(likeBtn(p));
   }
 
   return el;
@@ -2083,8 +2083,8 @@ document.querySelectorAll("#list .phase").forEach((el, index) => {
   });
   setOpen(el.id === "phase-2" || el.id === "phase-3" || el.id === "phase-4");
 });
-/* Phases 4 and 5: one poster/image in front; a small arrow expands/hides the rest of the cards. Works alongside the phase's own open arrow. */
-["phase-4", "phase-5"].forEach(id => {
+/* Phases 4, 5 and 6: one poster/image in front; a small arrow expands/hides the rest of the cards. Works alongside the phase's own open arrow. */
+["phase-4", "phase-5", "phase-6"].forEach(id => {
   const ph = document.getElementById(id);
   if (!ph) return;
   const hr = ph.querySelector(".hrow");
