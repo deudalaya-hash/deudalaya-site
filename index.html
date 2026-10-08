@@ -306,7 +306,7 @@ h2{font:300 clamp(20px,6.2vw,34px) var(--sans);letter-spacing:3px;margin:0}
 .share-wrap{position:relative;display:inline-flex}
 .share-btn{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:50%;border:0;background:var(--surface);color:var(--muted);cursor:pointer;transition:transform .18s,background .18s,color .18s;position:relative}
 @media(max-width:720px){ .share-btn{width:44px;height:44px} .share-btn svg{width:22px;height:22px}
- .face-stage{overflow:visible} #phase-2 .like-row,#phase-3 .like-row,#phase-4 .like-row,#phase-5 .like-row,#phase-6 .like-row{overflow:visible} .phase.open .phase-body-inner{overflow:visible}}
+ .face-stage{overflow:visible} #phase-2 .like-row,#phase-3 .like-row,#phase-4 .like-row,#phase-5 .like-row,#phase-6 .like-row,#phase-7 .like-row{overflow:visible} .phase.open .phase-body-inner{overflow:visible}}
 .share-btn svg{width:18px;height:18px}
 .share-btn:hover{background:var(--tint);color:var(--accent);transform:scale(1.12)}
 .share-btn:active{transform:scale(.92)}
@@ -657,17 +657,17 @@ div.contact-link:hover{transform:none;box-shadow:none;border-color:var(--line)}
 .citymap .legend{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 16px;max-width:720px;font-size:12px;color:var(--muted);letter-spacing:1px}
 .citymap .legend b{color:var(--accent);font-weight:600}
 
-#phase-2 .like-row,#phase-4 .like-row,#phase-5 .like-row,#phase-6 .like-row{flex-direction:column;align-items:center;gap:8px;justify-content:center;margin:0}
+#phase-2 .like-row,#phase-4 .like-row,#phase-5 .like-row,#phase-6 .like-row,#phase-7 .like-row{flex-direction:column;align-items:center;gap:8px;justify-content:center;margin:0}
 #phase-3 .like-row{flex-direction:column;align-items:center;gap:8px;justify-content:center}
 #phase-3 .face-photo{flex-direction:column;align-items:center;gap:12px}
 #phase-3.open .phase-body{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;justify-content:center}
 #phase-3 .hrow{flex:1 1 auto}
 #phase-3 .face-cta{position:static;transform:none;align-self:center;margin:0 0 0 16px}
 /* Clean poster phases: hide the PLOT meta row and prev/next card-nav */
-#phase-2 .card-meta,#phase-2 .card-nav,#phase-4 .card-meta,#phase-4 .card-nav,#phase-5 .card-meta,#phase-5 .card-nav,#phase-6 .card-meta,#phase-6 .card-nav{display:none}
+#phase-2 .card-meta,#phase-2 .card-nav,#phase-4 .card-meta,#phase-4 .card-nav,#phase-5 .card-meta,#phase-5 .card-nav,#phase-6 .card-meta,#phase-6 .card-nav,#phase-7 .card-meta,#phase-7 .card-nav{display:none}
 /* phase 3: card row stays hidden until the same arrow toggle opens the second image */
 #phase-3 .card-nav{display:none}
-#phase-4 .hrow,#phase-5 .hrow,#phase-6 .hrow{display:none}
+#phase-4 .hrow,#phase-5 .hrow,#phase-6 .hrow,#phase-7 .hrow{display:none}
 .cards-toggle{display:inline-grid;place-items:center;width:30px;height:30px;margin:6px auto;border:1px solid var(--line);background:var(--surface);color:var(--accent);border-radius:50%;font:18px/1 var(--sans);cursor:pointer;vertical-align:middle}
 .cards-toggle:hover{border-color:var(--accent)}
 
@@ -786,6 +786,26 @@ body:not(.entered) .hero *, body:not(.entered) .hero::before, body:not(.entered)
 .theme-toggle.hide,.menu-toggle.hide,.search-fab.hide,.lang-toggle.hide{opacity:0;pointer-events:none;transform:translateY(-12px) scale(.8)}
 .search-fab.hide{transform:translateY(-12px) scale(.8)}
 
+
+/* phase 7: big front card, same size as a poster */
+.food-hero{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;width:min(280px,78vw);min-height:min(280px,78vw);padding:24px 18px;text-align:center;border-radius:14px;box-shadow:0 8px 24px var(--shadow)}
+.food-hero .food-emoji{font-size:56px;line-height:1}
+.food-hero h3{margin:0;font-size:30px;line-height:1.3}
+@media(max-width:720px){#list .face-stage .food-hero{width:min(200px,50vw);min-height:min(200px,50vw);padding:16px 10px}#list .face-stage .food-hero .food-emoji{font-size:40px}#list .face-stage .food-hero h3{font-size:22px}}
+
+/* phases 2+ with a front item ("stack"): buttons in a column, rest of the cards hidden behind the arrow (phase 3 has its own toggle) */
+.phase.stack .like-row{flex-direction:column;align-items:center;gap:8px;justify-content:center;margin:0}
+.phase.stack .card-meta,.phase.stack .card-nav{display:none}
+.phase.stack:not(#phase-3) .hrow{display:none}
+.face-photo>.front-item{flex:0 0 auto;width:min(280px,78vw);max-width:100%;margin:0;box-sizing:border-box}
+.face-photo>.front-item.bylaw,.face-photo>.front-item.dest-card,.face-photo>.front-item.stall,.face-photo>.front-item.blog-post,.face-photo>.front-item.day-card{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-height:min(280px,78vw);border-radius:14px}
+.face-photo>.front-item.shop-card img{width:100%;aspect-ratio:1/1;object-fit:cover}
+.face-photo .order-mini,.face-photo .cta{display:none}
+@media(max-width:720px){
+ #list .face-stage .face-photo>.front-item{width:min(200px,50vw)}
+ #list .face-stage .face-photo>.front-item.bylaw,#list .face-stage .face-photo>.front-item.dest-card,#list .face-stage .face-photo>.front-item.stall,#list .face-stage .face-photo>.front-item.blog-post,#list .face-stage .face-photo>.front-item.day-card{min-height:min(200px,50vw);padding:14px 10px}
+ #list .face-stage .front-item img{width:100%}
+}
 </style>
 </head>
 <body>
@@ -1367,7 +1387,7 @@ const $ = (tag, cls, text) => {
 };
 /* ===== VERSION — change this number every time you upload a new index.html or replace any image.
    It (1) makes phones re-download images and (2) triggers the "Update available" banner for visitors. ===== */
-const APP_VERSION = "10";
+const APP_VERSION = "12";
 const IMG_V = APP_VERSION;
 const img = (src, alt) => { const i = $("img"); i.src = /^(https?:|data:)/.test(src) ? src : src + "?v=" + IMG_V; i.alt = alt; i.loading = "lazy"; i.decoding = "async"; return i; };
 const link = (href, child) => { const a = $("a"); a.href = href; a.target = "_blank"; a.rel = "noopener noreferrer"; a.append(child); return a; };
@@ -1611,6 +1631,47 @@ const stallCard = p => {
 /* subtle contribution calls-to-action, chosen to fit each laya's purpose */
 const CTA_BY_PHASE = { 1:"Join the Circle", 9:"Explore", 20:"Add Your Art", 24:"Contribute", 37:"Share Your Memory", 42:"Learn More" };
 
+/* the "face" layout used by phases 2+: one big item on the left, like / views / share / action buttons in a column beside it */
+function faceControls(p, photo) {
+  const wrap = $("div", "face-stage");
+      const face = $("div", "face-cta");
+      const btn = document.createElement("a");
+      btn.className = "btn face-add";
+      if (p.n === 2) {
+        btn.href = "https://wa.me/9779747704316?text=" + encodeURIComponent("नमस्ते, FACEलय मा आफ्नो अनुहार जोड्न चाहन्छु / I want to Add My Face to FACElay");
+        btn.innerHTML = "<span class=\"face-plus\">+</span><span class=\"face-label\">Add Your Face Here</span>";
+      } else if (p.n === 3) {
+        btn.href = "https://wa.me/9779747704316?text=" + encodeURIComponent("नमस्ते, शब्दलय मा आफ्ना कविता, मुक्तक, कथा वा शब्दहरू जोड्न चाहन्छु / I want to Add My Story/Words to Shabdalaya");
+        btn.innerHTML = "<span class=\"face-plus\">+</span><span class=\"face-label\">Add Your Story/Words Here</span>";
+      } else if (p.n === 5) {
+        btn.href = "https://wa.me/9779747704316?text=" + encodeURIComponent("नमस्ते, Concertलय / I want to join the Deuda Concert");
+        btn.innerHTML = "<span class=\"face-plus\">+</span><span class=\"face-label\">Join the Concert</span>";
+      } else if (p.n === 7) {
+        btn.href = "https://wa.me/9779747704316?text=" + encodeURIComponent("नमस्ते, अन्नालयबाट अर्डर गर्न चाहन्छु / I want to order from Annalaya");
+        btn.innerHTML = "<span class=\"face-plus\">+</span><span class=\"face-label\">Order Here</span>";
+      } else if (p.n === 4) {
+        btn.href = "https://wa.me/9779747704316?text=" + encodeURIComponent("नमस्ते, Websiteलय मार्फत आफ्नो वेबसाइट बनाउन चाहन्छु / I want to Build My Website with WebsiteLaya");
+        btn.innerHTML = "<span class=\"face-plus\">+</span><span class=\"face-label\">Build Your Website Here</span>";
+      } else {
+        btn.href = "https://wa.me/9779747704316?text=" + encodeURIComponent("नमस्ते, " + p.t + " बारे जान्न चाहन्छु / I want to know more about " + p.t);
+        btn.innerHTML = "<span class=\"face-plus\">+</span><span class=\"face-label\">Learn More</span>";
+      }
+      btn.target = "_blank";
+      btn.rel = "noopener noreferrer";
+      btn.addEventListener("click", e => {
+        if (btn.classList.contains("open") || matchMedia("(hover:hover)").matches) return;
+        e.preventDefault(); btn.classList.add("open");
+      });
+      wrap.append(photo, face);
+      const row = likeBtn(p);
+      const waEl = row.querySelector(".wa-plus");
+      if (waEl) waEl.remove();
+      const chip = row.querySelector(".views");
+      if (chip) row.insertBefore(btn, chip); else row.append(btn);
+      face.append(row);
+  return wrap;
+}
+
 function render(p) {
   const el = $("article", "phase" + (p.bare ? " bare" : "") + (p.n === 5 ? " concert-phase" : "") + (!p.bare ? " face-phase" : ""));
   if (p.id) el.id = p.id;
@@ -1635,7 +1696,7 @@ function render(p) {
 
   (p.d || []).forEach(line => el.append($("p", "desc", line)));
   const cta = p.n && CTA_BY_PHASE[p.n];
-  if (cta && !p.poster) {
+  if (cta && !(p.poster || p.food)) {
     const a = $("a", "phase-cta", cta);
     a.href = "https://wa.me/9779747704316?text=" + encodeURIComponent("Hello, I want to \"" + cta + "\" for " + p.t + " on the Deudalaya website.");
     a.target = "_blank"; a.rel = "noopener noreferrer";
@@ -1664,10 +1725,9 @@ function render(p) {
     el.append(box);
   }
 
-  if (p.poster) {
+  if (p.poster || p.food) {
     if (true) {
       /* phases 2–5: poster centered, + Add button on the right */
-      const wrap = $("div", "face-stage");
       const photo = $("div", "face-photo");
       if (p.n === 3 && p.poster2) photo.append(link(p.poster2[0], img(...p.poster2)));
       if (p.n === 3 && p.poster2) {
@@ -1677,42 +1737,17 @@ function render(p) {
         det.append(sum, link(p.poster[0], img(...p.poster)));
         photo.append(det);
         photo.append($("p", "img-note", "Coming soon"));
+      } else if (p.food) {
+        const [fne, fen] = FOODS[0];          /* big front card, sized like a poster */
+        const hero = $("div", "dest-card food-hero");
+        hero.append($("small", "dest-no", "01 / " + fen.toUpperCase()), $("span", "food-emoji", "🍚"), $("h3", null, fne));
+        photo.append(hero);
       } else {
         photo.append(link(p.poster[0], img(...p.poster)));
       }
-      const face = $("div", "face-cta");
-      const btn = document.createElement("a");
-      btn.className = "btn face-add";
-      if (p.n === 2) {
-        btn.href = "https://wa.me/9779747704316?text=" + encodeURIComponent("नमस्ते, FACEलय मा आफ्नो अनुहार जोड्न चाहन्छु / I want to Add My Face to FACElay");
-        btn.innerHTML = "<span class=\"face-plus\">+</span><span class=\"face-label\">Add Your Face Here</span>";
-      } else if (p.n === 3) {
-        btn.href = "https://wa.me/9779747704316?text=" + encodeURIComponent("नमस्ते, शब्दलय मा आफ्ना कविता, मुक्तक, कथा वा शब्दहरू जोड्न चाहन्छु / I want to Add My Story/Words to Shabdalaya");
-        btn.innerHTML = "<span class=\"face-plus\">+</span><span class=\"face-label\">Add Your Story/Words Here</span>";
-      } else if (p.n === 5) {
-        btn.href = "https://wa.me/9779747704316?text=" + encodeURIComponent("नमस्ते, Concertलय / I want to join the Deuda Concert");
-        btn.innerHTML = "<span class=\"face-plus\">+</span><span class=\"face-label\">Join the Concert</span>";
-      } else if (p.n === 4) {
-        btn.href = "https://wa.me/9779747704316?text=" + encodeURIComponent("नमस्ते, Websiteलय मार्फत आफ्नो वेबसाइट बनाउन चाहन्छु / I want to Build My Website with WebsiteLaya");
-        btn.innerHTML = "<span class=\"face-plus\">+</span><span class=\"face-label\">Build Your Website Here</span>";
-      } else {
-        btn.href = "https://wa.me/9779747704316?text=" + encodeURIComponent("नमस्ते, " + p.t + " बारे जान्न चाहन्छु / I want to know more about " + p.t);
-        btn.innerHTML = "<span class=\"face-plus\">+</span><span class=\"face-label\">Learn More</span>";
-      }
-      btn.target = "_blank";
-      btn.rel = "noopener noreferrer";
-      btn.addEventListener("click", e => {
-        if (btn.classList.contains("open") || matchMedia("(hover:hover)").matches) return;
-        e.preventDefault(); btn.classList.add("open");
-      });
-      wrap.append(photo, face);
+      const wrap = faceControls(p, photo);
       el.append(wrap);
-      const row = likeBtn(p);
-      const waEl = row.querySelector(".wa-plus");
-      if (waEl) waEl.remove();
-      const chip = row.querySelector(".views");
-      if (chip) row.insertBefore(btn, chip); else row.append(btn);
-      face.append(row);
+      el.classList.add("stack");
     } else {
       const row = $("div", "shop-grid"), c = $("div", "shop-card poster-card");
       c.append(link(p.poster[0], img(...p.poster)), actionBtn(p, p.poster[1] || p.t));
@@ -1768,7 +1803,8 @@ function render(p) {
 
   if (p.food) {
     const d = details("local foods", true), grid = $("div", "dest-grid");
-    FOODS.forEach(([ne, en], i) => {
+    FOODS.slice(1).forEach(([ne, en], j) => {
+      const i = j + 1;
       const c = $("div", "dest-card");
       c.append($("small", "dest-no", String(i + 1).padStart(2, "0") + " / " + en.toUpperCase()), $("h3", null, ne));
       grid.append(c);
@@ -1975,9 +2011,9 @@ function render(p) {
     const item = $("div", "img-item");
     a.replaceWith(item);
     item.append(a);
-    if (!p.poster) item.append(orderBtn((a.querySelector("img") || {}).alt || p.t));  /* skip if face-stage btn present */
+    if (!(p.poster || p.food)) item.append(orderBtn((a.querySelector("img") || {}).alt || p.t));  /* skip if face-stage btn present */
   });
-  if (!p.poster) {
+  if (!(p.poster || p.food)) {
     el.querySelectorAll("a.poster-solo").forEach(a => {
       const wrap = $("div", "cta");
       wrap.append(orderBtn((a.querySelector("img") || {}).alt || p.t));
@@ -1987,7 +2023,7 @@ function render(p) {
   }
 
   // action button on every dest-card (skip phases that already have a face-stage button)
-  if (!p.poster) el.querySelectorAll(".dest-card").forEach(c => {
+  if (!(p.poster || p.food)) el.querySelectorAll(".dest-card").forEach(c => {
     const h = c.querySelector("h3");
     c.append(actionBtn(p, h ? h.textContent : p.t));
   });
@@ -2020,6 +2056,18 @@ function render(p) {
     }
     hr.append(stallCard(p));
   }
+  if (p.n >= 8 && !p.poster && !p.food && !p.contact) {      /* phases 8+: ONE big item in front, everything else hidden behind the arrow */
+    const hr = el.querySelector(":scope > .hrow");
+    const front = hr && hr.firstElementChild;
+    if (front) {
+      front.classList.add("front-item");
+      const photo = $("div", "face-photo");
+      photo.append(front);
+      hr.before(faceControls(p, photo));
+      el.classList.add("stack");
+      if (!hr.children.length) hr.remove();
+    }
+  }
   if (p.n) {
     const nav = $("div", "card-nav");
     const prev = p.n > 1 ? PHASES.find(x => x.n === p.n - 1) : null;
@@ -2027,7 +2075,7 @@ function render(p) {
     if (prev) { const a = $("a", null, "← PLOT " + String(prev.n).padStart(3, "0")); a.href = "#" + (prev.id || "phase-" + prev.n); nav.append(a); } else nav.append($("span"));
     if (next) { const a = $("a", null, "PLOT " + String(next.n).padStart(3, "0") + " →"); a.href = "#" + (next.id || "phase-" + next.n); nav.append(a); } else nav.append($("span"));
     el.append(nav);
-    if (p.n && p.n !== 2 && p.n !== 3 && p.n !== 4 && p.n !== 5 && p.n !== 6) el.append(likeBtn(p));
+    if (p.n && !el.classList.contains("stack")) el.append(likeBtn(p));
   }
 
   return el;
@@ -2083,10 +2131,9 @@ document.querySelectorAll("#list .phase").forEach((el, index) => {
   });
   setOpen(el.id === "phase-2" || el.id === "phase-3" || el.id === "phase-4");
 });
-/* Phases 4, 5 and 6: one poster/image in front; a small arrow expands/hides the rest of the cards. Works alongside the phase's own open arrow. */
-["phase-4", "phase-5", "phase-6"].forEach(id => {
-  const ph = document.getElementById(id);
-  if (!ph) return;
+/* Every phase with a front item: a small arrow expands/hides the rest of the cards. (Phase 3 has its own toggle.) */
+document.querySelectorAll("#list .phase.stack").forEach(ph => {
+  if (ph.id === "phase-3") return;
   const hr = ph.querySelector(".hrow");
   if (!hr) return;
   const b = document.createElement("button");
