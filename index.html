@@ -300,6 +300,8 @@ h2{font:300 clamp(20px,6.2vw,34px) var(--sans);letter-spacing:3px;margin:0}
 .like-btn.liked svg{animation:likePop .45s cubic-bezier(.17,.89,.32,1.4)}
 .like-count{min-height:12px}
 .views{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--muted);font:600 12px/1 var(--sans);letter-spacing:.5px}
+.share-label{display:none;font:600 12px/1 var(--sans);letter-spacing:.4px;margin-left:6px}
+@media(max-width:720px){ .share-btn{width:auto;height:44px;padding:0 14px;border-radius:999px;gap:6px} .share-btn svg{width:22px;height:22px} .share-label{display:inline}}
 .img-note{font-size:12px;letter-spacing:2px;color:var(--muted);text-align:center;margin:8px 0 0}
 .share-wrap{position:relative;display:inline-flex}
 .share-btn{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:50%;border:0;background:var(--surface);color:var(--muted);cursor:pointer;transition:transform .18s,background .18s,color .18s;position:relative}
@@ -1434,7 +1436,7 @@ function makeShare(p) {
   const btn = document.createElement("button");
   btn.type = "button"; btn.className = "share-btn"; btn.title = "Share";
   btn.setAttribute("aria-label", "Share " + p.t);
-  btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M16 6l-4-4-4 4"/><line x1="12" y1="2" x2="12" y2="15"/></svg>';
+  btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M16 6l-4-4-4 4"/><line x1="12" y1="2" x2="12" y2="15"/></svg><span class="share-label">Share</span>';
   wrap.append(btn);
   const pop = document.createElement("div");
   pop.className = "share-pop"; pop.hidden = true;
