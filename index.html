@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -223,11 +223,7 @@ h2{font:300 clamp(20px,6.2vw,34px) var(--sans);letter-spacing:3px;margin:0}
 .phase:last-child{margin-bottom:0}
 @media(hover:hover){.phase:hover{border-color:var(--accent);transform:translateX(5px) translateY(-2px);box-shadow:0 12px 36px var(--shadow),0 0 28px var(--glow)}}
 .phase.bare{padding:0;border:0;border-radius:0;background:none}
-.phase-body{width:100%;margin-top:10px;text-align:center}
-.phase-body>summary.phase-open{display:inline-block;cursor:pointer;list-style:none;padding:8px 18px;border:1px solid var(--line);border-radius:999px;color:var(--accent);font-size:13px;letter-spacing:1px;margin:8px auto 12px}
-.phase-body>summary.phase-open::-webkit-details-marker{display:none}
-.phase-body[open]>summary.phase-open{margin-bottom:16px}
-/* phase 2 FACElay: photo centered, button on the right */
+/* phases 2–4: poster centered, compact action on the right */
 .face-phase{text-align:center}
 .face-stage{position:relative;display:flex;align-items:center;justify-content:center;width:100%;max-width:720px;margin:18px auto 10px;min-height:min(70vw,420px);padding:8px 0}
 .face-photo{display:flex;justify-content:center;align-items:center;width:auto}
@@ -619,8 +615,14 @@ div.contact-link:hover{transform:none;box-shadow:none;border-color:var(--line)}
 .citymap .legend{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 16px;max-width:720px;font-size:12px;color:var(--muted);letter-spacing:1px}
 .citymap .legend b{color:var(--accent);font-weight:600}
 
-#phase-2 .like-row{flex-direction:column;align-items:center;gap:8px;justify-content:center;margin:0}
+#phase-2 .like-row,#phase-4 .like-row{flex-direction:column;align-items:center;gap:8px;justify-content:center;margin:0}
 #phase-3 .like-row{flex-direction:column;align-items:center;gap:8px;justify-content:center}
+#phase-3 .face-photo{flex-direction:column;align-items:center;gap:12px}
+#phase-3 .face-cta{position:static;transform:none;align-self:flex-start;margin:12px 0 0 12px}
+/* Clean poster phases: hide the PLOT meta row and prev/next card-nav */
+#phase-2 .card-meta,#phase-2 .card-nav,#phase-4 .card-meta,#phase-4 .card-nav{display:none}
+/* phase 3: card row stays hidden until the same arrow toggle opens the second image */
+#phase-3 .hrow,#phase-3 .card-nav{display:none}
 /* Layapur city intro — collapsed behind a small arrow only */
 .city-fold{width:100%;max-width:1000px;margin:0 auto 8px;border:0;background:transparent}
 .city-fold-sum{display:flex;align-items:center;justify-content:center;padding:6px 10px;cursor:pointer;list-style:none;color:var(--muted);user-select:none}
@@ -646,10 +648,15 @@ div.contact-link:hover{transform:none;box-shadow:none;border-color:var(--line)}
 .citymap-body .legend{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 16px;max-width:720px;font-size:12px;color:var(--muted);letter-spacing:1px}
 .citymap-body .legend b{color:var(--accent);font-weight:600}
 .est{margin:10px 0 0;font-size:11px;letter-spacing:4px;color:var(--muted)}
-.phase-body{display:none}
-.phase.open .phase-body{display:block}
-.phase-arrow{border:0;background:none;cursor:pointer;color:var(--accent);font-size:18px;line-height:1;padding:0 0 0 6px;vertical-align:middle;transition:transform .2s}
-.phase-arrow:hover{transform:scale(1.2)}
+.phase-header{position:relative;width:100%;min-height:44px;padding:0 28px;cursor:pointer;border-radius:10px;outline:none}
+.phase-header:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+.phase-arrow{position:absolute;top:50%;right:6px;transform:translateY(-50%);color:var(--accent);font:500 12px/1 var(--sans);pointer-events:none}
+.phase-body{display:grid;grid-template-rows:0fr;width:100%;margin-top:0;text-align:center;opacity:0;visibility:hidden;
+ transition:grid-template-rows .32s cubic-bezier(.4,0,.2,1),margin-top .32s cubic-bezier(.4,0,.2,1),opacity .2s ease,visibility 0s linear .32s}
+.phase-body-inner{min-height:0;overflow:hidden}
+.phase.open .phase-body{grid-template-rows:1fr;margin-top:10px;opacity:1;visibility:visible;
+ transition:grid-template-rows .32s cubic-bezier(.4,0,.2,1),margin-top .32s cubic-bezier(.4,0,.2,1),opacity .24s ease .06s,visibility 0s}
+@media(prefers-reduced-motion:reduce){.phase-body{transition:none}}
 
 /* door-opening entrance */
 .door{position:fixed;inset:0;z-index:90;display:flex;pointer-events:auto;cursor:pointer}
@@ -1503,10 +1510,10 @@ const stallCard = p => {
 };
 
 /* subtle contribution calls-to-action, chosen to fit each laya's purpose */
-const CTA_BY_PHASE = { 1:"Join the Circle", 3:"Add Your Story", 9:"Explore", 20:"Add Your Art", 24:"Contribute", 37:"Share Your Memory", 42:"Learn More" };
+const CTA_BY_PHASE = { 1:"Join the Circle", 9:"Explore", 20:"Add Your Art", 24:"Contribute", 37:"Share Your Memory", 42:"Learn More" };
 
 function render(p) {
-  const el = $("article", "phase" + (p.bare ? " bare" : "") + (p.n === 5 ? " concert-phase" : "") + ((p.n === 2 || p.n === 3) ? " face-phase" : ""));
+  const el = $("article", "phase" + (p.bare ? " bare" : "") + (p.n === 5 ? " concert-phase" : "") + ((p.n === 2 || p.n === 3 || p.n === 4) ? " face-phase" : ""));
   if (p.id) el.id = p.id;
   if (p.gap) {
     el.style.cssText = "height:40px;background:none;border:none;box-shadow:none;margin:0;padding:0";
@@ -1525,8 +1532,8 @@ function render(p) {
   numEl.append(logo, document.createTextNode("लय / Phase : " + String(p.n).padStart(2, "0")));
   el.append(numEl, $("h2", "laya", p.t));
 
-  /* city wayfinding meta: district · conceptual distance · direction (hidden on phase 2 & 3) */
-  if (p.n && p.n !== 2 && p.n !== 3) {
+  /* city wayfinding meta: district · conceptual distance · direction (hidden on clean poster phases) */
+  if (p.n && p.n !== 2 && p.n !== 3 && p.n !== 4) {
     const c = cityFor(p.n);
     const meta = $("p", "card-meta");
     meta.append($("b", null, "PLOT " + String(p.n).padStart(3, "0")), document.createTextNode("·"),
@@ -1568,20 +1575,38 @@ function render(p) {
   }
 
   if (p.poster) {
-    if (p.n === 2 || p.n === 3) {
-      /* phase 2 & 3: poster centered, + Add button on the right (same layout) */
+    if (p.n === 2 || p.n === 3 || p.n === 4) {
+      /* phases 2–4: poster centered, + Add button on the right */
       const wrap = $("div", "face-stage");
       const photo = $("div", "face-photo");
-      photo.append(link(p.poster[0], img(...p.poster)));
+      if (p.n === 3 && p.poster2) photo.append(link(p.poster2[0], img(...p.poster2)));
+      if (p.n === 3 && p.poster2) {
+        const det = document.createElement("details");
+        det.className = "imgs";
+        const sum = document.createElement("summary"); sum.setAttribute("aria-label", "Show second image");
+        det.append(sum, link(p.poster[0], img(...p.poster)));
+        photo.append(det);
+        det.addEventListener("toggle", () => {
+          const hr = document.getElementById("phase-3") ? document.getElementById("phase-3").querySelector(".hrow") : null;
+          const nav = document.getElementById("phase-3") ? document.getElementById("phase-3").querySelector(".card-nav") : null;
+          if (hr) hr.style.display = det.open ? "flex" : "none";
+          if (nav) nav.style.display = det.open ? "flex" : "none";
+        });
+      } else {
+        photo.append(link(p.poster[0], img(...p.poster)));
+      }
       const face = $("div", "face-cta");
       const btn = document.createElement("a");
       btn.className = "btn face-add";
       if (p.n === 2) {
         btn.href = "https://wa.me/9779747704316?text=" + encodeURIComponent("नमस्ते, FACEलय मा आफ्नो अनुहार जोड्न चाहन्छु / I want to Add My Face to FACElay");
         btn.innerHTML = "<span class=\"face-plus\">+</span><span class=\"face-label\">Add Your Face Here</span>";
-      } else {
+      } else if (p.n === 3) {
         btn.href = "https://wa.me/9779747704316?text=" + encodeURIComponent("नमस्ते, शब्दलय मा आफ्ना कविता, मुक्तक, कथा वा शब्दहरू जोड्न चाहन्छु / I want to Add My Story/Words to Shabdalaya");
         btn.innerHTML = "<span class=\"face-plus\">+</span><span class=\"face-label\">Add Your Story/Words Here</span>";
+      } else {
+        btn.href = "https://wa.me/9779747704316?text=" + encodeURIComponent("नमस्ते, Websiteलय मार्फत आफ्नो वेबसाइट बनाउन चाहन्छु / I want to Build My Website with WebsiteLaya");
+        btn.innerHTML = "<span class=\"face-plus\">+</span><span class=\"face-label\">Build Your Website Here</span>";
       }
       btn.target = "_blank";
       btn.rel = "noopener noreferrer";
@@ -1859,9 +1884,9 @@ function render(p) {
     const item = $("div", "img-item");
     a.replaceWith(item);
     item.append(a);
-    if (p.n !== 2 && p.n !== 3) item.append(orderBtn((a.querySelector("img") || {}).alt || p.t));  /* phase 2/3 clean */
+    if (p.n !== 2 && p.n !== 3 && p.n !== 4) item.append(orderBtn((a.querySelector("img") || {}).alt || p.t));  /* clean poster phases */
   });
-  if (p.n !== 2 && p.n !== 3) {
+  if (p.n !== 2 && p.n !== 3 && p.n !== 4) {
     el.querySelectorAll("a.poster-solo").forEach(a => {
       const wrap = $("div", "cta");
       wrap.append(orderBtn((a.querySelector("img") || {}).alt || p.t));
@@ -1870,8 +1895,8 @@ function render(p) {
     el.querySelectorAll(".shop-card.branch").forEach(c => c.append(orderBtn(c.querySelector("h3").textContent)));
   }
 
-  // action button on every card (skip phase 2/3 — clean)
-  if (p.n !== 2 && p.n !== 3) el.querySelectorAll(".dest-card").forEach(c => {
+  // action button on every card (skip clean poster phases)
+  if (p.n !== 2 && p.n !== 3 && p.n !== 4) el.querySelectorAll(".dest-card").forEach(c => {
     const h = c.querySelector("h3");
     c.append(actionBtn(p, h ? h.textContent : p.t));
   });
@@ -1895,7 +1920,7 @@ function render(p) {
       if (h && !h.children.length) h.remove();
     });
   }
-  if (p.n && p.n !== 1 && p.n !== 2 && p.n !== 3 && !p.contact) {   // not phase 1 or clean phase 2/3
+  if (p.n && p.n !== 1 && p.n !== 2 && p.n !== 3 && p.n !== 4 && !p.contact) {   // not phase 1 or a clean poster phase
     let hr = el.querySelector(":scope > .hrow");
     if (!hr) {
       hr = $("div", "hrow");
@@ -1911,24 +1936,7 @@ function render(p) {
     if (prev) { const a = $("a", null, "← PLOT " + String(prev.n).padStart(3, "0")); a.href = "#" + (prev.id || "phase-" + prev.n); nav.append(a); } else nav.append($("span"));
     if (next) { const a = $("a", null, "PLOT " + String(next.n).padStart(3, "0") + " →"); a.href = "#" + (next.id || "phase-" + next.n); nav.append(a); } else nav.append($("span"));
     el.append(nav);
-    if (p.n && p.n !== 2 && p.n !== 3) el.append(likeBtn(p));
-  }
-
-  /* Phase 1 collapsed by default: only title visible until user opens */
-  if (p.collapsed) {
-    const det = document.createElement("details");
-    det.className = "phase-body";
-    const sum = document.createElement("summary");
-    sum.className = "phase-open";
-    sum.textContent = "Open · खोल्नुहोस्";
-    det.append(sum);
-    const keep = (ch) => ch.nodeType === 1 && (
-      ch.classList.contains("num") || ch.classList.contains("laya") ||
-      ch.classList.contains("card-meta") || ch.classList.contains("district-mark") ||
-      ch.classList.contains("card-nav")
-    );
-    [...el.childNodes].forEach(ch => { if (!keep(ch)) det.append(ch); });
-    el.append(det);
+    if (p.n && p.n !== 2 && p.n !== 3 && p.n !== 4) el.append(likeBtn(p));
   }
 
   return el;
@@ -1941,29 +1949,48 @@ PHASES.forEach(p => {
   if (p.n) el.id = el.id || "phase-" + p.n;
   list.append(el);
 });
-/* Collapse/expand EVERY phase: title + tiny arrow visible, rest hidden when closed. */
-document.querySelectorAll("#list .phase").forEach(el => {
+/* One shared collapse controller for every current and future numbered phase. */
+document.querySelectorAll("#list .phase").forEach((el, index) => {
   const title = el.querySelector(".laya");
-  if (!title) return;                                   // soon/bare phases: leave as-is
+  if (!title) return;                                   // status/gap cards are not phases
   const numEl = el.querySelector(".num");
+  const header = document.createElement("div");
+  header.className = "phase-header";
+  header.setAttribute("role", "button");
+  header.tabIndex = 0;
+
+  const bodyId = (el.id || "phase-" + (index + 1)) + "-content";
   const body = document.createElement("div");
   body.className = "phase-body";
-  [...el.children].forEach(ch => { if (ch !== numEl && ch !== title) body.appendChild(ch); });
-  el.appendChild(body);
-  const arr = document.createElement("button");
-  arr.type = "button";
-  arr.className = "phase-arrow";
-  arr.innerHTML = "›";
-  arr.setAttribute("aria-label", "Expand phase");
-  const toggle = () => {
-    const open = el.classList.toggle("open");
-    arr.innerHTML = open ? "⌄" : "›";
-    arr.setAttribute("aria-label", open ? "Collapse phase" : "Expand phase");
+  body.id = bodyId;
+  const inner = document.createElement("div");
+  inner.className = "phase-body-inner";
+  [...el.children].forEach(ch => { if (ch !== numEl && ch !== title) inner.appendChild(ch); });
+  body.append(inner);
+
+  const arrow = $("span", "phase-arrow", "▸");
+  arrow.setAttribute("aria-hidden", "true");
+  el.prepend(header);
+  header.append(numEl, title, arrow);
+  el.append(body);
+  header.setAttribute("aria-controls", bodyId);
+
+  const setOpen = open => {
+    el.classList.toggle("open", open);
+    header.setAttribute("aria-expanded", String(open));
+    header.setAttribute("aria-label", (open ? "Collapse " : "Expand ") + title.textContent.trim());
+    body.setAttribute("aria-hidden", String(!open));
+    body.inert = !open;
+    arrow.textContent = open ? "▾" : "▸";
   };
-  arr.addEventListener("click", e => { e.stopPropagation(); toggle(); });
-  title.appendChild(arr);
-  title.addEventListener("click", toggle);
-  if (el.id === "phase-2") { el.classList.add("open"); arr.innerHTML = "⌄"; arr.setAttribute("aria-label", "Collapse phase"); }
+  const toggle = () => setOpen(!el.classList.contains("open"));
+  header.addEventListener("click", toggle);
+  header.addEventListener("keydown", e => {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    e.preventDefault();
+    toggle();
+  });
+  setOpen(false);
 });
 watchViews();
 
@@ -2299,37 +2326,6 @@ document.addEventListener("click", e => {
       else lastTap = now;
     });
   }
-})();
-
-/* auto-scroll to Phase 2 once after load — slow & gentle; cancelled on user input */
-(function () {
-  let cancelled = false;
-  const stop = () => { cancelled = true; };
-  addEventListener("wheel", stop, { once: true, passive: true });
-  addEventListener("touchmove", stop, { once: true, passive: true });
-  addEventListener("keydown", stop, { once: true });
-  addEventListener("load", () => {
-    setTimeout(() => {
-      if (cancelled) return;
-      const el = document.getElementById("phase-2");
-      if (!el) return;
-      const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (reduce) { el.scrollIntoView({ behavior: "auto", block: "start" }); return; }
-      const startY = window.scrollY;
-      const endY = el.getBoundingClientRect().top + window.scrollY;
-      const dur = 3500;
-      const ease = k => k < 0.5 ? 2 * k * k : -1 + (4 - 2 * k) * k;
-      let t0 = null;
-      function step(ts) {
-        if (cancelled) return;
-        if (!t0) t0 = ts;
-        const k = Math.min(1, (ts - t0) / dur);
-        window.scrollTo(0, startY + (endY - startY) * ease(k));
-        if (k < 1) requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-    }, 1000);
-  });
 })();
 
 /* ============ LAYA MENU (top-left) ============ */
