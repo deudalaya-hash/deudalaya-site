@@ -1359,7 +1359,8 @@ const $ = (tag, cls, text) => {
   if (text != null) el.textContent = text;
   return el;
 };
-const img = (src, alt) => { const i = $("img"); i.src = src; i.alt = alt; i.loading = "lazy"; i.decoding = "async"; return i; };
+const IMG_V = "3"; /* bump this number whenever you replace any image file, so phones reload it instead of showing an old cached copy */
+const img = (src, alt) => { const i = $("img"); i.src = /^(https?:|data:)/.test(src) ? src : src + "?v=" + IMG_V; i.alt = alt; i.loading = "lazy"; i.decoding = "async"; return i; };
 const link = (href, child) => { const a = $("a"); a.href = href; a.target = "_blank"; a.rel = "noopener noreferrer"; a.append(child); return a; };
 const details = (label) => {          // plain always-visible block (no toggle), like हाटालय
   const d = $("div", "hblock");
