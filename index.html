@@ -1565,7 +1565,7 @@ const stallCard = p => {
 const CTA_BY_PHASE = { 1:"Join the Circle", 9:"Explore", 20:"Add Your Art", 24:"Contribute", 37:"Share Your Memory", 42:"Learn More" };
 
 function render(p) {
-  const el = $("article", "phase" + (p.bare ? " bare" : "") + (p.n === 5 ? " concert-phase" : "") + ((p.n === 2 || p.n === 3 || p.n === 4) ? " face-phase" : ""));
+  const el = $("article", "phase" + (p.bare ? " bare" : "") + (p.n === 5 ? " concert-phase" : "") + (!p.bare ? " face-phase" : ""));
   if (p.id) el.id = p.id;
   if (p.gap) {
     el.style.cssText = "height:40px;background:none;border:none;box-shadow:none;margin:0;padding:0";
@@ -1584,20 +1584,11 @@ function render(p) {
   numEl.append(logo, document.createTextNode("लय / Phase : " + String(p.n).padStart(2, "0")));
   el.append(numEl, $("h2", "laya", p.t));
 
-  /* city wayfinding meta: district · conceptual distance · direction (hidden on clean poster phases) */
-  if (p.n && p.n !== 2 && p.n !== 3 && p.n !== 4) {
-    const c = cityFor(p.n);
-    const meta = $("p", "card-meta");
-    meta.append($("b", null, "PLOT " + String(p.n).padStart(3, "0")), document.createTextNode("·"),
-      $("span", null, c[1] === "CITY CENTER" ? "CITY CENTER" : c[1] + " DISTRICT"), document.createTextNode("·"),
-      Object.assign($("span", "dist"), { textContent: (p.n === 1 || p.n === 5) ? "0.0 KM" : kmFor(p.n) + " KM" }),
-      document.createTextNode("·"), $("span", null, "🧭 " + c[2]));
-    el.append($("span", "district-mark", c[0] + " DISTRICT"), meta);
-  }
+  /* city wayfinding meta removed — all phases use clean layout */
 
   (p.d || []).forEach(line => el.append($("p", "desc", line)));
   const cta = p.n && CTA_BY_PHASE[p.n];
-  if (cta) {
+  if (cta && !p.poster) {
     const a = $("a", "phase-cta", cta);
     a.href = "https://wa.me/9779747704316?text=" + encodeURIComponent("Hello, I want to \"" + cta + "\" for " + p.t + " on the Deudalaya website.");
     a.target = "_blank"; a.rel = "noopener noreferrer";
@@ -1627,26 +1618,12 @@ function render(p) {
   }
 
   if (p.poster) {
-    if (p.n === 2 || p.n === 3 || p.n === 4) {
-      /* phases 2–4: poster centered, + Add button on the right */
+    if (true) {
+      /* phases 2–5: poster centered, + Add button on the right */
       const wrap = $("div", "face-stage");
       const photo = $("div", "face-photo");
       if (p.n === 3 && p.poster2) photo.append(link(p.poster2[0], img(...p.poster2)));
-      if (p.n === 3 && p.poster2) {
-        const det = document.createElement("details");
-        det.className = "imgs";
-        const sum = document.createElement("summary"); sum.setAttribute("aria-label", "Show second image");
-        det.append(sum, link(p.poster[0], img(...p.poster)));
-        photo.append(det);
-        det.addEventListener("toggle", () => {
-          const hr = document.getElementById("phase-3") ? document.getElementById("phase-3").querySelector(".hrow") : null;
-          const nav = document.getElementById("phase-3") ? document.getElementById("phase-3").querySelector(".card-nav") : null;
-          if (hr) hr.style.display = det.open ? "flex" : "none";
-          if (nav) nav.style.display = det.open ? "flex" : "none";
-        });
-      } else {
-        photo.append(link(p.poster[0], img(...p.poster)));
-      }
+      photo.append(link(p.poster[0], img(...p.poster)));
       const face = $("div", "face-cta");
       const btn = document.createElement("a");
       btn.className = "btn face-add";
@@ -1656,9 +1633,15 @@ function render(p) {
       } else if (p.n === 3) {
         btn.href = "https://wa.me/9779747704316?text=" + encodeURIComponent("नमस्ते, शब्दलय मा आफ्ना कविता, मुक्तक, कथा वा शब्दहरू जोड्न चाहन्छु / I want to Add My Story/Words to Shabdalaya");
         btn.innerHTML = "<span class=\"face-plus\">+</span><span class=\"face-label\">Add Your Story/Words Here</span>";
-      } else {
+      } else if (p.n === 5) {
+        btn.href = "https://wa.me/9779747704316?text=" + encodeURIComponent("नमस्ते, Concertलय / I want to join the Deuda Concert");
+        btn.innerHTML = "<span class=\"face-plus\">+</span><span class=\"face-label\">Join the Concert</span>";
+      } else if (p.n === 4) {
         btn.href = "https://wa.me/9779747704316?text=" + encodeURIComponent("नमस्ते, Websiteलय मार्फत आफ्नो वेबसाइट बनाउन चाहन्छु / I want to Build My Website with WebsiteLaya");
         btn.innerHTML = "<span class=\"face-plus\">+</span><span class=\"face-label\">Build Your Website Here</span>";
+      } else {
+        btn.href = "https://wa.me/9779747704316?text=" + encodeURIComponent("नमस्ते, " + p.t + " बारे जान्न चाहन्छु / I want to know more about " + p.t);
+        btn.innerHTML = "<span class=\"face-plus\">+</span><span class=\"face-label\">Learn More</span>";
       }
       btn.target = "_blank";
       btn.rel = "noopener noreferrer";
@@ -1667,7 +1650,16 @@ function render(p) {
         e.preventDefault(); btn.classList.add("open");
       });
       wrap.append(photo, face);
-      el.append(wrap);
+      if (p.n === 5) {
+        const det = document.createElement("details");
+        det.className = "imgs"; det.open = true;
+        const sum = document.createElement("summary");
+        face.replaceWith(det);
+        det.append(sum, face);
+        el.append(wrap);
+      } else {
+        el.append(wrap);
+      }
       const row = likeBtn(p);
       const waEl = row.querySelector(".wa-plus");
       if (waEl) waEl.remove();
@@ -1936,9 +1928,9 @@ function render(p) {
     const item = $("div", "img-item");
     a.replaceWith(item);
     item.append(a);
-    if (p.n !== 2 && p.n !== 3 && p.n !== 4) item.append(orderBtn((a.querySelector("img") || {}).alt || p.t));  /* clean poster phases */
+    if (!p.poster) item.append(orderBtn((a.querySelector("img") || {}).alt || p.t));  /* skip if face-stage btn present */
   });
-  if (p.n !== 2 && p.n !== 3 && p.n !== 4) {
+  if (!p.poster) {
     el.querySelectorAll("a.poster-solo").forEach(a => {
       const wrap = $("div", "cta");
       wrap.append(orderBtn((a.querySelector("img") || {}).alt || p.t));
@@ -1947,8 +1939,8 @@ function render(p) {
     el.querySelectorAll(".shop-card.branch").forEach(c => c.append(orderBtn(c.querySelector("h3").textContent)));
   }
 
-  // action button on every card (skip clean poster phases)
-  if (p.n !== 2 && p.n !== 3 && p.n !== 4) el.querySelectorAll(".dest-card").forEach(c => {
+  // action button on every dest-card (skip phases that already have a face-stage button)
+  if (!p.poster) el.querySelectorAll(".dest-card").forEach(c => {
     const h = c.querySelector("h3");
     c.append(actionBtn(p, h ? h.textContent : p.t));
   });
@@ -1988,7 +1980,7 @@ function render(p) {
     if (prev) { const a = $("a", null, "← PLOT " + String(prev.n).padStart(3, "0")); a.href = "#" + (prev.id || "phase-" + prev.n); nav.append(a); } else nav.append($("span"));
     if (next) { const a = $("a", null, "PLOT " + String(next.n).padStart(3, "0") + " →"); a.href = "#" + (next.id || "phase-" + next.n); nav.append(a); } else nav.append($("span"));
     el.append(nav);
-    if (p.n && p.n !== 2 && p.n !== 3 && p.n !== 4) el.append(likeBtn(p));
+    if (p.n && p.n !== 2 && p.n !== 3 && p.n !== 4 && p.n !== 5) el.append(likeBtn(p));
   }
 
   return el;
@@ -2042,7 +2034,7 @@ document.querySelectorAll("#list .phase").forEach((el, index) => {
     e.preventDefault();
     toggle();
   });
-  setOpen(el.id === "phase-2" || el.id === "phase-3" || el.id === "phase-4");
+  setOpen(el.id === "phase-2" || el.id === "phase-3" || el.id === "phase-4" || el.id === "phase-5");
 });
 /* Phase 4: a small arrow next to the cards that expands/hides the card row. Works alongside the phase's own open arrow. */
 (function () {
