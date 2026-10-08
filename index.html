@@ -629,11 +629,13 @@ div.contact-link:hover{transform:none;box-shadow:none;border-color:var(--line)}
 #phase-2 .like-row,#phase-4 .like-row{flex-direction:column;align-items:center;gap:8px;justify-content:center;margin:0}
 #phase-3 .like-row{flex-direction:column;align-items:center;gap:8px;justify-content:center}
 #phase-3 .face-photo{flex-direction:column;align-items:center;gap:12px}
-#phase-3 .face-cta{position:static;transform:none;align-self:flex-start;margin:12px 0 0 12px}
+#phase-3.open .phase-body{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end}
+#phase-3 .hrow{flex:1 1 auto}
+#phase-3 .face-cta{position:static;transform:none;align-self:center;margin:0 0 0 16px}
 /* Clean poster phases: hide the PLOT meta row and prev/next card-nav */
 #phase-2 .card-meta,#phase-2 .card-nav,#phase-4 .card-meta,#phase-4 .card-nav{display:none}
 /* phase 3: card row stays hidden until the same arrow toggle opens the second image */
-#phase-3 .hrow,#phase-3 .card-nav{display:none}
+#phase-3 .card-nav{display:none}
 #phase-4 .hrow{display:none}
 .cards-toggle{display:inline-grid;place-items:center;width:30px;height:30px;margin:6px auto;border:1px solid var(--line);background:var(--surface);color:var(--accent);border-radius:50%;font:18px/1 var(--sans);cursor:pointer;vertical-align:middle}
 .cards-toggle:hover{border-color:var(--accent)}
@@ -1623,7 +1625,15 @@ function render(p) {
       const wrap = $("div", "face-stage");
       const photo = $("div", "face-photo");
       if (p.n === 3 && p.poster2) photo.append(link(p.poster2[0], img(...p.poster2)));
-      photo.append(link(p.poster[0], img(...p.poster)));
+      if (p.n === 3 && p.poster2) {
+        const det = document.createElement("details");
+        det.className = "imgs";
+        const sum = document.createElement("summary");
+        det.append(sum, link(p.poster[0], img(...p.poster)));
+        photo.append(det);
+      } else {
+        photo.append(link(p.poster[0], img(...p.poster)));
+      }
       const face = $("div", "face-cta");
       const btn = document.createElement("a");
       btn.className = "btn face-add";
@@ -2054,6 +2064,19 @@ document.querySelectorAll("#list .phase").forEach((el, index) => {
     b.innerHTML = hidden ? "⌄" : "›";
     b.setAttribute("aria-label", hidden ? "Collapse cards" : "Expand cards");
   });
+})();
+/* Phase 3: the same small-arrow toggle for the blog-card row */
+(function () {
+  const ph = document.getElementById("phase-3");
+  if (!ph) return;
+  const hr = ph.querySelector(".hrow");
+  if (!hr) return;
+  const det = document.createElement("details");
+  det.className = "imgs"; det.open = false;
+  const sum = document.createElement("summary");
+  const parent = hr.parentNode;
+  parent.insertBefore(det, hr);
+  det.append(sum, hr);
 })();
 watchViews();
 
