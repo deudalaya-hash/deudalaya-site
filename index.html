@@ -623,6 +623,10 @@ div.contact-link:hover{transform:none;box-shadow:none;border-color:var(--line)}
 #phase-2 .card-meta,#phase-2 .card-nav,#phase-4 .card-meta,#phase-4 .card-nav{display:none}
 /* phase 3: card row stays hidden until the same arrow toggle opens the second image */
 #phase-3 .hrow,#phase-3 .card-nav{display:none}
+#phase-4 .hrow{display:none}
+.cards-toggle{display:inline-grid;place-items:center;width:30px;height:30px;margin:6px auto;border:1px solid var(--line);background:var(--surface);color:var(--accent);border-radius:50%;font:18px/1 var(--sans);cursor:pointer;vertical-align:middle}
+.cards-toggle:hover{border-color:var(--accent)}
+
 /* Layapur city intro — collapsed behind a small arrow only */
 .city-fold{width:100%;max-width:1000px;margin:0 auto 8px;border:0;background:transparent}
 .city-fold-sum{display:flex;align-items:center;justify-content:center;padding:6px 10px;cursor:pointer;list-style:none;color:var(--muted);user-select:none}
@@ -1990,8 +1994,27 @@ document.querySelectorAll("#list .phase").forEach((el, index) => {
     e.preventDefault();
     toggle();
   });
-  setOpen(false);
+  setOpen(el.id === "phase-2" || el.id === "phase-3");
 });
+/* Phase 4: a small arrow next to the cards that expands/hides the card row. Works alongside the phase's own open arrow. */
+(function () {
+  const ph = document.getElementById("phase-4");
+  if (!ph) return;
+  const hr = ph.querySelector(".hrow");
+  if (!hr) return;
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "cards-toggle";
+  b.setAttribute("aria-label", "Toggle cards");
+  b.innerHTML = "›";
+  hr.before(b);
+  b.addEventListener("click", () => {
+    const hidden = hr.style.display !== "flex";
+    hr.style.display = hidden ? "flex" : "none";
+    b.innerHTML = hidden ? "⌄" : "›";
+    b.setAttribute("aria-label", hidden ? "Collapse cards" : "Expand cards");
+  });
+})();
 watchViews();
 
 /* ============ CITY: district filter + legend + where-am-I + random ============ */
