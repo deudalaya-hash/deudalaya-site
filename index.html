@@ -786,6 +786,17 @@ body:not(.entered) .hero *, body:not(.entered) .hero::before, body:not(.entered)
 .theme-toggle.hide,.menu-toggle.hide,.search-fab.hide,.lang-toggle.hide{opacity:0;pointer-events:none;transform:translateY(-12px) scale(.8)}
 .search-fab.hide{transform:translateY(-12px) scale(.8)}
 
+
+/* ===== TikTok-style scroll (phones / touch): every laya is one full screen, swipe snaps to the next ===== */
+@media (max-width:900px),(hover:none){
+ html{scroll-snap-type:y mandatory;overscroll-behavior-y:none}
+ .hero,#phases,.phase-index{scroll-snap-align:start}
+ .phase-index{scroll-margin-top:64px}
+ .phase.tt{min-height:calc(100vh - 16px);min-height:calc(100svh - 16px);display:flex;flex-direction:column;justify-content:center;margin-bottom:10px;padding:60px 14px 56px;
+  scroll-snap-align:start;scroll-snap-stop:always;scroll-margin-top:8px}
+ .phase.tt:last-child{margin-bottom:0}
+ .site-footer{scroll-snap-align:end}
+}
 </style>
 </head>
 <body>
@@ -1367,7 +1378,7 @@ const $ = (tag, cls, text) => {
 };
 /* ===== VERSION — change this number every time you upload a new index.html or replace any image.
    It (1) makes phones re-download images and (2) triggers the "Update available" banner for visitors. ===== */
-const APP_VERSION = "5";
+const APP_VERSION = "6";
 const IMG_V = APP_VERSION;
 const img = (src, alt) => { const i = $("img"); i.src = /^(https?:|data:)/.test(src) ? src : src + "?v=" + IMG_V; i.alt = alt; i.loading = "lazy"; i.decoding = "async"; return i; };
 const link = (href, child) => { const a = $("a"); a.href = href; a.target = "_blank"; a.rel = "noopener noreferrer"; a.append(child); return a; };
@@ -2127,6 +2138,10 @@ document.querySelectorAll("#list .phase").forEach((el, index) => {
   det.addEventListener("toggle", sync);
   sync();
 })();
+/* TikTok-style scroll: mark every laya card so the CSS above makes it a full-screen snap page */
+document.querySelectorAll("#list .phase").forEach(el => {
+  if (!el.classList.contains("bare") && el.querySelector(".laya,.soon")) el.classList.add("tt");
+});
 watchViews();
 
 /* ============ CITY: district filter + legend + where-am-I + random ============ */
