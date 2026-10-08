@@ -325,12 +325,18 @@ h2{font:300 clamp(20px,6.2vw,34px) var(--sans);letter-spacing:3px;margin:0}
  .share-label{display:inline;margin-left:0}
 }
 @media(hover:none){.share-btn::after{display:none}}
-/* mobile: put the action buttons (like / views / share) in a row BELOW the image so nothing gets pushed off-screen on narrow Android phones */
+/* mobile: action buttons (like / views / share / add) sit in a column BESIDE the image, on the right */
 @media(max-width:720px){
- #list .face-stage{flex-direction:column;align-items:center;gap:12px}
- #list .face-stage .face-cta{margin:0 auto;width:100%;max-width:100%;text-align:center}
- #list .face-stage .like-row{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;width:100%;max-width:100%}
+ #list .face-stage{flex-direction:row;flex-wrap:nowrap;align-items:center;justify-content:center;gap:10px}
+ #list .face-stage .face-photo{flex:0 1 auto;min-width:0}
+ #list .face-stage .face-photo img{width:min(200px,50vw);max-width:100%}
+ #list .face-stage .face-cta{margin:0;width:auto;max-width:none;flex:0 0 auto;text-align:center}
+ #list .face-stage .like-row{flex-direction:column;flex-wrap:nowrap;align-items:center;justify-content:center;gap:10px;width:auto;max-width:none}
+ #list .face-stage .share-label{display:none}
+ #list .face-stage .share-btn{width:44px;padding:0;border-radius:50%}
  #list .face-stage .share-wrap{flex:0 0 auto}
+ #list .face-stage .face-add.open{padding:9px 12px}
+ #list .face-stage .face-add.open .face-label{max-width:84px;white-space:normal;text-align:left}
 }
 
 
@@ -1359,7 +1365,10 @@ const $ = (tag, cls, text) => {
   if (text != null) el.textContent = text;
   return el;
 };
-const IMG_V = "3"; /* bump this number whenever you replace any image file, so phones reload it instead of showing an old cached copy */
+/* ===== VERSION — change this number every time you upload a new index.html or replace any image.
+   It (1) makes phones re-download images and (2) triggers the "Update available" banner for visitors. ===== */
+const APP_VERSION = "5";
+const IMG_V = APP_VERSION;
 const img = (src, alt) => { const i = $("img"); i.src = /^(https?:|data:)/.test(src) ? src : src + "?v=" + IMG_V; i.alt = alt; i.loading = "lazy"; i.decoding = "async"; return i; };
 const link = (href, child) => { const a = $("a"); a.href = href; a.target = "_blank"; a.rel = "noopener noreferrer"; a.append(child); return a; };
 const details = (label) => {          // plain always-visible block (no toggle), like हाटालय
@@ -2177,6 +2186,49 @@ watchViews();
     }), { rootMargin: "-45% 0px -50% 0px" });
     document.querySelectorAll("#list .phase").forEach(el => io.observe(el));
   }
+})();
+
+/* ============ "Update available" notification ============
+   Checks the live index.html (bypassing cache) for a newer APP_VERSION: on load, every 5 minutes,
+   and whenever the visitor comes back to the tab/app. Silent on file:// or when offline. */
+(function () {
+  if (!/^https?:$/.test(location.protocol)) return;
+  const css = document.createElement("style");
+  css.textContent = ".upd{position:fixed;right:calc(10px + env(safe-area-inset-right,0px));top:50%;transform:translate(30px,-50%);z-index:10001;display:flex;flex-direction:column;align-items:stretch;gap:10px;width:min(158px,42vw);padding:14px 12px 12px;border:1px solid var(--accent);border-radius:16px;background:var(--surface,#111);color:var(--text,#fff);box-shadow:0 12px 36px var(--shadow,rgba(0,0,0,.4)),0 0 24px var(--glow,transparent);font-size:13px;line-height:1.35;text-align:left;opacity:0;visibility:hidden;transition:opacity .3s,transform .3s,visibility .3s}.upd.show{opacity:1;visibility:visible;transform:translate(0,-50%)}.upd div{padding-right:18px}.upd b{display:block;font-weight:600}.upd span{color:var(--muted,#aaa);font-size:11px}.upd button{cursor:pointer;font:inherit;border-radius:999px}.upd .upd-go{padding:8px 12px;border:0;background:var(--accent);color:var(--bg,#000);font-weight:600}.upd .upd-x{position:absolute;top:6px;right:6px;width:26px;height:26px;padding:0;border:0;background:none;color:var(--muted,#aaa);font-size:14px;line-height:1}";
+  document.head.append(css);
+
+  let shown = false, dismissed = "";
+  const show = v => {
+    if (shown || dismissed === v) return;
+    shown = true;
+    const n = document.createElement("div");
+    n.className = "upd"; n.setAttribute("role", "status"); n.setAttribute("aria-live", "polite");
+    n.innerHTML = '<div><b>Update available</b><span>New version ready</span></div>' +
+      '<button type="button" class="upd-go">Refresh</button><button type="button" class="upd-x" aria-label="Later">✕</button>';
+    n.querySelector(".upd-go").addEventListener("click", () => location.reload());
+    n.querySelector(".upd-x").addEventListener("click", () => {
+      dismissed = v; shown = false; n.classList.remove("show"); setTimeout(() => n.remove(), 400);
+    });
+    document.body.append(n);
+    requestAnimationFrame(() => requestAnimationFrame(() => n.classList.add("show")));
+  };
+
+  let busy = false;
+  const check = async () => {
+    if (busy || shown) return;
+    busy = true;
+    try {
+      const r = await fetch(location.pathname + "?_chk=" + Date.now(), { cache: "no-store" });
+      if (!r.ok) return;
+      const m = (await r.text()).match(/const APP_VERSION\s*=\s*"([^"]+)"/);
+      if (m && m[1] !== APP_VERSION) show(m[1]);
+    } catch (e) { /* offline — try again later */ }
+    finally { busy = false; }
+  };
+  setTimeout(check, 4000);
+  setInterval(check, 5 * 60 * 1000);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) check(); });
+  addEventListener("online", check);
 })();
 
 /* lightbox for gallery images (no full-page navigation) */
