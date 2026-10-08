@@ -797,6 +797,21 @@ body:not(.entered) .hero *, body:not(.entered) .hero::before, body:not(.entered)
  .phase.tt:last-child{margin-bottom:0}
  .site-footer{scroll-snap-align:end}
 }
+
+/* ===== TikTok scroll, extra polish: active-card focus, progress bar, swipe hint ===== */
+.tt-bar,.tt-hint{display:none}
+@media (max-width:900px),(hover:none){
+ html{scroll-behavior:auto}
+ .phase.tt .phase-header,.phase.tt .phase-body-inner{transition:opacity .45s ease,transform .5s cubic-bezier(.16,1,.3,1)}
+ .phase.tt:not(.active) .phase-header,.phase.tt:not(.active) .phase-body-inner{opacity:.3;transform:translateY(22px) scale(.97)}
+ .phase.tt.active .phase-header,.phase.tt.active .phase-body-inner{opacity:1;transform:none}
+ .tt-bar{display:block;position:fixed;top:0;left:0;height:3px;width:0;z-index:25;background:var(--accent);box-shadow:0 0 10px var(--glow);transition:width .25s ease;pointer-events:none}
+ .tt-hint{display:flex;flex-direction:column;align-items:center;gap:2px;position:fixed;left:50%;bottom:calc(10px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:19;color:var(--accent);font:600 11px/1 var(--sans);letter-spacing:2px;pointer-events:none;opacity:0;transition:opacity .4s}
+ .tt-hint.show{opacity:.9}
+ .tt-hint i{font-style:normal;font-size:18px;animation:ttBob 1.2s ease-in-out infinite}
+}
+@keyframes ttBob{0%,100%{transform:translateY(3px)}50%{transform:translateY(-5px)}}
+@media(prefers-reduced-motion:reduce){.tt-hint i{animation:none}.phase.tt .phase-header,.phase.tt .phase-body-inner{transition:none}}
 </style>
 </head>
 <body>
@@ -1378,7 +1393,7 @@ const $ = (tag, cls, text) => {
 };
 /* ===== VERSION — change this number every time you upload a new index.html or replace any image.
    It (1) makes phones re-download images and (2) triggers the "Update available" banner for visitors. ===== */
-const APP_VERSION = "6";
+const APP_VERSION = "7";
 const IMG_V = APP_VERSION;
 const img = (src, alt) => { const i = $("img"); i.src = /^(https?:|data:)/.test(src) ? src : src + "?v=" + IMG_V; i.alt = alt; i.loading = "lazy"; i.decoding = "async"; return i; };
 const link = (href, child) => { const a = $("a"); a.href = href; a.target = "_blank"; a.rel = "noopener noreferrer"; a.append(child); return a; };
@@ -2142,6 +2157,62 @@ document.querySelectorAll("#list .phase").forEach((el, index) => {
 document.querySelectorAll("#list .phase").forEach(el => {
   if (!el.classList.contains("bare") && el.querySelector(".laya,.soon")) el.classList.add("tt");
 });
+/* TikTok scroll polish: focus the card in view, open it after a short pause, progress bar, swipe hint, tiny haptic tick */
+(function () {
+  const mq = matchMedia("(max-width:900px),(hover:none)");
+  const cards = () => [...document.querySelectorAll("#list .phase.tt:not([hidden])")];
+  const bar = $("div", "tt-bar"); bar.setAttribute("aria-hidden", "true");
+  const hint = $("div", "tt-hint"); hint.setAttribute("aria-hidden", "true"); hint.innerHTML = "<i>⌃</i>SWIPE UP";
+  document.body.append(bar, hint);
+
+  /* remember if the visitor closed a laya themselves, so we never re-open it */
+  document.querySelectorAll("#list .phase.tt").forEach(el => {
+    const h = el.querySelector(".phase-header");
+    if (h) h.addEventListener("click", e => { if (e.isTrusted) el.dataset.userClosed = el.classList.contains("open") ? "" : "1"; });
+  });
+
+  let current = null, timer = 0;
+  const setActive = el => {
+    if (el === current) return;
+    if (current) current.classList.remove("active");
+    current = el;
+    if (!el) return;
+    el.classList.add("active");
+    try { if (navigator.vibrate) navigator.vibrate(6); } catch (e) {}
+    const list = cards(), idx = list.indexOf(el);
+    bar.style.width = (list.length ? ((idx + 1) / list.length) * 100 : 0) + "%";
+    clearTimeout(timer);
+    timer = setTimeout(() => {           /* dwell ~0.45s on a laya → open it, so no screen is just a title */
+      if (current !== el || el.classList.contains("open") || el.dataset.userClosed) return;
+      const h = el.querySelector(".phase-header"); if (h) h.click();
+    }, 450);
+  };
+
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver(es => es.forEach(en => {
+      if (!mq.matches) return;
+      if (en.isIntersecting) setActive(en.target);
+    }), { rootMargin: "-45% 0px -45% 0px" });
+    document.querySelectorAll("#list .phase.tt").forEach(el => io.observe(el));
+  }
+  /* before the first laya (hero / index) the bar is empty and no card is "active" */
+  const first = document.querySelector("#list .phase.tt");
+  addEventListener("scroll", () => {
+    if (!mq.matches || !first) return;
+    if (first.getBoundingClientRect().top > innerHeight * 0.55) {
+      if (current) { current.classList.remove("active"); current = null; }
+      bar.style.width = "0%";
+    }
+  }, { passive: true });
+
+  /* "swipe up" hint: shows once the door is open, disappears after the first real scroll */
+  let scrolled = false;
+  addEventListener("scroll", () => { if (scrollY > 40 && !scrolled) { scrolled = true; hint.classList.remove("show"); } }, { passive: true });
+  const showHint = () => { if (!scrolled && mq.matches) hint.classList.add("show"); };
+  if (document.body.classList.contains("entered")) setTimeout(showHint, 800);
+  else new MutationObserver((m, o) => { if (document.body.classList.contains("entered")) { o.disconnect(); setTimeout(showHint, 1200); } })
+    .observe(document.body, { attributes: true, attributeFilter: ["class"] });
+})();
 watchViews();
 
 /* ============ CITY: district filter + legend + where-am-I + random ============ */
