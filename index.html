@@ -2073,18 +2073,21 @@ document.querySelectorAll("#list .phase").forEach((el, index) => {
     b.setAttribute("aria-label", collapse ? "Expand cards" : "Collapse cards");
   });
 })();
-/* Phase 3: the same small-arrow toggle for the blog-card row */
+/* Phase 3: ONE arrow (under the first image) opens/hides the second image AND the blog cards together. */
 (function () {
   const ph = document.getElementById("phase-3");
   if (!ph) return;
-  const hr = ph.querySelector(".hrow");
-  if (!hr) return;
-  const det = document.createElement("details");
-  det.className = "imgs"; det.open = false;
-  const sum = document.createElement("summary");
-  const parent = hr.parentNode;
-  parent.insertBefore(det, hr);
-  det.append(sum, hr);
+  const det = ph.querySelector("details.imgs"), hr = ph.querySelector(".hrow");
+  if (!det || !hr) return;
+  const nav = ph.querySelector(".card-nav");
+  det.open = false;
+  const sync = () => {
+    const show = det.open;
+    hr.style.display = show ? "" : "none";
+    if (nav) nav.style.display = show ? "" : "none";
+  };
+  det.addEventListener("toggle", sync);
+  sync();
 })();
 watchViews();
 
