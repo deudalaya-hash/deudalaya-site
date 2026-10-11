@@ -23,6 +23,22 @@ article h2{margin:0 0 4px;font-weight:500;font-size:26px}
 .meta{margin:0 0 16px;color:var(--muted);font-size:14px}
 .scene{font-family:Consolas,monospace;font-size:14px;color:var(--muted);margin:0 0 14px}
 article p{margin:6px 0;color:var(--desc)}
+/* Match the main site's architectural surface and original warm palette. */
+:root{--bg:#fdfdfb;--text:#2b2b2b;--desc:#444;--muted:#666;--line:#deded8;--accent:#a65f3b;--surface:rgba(255,255,255,.58)}
+:root[data-theme="dark"]{--bg:#17140f;--text:#ece7de;--desc:#cfc8bc;--muted:#a39b8f;--line:#352f27;--accent:#dd9068;--surface:rgba(255,255,255,.045)}
+body{position:relative;isolation:isolate;background:radial-gradient(ellipse at 50% -10%,rgba(166,95,59,.08),transparent 42%),var(--bg);transition:background .5s,color .35s}
+:root[data-theme="dark"] body{background:radial-gradient(ellipse at 50% -10%,rgba(221,144,104,.1),transparent 46%),var(--bg)}
+main{position:relative;isolation:isolate}
+main::before{content:"";position:absolute;inset:-16px -30vw;z-index:-1;pointer-events:none;opacity:.16;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:48px 48px;-webkit-mask-image:radial-gradient(ellipse at 50% 0,#000,transparent 72%);mask-image:radial-gradient(ellipse at 50% 0,#000,transparent 72%)}
+article{position:relative;overflow:hidden;border-color:var(--line);background:var(--surface);box-shadow:0 16px 38px rgba(32,25,18,.08),inset 0 1px 0 rgba(255,255,255,.32);backdrop-filter:blur(14px) saturate(115%);-webkit-backdrop-filter:blur(14px) saturate(115%);transition:transform .35s cubic-bezier(.2,.75,.2,1),box-shadow .35s,border-color .3s}
+article::before{content:"";position:absolute;inset:0 0 auto;height:1px;pointer-events:none;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.42}
+article h2{letter-spacing:-.02em}.scene{letter-spacing:.06em}
+a{transition:color .22s ease,opacity .22s ease}a:hover{opacity:.78}
+:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){article{background:var(--bg)}}
+@media(max-width:600px){main{padding-top:24px}article{padding:22px 18px;border-radius:18px}main::before{background-size:36px 36px}}
+@media(prefers-reduced-motion:reduce){article,a{transition:none!important;transform:none!important}}
+
 </style>
 </head>
 <body>
