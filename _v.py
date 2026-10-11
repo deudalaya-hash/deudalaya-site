@@ -1,0 +1,8 @@
+txt = open('C:/deudalaya/index.html', encoding='utf-8').read()
+print('sharePost:', 'function sharePost' in txt)
+print('copyLink:', 'function copyLink' in txt)
+print('sharePop:', 'sharePop' in txt)
+print('shareBtn:', 'shareBtn' in txt)
+print('hashParse:', "startsWith('#post-')" in txt)
+print('clickOutside:', 'closest' in txt)
+print('oldBtnGone:', "onclick=\"toast('Link copied" not in txt)
