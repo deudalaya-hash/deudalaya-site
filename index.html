@@ -114,7 +114,7 @@
 <style>
 .auth-modal{display:none;position:fixed;inset:0;z-index:1100;align-items:center;justify-content:center;padding:16px;background:#000d}.auth-modal.open{display:flex}.auth-card{position:relative;width:min(390px,100%);padding:24px;border:1px solid #ffffff20;border-radius:16px;background:#17171e;box-shadow:0 24px 80px #000b}.auth-card h2{margin:0 35px 8px 0;font-size:20px}.auth-card p{margin:0 0 18px;color:#aaa;font-size:13px;line-height:1.45}.auth-card label{display:block;margin:12px 0 5px;font-size:12px;color:#ddd}.auth-card input{width:100%;padding:11px;border:1px solid #34343c;border-radius:9px;background:#25252c;color:#fff}.auth-card .publish-button{margin-top:16px}.auth-mode-toggle{display:block;width:100%;margin-top:12px;background:none;color:#25e5dc;font-size:13px}.profile-auth-button{margin-top:10px;padding:8px 12px;border-radius:8px;background:var(--pink);font-weight:700}.upload-card #uploadImagePreview{display:block;width:min(100%,240px);height:min(34dvh,310px);margin:0 auto 14px;object-fit:contain;background:#000;border-radius:10px}.upload-card #uploadPreview[hidden],.upload-card #uploadImagePreview[hidden]{display:none!important}
 </style>
-<!-- deudalaya-social-profile-styles --><style>.profile-stats{display:flex;gap:18px;color:#ddd!important}.profile-stats b{color:#fff}.profile-buttons{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.profile-edit-button{margin-top:10px;padding:8px 12px;border:1px solid #555;border-radius:8px;background:#24242b;font-weight:700}.profile-editor{max-width:700px;margin:18px auto 24px;padding:18px;border:1px solid #303038;border-radius:14px;background:#19191f}.profile-editor h3{margin:0 0 12px}.profile-editor label{display:block;margin:12px 0 6px;color:#ddd;font-size:13px}.profile-editor input,.profile-editor textarea{width:100%;padding:11px;border:1px solid #34343c;border-radius:9px;background:#25252c;color:#fff}.profile-editor small{display:block;color:#999;margin-top:5px}.comment small{color:#999}.comment p{white-space:pre-wrap;overflow-wrap:anywhere}.profile-post span{position:absolute;right:8px;bottom:8px;background:#0009;border-radius:50%;padding:5px}[hidden]{display:none!important}</style>
+<!-- deudalaya-social-profile-styles --><style>.profile-stats{display:flex;gap:18px;color:#ddd!important}.profile-stats b{color:#fff}.profile-buttons{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.profile-edit-button{margin-top:10px;padding:8px 12px;border:1px solid #555;border-radius:8px;background:#24242b;font-weight:700}.profile-editor{max-width:700px;margin:18px auto 24px;padding:18px;border:1px solid #303038;border-radius:14px;background:#19191f}.profile-editor h3{margin:0 0 12px}.profile-editor label{display:block;margin:12px 0 6px;color:#ddd;font-size:13px}.profile-editor input,.profile-editor textarea{width:100%;padding:11px;border:1px solid #34343c;border-radius:9px;background:#25252c;color:#fff}.profile-editor small{display:block;color:#999;margin-top:5px}.comment small{color:#999}.comment p{white-space:pre-wrap;overflow-wrap:anywhere}[hidden]{display:none!important}</style>
 <style id="update-available-styles">
 .update-notice{z-index:99998;flex-wrap:wrap;gap:10px;align-items:flex-start}
 .update-notice-body{flex:1;min-width:180px;display:grid;gap:3px}
@@ -1683,6 +1683,21 @@ html,body{background:#000;overscroll-behavior:none}
     });
   }
   setHomeActive();
+
+  // Double-tapping Home refreshes the feed, matching the pull-to-refresh gesture.
+  var homeButton=document.querySelector('.mobile-nav button:first-child');
+  var lastHomeTap=0;
+  if(homeButton){
+    homeButton.addEventListener('click',function(e){
+      var now=Date.now();
+      if(now-lastHomeTap<400){
+        e.preventDefault();
+        lastHomeTap=0;
+        if(typeof window.toast==='function')window.toast('Refreshing feed…');
+        setTimeout(function(){window.location.reload()},120);
+      }else lastHomeTap=now;
+    });
+  }
 
   // Caption expand/collapse on tap (TikTok style)
   var caption=document.getElementById('caption');
