@@ -370,4 +370,21 @@ feed.addEventListener('touchend',function(e){
 feed.addEventListener('touchcancel',function(){tracking=false;clear()},{passive:true});
 })();
 </script>
+
+<!-- ADDED: if the profile photo is empty or fails to load, show the deudalaya logo instead. Nothing existing is changed. -->
+<script>
+(function(){
+var img=document.getElementById('profileAvatar');if(!img)return;
+function fallback(){try{return asset('deudalaya_icon.webp')}catch(e){return 'deudalaya_icon.webp'}}
+var fixing=false;
+function fix(){
+ if(fixing)return;var cur=img.getAttribute('src');
+ if(!cur||!cur.trim()){fixing=true;img.src=fallback();fixing=false}}
+img.addEventListener('error',function(){var f=fallback();if(img.getAttribute('src')!==f){fixing=true;img.src=f;fixing=false}});
+try{new MutationObserver(fix).observe(img,{attributes:true,attributeFilter:['src']})}catch(e){}
+var prev=window.openProfile;
+if(typeof prev==='function')window.openProfile=function(){var r=prev.apply(this,arguments);try{fix();setTimeout(fix,300)}catch(e){}return r};
+fix();
+})();
+</script>
 </body></html>
