@@ -2108,4 +2108,114 @@ html,body{background:#000;overscroll-behavior:none}
 })();
 </script>
 
+<style id="tt-profile-style">
+/* TikTok-style profile (additive overrides; original profile code untouched) */
+#profilePanel{background:#000}
+#profilePanel .profile-summary{flex-direction:row-reverse;align-items:flex-start;justify-content:space-between;max-width:900px;gap:14px}
+#profilePanel .profile-summary>img{width:96px;height:96px;border-radius:50%;object-fit:contain;background:#fff;flex:none}
+#profilePanel .profile-summary>div{min-width:0;flex:1}
+#profilePanel #profileDisplayName{font-size:32px;font-weight:800;line-height:1.15;margin:0}
+#profilePanel #profileUsername{color:#8a8b91;margin:4px 0 14px;font-size:15px}
+#profilePanel .profile-stats{gap:22px;margin:0 0 12px}
+#profilePanel .profile-stats span{display:flex;flex-direction:column;color:#8a8b91;font-size:14px}
+#profilePanel .profile-stats b{display:block;color:#fff;font-size:20px;font-weight:700}
+#profilePanel .profile-stats span:nth-child(1){display:none}
+#profilePanel .profile-stats span:nth-child(3){order:1}
+#profilePanel .profile-stats span:nth-child(2){order:2}
+#profilePanel .profile-stats #ttProfileLikes{order:3}
+#profilePanel .profile-links{margin:6px 0 10px;font-size:14px;line-height:1.5}
+#profilePanel .profile-links a{color:#fff;text-decoration:none;font-weight:600}
+#profilePanel .profile-tab{display:none}
+#ttProfileExtra{max-width:900px;margin:0 auto}
+.tt-live{display:inline-flex;align-items:center;gap:8px;margin:2px 0 18px;padding:9px 16px;border:1px solid #ffffff30;border-radius:12px;background:#16161a;color:#fff;font-weight:800;font-size:15px}
+.tt-live svg{width:18px;height:18px;fill:#fe2c55}
+.tt-highlights{display:flex;gap:16px;overflow-x:auto;padding:4px 2px 18px;scrollbar-width:none}
+.tt-highlights::-webkit-scrollbar{display:none}
+.tt-hl{flex:none;width:72px;text-align:center;color:#ddd;font-size:12px;background:none;border:0;padding:0}
+.tt-hl i{display:grid;place-items:center;width:68px;height:68px;margin:0 auto 6px;border-radius:50%;border:2px solid #ffffff40;background:#16161a center/cover no-repeat;font-style:normal;font-size:30px;color:#fff;overflow:hidden}
+.tt-hl span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt-tabs{display:flex;border-bottom:1px solid #ffffff1c}
+.tt-tabs button{flex:1;padding:12px 0;background:none;border:0;border-bottom:2px solid transparent;color:#8a8b91}
+.tt-tabs button.on{color:#fff;border-bottom-color:#fff}
+.tt-tabs svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tt-empty{padding:60px 20px;text-align:center;color:#8a8b91;font-size:14px}
+#profilePanel .profile-grid{max-width:900px;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;margin-top:1px}
+#profilePanel .profile-post{aspect-ratio:3/4;background:#111}
+#profilePanel .profile-post img,#profilePanel .profile-post video{width:100%;height:100%;object-fit:cover;display:block}
+.tt-views{position:absolute;left:6px;bottom:6px;display:flex;align-items:center;gap:4px;color:#fff;font-size:13px;font-weight:700;text-shadow:0 1px 3px #000c}
+.tt-views svg{width:13px;height:13px;fill:#fff}
+.tt-pinned{position:absolute;left:6px;top:6px;padding:2px 7px;border-radius:3px;background:#fe2c55;color:#fff;font-size:12px;font-weight:700}
+</style>
+<script id="tt-profile-js">
+(function(){
+  var PIN_KEY='deudalaya-pinned',MAX_PINS=3;
+  function pins(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'[]')}catch(e){return []}}
+  function savePins(p){try{localStorage.setItem(PIN_KEY,JSON.stringify(p))}catch(e){}}
+  function keyOf(v){return String(v.cloudId||v.localId||v.image||v.videoSrc||'')}
+  function compact(n){n=Number(n)||0;return n>=1e6?(n/1e6).toFixed(1).replace('.0','')+'M':n>=1e3?(n/1e3).toFixed(1).replace('.0','')+'K':String(n)}
+  function thumb(v){try{if(!v.image)return '';if(/^(https?:|blob:|data:)/.test(v.image))return v.image;return v.image.indexOf('photo-')===0?photo(v.image,400):asset(v.image)}catch(e){return v.image||''}}
+  function esc(s){return String(s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  var playSvg='<svg viewBox="0 0 24 24"><path d="m7 4 14 8-14 8z"/></svg>';
+  var tabs=[
+    ['posts','<svg viewBox="0 0 24 24"><path d="M4 4h4v4H4zM10 4h4v4h-4zM16 4h4v4h-4zM4 10h4v4H4zM10 10h4v4h-4zM16 10h4v4h-4zM4 16h4v4H4zM10 16h4v4h-4zM16 16h4v4h-4z"/></svg>',''],
+    ['private','<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>','Private videos will appear here'],
+    ['repost','<svg viewBox="0 0 24 24"><path d="M17 2l4 4-4 4M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4M21 13v2a3 3 0 0 1-3 3H3"/></svg>','Reposts will appear here'],
+    ['saved','<svg viewBox="0 0 24 24"><path d="M6 4h12v17l-6-4-6 4z"/></svg>','Saved videos will appear here'],
+    ['liked','<svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8z"/></svg>','Liked videos will appear here']
+  ];
+  function openPost(i){index=i;liked=false;bookmarked=false;render();closeProfile()}
+  function buildExtra(){
+    var panel=document.getElementById('profilePanel');if(!panel)return;
+    var extra=document.getElementById('ttProfileExtra');
+    if(!extra){
+      extra=document.createElement('div');extra.id='ttProfileExtra';
+      extra.innerHTML='<button type="button" class="tt-live"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/></svg>LIVE</button><div class="tt-highlights" id="ttHighlights"></div><div class="tt-tabs" id="ttTabs"></div><div class="tt-empty" id="ttEmpty" hidden></div>';
+      var grid=document.getElementById('profileGrid');grid.parentNode.insertBefore(extra,grid);
+      extra.querySelector('.tt-live').onclick=function(){toast('LIVE is coming soon')};
+      var tb=extra.querySelector('#ttTabs');
+      tabs.forEach(function(t,n){var b=document.createElement('button');b.type='button';b.innerHTML=t[1];b.setAttribute('aria-label',t[0]);if(!n)b.className='on';
+        b.onclick=function(){tb.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');
+          var posts=!n;document.getElementById('profileGrid').hidden=!posts;var e=document.getElementById('ttEmpty');e.hidden=posts;e.textContent=t[2]};
+        tb.appendChild(b)});
+    }
+    var bio=document.getElementById('profileBio');
+    if(bio&&!document.getElementById('ttLinks')){var l=document.createElement('div');l.id='ttLinks';l.className='profile-links';l.innerHTML='<a href="https://www.deudalaya.com">www.deudalaya.com</a><br>YouTube: @deudalaya';bio.parentNode.insertBefore(l,bio.nextSibling)}
+    var st=document.querySelector('#profilePanel .profile-stats');
+    if(st&&!document.getElementById('ttProfileLikes')){var s=document.createElement('span');s.id='ttProfileLikes';s.innerHTML='<b>0</b> Likes';st.appendChild(s)}
+  }
+  function enhance(){
+    try{
+      buildExtra();
+      var total=videos.reduce(function(a,v){return a+(Number(v.likes)||0)},0);
+      var lb=document.querySelector('#ttProfileLikes b');if(lb)lb.textContent=compact(total);
+      var p=pins();
+      var order=videos.map(function(v,i){return i}).sort(function(a,b){var pa=p.indexOf(keyOf(videos[a]))>-1?0:1,pb=p.indexOf(keyOf(videos[b]))>-1?0:1;return pa-pb});
+      var grid=document.getElementById('profileGrid');grid.innerHTML='';
+      order.forEach(function(i){
+        var v=videos[i],pinned=p.indexOf(keyOf(v))>-1,btn=document.createElement('button');btn.type='button';btn.className='profile-post';
+        var media=v.videoSrc?'<video muted playsinline preload="metadata" src="'+esc(v.videoSrc)+'#t=0.1"></video>':'<img src="'+esc(thumb(v))+'" alt="'+esc(v.caption)+'" loading="lazy">';
+        btn.innerHTML=media+(pinned?'<span class="tt-pinned">Pinned</span>':'')+'<span class="tt-views">'+playSvg+compact(v.views||0)+'</span>';
+        var timer,long=false;
+        btn.addEventListener('pointerdown',function(){long=false;if(typeof cloudUser==='undefined'||!cloudUser)return;timer=setTimeout(function(){long=true;var q=pins(),k=keyOf(v),at=q.indexOf(k);
+          if(at>-1){q.splice(at,1);toast('Unpinned')}else if(q.length>=MAX_PINS){toast('You can pin up to 3 videos');return}else{q.push(k);toast('Pinned to your profile')}
+          savePins(q);enhance()},600)});
+        ['pointerup','pointerleave','pointercancel'].forEach(function(ev){btn.addEventListener(ev,function(){clearTimeout(timer)})});
+        btn.addEventListener('click',function(){if(long){long=false;return}openPost(i)});
+        grid.appendChild(btn);
+      });
+      var hl=document.getElementById('ttHighlights');hl.innerHTML='';
+      if(typeof cloudUser!=='undefined'&&cloudUser){var nb=document.createElement('button');nb.type='button';nb.className='tt-hl';nb.innerHTML='<i>+</i><span>New</span>';nb.onclick=function(){closeProfile();requestVideoUpload()};hl.appendChild(nb)}
+      var seen={};
+      videos.forEach(function(v,i){var c=String(v.music||'').split(' · ')[1];if(!c||seen[c])return;seen[c]=1;
+        var b=document.createElement('button');b.type='button';b.className='tt-hl';var t=v.videoSrc?'':thumb(v);
+        b.innerHTML='<i style="'+(t?'background-image:url(&quot;'+esc(t)+'&quot;)':'')+'">'+(t?'':'▶')+'</i><span>'+esc(c)+'</span>';
+        b.onclick=function(){openPost(i)};hl.appendChild(b)});
+      hl.style.display=hl.children.length?'':'none';
+    }catch(e){console.warn('TikTok profile enhance failed',e)}
+  }
+  var orig=window.openProfile;
+  window.openProfile=function(){var r=orig.apply(this,arguments);enhance();return r};
+})();
+</script>
+
 </body></html>
