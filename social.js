@@ -391,7 +391,6 @@
     const profileSource = profileTargetId ? sharedPosts : videos;
     const allPosts = profileSource.filter(post => profileTargetId ? post.userId === profileTargetId : !post.cloudPost || post.userId === ownId());
     document.getElementById('profilePostCount').textContent = formatCount(allPosts.length);
-    document.getElementById('postTotal').textContent = formatCount(allPosts.length);
     document.getElementById('profileGrid').innerHTML = allPosts.map(post => {
       const src = post.videoSrc ? asset('deudalaya_icon.webp') : (post.image.startsWith('http') ? post.image : asset(post.image));
       const action = post.cloudPost ? `openFeedPostById('${escapeProfileText(post.cloudId)}')` : `openFeedPostByImage('${escapeProfileText(post.image)}')`;
