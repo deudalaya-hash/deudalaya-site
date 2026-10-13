@@ -5,7 +5,7 @@ The site remains deployable as a static GitHub Pages site. This repository curre
 ## Implemented in the static site
 
 - Existing home/feed and poster retained, including optimized `dashain.webp`.
-- Upload preview accepts MP4/WebM and enforces 25 MB and 15 seconds in the browser.
+- Upload preview accepts MP4/WebM and enforces 50 MB and 15 seconds in the browser.
 - The interface explicitly reports that submission is unavailable until backend setup; it never reports a successful upload.
 - Share uses a stable URL hash and native share or clipboard where available. Opening a shared hash selects that feed item.
 - Search finds matching current feed entries by creator, caption, or tags.
@@ -15,7 +15,7 @@ Social action buttons explain that a connected account/backend is required; they
 
 ## Free plan notes checked 2026-10-12
 
-Supabase is the proposed single backend (Auth, Postgres, Storage, and server functions) because the site is already static. Current published Free quotas include 50,000 monthly active users, 500 MB database size, 1 GB file storage, 5 GB egress, 500,000 Edge Function invocations, and at most two active free projects; free projects may pause after a week of inactivity. These are provider quotas, not a cost or availability guarantee. For a video feed, the 5 GB egress quota is likely the practical constraint: 1 GB storage holds at most about 40 files at the 25 MB cap before overhead, and repeated viewing consumes egress quickly. Monitor use and stop accepting uploads before quotas are exceeded. Supabase documents a 50 MB maximum file setting on Free, so this app's 25 MB bucket limit fits; for uploads above 6 MB, its docs recommend resumable upload for reliability.
+Supabase is the proposed single backend (Auth, Postgres, Storage, and server functions) because the site is already static. Current published Free quotas include 50,000 monthly active users, 500 MB database size, 1 GB file storage, 5 GB egress, 500,000 Edge Function invocations, and at most two active free projects; free projects may pause after a week of inactivity. These are provider quotas, not a cost or availability guarantee. For a video feed, the 5 GB egress quota is likely the practical constraint: 1 GB storage holds at most about 40 files at the 50 MB cap before overhead, and repeated viewing consumes egress quickly. Monitor use and stop accepting uploads before quotas are exceeded. Supabase documents a 50 MB maximum file setting on Free, so this app's 50 MB bucket limit fits; for uploads above 6 MB, its docs recommend resumable upload for reliability.
 
 See [Supabase pricing](https://supabase.com/pricing), [usage quotas](https://supabase.com/docs/guides/platform/billing-on-supabase), [file size limits](https://supabase.com/docs/guides/storage/uploads/file-limits), and [upload guidance](https://supabase.com/docs/guides/storage/uploads/standard-uploads). Recheck these before launch because provider limits can change.
 
@@ -31,7 +31,7 @@ The SQL alone does not enforce 15-second media duration. A trusted upload proces
 2. Apply the migration in the Supabase SQL editor or with Supabase CLI after reviewing the policies.
 3. Configure email authentication and site/redirect URLs. Google OAuth requires Google client credentials. Phone OTP requires an SMS provider and may incur charges; leave it disabled until configured.
 4. Assign the administrator role through trusted Supabase server-side tooling. Never place a service-role key in this repository or browser code.
-5. Add a server-side upload/validation function that authenticates the user, checks MP4/WebM, 25 MB and 15 seconds, writes to the private bucket, and inserts a `pending` row. It must not allow the uploader to set `approved`.
+5. Add a server-side upload/validation function that authenticates the user, checks MP4/WebM, 50 MB and 15 seconds, writes to the private bucket, and inserts a `pending` row. It must not allow the uploader to set `approved`.
 6. Add the protected moderation UI and playback flow using authorized signed URLs for approved videos.
 7. Connect the static page to the project's public URL and anon/publishable key only after policies and flows are tested. Keep all privileged keys server-side.
 8. Configure GitHub Pages deployment as before; no workflow or domain changes were made in this update.
