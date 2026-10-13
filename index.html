@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preload" as="image" href="dashain.webp" fetchpriority="high"><meta name="theme-color" content="#101014">
 <title>देउडालय</title>
 <meta name="application-name" content="देउडालय">
-<meta name="deudalaya-version" content="2026.10.13.20">
+<meta name="deudalaya-version" content="2026.10.13.21">
 <meta name="apple-mobile-web-app-title" content="देउडालय">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest.webmanifest">
@@ -351,7 +351,7 @@ installAction.addEventListener('click',async()=>{
     }
   },900);
 });
-document.addEventListener('keydown',event=>{if(!gateOpened&&event.key==='Tab'){event.preventDefault();installAction.focus()}if(!gateOpened&&event.key==='Escape')event.preventDefault()});/* gateContinue removed */if(isStandalone()){openInstalledGate()}else{/* continue-in-browser disabled */}function showFeedTab(button){document.querySelectorAll('.feed-tabs button').forEach(item=>item.classList.remove('selected'));button.classList.add('selected')}function openFeedSearch(){const panel=document.getElementById('feedSearchPanel');panel.classList.toggle('visible');if(panel.classList.contains('visible'))document.getElementById('feedSearchInput').focus()}function submitFeedSearch(){const input=document.getElementById('feedSearchInput'),search=document.getElementById('search');if(search){search.value=input.value;search.dispatchEvent(new Event('input',{bubbles:true}));search.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}))}}if(isStandalone()){openInstalledGate()}else{document.body.classList.add('gate-locked');installAction.focus()}const launchSplash=document.getElementById('launchSplash');if(launchSplash&&isStandalone()){launchSplash.hidden=true}else if(launchSplash){const splashStarted=performance.now();let splashDismissed=false;const dismissLaunchSplash=()=>{if(splashDismissed)return;splashDismissed=true;setTimeout(()=>launchSplash.classList.add('fade-out'),Math.max(0,650-(performance.now()-splashStarted)))};if(document.readyState==='complete')dismissLaunchSplash();else window.addEventListener('load',dismissLaunchSplash,{once:true});setTimeout(dismissLaunchSplash,3000)}const siteBuildVersion='2026.10.13.20';
+document.addEventListener('keydown',event=>{if(!gateOpened&&event.key==='Tab'){event.preventDefault();installAction.focus()}if(!gateOpened&&event.key==='Escape')event.preventDefault()});/* gateContinue removed */if(isStandalone()){openInstalledGate()}else{/* continue-in-browser disabled */}function showFeedTab(button){document.querySelectorAll('.feed-tabs button').forEach(item=>item.classList.remove('selected'));button.classList.add('selected')}function openFeedSearch(){const panel=document.getElementById('feedSearchPanel');panel.classList.toggle('visible');if(panel.classList.contains('visible'))document.getElementById('feedSearchInput').focus()}function submitFeedSearch(){const input=document.getElementById('feedSearchInput'),search=document.getElementById('search');if(search){search.value=input.value;search.dispatchEvent(new Event('input',{bubbles:true}));search.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}))}}if(isStandalone()){openInstalledGate()}else{document.body.classList.add('gate-locked');installAction.focus()}const launchSplash=document.getElementById('launchSplash');if(launchSplash&&isStandalone()){launchSplash.hidden=true}else if(launchSplash){const splashStarted=performance.now();let splashDismissed=false;const dismissLaunchSplash=()=>{if(splashDismissed)return;splashDismissed=true;setTimeout(()=>launchSplash.classList.add('fade-out'),Math.max(0,650-(performance.now()-splashStarted)))};if(document.readyState==='complete')dismissLaunchSplash();else window.addEventListener('load',dismissLaunchSplash,{once:true});setTimeout(dismissLaunchSplash,3000)}const siteBuildVersion='2026.10.13.21';
 const updateNotice=document.getElementById('updateNotice');
 const UPDATE_DISMISS_KEY='deudalaya-update-dismissed';
 const UPDATE_LATER_KEY='deudalaya-update-later';
@@ -472,7 +472,7 @@ setInterval(function(){if(document.visibilityState==='visible')checkForSiteUpdat
 document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')checkForSiteUpdate()});
 window.checkForSiteUpdate=checkForSiteUpdate;
 window.applySiteUpdate=applySiteUpdate;
-</script><script src="social.js?v=2026.10.13.20"></script>
+</script><script src="social.js?v=2026.10.13.21"></script>
 <!-- ADDED: TikTok-style grid of all posts (new, standalone; no existing code changed) -->
 <style>
 .gridview{position:fixed;inset:0;z-index:9000;background:#101014;color:#fff;display:none;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
@@ -773,7 +773,7 @@ fix();
 @media(min-width:701px){.tt-post-chip{top:18px}.tt-react{bottom:90px}}
 /* Not interested toast style already via toast */
 </style>
-<div class="tt-sheet" id="ttShareSheet" aria-hidden="true"><div class="tt-sheet-card" role="dialog" aria-label="Share"><div class="tt-sheet-handle"></div><div class="tt-sheet-title">Send to</div><div class="tt-sheet-people" id="ttSharePeople"></div><div class="tt-sheet-grid" id="ttShareGrid"></div><div class="tt-sheet-list"><button type="button" id="ttCopyLink">🔗　Copy link</button><button type="button" id="ttRepost">🔁　Repost</button><button type="button" id="ttDownload">⬇　Download</button><button type="button" id="ttDuet">◉　Duet</button><button type="button" id="ttStitch">▣　Stitch</button><button type="button" id="ttNotInterested">♡　Not interested</button><button type="button" id="ttReport">⚑　Report</button><button type="button" id="ttMore">•••　More options</button></div><button type="button" class="tt-sheet-close" id="ttShareClose">Close</button></div></div>
+<div class="tt-sheet" id="ttShareSheet" aria-hidden="true"><div class="tt-sheet-card" role="dialog" aria-label="Share"><div class="tt-sheet-handle"></div><div class="tt-sheet-title">Send to</div><div class="tt-sheet-people" id="ttSharePeople"></div><div class="tt-sheet-grid" id="ttShareGrid"></div><div class="tt-sheet-list"><button type="button" id="ttCopyLink">🔗　Copy link</button><button type="button" id="ttRepost">🔁　Repost</button><button type="button" id="ttPinPost">📌　Pin to profile</button><button type="button" id="ttDownload">⬇　Download</button><button type="button" id="ttDuet">◉　Duet</button><button type="button" id="ttStitch">▣　Stitch</button><button type="button" id="ttNotInterested">♡　Not interested</button><button type="button" id="ttReport">⚑　Report</button><button type="button" id="ttMore">•••　More options</button></div><button type="button" class="tt-sheet-close" id="ttShareClose">Close</button></div></div>
 <script>
 (function(){
   var feed=document.getElementById('feed');
@@ -1052,6 +1052,8 @@ fix();
         grid.appendChild(b);
       });
     }
+    var pinButton=document.getElementById('ttPinPost');
+    if(pinButton){var pinned=!!(window.ttIsPostPinned&&window.ttIsPostPinned(videos[index]));pinButton.textContent=pinned?'📌　Unpin from profile':'📌　Pin to profile';pinButton.setAttribute('aria-pressed',String(pinned))}
     sheet.classList.add('open');
     sheet.setAttribute('aria-hidden','false');
   }
@@ -1082,6 +1084,7 @@ fix();
     });
     document.getElementById('ttDownload').addEventListener('click',function(){downloadCurrent();closeShareSheet()});
     document.getElementById('ttRepost').addEventListener('click',function(){try{var saved=JSON.parse(localStorage.getItem('deudalaya-reposts')||'[]'),id=videos[index].cloudId||videos[index].image;if(!saved.includes(id))saved.unshift(id);localStorage.setItem('deudalaya-reposts',JSON.stringify(saved))}catch(e){}closeShareSheet();toast('Added to your reposts')});
+    document.getElementById('ttPinPost').addEventListener('click',function(){var item=videos[index];closeShareSheet();if(window.ttTogglePostPin)window.ttTogglePostPin(item);else toast('Pinning is not available yet')});
     document.getElementById('ttDuet').addEventListener('click',function(){closeShareSheet();toast('Duet: choose a video in the composer to record a response')});
     document.getElementById('ttStitch').addEventListener('click',function(){closeShareSheet();toast('Stitch: choose a clip in the composer to continue this post')});
     document.getElementById('ttMore').addEventListener('click',function(){if(navigator.share)navigator.share({title:'देउडालय',text:videos[index].caption||'',url:currentShareUrl()}).catch(function(){});else copyShare(currentShareUrl());closeShareSheet()});
@@ -2189,6 +2192,15 @@ html,body{background:#000;overscroll-behavior:none}
   function pins(){try{return JSON.parse(localStorage.getItem(PIN_KEY)||'[]')}catch(e){return []}}
   function savePins(p){try{localStorage.setItem(PIN_KEY,JSON.stringify(p))}catch(e){}}
   function keyOf(v){return String(v.cloudId||v.localId||v.image||v.videoSrc||'')}
+  window.ttIsPostPinned=function(v){return !!v&&pins().indexOf(keyOf(v))>-1};
+  window.ttTogglePostPin=function(v){
+    if(!v)return false;
+    if(typeof cloudUser==='undefined'||!cloudUser){if(typeof openAuth==='function')openAuth();else toast('Sign in to pin videos');return false}
+    var q=pins(),k=keyOf(v),at=q.indexOf(k);
+    if(at>-1){q.splice(at,1);savePins(q);toast('Unpinned from your profile')}
+    else{if(q.length>=MAX_PINS){toast('You can pin up to 3 videos');return false}q.push(k);savePins(q);toast('Pinned to your profile')}
+    enhance();return true;
+  };
   function compact(n){n=Number(n)||0;return n>=1e6?(n/1e6).toFixed(1).replace('.0','')+'M':n>=1e3?(n/1e3).toFixed(1).replace('.0','')+'K':String(n)}
   function thumb(v){try{if(!v.image)return '';if(/^(https?:|blob:|data:)/.test(v.image))return v.image;return v.image.indexOf('photo-')===0?photo(v.image,400):asset(v.image)}catch(e){return v.image||''}}
   function esc(s){return String(s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
