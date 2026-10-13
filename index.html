@@ -2218,4 +2218,25 @@ html,body{background:#000;overscroll-behavior:none}
 })();
 </script>
 
+<style id="tt-nomute-style">
+/* TikTok-style sound: no mute button in the action rail (volume is controlled by the phone) */
+#ttMuteBtn,.action.tt-mute,.tt-mute-badge{display:none!important}
+</style>
+<script id="tt-nomute-js">
+(function(){
+  /* Sound is on by default, like TikTok. Browsers only allow audio after a first tap/swipe,
+     so the first touch of the visitor switches the sound on and it stays on. */
+  var done=false;
+  function soundOn(){
+    if(done)return;done=true;
+    try{muted=false}catch(e){}
+    window.muted=false;
+    var v=document.getElementById('postVideo');
+    if(v){v.muted=false;try{if(!v.hidden&&!(typeof paused!=='undefined'&&paused))v.play().catch(function(){})}catch(e){}}
+    ['pointerup','touchend','click','keydown'].forEach(function(ev){document.removeEventListener(ev,soundOn,true)});
+  }
+  ['pointerup','touchend','click','keydown'].forEach(function(ev){document.addEventListener(ev,soundOn,true)});
+})();
+</script>
+
 </body></html>
