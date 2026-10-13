@@ -186,8 +186,8 @@ function openGrid(){
 function closeGrid(){view.classList.remove('open');view.setAttribute('aria-hidden','true');grid.innerHTML=''}
 var icon='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>';
 function addNavButtons(){
- var mn=document.querySelector('.mobile-nav'),dn=document.querySelector('nav.nav');
- [[mn,''],[dn,'nav-item']].forEach(function(p){
+ var dn=document.querySelector('nav.nav');
+ [[dn,'nav-item']].forEach(function(p){
   var host=p[0];if(!host||host.querySelector('.grid-nav'))return;
   var prof=host.querySelector('button[onclick="openProfile()"]');if(!prof)return;
   var b=document.createElement('button');b.type='button';b.className=(p[1]+' grid-nav').trim();b.innerHTML=icon+'Grid';b.addEventListener('click',openGrid);
