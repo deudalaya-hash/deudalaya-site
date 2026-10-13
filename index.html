@@ -317,4 +317,10 @@ if(action&&action.parentNode){
  action.parentNode.insertBefore(b,action.nextSibling)}
 })();
 </script>
+
+<!-- ADDED: grid and profile thumbnails now show the whole picture, the same as the feed posts (no cropping). -->
+<style>
+.gridview-item,.profile-post{background:#000}
+.gridview-item img,.gridview-item video,.profile-post img,.profile-post video{object-fit:contain!important;object-position:center center!important;background:#000}
+</style>
 </body></html>
