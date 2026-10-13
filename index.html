@@ -139,7 +139,7 @@
 
  <header class="topbar"><div class="brand"><img src="assets/inline-media/aa31fbd9abbab07d8a39.webp" alt="देउडालय logo"><span>देउडालय</span></div><label class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="search" placeholder="Search videos, creators, sounds"/><span style="color:#555;font-size:12px">⌘ K</span></label><button class="login" id="topAuthButton" type="button" onclick="handleAuthAction()">Sign in</button></header>
  <nav class="nav"><button class="nav-item active"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1z"/></svg>For you</button><button class="nav-item" onclick="nextVideo()"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg>Following</button><button class="nav-item" onclick="toast('Explore is ready for you')"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 7v8M7 11h8"/></svg>Explore</button><button class="nav-item" type="button" onclick="requestVideoUpload()"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Add video</button><button class="nav-item" onclick="toggleComments()"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8z"/></svg>Inbox</button><button class="nav-item" onclick="openProfile()"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/></svg>Profile</button><div class="nav-divider"></div><div class="nav-label">Following accounts</div><div id="suggestions"></div><button class="nav-item followed" onclick="toast('You’re all caught up')">See all</button><div class="nav-divider"></div><div class="nav-label">Discover</div><div class="trending"><button class="tag-chip"># travel</button><button class="tag-chip"># recipes</button><button class="tag-chip"># streetstyle</button></div></nav>
- <main class="main"><div class="feed-tabs"><button type="button" class="feed-live" aria-label="Live"><svg viewBox="0 0 34 34" aria-hidden="true"><path d="M8 6 12 3m10 3-4-3M5 9h24v16H5zM12 29h10"/></svg><small>LIVE</small></button><button type="button" onclick="showFeedTab(this)">Community</button><button type="button" onclick="showFeedTab(this)">Following</button><button type="button" class="selected" onclick="showFeedTab(this)">For You</button><button type="button" class="feed-search" aria-label="Search" onclick="openFeedSearch()"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></button></div><div class="feed-search-panel" id="feedSearchPanel"><input id="feedSearchInput" type="search" placeholder="Search देउडालय"><button type="button" onclick="submitFeedSearch()">Search</button></div><div class="feed-wrap" id="feed"><div class="video" id="video"><img class="post-image" id="postImage" src="dashain.webp" alt="देउडालय दशैं २०८३ पोस्टर" loading="eager" decoding="async" fetchpriority="high"><video id="postVideo" playsinline loop preload="metadata" hidden></video></div><div class="vignette"></div><button class="play" onclick="togglePlay()"><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="m7 4 14 8-14 8z"/></svg></button><div class="video-copy"><div class="creator"><img class="avatar" id="avatar"/><span id="handle" role="link" tabindex="0"></span><button class="follow" id="follow" onclick="toggleFollow()">Follow</button></div><div class="caption" id="caption"></div><div class="mobile-music">♫ <span>Contains:</span> <span id="musicTitle">देउडालयको मौलिक धुन</span></div></div><div class="actions"><div class="creator-disc"><img class="avatar" id="disc" alt="Creator"><span aria-hidden="true">+</span></div><button class="action like" id="like" onclick="toggleLike()" aria-label="Like post" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8z"/></svg><span id="likes"></span></button><button class="action" onclick="toggleComments()"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8z"/></svg><span id="commentCount"></span></button><button class="action bookmark" id="bookmark" onclick="toggleBookmark()"><svg viewBox="0 0 24 24"><path d="M6 4h12v17l-6-4-6 4z"/></svg><span>Save</span></button><button class="action" onclick="shareCurrentVideo()"><svg viewBox="0 0 24 24"><path d="M4 11.5 20 4l-4.5 16-4.2-6.1L4 11.5Zm7.3 2.4L20 4"/></svg><span>Share</span></button></div><div class="progress"><i id="progress"></i></div></div><section class="comments" id="comments"><div class="comments-head"><div>Comments <span id="commentTitle"></span></div><button onclick="toggleComments()">✕</button></div><div class="comment-list" id="commentList"></div><form class="comment-input" onsubmit="addComment(event)"><input id="commentInput" placeholder="Add a comment…"/><button>Post</button></form></section></main>
+ <main class="main"><div class="feed-tabs"><button type="button" class="feed-live" aria-label="Live"><svg viewBox="0 0 34 34" aria-hidden="true"><path d="M8 6 12 3m10 3-4-3M5 9h24v16H5zM12 29h10"/></svg><small>LIVE</small></button><button type="button" onclick="showFeedTab(this)">Community</button><button type="button" onclick="showFeedTab(this)">Following</button><button type="button" class="selected" onclick="showFeedTab(this)">For You</button><button type="button" class="feed-search" aria-label="Search" onclick="openFeedSearch()"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></button></div><div class="feed-search-panel" id="feedSearchPanel"><input id="feedSearchInput" type="search" placeholder="Search देउडालय"><button type="button" onclick="submitFeedSearch()">Search</button></div><div class="feed-wrap" id="feed"><div class="video" id="video"><img class="post-image" id="postImage" src="dashain.webp" alt="देउडालय दशैं २०८३ पोस्टर" loading="eager" decoding="async" fetchpriority="high"><video id="postVideo" playsinline loop preload="metadata" hidden></video></div><div class="vignette"></div><button class="play" onclick="togglePlay()"><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="m7 4 14 8-14 8z"/></svg></button><div class="video-copy"><div class="creator"><img class="avatar" id="avatar"/><span id="handle" role="link" tabindex="0"></span><button class="follow" id="follow" onclick="toggleFollow()">Follow</button></div><div class="caption" id="caption"></div><div class="mobile-music">♫ <span>Contains:</span> <span id="musicTitle">देउडालय — मौलिक धुन</span></div></div><div class="actions"><div class="creator-disc"><img class="avatar" id="disc" alt="Creator"><span aria-hidden="true">+</span></div><button class="action like" id="like" onclick="toggleLike()" aria-label="Like post" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8z"/></svg><span id="likes"></span></button><button class="action" onclick="toggleComments()"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8z"/></svg><span id="commentCount"></span></button><button class="action bookmark" id="bookmark" onclick="toggleBookmark()"><svg viewBox="0 0 24 24"><path d="M6 4h12v17l-6-4-6 4z"/></svg><span>Save</span></button><button class="action" onclick="shareCurrentVideo()"><svg viewBox="0 0 24 24"><path d="M4 11.5 20 4l-4.5 16-4.2-6.1L4 11.5Zm7.3 2.4L20 4"/></svg><span>Share</span></button></div><div class="progress"><i id="progress"></i></div></div><section class="comments" id="comments"><div class="comments-head"><div>Comments <span id="commentTitle"></span></div><button onclick="toggleComments()">✕</button></div><div class="comment-list" id="commentList"></div><form class="comment-input" onsubmit="addComment(event)"><input id="commentInput" placeholder="Add a comment…"/><button>Post</button></form></section></main>
 <section class="profile-panel" id="profilePanel"><div class="profile-top"><button onclick="closeProfile()">← Back to feed</button><span>Profile</span><button onclick="closeProfile()">✕</button></div><div class="profile-summary"><img id="profileAvatar" alt="Profile photo"><div><h2 id="profileDisplayName">देउडालय</h2><p id="profileUsername">@देउडालय</p><p class="profile-stats"><span><b id="profilePostCount">0</b> posts</span><span><b id="profileFollowerCount">0</b> followers</span><span><b id="profileFollowingCount">0</b> following</span></p><p class="profile-bio" id="profileBio">देउडालय — सुदूर - कर्णाली</p><div class="profile-buttons"><button class="profile-auth-button" id="profileAuthButton" type="button">Sign in</button><button class="profile-edit-button" id="editProfileButton" type="button" onclick="showProfileEditor()" hidden>Edit profile</button><button class="profile-auth-button" id="profileFollowButton" type="button" onclick="toggleProfileFollow()" hidden>Follow</button><button class="profile-edit-button" id="shareProfileButton" type="button" onclick="shareProfile()">Share profile</button><button class="profile-edit-button" id="checkUpdateButton" type="button" onclick="checkForSiteUpdate({manual:true})">Check for updates</button></div><small id="authStatusText"></small></div></div><form id="profileEditor" class="profile-editor" onsubmit="saveProfile(event)" hidden><h3>Edit profile</h3><label for="editDisplayName">Name</label><input id="editDisplayName" maxlength="60" required><label for="editUsername">Username</label><input id="editUsername" maxlength="24" pattern="[A-Za-z0-9._]{3,24}" required><small>3–24 letters, numbers, dots, or underscores</small><label for="editBio">Bio</label><textarea id="editBio" maxlength="300" rows="3"></textarea><label for="editAvatarFile">Profile photo</label><input id="editAvatarFile" type="file" accept="image/jpeg,image/png,image/webp"><button class="publish-button" type="submit">Save profile</button></form><div class="profile-tab">▦　Posts</div><div class="profile-grid" id="profileGrid"></div></section>
  <aside class="right"><h3>Your profile</h3><div id="creators"></div><hr><h3>Trending now</h3><div class="trending"><button class="tag-chip"># slowmornings</button><button class="tag-chip"># weekendvibes</button><button class="tag-chip"># filmlook</button><button class="tag-chip"># citylights</button><button class="tag-chip"># homecooking</button></div><hr><h3>About देउडालय</h3><p style="font-size:12px;color:#888;line-height:1.6">देउडालय - सुदूर - कर्णाली</p><div class="right-foot">About · Newsroom · Contact · Careers<br>Terms · Privacy · Community Guidelines<br>© देउडालय</div></aside>
  <nav class="mobile-nav" aria-label="Primary"><button class="active" type="button"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1z"/></svg>Home</button><button type="button" onclick="nextVideo()"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><circle cx="17" cy="9" r="3"/><path d="M2 20c.4-4 2.8-6 7-6s6.6 2 7 6M15 15c3.8-.2 6 1.5 6.5 4.5"/></svg><span class="nav-label-badge">Friends <i>43</i></span></button><button class="mobile-add" type="button" onclick="requestVideoUpload()" aria-label="Create"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button><button type="button" onclick="toggleComments()"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8z"/></svg><span class="nav-label-badge">Inbox <i>99+</i></span></button><button type="button" onclick="openProfile()"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/></svg>Profile</button></nav>
@@ -177,11 +177,86 @@ const videos=[
  {handle:'deudalaya',name:'देउडालय',avatar:'deudalaya-avatar',disc:'deudalaya-avatar',image:'community-08.webp',fit:'cover',caption:'Carrying our culture with pride wherever we go.',tags:'#Deuda #देउडालय #Karnali',music:'Deuda folk — community sound',likes:0,comments:0,following:'deudalaya'},
  {handle:'deudalaya',name:'देउडालय',avatar:'deudalaya-avatar',disc:'deudalaya-avatar',image:'community-09.webp',fit:'contain',caption:'Another day, another chance to meet and dance together.',tags:'#Deuda #देउडालय #Karnali',music:'Deuda folk — community sound',likes:0,comments:0,following:'deudalaya'}
 ];videos.push({"handle":"deudalaya","name":"देउडालय","avatar":"deudalaya-avatar","disc":"deudalaya-avatar","image":"WhatsApp Image 2026-10-13 at 4.38.47 AM.jpeg","fit":"contain","caption":"दशैंको रौनक — देउडालय","tags":"#दशैं #देउडालय #कर्णाली","music":"देउडालय — दशैं विशेष","likes":0,"comments":0,"following":"deudalaya"},{"handle":"deudalaya","name":"देउडालय","avatar":"deudalaya-avatar","disc":"deudalaya-avatar","image":"WhatsApp Image 2026-10-13 at 4.38.48 AM.jpeg","fit":"contain","caption":"रातको भेटघाट र साथीहरूको सम्झना","tags":"#समुदाय #देउडालय #काठमाडौं","music":"Deuda folk — community sound","likes":0,"comments":0,"following":"deudalaya"},{"handle":"deudalaya","name":"देउडालय","avatar":"deudalaya-avatar","disc":"deudalaya-avatar","image":"WhatsApp Image 2026-10-13 at 4.38.49 AM (1).jpeg","fit":"contain","caption":"दियोको उज्यालोमा देउडा र आत्मीयता","tags":"#देउडा #परम्परा #समुदाय","music":"Deuda folk — community sound","likes":0,"comments":0,"following":"deudalaya"},{"handle":"deudalaya","name":"देउडालय","avatar":"deudalaya-avatar","disc":"deudalaya-avatar","image":"WhatsApp Image 2026-10-13 at 4.38.49 AM (2).jpeg","fit":"contain","caption":"सुदूर–कर्णाली पनि दुःखी छ… हामी सबै एउटै घेरामा छौँ।","tags":"#कर्णाली #सुदूरपश्चिम #एकता","music":"देउडालय — हाम्रो आवाज","likes":0,"comments":0,"following":"deudalaya"},{"handle":"deudalaya","name":"देउडालय","avatar":"deudalaya-avatar","disc":"deudalaya-avatar","image":"WhatsApp Image 2026-10-13 at 4.38.49 AM.jpeg","fit":"contain","caption":"शब्द, कविता र सिर्जनालाई साथ दिऔँ","tags":"#साहित्य #कला #देउडालय","music":"Original sound — Deudalaya","likes":0,"comments":0,"following":"deudalaya"},{"handle":"deudalaya","name":"देउडालय","avatar":"deudalaya-avatar","disc":"deudalaya-avatar","image":"WhatsApp Image 2026-10-13 at 4.38.50 AM (1).jpeg","fit":"contain","caption":"देउडा साँझ — संगीत, संस्कृति र भेटघाट","tags":"#देउडासाँझ #संस्कृति #देउडा","music":"Deuda folk — live evening","likes":0,"comments":0,"following":"deudalaya"},{"handle":"deudalaya","name":"देउडालय","avatar":"deudalaya-avatar","disc":"deudalaya-avatar","image":"WhatsApp Image 2026-10-13 at 4.38.50 AM.jpeg","fit":"contain","caption":"समुदायसँगको आत्मीय साँझ","tags":"#समुदाय #देउडालय #नेपाल","music":"Deuda folk — community sound","likes":0,"comments":0,"following":"deudalaya"},{"handle":"deudalaya","name":"देउडालय","avatar":"deudalaya-avatar","disc":"deudalaya-avatar","image":"WhatsApp Image 2026-10-13 at 4.38.51 AM.jpeg","fit":"contain","caption":"एउटै घेरामा भेटिएका साथीहरू","tags":"#साथी #समुदाय #देउडा","music":"Deuda folk — community sound","likes":0,"comments":0,"following":"deudalaya"},{"handle":"deudalaya","name":"देउडालय","avatar":"deudalaya-avatar","disc":"deudalaya-avatar","image":"WhatsApp Image 2026-10-13 at 4.38.55 AM (1).jpeg","fit":"contain","caption":"संस्कृति र समुदायको खुला उत्सव","tags":"#उत्सव #काठमाडौं #देउडालय","music":"Deuda folk — community sound","likes":0,"comments":0,"following":"deudalaya"},{"handle":"deudalaya","name":"देउडालय","avatar":"deudalaya-avatar","disc":"deudalaya-avatar","image":"WhatsApp Image 2026-10-13 at 4.38.55 AM.jpeg","fit":"contain","caption":"देउडालयको यात्रा — चाँडै आउँदैछ","tags":"#चलचित्र #कथा #देउडालय","music":"Original sound — Deudalaya","likes":0,"comments":0,"following":"deudalaya"},{"handle":"deudalaya","name":"देउडालय","avatar":"deudalaya-avatar","disc":"deudalaya-avatar","image":"WhatsApp Image 2026-10-13 at 4.38.56 AM (1).jpeg","fit":"contain","caption":"कला र कथाका साथीहरूसँग","tags":"#चलचित्र #कला #समुदाय","music":"Original sound — Deudalaya","likes":0,"comments":0,"following":"deudalaya"},{"handle":"deudalaya","name":"देउडालय","avatar":"deudalaya-avatar","disc":"deudalaya-avatar","image":"WhatsApp Image 2026-10-13 at 4.38.56 AM (2).jpeg","fit":"contain","caption":"एउटा घेरा, एउटा संस्कार, एउटा नेपाल","tags":"#देउडालय #एकनेपाल #पहिचान","music":"देउडालय — हाम्रो पहिचान","likes":0,"comments":0,"following":"deudalaya"},{"handle":"deudalaya","name":"देउडालय","avatar":"deudalaya-avatar","disc":"deudalaya-avatar","image":"WhatsApp Image 2026-10-13 at 4.38.56 AM (3).jpeg","fit":"contain","caption":"देउडालयको चिनारी — हाम्रो साझा घेरा","tags":"#देउडालय #लोगो #पहिचान","music":"Original sound — Deudalaya","likes":0,"comments":0,"following":"deudalaya"},{"handle":"deudalaya","name":"देउडालय","avatar":"deudalaya-avatar","disc":"deudalaya-avatar","image":"WhatsApp Image 2026-10-13 at 4.38.56 AM.jpeg","fit":"contain","caption":"हाम्रो लोगो, हाम्रो साझा पहिचान","tags":"#देउडालय #समुदाय #कर्णाली","music":"Original sound — Deudalaya","likes":0,"comments":0,"following":"deudalaya"},{"handle":"deudalaya","name":"देउडालय","avatar":"deudalaya-avatar","disc":"deudalaya-avatar","image":"WhatsApp Image 2026-10-13 at 4.38.57 AM (1).jpeg","fit":"contain","caption":"देउडाको इतिहास — पुस्तौँको कथा","tags":"#इतिहास #देउडा #कर्णाली","music":"Original sound — Deudalaya","likes":0,"comments":0,"following":"deudalaya"},{"handle":"deudalaya","name":"देउडालय","avatar":"deudalaya-avatar","disc":"deudalaya-avatar","image":"WhatsApp Image 2026-10-13 at 4.38.57 AM.jpeg","fit":"contain","caption":"साझा पहिचान र हाम्रो घेराको सम्झना","tags":"#देउडालय #नेपाल #संस्कृति","music":"Original sound — Deudalaya","likes":0,"comments":0,"following":"deudalaya"});const feedSeen=new Set();for(let i=videos.length-1;i>=0;i--){const source=asset(videos[i].image);if(feedSeen.has(source))videos.splice(i,1);else feedSeen.add(source)}for(let i=videos.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[videos[i],videos[j]]=[videos[j],videos[i]]}let index=0,liked=false,bookmarked=false,following=false,muted=true,paused=false;try{const shared=new URLSearchParams(location.hash.slice(1));const sharedImage=shared.get('video');const sharedIndex=videos.findIndex(v=>v.image===sharedImage);if(sharedIndex>=0)index=sharedIndex}catch{}const profileAssets={'photo-1534528741775-53994a69daeb':asset('community-01.webp'),'photo-1524504388940-b1c1722653e1':asset('community-02.webp'),'photo-1500648767791-00dcc994a43e':asset('community-04.webp'),'photo-1531123897727-8f129e1688ce':asset('community-08.webp'),'photo-1529139574466-a303027c1d8b':asset('community-07.webp'),'deudalaya-avatar':asset('deudalaya_icon.webp')};const photo=(id,w=640)=>{if(profileAssets[id])return profileAssets[id];const h=[...id].reduce((s,c)=>s+c.charCodeAt(0),0)%360;const svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="hsl('+h+' 45% 45%)"/><circle cx="50" cy="38" r="18" fill="#fff" opacity=".9"/><path d="M14 100c2-23 15-36 36-36s34 13 36 36" fill="#fff" opacity=".9"/></svg>';return 'data:image/svg+xml,'+encodeURIComponent(svg)};const people=[['deudalaya','देउडालय','deudalaya-avatar','0']];
-const SUPABASE_URL='https://bxzkclqanpuvxyhsrpog.supabase.co',SUPABASE_PUBLISHABLE_KEY='sb_publishable_G6jtHZuUS4s2NOqgpZApJw_uqDP8db8';let cloudClient=null,cloudUser=null,authMode='signin',supabaseLoadPromise=null;function loadSupabaseClient(){if(cloudClient)return Promise.resolve(cloudClient);if(supabaseLoadPromise)return supabaseLoadPromise;supabaseLoadPromise=new Promise(resolve=>{const script=document.createElement('script');script.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';script.async=true;script.onload=async()=>{try{cloudClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);const{data}=await cloudClient.auth.getSession();cloudUser=data.session?.user||null;updateAuthUI();cloudClient.auth.onAuthStateChange((event,session)=>{cloudUser=session?.user||null;updateAuthUI();if(event==='SIGNED_IN'){closeAuth();loadRemotePosts()}});resolve(cloudClient)}catch(error){console.error('Supabase initialization failed',error);resolve(null)}};script.onerror=()=>{console.error('Supabase client failed to load');resolve(null)};document.head.appendChild(script)});return supabaseLoadPromise}function updateAuthUI(){const label=cloudUser?(cloudUser.email||'Signed in'):'Not signed in',action=cloudUser?'Sign out':'Sign in';for(const id of ['topAuthButton','profileAuthButton']){const button=document.getElementById(id);if(button)button.textContent=action}const status=document.getElementById('authStatusText');if(status)status.textContent=label}function openAuth(){document.getElementById('authModal').classList.add('open');document.getElementById('authModal').setAttribute('aria-hidden','false');setAuthMode(authMode);setTimeout(()=>document.getElementById('authEmail').focus(),50)}function closeAuth(){document.getElementById('authModal').classList.remove('open');document.getElementById('authModal').setAttribute('aria-hidden','true')}function setAuthMode(mode){authMode=mode;document.getElementById('authTitle').textContent=mode==='signup'?'Create a देउडालय account':'Sign in to देउडालय';document.getElementById('authSubmit').textContent=mode==='signup'?'Create account':'Sign in';document.getElementById('authModeToggle').textContent=mode==='signup'?'Already have an account? Sign in':'Create an account';document.getElementById('authMessage').textContent=mode==='signup'?'Create an account to publish images and videos to the shared feed.':'Sign in to add images and videos to the shared feed.'}function toggleAuthMode(){setAuthMode(authMode==='signin'?'signup':'signin')}async function handleAuthAction(){if(cloudUser){const client=await loadSupabaseClient();if(!client)return;const{error}=await client.auth.signOut();if(error)toast(error.message);else toast('Signed out');return}openAuth()}async function submitAuth(event){event.preventDefault();const client=await loadSupabaseClient();if(!client){toast('Could not connect to Supabase');return}const email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value,button=document.getElementById('authSubmit');button.disabled=true;try{let result;if(authMode==='signup')result=await client.auth.signUp({email,password,options:{emailRedirectTo:location.origin}});else result=await client.auth.signInWithPassword({email,password});if(result.error)throw result.error;if(authMode==='signup'&&!result.data.session){document.getElementById('authMessage').textContent='Account created. Check your email and confirm the address, then sign in.';return}cloudUser=result.data.user||null;updateAuthUI();closeAuth();toast(authMode==='signup'?'Account created':'Signed in');await loadRemotePosts()}catch(error){document.getElementById('authMessage').textContent=error.message||'Could not authenticate';toast(error.message||'Sign in failed')}finally{button.disabled=false}}async function requestVideoUpload(){const client=await loadSupabaseClient();if(!client){toast('Could not connect. Check your internet connection.');return}if(!cloudUser){openAuth();return}document.getElementById('videoUpload').click()}async function loadRemotePosts(){if(!cloudClient)return;const{data,error}=await cloudClient.from('feed_posts').select('id,user_id,media_path,media_type,caption,category,created_at').order('created_at',{ascending:false}).limit(100);if(error){console.warn('Could not load shared posts',error);return}for(let i=videos.length-1;i>=0;i--)if(videos[i].cloudPost)videos.splice(i,1);for(const row of [...(data||[])].reverse()){const url=cloudClient.storage.from('videos').getPublicUrl(row.media_path).data.publicUrl,isVideo=row.media_type.startsWith('video/');videos.unshift({handle:'deudalaya',name:'देउडालय',avatar:'deudalaya-avatar',disc:'deudalaya-avatar',image:isVideo?'':url,videoSrc:isVideo?url:null,fit:'contain',caption:row.caption||'देउडालयमा नयाँ पोस्ट',tags:'#देउडालय #कर्णाली',music:(isVideo?'Original sound':'Photo')+' · '+(row.category||'देउडा'),likes:0,comments:0,following:'deudalaya',cloudPost:true,cloudId:row.id,userId:row.user_id})}index=0;render()}
-function render(){let v=videos[index];liked=false;const postVideo=document.getElementById('postVideo'),postImage=document.getElementById('postImage');if(v.videoSrc){postImage.hidden=true;postVideo.hidden=false;if(postVideo.src!==v.videoSrc){postVideo.src=v.videoSrc;postVideo.load()}postVideo.muted=muted;if(!paused)postVideo.play().catch(()=>{});}else{postVideo.pause();postVideo.removeAttribute('src');postVideo.load();postVideo.hidden=true;postImage.hidden=false;postImage.src=v.image.startsWith('photo-')?photo(v.image,900):asset(v.image);postImage.alt=v.caption;postImage.style.objectFit='contain';}document.getElementById('video').style.backgroundImage='none';document.getElementById('avatar').src=asset('deudalaya_icon.webp');document.getElementById('avatar').style.objectFit='contain';document.getElementById('avatar').style.background='#fff';document.getElementById('disc').src=asset(v.disc||v.avatar||'deudalaya_icon.webp');document.getElementById('disc').style.objectFit='cover';document.getElementById('disc').style.background='transparent';document.getElementById('handle').textContent=v.name||v.handle;document.getElementById('caption').innerHTML=`${v.caption}<br><span class="tags">${v.tags}</span>`;document.getElementById('musicTitle').textContent=v.music||'Original sound';document.getElementById('likes').textContent=liked?'1':'0';document.getElementById('like').classList.toggle('on',liked);document.getElementById('like').setAttribute('aria-pressed',String(liked));document.getElementById('commentCount').textContent=v.comments>999?(v.comments/1000).toFixed(1)+'K':v.comments;document.getElementById('commentTitle').textContent=`(${v.comments.toLocaleString()})`;document.getElementById('follow').textContent=following?'Following':'Follow';document.getElementById('follow').style.background=following?'#34343b':'var(--pink)';document.getElementById('like').classList.toggle('on',liked);document.getElementById('bookmark').classList.toggle('on',bookmarked);document.getElementById('commentList').innerHTML=commentsFor(v);document.getElementById('creators').innerHTML=people.map(p=>`<div class="creator-row"><img class="avatar" src="${photo(p[2],120)}"><div class="creator-details"><b>${p[0]}</b><span>${p[1]}</span></div><button onclick="openProfile()">View profile</button></div>`).join('');document.getElementById('suggestions').innerHTML=people.slice(0,3).map(p=>`<div class="suggestion"><img class="avatar" src="${photo(p[2],100)}">@${p[0]}</div>`).join('')}
-function openProfile(){document.getElementById('profileAvatar').src=asset('deudalaya_icon.webp');var dn=document.getElementById('profileDisplayName');if(dn)dn.textContent='देउडालय';var un=document.getElementById('profileUsername');if(un)un.textContent='@देउडालय';var bio=document.getElementById('profileBio');if(bio)bio.textContent='देउडालय — सुदूर - कर्णाली';var pc=document.getElementById('profilePostCount')||document.getElementById('postTotal');if(pc)pc.textContent=videos.length;document.getElementById('profileGrid').innerHTML=videos.map((v,i)=>`<button class="profile-post" onclick="index=${i};liked=false;bookmarked=false;render();closeProfile()"><img src="${v.videoSrc?asset('deudalaya_icon.webp'):asset(v.image)}" alt="${v.caption}"></button>`).join('');document.getElementById('profilePanel').classList.add('open')}function closeProfile(){document.getElementById('profilePanel').classList.remove('open')}function commentsFor(){return '<p class="empty-comments">No comments yet.</p>'}
-let pendingUpload=null,pendingUploadUrl=null,pendingUploadIsVideo=false;const MAX_UPLOAD_BYTES=25*1024*1024,MAX_VIDEO_SECONDS=15,UPLOAD_DB_NAME='deudalaya-local-feed';function openUploadDB(){return new Promise((resolve,reject)=>{if(!('indexedDB'in window)){reject(new Error('Local video storage is unavailable'));return}const request=indexedDB.open(UPLOAD_DB_NAME,1);request.onupgradeneeded=()=>{if(!request.result.objectStoreNames.contains('videos'))request.result.createObjectStore('videos',{keyPath:'id'})};request.onsuccess=()=>resolve(request.result);request.onerror=()=>reject(request.error||new Error('Could not open local video storage'))})}function saveLocalVideo(record){return openUploadDB().then(db=>new Promise((resolve,reject)=>{const tx=db.transaction('videos','readwrite');tx.objectStore('videos').put(record);tx.oncomplete=()=>{db.close();resolve()};tx.onerror=()=>{db.close();reject(tx.error||new Error('Could not save video'))};tx.onabort=()=>{db.close();reject(tx.error||new Error('Could not save video'))}}))}function readLocalVideos(){return openUploadDB().then(db=>new Promise((resolve,reject)=>{const request=db.transaction('videos','readonly').objectStore('videos').getAll();request.onsuccess=()=>{db.close();resolve(request.result||[])};request.onerror=()=>{db.close();reject(request.error||new Error('Could not load saved videos'))}}))}async function restoreLocalVideos(){try{const saved=(await readLocalVideos()).sort((a,b)=>b.createdAt-a.createdAt);for(const item of saved.reverse()){videos.unshift({handle:'deudalaya',name:'देउडालय',avatar:'deudalaya-avatar',disc:'deudalaya-avatar',videoSrc:URL.createObjectURL(item.file),caption:item.caption||'देउडालयमा नयाँ भिडियो',tags:'#देउडालय #कर्णाली',music:'Original sound · '+(item.category||'देउडा'),likes:0,comments:0,following:'deudalaya',localId:item.id})}if(saved.length){index=0;render()}}catch(error){console.warn('Saved videos could not be restored',error)}}function closeUpload(){document.getElementById('uploadModal').classList.remove('open');document.getElementById('uploadModal').setAttribute('aria-hidden','true');if(pendingUploadUrl){URL.revokeObjectURL(pendingUploadUrl);pendingUploadUrl=null}pendingUpload=null;pendingUploadIsVideo=false;document.getElementById('videoUpload').value='';document.getElementById('publishButton').disabled=true;const preview=document.getElementById('uploadPreview'),imagePreview=document.getElementById('uploadImagePreview');preview.pause();preview.removeAttribute('src');preview.load();imagePreview.removeAttribute('src');imagePreview.hidden=true}function handleVideoUpload(event){const file=event.target.files&&event.target.files[0];if(!file)return;const allowedTypes=['video/mp4','video/webm','image/jpeg','image/png','image/webp'];if(!allowedTypes.includes(file.type)){toast('Choose MP4, WebM, JPEG, PNG, or WebP media');event.target.value='';return}if(file.size>MAX_UPLOAD_BYTES){toast('Media must be 25 MB or smaller');event.target.value='';return}if(pendingUploadUrl)URL.revokeObjectURL(pendingUploadUrl);pendingUpload=file;pendingUploadIsVideo=file.type.startsWith('video/');pendingUploadUrl=URL.createObjectURL(file);const preview=document.getElementById('uploadPreview'),imagePreview=document.getElementById('uploadImagePreview');if(pendingUploadIsVideo){imagePreview.hidden=true;imagePreview.removeAttribute('src');preview.hidden=false;preview.src=pendingUploadUrl;document.getElementById('uploadDuration').textContent='Checking video…';document.getElementById('publishButton').disabled=true;preview.onloadedmetadata=()=>{const duration=preview.duration,withinLimit=Number.isFinite(duration)&&duration>0&&duration<=MAX_VIDEO_SECONDS;document.getElementById('uploadDuration').textContent=Number.isFinite(duration)?`${duration.toFixed(1)} sec${withinLimit?' · within limit':' · maximum 15 sec'}`:'Duration unavailable';document.getElementById('publishButton').disabled=!withinLimit};preview.onerror=()=>{document.getElementById('uploadDuration').textContent='Could not read video duration';document.getElementById('publishButton').disabled=true}}else{preview.pause();preview.removeAttribute('src');preview.hidden=true;imagePreview.src=pendingUploadUrl;imagePreview.hidden=false;document.getElementById('uploadDuration').textContent='Image ready to upload';document.getElementById('publishButton').disabled=false}document.getElementById('uploadModal').classList.add('open');document.getElementById('uploadModal').setAttribute('aria-hidden','false')}async function publishUpload(event){event.preventDefault();const client=await loadSupabaseClient();if(!client){toast('Could not connect to Supabase');return}if(!cloudUser){closeUpload();openAuth();return}const file=pendingUpload,category=document.getElementById('uploadCategory').value,caption=document.getElementById('uploadCaption').value.trim(),rights=document.getElementById('uploadRights').checked;if(!file||!rights||!category){toast('Choose a category and confirm your upload rights');return}const button=document.getElementById('publishButton'),id=crypto.randomUUID(),extension=(file.name.split('.').pop()||'media').toLowerCase().replace(/[^a-z0-9]/g,'')||'media',path=`${cloudUser.id}/${id}.${extension}`;button.disabled=true;button.textContent='Uploading…';try{const{error:uploadError}=await client.storage.from('videos').upload(path,file,{cacheControl:'3600',contentType:file.type,upsert:false});if(uploadError)throw uploadError;const{data:post,error:postError}=await client.from('feed_posts').insert({user_id:cloudUser.id,media_path:path,media_type:file.type,caption,category}).select('id,user_id,media_path,media_type,caption,category,created_at').single();if(postError){await client.storage.from('videos').remove([path]);throw postError}const url=client.storage.from('videos').getPublicUrl(post.media_path).data.publicUrl,isVideo=post.media_type.startsWith('video/');videos.unshift({handle:'deudalaya',name:'देउडालय',avatar:'deudalaya-avatar',disc:'deudalaya-avatar',image:isVideo?'':url,videoSrc:isVideo?url:null,fit:'contain',caption:post.caption||'देउडालयमा नयाँ पोस्ट',tags:'#देउडालय #कर्णाली',music:(isVideo?'Original sound':'Photo')+' · '+(post.category||'देउडा'),likes:0,comments:0,following:'deudalaya',cloudPost:true,cloudId:post.id,userId:cloudUser.id,profile:window.deudalayaProfile||null,likedByMe:false,bookmarkedByMe:false,followedByMe:false});index=0;liked=false;bookmarked=false;following=false;paused=false;render();closeUpload();document.getElementById('uploadCaption').value='';document.getElementById('uploadCategory').value='';document.getElementById('uploadLocation').value='';document.getElementById('uploadRights').checked=false;document.getElementById('captionCount').textContent='0 / 220';toast('Posted to the shared देउडालय feed')}catch(error){console.error('Shared upload failed',error);toast(error.message||'Upload failed. Check your connection and Supabase policies')}finally{button.textContent='Add to feed';if(pendingUpload)button.disabled=pendingUploadIsVideo}}document.getElementById('videoUpload').addEventListener('change',handleVideoUpload);document.getElementById('uploadCaption').addEventListener('input',e=>document.getElementById('captionCount').textContent=`${e.target.value.length} / 220`);document.getElementById('uploadModal').addEventListener('click',event=>{if(event.target.id==='uploadModal')closeUpload()});let autoAdvanceTimer;function scheduleAutoAdvance(){clearTimeout(autoAdvanceTimer);autoAdvanceTimer=setTimeout(()=>{if(document.hidden||paused||document.getElementById('comments').classList.contains('open')||document.getElementById('profilePanel').classList.contains('open')){scheduleAutoAdvance();return}nextVideo()},10000)}
-function pickRandomIndex(exclude){if(!videos.length)return 0;if(videos.length===1)return 0;let n;do{n=Math.floor(Math.random()*videos.length)}while(n===exclude);return n}function nextVideo(){index=pickRandomIndex(index);liked=false;bookmarked=false;following=false;render();document.getElementById('progress').style.width='0%';scheduleAutoAdvance()}function prevVideo(){index=pickRandomIndex(index);liked=false;bookmarked=false;following=false;render();document.getElementById('progress').style.width='0%';scheduleAutoAdvance()};function socialBackendRequired(feature){toast(feature+' needs an account and connected backend')}function toggleLike(){socialBackendRequired('Likes')}function toggleBookmark(){socialBackendRequired('Bookmarks')}function toggleFollow(){socialBackendRequired('Following')}function toggleComments(){document.getElementById('comments').classList.toggle('open')}function togglePlay(){paused=!paused;document.getElementById('feed').classList.toggle('paused',paused);const pv=document.getElementById('postVideo');if(!pv.hidden){if(paused)pv.pause();else pv.play().catch(()=>{})}}function addComment(e){e.preventDefault();toast('Comments require an account and connected backend')}function toast(s){let t=document.getElementById('toast');t.textContent=s;t.classList.add('show');clearTimeout(window.tt);window.tt=setTimeout(()=>t.classList.remove('show'),1900)}
+const SUPABASE_URL='https://bxzkclqanpuvxyhsrpog.supabase.co',SUPABASE_PUBLISHABLE_KEY='sb_publishable_G6jtHZuUS4s2NOqgpZApJw_uqDP8db8';let cloudClient=null,cloudUser=null,authMode='signin',supabaseLoadPromise=null;function loadSupabaseClient(){if(cloudClient)return Promise.resolve(cloudClient);if(supabaseLoadPromise)return supabaseLoadPromise;supabaseLoadPromise=new Promise(resolve=>{const script=document.createElement('script');script.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';script.async=true;script.onload=async()=>{try{cloudClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);const{data}=await cloudClient.auth.getSession();cloudUser=data.session?.user||null;updateAuthUI();cloudClient.auth.onAuthStateChange((event,session)=>{cloudUser=session?.user||null;updateAuthUI();if(event==='SIGNED_IN'){closeAuth();loadRemotePosts()}});resolve(cloudClient)}catch(error){console.error('Supabase initialization failed',error);resolve(null)}};script.onerror=()=>{console.error('Supabase client failed to load');resolve(null)};document.head.appendChild(script)});return supabaseLoadPromise}function updateAuthUI(){const label=cloudUser?(cloudUser.email||'Signed in'):'Not signed in',action=cloudUser?'Sign out':'Sign in';for(const id of ['topAuthButton','profileAuthButton']){const button=document.getElementById(id);if(button)button.textContent=action}
+function readLocalProfile(){try{return JSON.parse(localStorage.getItem('deudalaya-profile')||'null')}catch(e){return null}}
+function writeLocalProfile(p){try{localStorage.setItem('deudalaya-profile',JSON.stringify(p))}catch(e){}}
+function profileFromUser(){
+  const meta=(cloudUser&&cloudUser.user_metadata)||{};
+  const local=readLocalProfile()||{};
+  return {
+    displayName: local.displayName||meta.display_name||meta.full_name||(cloudUser&&cloudUser.email?cloudUser.email.split('@')[0]:'')||'देउडालय',
+    username: (local.username||meta.username||'').replace(/^@/,'')||'user',
+    bio: local.bio!=null?local.bio:(meta.bio||''),
+    avatarDataUrl: local.avatarDataUrl||''
+  };
+}
+function applyProfileToUI(){
+  const p=profileFromUser();
+  const dn=document.getElementById('profileDisplayName');
+  const un=document.getElementById('profileUsername');
+  const bio=document.getElementById('profileBio');
+  const av=document.getElementById('profileAvatar');
+  if(cloudUser){
+    if(dn)dn.textContent=p.displayName||'देउडालय';
+    if(un)un.textContent='@'+(p.username||'user');
+    if(bio)bio.textContent=p.bio||'देउडालय — सुदूर - कर्णाली';
+    if(av&&p.avatarDataUrl)av.src=p.avatarDataUrl;
+  } else {
+    if(dn)dn.textContent='देउडालय';
+    if(un)un.textContent='@देउडालय';
+    if(bio)bio.textContent='देउडालय — सुदूर - कर्णाली';
+  }
+}
+function showProfileEditor(){
+  const ed=document.getElementById('profileEditor');
+  if(!ed)return;
+  if(!cloudUser){openAuth();return}
+  const p=profileFromUser();
+  const dn=document.getElementById('editDisplayName');
+  const un=document.getElementById('editUsername');
+  const bio=document.getElementById('editBio');
+  if(dn)dn.value=p.displayName||'';
+  if(un)un.value=p.username||'';
+  if(bio)bio.value=p.bio||'';
+  ed.hidden=false;
+}
+async function saveProfile(event){
+  event.preventDefault();
+  if(!cloudUser){openAuth();return}
+  const displayName=(document.getElementById('editDisplayName').value||'').trim();
+  const username=(document.getElementById('editUsername').value||'').trim().replace(/^@/,'');
+  const bio=(document.getElementById('editBio').value||'').trim();
+  if(!displayName){toast('Name is required');return}
+  if(!/^[A-Za-z0-9._]{3,24}$/.test(username)){toast('Username must be 3–24 letters, numbers, dots, or underscores');return}
+  let avatarDataUrl='';
+  const fileInput=document.getElementById('editAvatarFile');
+  const local=readLocalProfile()||{};
+  avatarDataUrl=local.avatarDataUrl||'';
+  if(fileInput&&fileInput.files&&fileInput.files[0]){
+    const file=fileInput.files[0];
+    if(file.size>2*1024*1024){toast('Photo must be under 2 MB');return}
+    avatarDataUrl=await new Promise(function(resolve,reject){
+      const r=new FileReader();r.onload=function(){resolve(r.result)};r.onerror=reject;r.readAsDataURL(file);
+    });
+  }
+  const profile={displayName:displayName,username:username,bio:bio,avatarDataUrl:avatarDataUrl,email:cloudUser.email,updatedAt:Date.now()};
+  writeLocalProfile(profile);
+  try{
+    const client=await loadSupabaseClient();
+    if(client){
+      await client.auth.updateUser({data:{display_name:displayName,username:username,full_name:displayName,bio:bio}});
+    }
+  }catch(e){console.warn(e)}
+  window.deudalayaProfile=profile;
+  applyProfileToUI();
+  document.getElementById('profileEditor').hidden=true;
+  toast('Profile saved');
+}
+const status=document.getElementById('authStatusText');if(status)status.textContent=label;const editBtn=document.getElementById('editProfileButton');if(editBtn)editBtn.hidden=!cloudUser;try{applyProfileToUI()}catch(e){}}const status=document.getElementById('authStatusText');if(status)status.textContent=label}function openAuth(){document.getElementById('authModal').classList.add('open');document.getElementById('authModal').setAttribute('aria-hidden','false');setAuthMode(authMode);setTimeout(()=>document.getElementById('authEmail').focus(),50)}function closeAuth(){document.getElementById('authModal').classList.remove('open');document.getElementById('authModal').setAttribute('aria-hidden','true')}function setAuthMode(mode){authMode=mode;document.getElementById('authTitle').textContent=mode==='signup'?'Create a देउडालय account':'Sign in to देउडालय';document.getElementById('authSubmit').textContent=mode==='signup'?'Create account':'Sign in';document.getElementById('authModeToggle').textContent=mode==='signup'?'Already have an account? Sign in':'Create an account';document.getElementById('authMessage').textContent=mode==='signup'?'Choose a name and username, then create your account.':'Sign in to like, comment, follow, and post.';const sf=document.getElementById('signupFields');if(sf)sf.hidden=mode!=='signup';const dn=document.getElementById('signupDisplayName'),un=document.getElementById('signupUsername');if(dn)dn.required=mode==='signup';if(un)un.required=mode==='signup'}function toggleAuthMode(){setAuthMode(authMode==='signin'?'signup':'signin')}async function handleAuthAction(){if(cloudUser){const client=await loadSupabaseClient();if(!client)return;const{error}=await client.auth.signOut();if(error)toast(error.message);else toast('Signed out');return}openAuth()}async function submitAuth(event){event.preventDefault();const client=await loadSupabaseClient();if(!client){toast('Could not connect to Supabase');return}const email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value,button=document.getElementById('authSubmit');const displayName=(document.getElementById('signupDisplayName')&&document.getElementById('signupDisplayName').value||'').trim();const username=(document.getElementById('signupUsername')&&document.getElementById('signupUsername').value||'').trim().replace(/^@/,'');if(authMode==='signup'){if(!displayName){document.getElementById('authMessage').textContent='Please enter your name';return}if(!/^[A-Za-z0-9._]{3,24}$/.test(username)){document.getElementById('authMessage').textContent='Username must be 3–24 letters, numbers, dots, or underscores';return}}button.disabled=true;try{let result;if(authMode==='signup'){result=await client.auth.signUp({email,password,options:{emailRedirectTo:location.origin,data:{display_name:displayName,username:username,full_name:displayName}}});if(!result.error&&displayName){try{localStorage.setItem('deudalaya-profile',JSON.stringify({displayName:displayName,username:username,bio:'',email:email,updatedAt:Date.now()}))}catch(e){}}}else result=await client.auth.signInWithPassword({email,password});if(result.error)throw result.error;if(authMode==='signup'&&!result.data.session){document.getElementById('authMessage').textContent='Account created. Check your email and confirm the address, then sign in.';return}cloudUser=result.data.user||null;updateAuthUI();applyProfileToUI();closeAuth();toast(authMode==='signup'?'Account created':'Signed in');await loadRemotePosts()}catch(error){document.getElementById('authMessage').textContent=error.message||'Could not authenticate';toast(error.message||'Sign in failed')}finally{button.disabled=false}}async function requestVideoUpload(){const client=await loadSupabaseClient();if(!client){toast('Could not connect. Check your internet connection.');return}if(!cloudUser){openAuth();return}document.getElementById('videoUpload').click()}async function loadRemotePosts(){if(!cloudClient)return;const{data,error}=await cloudClient.from('feed_posts').select('id,user_id,media_path,media_type,caption,category,created_at').order('created_at',{ascending:false}).limit(100);if(error){console.warn('Could not load shared posts',error);return}for(let i=videos.length-1;i>=0;i--)if(videos[i].cloudPost)videos.splice(i,1);for(const row of [...(data||[])].reverse()){const url=cloudClient.storage.from('videos').getPublicUrl(row.media_path).data.publicUrl,isVideo=row.media_type.startsWith('video/');videos.unshift({handle:'deudalaya',name:'देउडालय',avatar:'deudalaya-avatar',disc:'deudalaya-avatar',image:isVideo?'':url,videoSrc:isVideo?url:null,fit:'contain',caption:row.caption||'देउडालय — सुदूर - कर्णाली',tags:'#देउडालय #कर्णाली #सुदूरपश्चिम',music:(isVideo?'Original sound':'Photo')+' · '+(row.category||'देउडा'),likes:0,comments:0,following:'deudalaya',cloudPost:true,cloudId:row.id,userId:row.user_id})}index=0;render()}
+function render(){let v=videos[index];liked=false;const postVideo=document.getElementById('postVideo'),postImage=document.getElementById('postImage');if(v.videoSrc){postImage.hidden=true;postVideo.hidden=false;if(postVideo.src!==v.videoSrc){postVideo.src=v.videoSrc;postVideo.load()}postVideo.muted=muted;if(!paused)postVideo.play().catch(()=>{});}else{postVideo.pause();postVideo.removeAttribute('src');postVideo.load();postVideo.hidden=true;postImage.hidden=false;postImage.src=v.image.startsWith('photo-')?photo(v.image,900):asset(v.image);postImage.alt=v.caption;postImage.style.objectFit='contain';}document.getElementById('video').style.backgroundImage='none';document.getElementById('avatar').src=asset('deudalaya_icon.webp');document.getElementById('avatar').style.objectFit='contain';document.getElementById('avatar').style.background='#fff';document.getElementById('disc').src=asset(v.disc||v.avatar||'deudalaya_icon.webp');document.getElementById('disc').style.objectFit='cover';document.getElementById('disc').style.background='transparent';document.getElementById('handle').textContent='देउडालय';const nepaliCaption=(v.caption&&String(v.caption).trim())?v.caption:'देउडालय — सुदूर - कर्णाली';const nepaliTags=(v.tags&&String(v.tags).trim())?v.tags:'#देउडालय #कर्णाली #सुदूरपश्चिम';document.getElementById('caption').innerHTML=`${nepaliCaption}<br><span class="tags">${nepaliTags}</span>`;document.getElementById('musicTitle').textContent=v.music||'देउडालय — मौलिक धुन';document.getElementById('likes').textContent=liked?'1':'0';document.getElementById('like').classList.toggle('on',liked);document.getElementById('like').setAttribute('aria-pressed',String(liked));document.getElementById('commentCount').textContent=v.comments>999?(v.comments/1000).toFixed(1)+'K':v.comments;document.getElementById('commentTitle').textContent=`(${v.comments.toLocaleString()})`;document.getElementById('follow').textContent=following?'Following':'Follow';document.getElementById('follow').style.background=following?'#34343b':'var(--pink)';document.getElementById('like').classList.toggle('on',liked);document.getElementById('bookmark').classList.toggle('on',bookmarked);document.getElementById('commentList').innerHTML=commentsFor(v);document.getElementById('creators').innerHTML=people.map(p=>`<div class="creator-row"><img class="avatar" src="${photo(p[2],120)}"><div class="creator-details"><b>${p[0]}</b><span>${p[1]}</span></div><button onclick="openProfile()">View profile</button></div>`).join('');document.getElementById('suggestions').innerHTML=people.slice(0,3).map(p=>`<div class="suggestion"><img class="avatar" src="${photo(p[2],100)}">@${p[0]}</div>`).join('')}
+function openProfile(){document.getElementById('profileAvatar').src=asset('deudalaya_icon.webp');try{applyProfileToUI()}catch(e){var dn=document.getElementById('profileDisplayName');if(dn)dn.textContent='देउडालय';var un=document.getElementById('profileUsername');if(un)un.textContent='@देउडालय';var bio=document.getElementById('profileBio');if(bio)bio.textContent='देउडालय — सुदूर - कर्णाली';}var pc=document.getElementById('profilePostCount')||document.getElementById('postTotal');if(pc)pc.textContent=videos.length;document.getElementById('profileGrid').innerHTML=videos.map((v,i)=>`<button class="profile-post" onclick="index=${i};liked=false;bookmarked=false;render();closeProfile()"><img src="${v.videoSrc?asset('deudalaya_icon.webp'):asset(v.image)}" alt="${v.caption}"></button>`).join('');document.getElementById('profilePanel').classList.add('open')}function closeProfile(){document.getElementById('profilePanel').classList.remove('open')}function commentsFor(){return '<p class="empty-comments">No comments yet.</p>'}
+let pendingUpload=null,pendingUploadUrl=null,pendingUploadIsVideo=false;const MAX_UPLOAD_BYTES=25*1024*1024,MAX_VIDEO_SECONDS=15,UPLOAD_DB_NAME='deudalaya-local-feed';function openUploadDB(){return new Promise((resolve,reject)=>{if(!('indexedDB'in window)){reject(new Error('Local video storage is unavailable'));return}const request=indexedDB.open(UPLOAD_DB_NAME,1);request.onupgradeneeded=()=>{if(!request.result.objectStoreNames.contains('videos'))request.result.createObjectStore('videos',{keyPath:'id'})};request.onsuccess=()=>resolve(request.result);request.onerror=()=>reject(request.error||new Error('Could not open local video storage'))})}function saveLocalVideo(record){return openUploadDB().then(db=>new Promise((resolve,reject)=>{const tx=db.transaction('videos','readwrite');tx.objectStore('videos').put(record);tx.oncomplete=()=>{db.close();resolve()};tx.onerror=()=>{db.close();reject(tx.error||new Error('Could not save video'))};tx.onabort=()=>{db.close();reject(tx.error||new Error('Could not save video'))}}))}function readLocalVideos(){return openUploadDB().then(db=>new Promise((resolve,reject)=>{const request=db.transaction('videos','readonly').objectStore('videos').getAll();request.onsuccess=()=>{db.close();resolve(request.result||[])};request.onerror=()=>{db.close();reject(request.error||new Error('Could not load saved videos'))}}))}async function restoreLocalVideos(){try{const saved=(await readLocalVideos()).sort((a,b)=>b.createdAt-a.createdAt);for(const item of saved.reverse()){videos.unshift({handle:'deudalaya',name:'देउडालय',avatar:'deudalaya-avatar',disc:'deudalaya-avatar',videoSrc:URL.createObjectURL(item.file),caption:item.caption||'देउडालय — सुदूर - कर्णाली',tags:'#देउडालय #कर्णाली #सुदूरपश्चिम',music:'Original sound · '+(item.category||'देउडा'),likes:0,comments:0,following:'deudalaya',localId:item.id})}if(saved.length){index=0;render()}}catch(error){console.warn('Saved videos could not be restored',error)}}function closeUpload(){document.getElementById('uploadModal').classList.remove('open');document.getElementById('uploadModal').setAttribute('aria-hidden','true');if(pendingUploadUrl){URL.revokeObjectURL(pendingUploadUrl);pendingUploadUrl=null}pendingUpload=null;pendingUploadIsVideo=false;document.getElementById('videoUpload').value='';document.getElementById('publishButton').disabled=true;const preview=document.getElementById('uploadPreview'),imagePreview=document.getElementById('uploadImagePreview');preview.pause();preview.removeAttribute('src');preview.load();imagePreview.removeAttribute('src');imagePreview.hidden=true}function handleVideoUpload(event){const file=event.target.files&&event.target.files[0];if(!file)return;const allowedTypes=['video/mp4','video/webm','image/jpeg','image/png','image/webp'];if(!allowedTypes.includes(file.type)){toast('Choose MP4, WebM, JPEG, PNG, or WebP media');event.target.value='';return}if(file.size>MAX_UPLOAD_BYTES){toast('Media must be 25 MB or smaller');event.target.value='';return}if(pendingUploadUrl)URL.revokeObjectURL(pendingUploadUrl);pendingUpload=file;pendingUploadIsVideo=file.type.startsWith('video/');pendingUploadUrl=URL.createObjectURL(file);const preview=document.getElementById('uploadPreview'),imagePreview=document.getElementById('uploadImagePreview');if(pendingUploadIsVideo){imagePreview.hidden=true;imagePreview.removeAttribute('src');preview.hidden=false;preview.src=pendingUploadUrl;document.getElementById('uploadDuration').textContent='Checking video…';document.getElementById('publishButton').disabled=true;preview.onloadedmetadata=()=>{const duration=preview.duration,withinLimit=Number.isFinite(duration)&&duration>0&&duration<=MAX_VIDEO_SECONDS;document.getElementById('uploadDuration').textContent=Number.isFinite(duration)?`${duration.toFixed(1)} sec${withinLimit?' · within limit':' · maximum 15 sec'}`:'Duration unavailable';document.getElementById('publishButton').disabled=!withinLimit};preview.onerror=()=>{document.getElementById('uploadDuration').textContent='Could not read video duration';document.getElementById('publishButton').disabled=true}}else{preview.pause();preview.removeAttribute('src');preview.hidden=true;imagePreview.src=pendingUploadUrl;imagePreview.hidden=false;document.getElementById('uploadDuration').textContent='Image ready to upload';document.getElementById('publishButton').disabled=false}document.getElementById('uploadModal').classList.add('open');document.getElementById('uploadModal').setAttribute('aria-hidden','false')}async function publishUpload(event){event.preventDefault();const client=await loadSupabaseClient();if(!client){toast('Could not connect to Supabase');return}if(!cloudUser){closeUpload();openAuth();return}const file=pendingUpload,category=document.getElementById('uploadCategory').value,caption=document.getElementById('uploadCaption').value.trim(),rights=document.getElementById('uploadRights').checked;if(!file||!rights||!category){toast('Choose a category and confirm your upload rights');return}const button=document.getElementById('publishButton'),id=crypto.randomUUID(),extension=(file.name.split('.').pop()||'media').toLowerCase().replace(/[^a-z0-9]/g,'')||'media',path=`${cloudUser.id}/${id}.${extension}`;button.disabled=true;button.textContent='Uploading…';try{const{error:uploadError}=await client.storage.from('videos').upload(path,file,{cacheControl:'3600',contentType:file.type,upsert:false});if(uploadError)throw uploadError;const{data:post,error:postError}=await client.from('feed_posts').insert({user_id:cloudUser.id,media_path:path,media_type:file.type,caption,category}).select('id,user_id,media_path,media_type,caption,category,created_at').single();if(postError){await client.storage.from('videos').remove([path]);throw postError}const url=client.storage.from('videos').getPublicUrl(post.media_path).data.publicUrl,isVideo=post.media_type.startsWith('video/');videos.unshift({handle:'deudalaya',name:'देउडालय',avatar:'deudalaya-avatar',disc:'deudalaya-avatar',image:isVideo?'':url,videoSrc:isVideo?url:null,fit:'contain',caption:post.caption||'देउडालय — सुदूर - कर्णाली',tags:'#देउडालय #कर्णाली #सुदूरपश्चिम',music:(isVideo?'Original sound':'Photo')+' · '+(post.category||'देउडा'),likes:0,comments:0,following:'deudalaya',cloudPost:true,cloudId:post.id,userId:cloudUser.id,profile:window.deudalayaProfile||null,likedByMe:false,bookmarkedByMe:false,followedByMe:false});index=0;liked=false;bookmarked=false;following=false;paused=false;render();closeUpload();document.getElementById('uploadCaption').value='';document.getElementById('uploadCategory').value='';document.getElementById('uploadLocation').value='';document.getElementById('uploadRights').checked=false;document.getElementById('captionCount').textContent='0 / 220';toast('Posted to the shared देउडालय feed')}catch(error){console.error('Shared upload failed',error);toast(error.message||'Upload failed. Check your connection and Supabase policies')}finally{button.textContent='Add to feed';if(pendingUpload)button.disabled=pendingUploadIsVideo}}document.getElementById('videoUpload').addEventListener('change',handleVideoUpload);document.getElementById('uploadCaption').addEventListener('input',e=>document.getElementById('captionCount').textContent=`${e.target.value.length} / 220`);document.getElementById('uploadModal').addEventListener('click',event=>{if(event.target.id==='uploadModal')closeUpload()});let autoAdvanceTimer;function scheduleAutoAdvance(){clearTimeout(autoAdvanceTimer);autoAdvanceTimer=setTimeout(()=>{if(document.hidden||paused||document.getElementById('comments').classList.contains('open')||document.getElementById('profilePanel').classList.contains('open')){scheduleAutoAdvance();return}nextVideo()},10000)}
+function pickRandomIndex(exclude){if(!videos.length)return 0;if(videos.length===1)return 0;let n;do{n=Math.floor(Math.random()*videos.length)}while(n===exclude);return n}function nextVideo(){index=(typeof fypPickNext==='function'?fypPickNext(index):pickRandomIndex(index));liked=false;bookmarked=false;following=false;render();document.getElementById('progress').style.width='0%';scheduleAutoAdvance();if(typeof fypOnShow==='function')fypOnShow(index)}function prevVideo(){index=(typeof fypPickPrev==='function'?fypPickPrev(index):pickRandomIndex(index));liked=false;bookmarked=false;following=false;render();document.getElementById('progress').style.width='0%';scheduleAutoAdvance();if(typeof fypOnShow==='function')fypOnShow(index)};function socialBackendRequired(feature){toast(feature+' needs an account and connected backend')}function toggleLike(){socialBackendRequired('Likes')}function toggleBookmark(){socialBackendRequired('Bookmarks')}function toggleFollow(){socialBackendRequired('Following')}function toggleComments(){document.getElementById('comments').classList.toggle('open')}function togglePlay(){paused=!paused;document.getElementById('feed').classList.toggle('paused',paused);const pv=document.getElementById('postVideo');if(!pv.hidden){if(paused)pv.pause();else pv.play().catch(()=>{})}}function addComment(e){e.preventDefault();toast('Comments require an account and connected backend')}function toast(s){let t=document.getElementById('toast');t.textContent=s;t.classList.add('show');clearTimeout(window.tt);window.tt=setTimeout(()=>t.classList.remove('show'),1900)}
 document.addEventListener('keydown',e=>{if(e.key==='ArrowDown'){e.preventDefault();nextVideo()}if(e.key==='ArrowUp'){e.preventDefault();prevVideo()}if(e.key===' '&&document.activeElement.tagName!=='INPUT'){e.preventDefault();togglePlay()}if(e.key==='Escape')document.getElementById('comments').classList.remove('open')});let sy=0,sx=0;document.getElementById('feed').addEventListener('touchstart',e=>{sy=e.touches[0].clientY;sx=e.touches[0].clientX},{passive:true});document.getElementById('feed').addEventListener('touchend',e=>{const dy=e.changedTouches[0].clientY-sy,dx=e.changedTouches[0].clientX-sx;if(window.matchMedia('(max-width: 700px)').matches&&sy<120&&dy>85&&Math.abs(dy)>Math.abs(dx)){toast('Refreshing feed…');setTimeout(()=>window.location.reload(),120);return}const d=-dy;if(Math.abs(d)>55&&Math.abs(d)>Math.abs(dx))d>0?nextVideo():prevVideo()},{passive:true});let prog=0;setInterval(()=>{if(!paused){prog=(prog+0.28)%100;document.getElementById('progress').style.width=prog+'%'}},100);document.getElementById('search').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.value.trim()){const q=e.target.value.trim().toLocaleLowerCase();const found=videos.findIndex(v=>(v.handle+' '+v.caption+' '+v.tags).toLocaleLowerCase().includes(q));if(found<0){toast('No matching videos');return}index=found;liked=false;bookmarked=false;following=false;render();toast('Showing matching video')}});function shareCurrentVideo(){const item=videos[index],url=item.videoSrc||(item.image&&item.image.startsWith('http')?item.image:(()=>{const page=new URL(location.href);page.hash='video='+encodeURIComponent(item.image||item.cloudId||'');return page.href})());if(navigator.share){navigator.share({title:'देउडालय',text:item.caption,url}).catch(()=>{})}else if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>toast('Video link copied')).catch(()=>toast(url))}else toast(url)}render();restoreLocalVideos();loadSupabaseClient().then(client=>client&&loadRemotePosts());scheduleAutoAdvance();
 
 let deferredInstallPrompt=null;const installGate=document.getElementById('installGate'),installAction=document.getElementById('installAction'),installHint=document.getElementById('installHint');const isStandalone=()=>window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;let gateOpened=false;function openInstalledGate(){if(gateOpened)return;gateOpened=true;installGate.classList.add('opening');installGate.setAttribute('aria-hidden','true');document.body.classList.remove('gate-locked');setTimeout(()=>{installGate.hidden=true},1450)}function showInstallInstructions(){const ios=/iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);installHint.textContent=ios?'Tap Share, choose “Add to Home Screen,” then tap Add.':'Open your browser menu and choose “Install app” or “Add to Home screen.”';installAction.textContent=ios?'How to install':'Install from browser menu';installAction.onclick=()=>{installHint.textContent=ios?'In Safari, tap the Share icon, then “Add to Home Screen.”':'In Chrome, tap ⋮, then “Install app” or “Add to Home screen.”'};}window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();deferredInstallPrompt=event;/* no browser continue */});window.addEventListener('appinstalled',()=>{deferredInstallPrompt=null;openInstalledGate()});installAction.addEventListener('click',async()=>{if(deferredInstallPrompt){deferredInstallPrompt.prompt();const choice=await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;if(choice.outcome==='accepted'){installHint.textContent='Finish installing देउडालय to open the gate.'}else{installHint.textContent='Installation was cancelled. Tap Install to try again.'}return}showInstallInstructions()});document.addEventListener('keydown',event=>{if(!gateOpened&&event.key==='Tab'){event.preventDefault();installAction.focus()}if(!gateOpened&&event.key==='Escape')event.preventDefault()});/* gateContinue removed */if(isStandalone()){openInstalledGate()}else{/* continue-in-browser disabled */}function showFeedTab(button){document.querySelectorAll('.feed-tabs button').forEach(item=>item.classList.remove('selected'));button.classList.add('selected')}function openFeedSearch(){const panel=document.getElementById('feedSearchPanel');panel.classList.toggle('visible');if(panel.classList.contains('visible'))document.getElementById('feedSearchInput').focus()}function submitFeedSearch(){const input=document.getElementById('feedSearchInput'),search=document.getElementById('search');if(search){search.value=input.value;search.dispatchEvent(new Event('input',{bubbles:true}));search.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}))}}if(isStandalone()){openInstalledGate()}else{document.body.classList.add('gate-locked');installAction.focus()}const launchSplash=document.getElementById('launchSplash');if(launchSplash&&isStandalone()){launchSplash.hidden=true}else if(launchSplash){const splashStarted=performance.now();let splashDismissed=false;const dismissLaunchSplash=()=>{if(splashDismissed)return;splashDismissed=true;setTimeout(()=>launchSplash.classList.add('fade-out'),Math.max(0,650-(performance.now()-splashStarted)))};if(document.readyState==='complete')dismissLaunchSplash();else window.addEventListener('load',dismissLaunchSplash,{once:true});setTimeout(dismissLaunchSplash,3000)}const siteBuildVersion='2026.10.13.14';
@@ -1416,6 +1491,477 @@ fix();
     if(!isMyUpload(v)){toast('You can only delete your own uploads');return}
     openConfirm({kind:'cloud',post:v,index:index});
   };
+})();
+</script>
+
+
+<!-- ADDED: TikTok-like polish (layout, disc spin, overlays, nav, interactions) -->
+<style id="tiktok-polish">
+/* Full-bleed feed like TikTok */
+html,body{background:#000;overscroll-behavior:none}
+@media(max-width:700px){
+  body{overflow:hidden}
+  .app{background:#000}
+  .main,.feed-wrap,.video{background:#000!important}
+  .feed-wrap{box-shadow:none!important}
+  .video-copy{left:12px!important;right:78px!important;bottom:calc(78px + env(safe-area-inset-bottom,0px))!important;z-index:6!important}
+  .creator{font-size:16px!important;font-weight:800!important;letter-spacing:.2px}
+  .creator #handle:before{content:"@"}
+  .caption{font-size:14px!important;line-height:1.35!important;max-height:4.2em;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+  .caption .tags{display:inline!important;color:#fff;font-weight:700}
+  .actions{right:6px!important;bottom:calc(90px + env(safe-area-inset-bottom,0px))!important;gap:14px!important;z-index:7!important}
+  .action{gap:1px!important}
+  .action span{font-size:12px!important;font-weight:600!important;text-shadow:0 1px 3px #000c}
+  .action svg{width:46px!important;height:46px!important;padding:6px!important;background:transparent!important;filter:drop-shadow(0 2px 4px #0009)}
+  .creator-disc{display:block!important;width:48px!important;height:48px!important;margin:0 auto 4px;border:2px solid #fff;box-shadow:0 0 0 2px #fe2c55;animation:ttDiscSpin 4s linear infinite;position:relative}
+  .creator-disc img{border-radius:50%}
+  .creator-disc span{bottom:-10px!important;width:22px!important;height:22px!important;font-size:16px!important;background:#fe2c55!important;border:2px solid #000}
+  .progress{left:0!important;right:0!important;bottom:0!important;height:2px!important;background:#ffffff40!important;border-radius:0!important;z-index:8}
+  .progress i{border-radius:0!important}
+  .progress i:after{display:none!important}
+  .mobile-nav{height:56px!important;min-height:56px!important;padding-bottom:env(safe-area-inset-bottom)!important;background:#000!important;border-top:1px solid #ffffff12!important}
+  .mobile-nav button{color:#888!important;font-size:10px!important;font-weight:600}
+  .mobile-nav button.active,.mobile-nav button:first-child{color:#fff!important}
+  .mobile-nav .mobile-add{width:48px!important;height:30px!important;border-radius:8px!important;background:linear-gradient(90deg,#25f4ee 0 12%,#fff 12% 88%,#fe2c55 88%)!important}
+  .feed-tabs{top:8px!important;z-index:9!important}
+  .feed-tabs button{font-size:15px!important;color:#ffffffb0!important;text-shadow:0 1px 4px #000}
+  .feed-tabs button.selected{color:#fff!important;font-weight:800!important}
+  .feed-tabs button.selected:after{height:2px!important;background:#fff!important}
+  .vignette{display:block!important;background:linear-gradient(180deg,#0006 0%,transparent 18%,transparent 55%,#000c 100%)!important;pointer-events:none;z-index:3}
+  .comments{border-radius:16px 16px 0 0!important;max-height:70dvh!important;background:#121212!important}
+  .tt-post-chip{top:calc(env(safe-area-inset-top,0px) + 48px)!important;opacity:.85}
+  .follow{display:none!important}
+  .mobile-music{display:flex!important;align-items:center;gap:6px;margin-top:6px;font-size:13px;opacity:.95}
+  .mobile-music:before{content:"♫ ";opacity:.9}
+}
+@keyframes ttDiscSpin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.creator-disc{animation:none!important}}
+/* Desktop: centered phone canvas like TikTok web */
+@media(min-width:701px){
+  .main{background:#000}
+  .feed-wrap{max-width:420px;height:min(100%,820px);border-radius:12px;box-shadow:0 0 0 1px #ffffff10,0 24px 80px #000a}
+  .actions{position:fixed;left:calc(50% + 230px);right:auto;top:50%;transform:translateY(-50%);gap:16px}
+  .creator #handle:before{content:"@"}
+  .creator-disc{display:block!important;width:48px;height:48px;margin:0 auto 4px;border:2px solid #fff;box-shadow:0 0 0 2px #fe2c55;animation:ttDiscSpin 4s linear infinite}
+  .creator-disc span{position:absolute;left:50%;bottom:-10px;transform:translateX(-50%);width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:#fe2c55;color:#fff;border:2px solid #000;font-size:16px;line-height:1;font-weight:700}
+  .mobile-music{display:flex!important;margin-top:8px;font-size:13px}
+}
+/* Pause disc when paused */
+.feed-wrap.paused .creator-disc{animation-play-state:paused}
+/* Bottom sheet comments handle */
+.comments-head{position:relative}
+.comments-head:before{content:"";position:absolute;left:50%;top:8px;width:36px;height:4px;margin-left:-18px;border-radius:4px;background:#ffffff35}
+@media(max-width:700px){.comments-head{padding-top:22px}}
+</style>
+<script>
+(function(){
+  // TikTok-like: active Home tab, expand caption, spinning disc state
+  function setHomeActive(){
+    document.querySelectorAll('.mobile-nav button').forEach(function(b,i){
+      if(i===0)b.classList.add('active');
+      else if(!(b.classList.contains('mobile-add'))) b.classList.remove('active');
+    });
+  }
+  setHomeActive();
+
+  // Caption expand/collapse on tap (TikTok style)
+  var caption=document.getElementById('caption');
+  if(caption){
+    caption.style.cursor='pointer';
+    caption.addEventListener('click',function(e){
+      e.stopPropagation();
+      if(caption.style.maxHeight==='none'||caption.classList.contains('expanded')){
+        caption.classList.remove('expanded');
+        caption.style.maxHeight='';
+        caption.style.display='';
+        caption.style.webkitLineClamp='3';
+      } else {
+        caption.classList.add('expanded');
+        caption.style.maxHeight='none';
+        caption.style.display='block';
+        caption.style.webkitLineClamp='unset';
+      }
+    });
+  }
+
+  // Ensure @देउडालय on handle after each render
+  if(typeof window.render==='function'){
+    var _r=window.render;
+    window.render=function(){
+      var out=_r.apply(this,arguments);
+      try{
+        var h=document.getElementById('handle');
+        if(h){
+          var t=h.textContent||'';
+          t=t.replace(/^@+/,'');
+          if(!t||t.toLowerCase()==='deudalaya')t='देउडालय';
+          h.textContent=t; // CSS :before adds @
+        }
+        var disc=document.querySelector('.creator-disc');
+        var feed=document.getElementById('feed');
+        if(disc&&feed){
+          if(feed.classList.contains('paused'))disc.style.animationPlayState='paused';
+          else disc.style.animationPlayState='running';
+        }
+        setHomeActive();
+      }catch(e){}
+      return out;
+    };
+  }
+
+  // Sync disc spin with play/pause
+  if(typeof window.togglePlay==='function'){
+    var _tp=window.togglePlay;
+    window.togglePlay=function(){
+      var r=_tp.apply(this,arguments);
+      try{
+        var disc=document.querySelector('.creator-disc');
+        var feed=document.getElementById('feed');
+        if(disc&&feed)disc.style.animationPlayState=feed.classList.contains('paused')?'paused':'running';
+      }catch(e){}
+      return r;
+    };
+  }
+
+  // Vertical wheel on desktop → next/prev (TikTok web)
+  var feed=document.getElementById('feed');
+  if(feed){
+    var wheelLock=false;
+    feed.addEventListener('wheel',function(e){
+      if(Math.abs(e.deltaY)<30)return;
+      e.preventDefault();
+      if(wheelLock)return;
+      wheelLock=true;
+      if(e.deltaY>0&&typeof nextVideo==='function')nextVideo();
+      else if(e.deltaY<0&&typeof prevVideo==='function')prevVideo();
+      setTimeout(function(){wheelLock=false},450);
+    },{passive:false});
+  }
+
+  // Hide desktop side chrome more for focus
+  var style=document.createElement('style');
+  style.textContent='@media(min-width:701px) and (max-width:1159px){.nav{display:none!important}.app{grid-template-columns:1fr!important}}';
+  document.head.appendChild(style);
+})();
+</script>
+
+
+<!-- ADDED: For You ranking algorithm (watch time, completion, engagement, diversity) -->
+<style>
+.fyp-why{position:absolute;z-index:11;left:12px;bottom:calc(130px + env(safe-area-inset-bottom,0px));max-width:70%;padding:6px 10px;border-radius:8px;background:#0008;color:#ddd;font-size:11px;line-height:1.3;pointer-events:none;opacity:0;transition:opacity .25s;backdrop-filter:blur(6px)}
+.fyp-why.show{opacity:1}
+@media(min-width:701px){.fyp-why{bottom:100px;left:20px}}
+</style>
+<script>
+(function(){
+  var STORE='deudalaya-fyp-v1';
+  var SESSION_SEEN='deudalaya-fyp-session-seen';
+  var mode='foryou'; // foryou | following | community
+  var showStarted=0;
+  var lastIndex=-1;
+  var dwellTimer=null;
+
+  function loadState(){
+    try{return JSON.parse(localStorage.getItem(STORE)||'{}')}catch(e){return {}}
+  }
+  function saveState(s){
+    try{localStorage.setItem(STORE,JSON.stringify(s))}catch(e){}
+  }
+  function state(){
+    var s=loadState();
+    if(!s.posts)s.posts={};
+    if(!s.tags)s.tags={};
+    if(!s.notInterested)s.notInterested=[];
+    if(!s.sessionOrder)s.sessionOrder=[];
+    return s;
+  }
+  function postKey(v,i){
+    if(!v)return 'i_'+i;
+    if(v.cloudId)return 'c_'+v.cloudId;
+    if(v.localId)return 'l_'+v.localId;
+    if(v.image)return 'img_'+String(v.image).slice(-80);
+    if(v.videoSrc)return 'vid_'+String(v.videoSrc).slice(-80);
+    return 'i_'+i;
+  }
+  function ensurePost(s,key){
+    if(!s.posts[key])s.posts[key]={impressions:0,watchMs:0,completes:0,skips:0,likes:0,shares:0,saves:0,comments:0,notInt:0,lastShown:0};
+    return s.posts[key];
+  }
+  function extractTags(v){
+    var t=(v&&v.tags)||'';
+    var c=(v&&v.caption)||'';
+    var raw=(t+' '+c).toLowerCase();
+    var tags=raw.match(/#[\w\u0900-\u097F]+/g)||[];
+    return tags.map(function(x){return x.slice(1)}).slice(0,12);
+  }
+  function sessionSeen(){
+    try{return JSON.parse(sessionStorage.getItem(SESSION_SEEN)||'[]')}catch(e){return []}
+  }
+  function markSessionSeen(key){
+    var a=sessionSeen();
+    if(a.indexOf(key)<0)a.push(key);
+    if(a.length>80)a=a.slice(-80);
+    try{sessionStorage.setItem(SESSION_SEEN,JSON.stringify(a))}catch(e){}
+  }
+
+  // --- scoring (TikTok-inspired, local) ---
+  function scoreVideo(v,i,s,ctx){
+    var key=postKey(v,i);
+    var st=ensurePost(s,key);
+    var tags=extractTags(v);
+    var score=0;
+
+    // Negative: not interested
+    if(s.notInterested.indexOf(key)>=0)return -1e9;
+    if(st.notInt>0)score-=80*st.notInt;
+
+    // Interest from tag affinity (collaborative-lite / content match)
+    var tagBoost=0;
+    tags.forEach(function(t){
+      var tw=s.tags[t]||0;
+      tagBoost+=tw;
+    });
+    score+=Math.min(40,tagBoost*3);
+
+    // Historical performance of this post (quality prior)
+    var impressions=Math.max(1,st.impressions);
+    var completionRate=st.completes/impressions;
+    var skipRate=st.skips/impressions;
+    var avgWatch=st.watchMs/impressions;
+    score+=completionRate*50;
+    score+=Math.min(30,avgWatch/1000); // up to +30 for long dwell
+    score-=skipRate*35;
+    score+=st.likes*4+st.shares*8+st.saves*7+st.comments*5;
+
+    // Freshness: slight boost for less shown globally on device
+    score+=Math.max(0,12-st.impressions)*1.5;
+
+    // Session diversity: penalize already seen this session
+    if(sessionSeen().indexOf(key)>=0)score-=25;
+
+    // Avoid immediate repeat of last few
+    if(ctx&&ctx.recentKeys&&ctx.recentKeys.indexOf(key)>=0)score-=40;
+
+    // Mode filters
+    if(mode==='following'){
+      // only followed handles if we track following — mild boost for deudalaya official
+      if(v&&v.handle==='deudalaya')score+=5;
+      else score-=15;
+    }
+    if(mode==='community'){
+      if(v&&v.cloudPost)score+=12;
+    }
+
+    // Explore noise so feed doesn't lock in
+    score+=Math.random()*8;
+
+    return score;
+  }
+
+  function rankedIndices(exclude){
+    var s=state();
+    var recent=s.sessionOrder.slice(-5);
+    var ctx={recentKeys:recent};
+    var arr=[];
+    for(var i=0;i<videos.length;i++){
+      if(i===exclude)continue;
+      arr.push({i:i,sc:scoreVideo(videos[i],i,s,ctx)});
+    }
+    arr.sort(function(a,b){return b.sc-a.sc});
+    return arr;
+  }
+
+  function fypPickNext(from){
+    if(!videos||!videos.length)return 0;
+    if(mode==='foryou'||mode==='community'||mode==='following'){
+      var ranked=rankedIndices(from);
+      if(!ranked.length)return pickRandomIndex(from);
+      // 85% take top ranked, 15% random explore (diversity rule)
+      if(Math.random()<0.15)return pickRandomIndex(from);
+      return ranked[0].i;
+    }
+    return pickRandomIndex(from);
+  }
+  function fypPickPrev(from){
+    // prev: second-best or previous in session stack
+    var s=state();
+    if(s.sessionOrder.length>=2){
+      // find previous key in videos
+      var prevKey=s.sessionOrder[s.sessionOrder.length-2];
+      for(var i=0;i<videos.length;i++){
+        if(postKey(videos[i],i)===prevKey&&i!==from)return i;
+      }
+    }
+    var ranked=rankedIndices(from);
+    if(ranked.length>1)return ranked[1].i;
+    return fypPickNext(from);
+  }
+
+  function flushDwell(reason){
+    if(lastIndex<0||!videos[lastIndex])return;
+    var ms=Date.now()-showStarted;
+    if(ms<200)return;
+    var s=state();
+    var v=videos[lastIndex];
+    var key=postKey(v,lastIndex);
+    var st=ensurePost(s,key);
+    st.watchMs+=ms;
+    st.lastShown=Date.now();
+    // completion heuristics
+    var pv=document.getElementById('postVideo');
+    if(pv&&!pv.hidden&&pv.duration&&isFinite(pv.duration)){
+      var ratio=pv.currentTime/pv.duration;
+      if(ratio>0.9||reason==='complete')st.completes+=1;
+      if(ms<1200&&ratio<0.25)st.skips+=1;
+    } else {
+      // image post: dwell > 4s counts as complete-ish, <1.2s skip
+      if(ms>=4000)st.completes+=1;
+      if(ms<1200)st.skips+=1;
+    }
+    // tag affinity from positive dwell
+    if(ms>=2500){
+      extractTags(v).forEach(function(t){
+        s.tags[t]=(s.tags[t]||0)+1;
+      });
+    }
+    if(ms<1200){
+      extractTags(v).forEach(function(t){
+        s.tags[t]=(s.tags[t]||0)-0.5;
+      });
+    }
+    saveState(s);
+  }
+
+  function fypOnShow(i){
+    flushDwell('navigate');
+    lastIndex=i;
+    showStarted=Date.now();
+    if(!videos[i])return;
+    var s=state();
+    var key=postKey(videos[i],i);
+    var st=ensurePost(s,key);
+    st.impressions+=1;
+    st.lastShown=Date.now();
+    s.sessionOrder.push(key);
+    if(s.sessionOrder.length>40)s.sessionOrder=s.sessionOrder.slice(-40);
+    markSessionSeen(key);
+    saveState(s);
+    showWhy(videos[i],st);
+  }
+
+  // Why this post chip
+  var why=document.createElement('div');
+  why.className='fyp-why';
+  why.id='fypWhy';
+  var feed=document.getElementById('feed');
+  if(feed)feed.appendChild(why);
+  function showWhy(v,st){
+    if(!why)return;
+    var parts=[];
+    if(st&&st.completes>0)parts.push('Similar posts you finished');
+    var tags=extractTags(v);
+    if(tags.length)parts.push('Topics: '+tags.slice(0,3).map(function(t){return '#'+t}).join(' '));
+    if(v&&v.cloudPost)parts.push('From shared feed');
+    if(!parts.length)parts.push('For You · personalized for this device');
+    why.textContent=parts[0];
+    why.classList.add('show');
+    clearTimeout(why._t);
+    why._t=setTimeout(function(){why.classList.remove('show')},3200);
+  }
+
+  // Track video complete
+  var pv=document.getElementById('postVideo');
+  if(pv){
+    pv.addEventListener('ended',function(){flushDwell('complete')});
+  }
+
+  // Engagement hooks
+  function bump(kind){
+    if(lastIndex<0||!videos[lastIndex])return;
+    var s=state();
+    var key=postKey(videos[lastIndex],lastIndex);
+    var st=ensurePost(s,key);
+    if(kind==='like')st.likes+=1;
+    if(kind==='share')st.shares+=1;
+    if(kind==='save')st.saves+=1;
+    if(kind==='comment')st.comments+=1;
+    extractTags(videos[lastIndex]).forEach(function(t){s.tags[t]=(s.tags[t]||0)+2});
+    saveState(s);
+  }
+
+  // Wrap social actions
+  if(typeof window.toggleLike==='function'){
+    var _like=window.toggleLike;
+    window.toggleLike=function(){var r=_like.apply(this,arguments);try{bump('like')}catch(e){}return r};
+  }
+  if(typeof window.toggleBookmark==='function'){
+    var _bm=window.toggleBookmark;
+    window.toggleBookmark=function(){var r=_bm.apply(this,arguments);try{bump('save')}catch(e){}return r};
+  }
+  if(typeof window.shareCurrentVideo==='function'){
+    var _sh=window.shareCurrentVideo;
+    window.shareCurrentVideo=function(){try{bump('share')}catch(e){}return _sh.apply(this,arguments)};
+  }
+  // Not interested from share sheet
+  var ni=document.getElementById('ttNotInterested');
+  if(ni){
+    ni.addEventListener('click',function(){
+      if(lastIndex<0||!videos[lastIndex])return;
+      var s=state();
+      var key=postKey(videos[lastIndex],lastIndex);
+      var st=ensurePost(s,key);
+      st.notInt+=1;
+      if(s.notInterested.indexOf(key)<0)s.notInterested.push(key);
+      extractTags(videos[lastIndex]).forEach(function(t){s.tags[t]=(s.tags[t]||0)-3});
+      saveState(s);
+      flushDwell('not_interested');
+    });
+  }
+
+  // Feed tabs → mode
+  document.querySelectorAll('.feed-tabs button').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var t=(btn.textContent||'').trim().toLowerCase();
+      if(t.indexOf('for you')>=0)mode='foryou';
+      else if(t.indexOf('following')>=0)mode='following';
+      else if(t.indexOf('community')>=0)mode='community';
+      try{toast(mode==='foryou'?'For You · ranked for you':mode==='following'?'Following focus':'Community posts boosted')}catch(e){}
+    });
+  });
+  // also patch showFeedTab
+  if(typeof window.showFeedTab==='function'){
+    var _sft=window.showFeedTab;
+    window.showFeedTab=function(button){
+      _sft(button);
+      var t=(button&&button.textContent||'').trim().toLowerCase();
+      if(t.indexOf('for you')>=0)mode='foryou';
+      else if(t.indexOf('following')>=0)mode='following';
+      else if(t.indexOf('community')>=0)mode='community';
+    };
+  }
+
+  // Comment form
+  var form=document.querySelector('.comment-input');
+  if(form){
+    form.addEventListener('submit',function(){try{bump('comment')}catch(e){}});
+  }
+
+  // Flush on hide
+  document.addEventListener('visibilitychange',function(){
+    if(document.visibilityState==='hidden')flushDwell('hidden');
+  });
+  window.addEventListener('beforeunload',function(){flushDwell('unload')});
+
+  // Export
+  window.fypPickNext=fypPickNext;
+  window.fypPickPrev=fypPickPrev;
+  window.fypOnShow=fypOnShow;
+  window.fypBump=bump;
+  window.fypGetState=state;
+  window.fypReset=function(){try{localStorage.removeItem(STORE);sessionStorage.removeItem(SESSION_SEEN)}catch(e){}toast('For You data cleared')};
+
+  // Initial impression
+  setTimeout(function(){try{fypOnShow(index)}catch(e){}},400);
 })();
 </script>
 
