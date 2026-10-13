@@ -2145,6 +2145,19 @@ html,body{background:#000;overscroll-behavior:none}
 .tt-views{position:absolute;left:6px;bottom:6px;display:flex;align-items:center;gap:4px;color:#fff;font-size:13px;font-weight:700;text-shadow:0 1px 3px #000c}
 .tt-views svg{width:13px;height:13px;fill:#fff}
 .tt-pinned{position:absolute;left:6px;top:6px;padding:2px 7px;border-radius:3px;background:#fe2c55;color:#fff;font-size:12px;font-weight:700}
+/* TikTok-style top bar */
+#profilePanel .profile-top{display:none}
+.tt-topbar{display:flex;align-items:center;justify-content:space-between;max-width:900px;margin:0 auto 18px;padding-top:env(safe-area-inset-top,0px)}
+.tt-topbar>div{display:flex;align-items:center;gap:20px}
+.tt-topbar button{position:relative;background:none;border:0;padding:4px;color:#fff;display:grid;place-items:center}
+.tt-topbar svg{width:27px;height:27px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tt-topbar .tt-badge{position:absolute;top:-6px;right:-8px;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:#fe2c55;color:#fff;font-size:12px;font-weight:700;display:grid;place-items:center}
+.tt-menu{position:fixed;inset:0;z-index:60;background:#0008;display:none;align-items:flex-end;justify-content:center}
+.tt-menu.open{display:flex}
+.tt-menu-card{width:100%;max-width:520px;background:#1c1c21;border-radius:16px 16px 0 0;padding:8px 0 calc(14px + env(safe-area-inset-bottom,0px))}
+.tt-menu-card:before{content:"";display:block;width:36px;height:4px;margin:6px auto 10px;border-radius:4px;background:#ffffff35}
+.tt-menu-card button{display:block;width:100%;text-align:left;padding:15px 22px;background:none;border:0;color:#fff;font-size:16px;font-weight:600}
+.tt-menu-card button.tt-menu-close{color:#8a8b91;border-top:1px solid #ffffff14;margin-top:6px;text-align:center}
 </style>
 <script id="tt-profile-js">
 (function(){
@@ -2183,9 +2196,41 @@ html,body{background:#000;overscroll-behavior:none}
     var st=document.querySelector('#profilePanel .profile-stats');
     if(st&&!document.getElementById('ttProfileLikes')){var s=document.createElement('span');s.id='ttProfileLikes';s.innerHTML='<b>0</b> Likes';st.appendChild(s)}
   }
+  function buildTop(){
+    var panel=document.getElementById('profilePanel');if(!panel)return;
+    if(!document.getElementById('ttTopbar')){
+      var bar=document.createElement('div');bar.id='ttTopbar';bar.className='tt-topbar';
+      bar.innerHTML='<div><button type="button" id="ttTopBack" aria-label="Back to feed"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg></button><button type="button" id="ttTopEdit" aria-label="Edit profile"><svg viewBox="0 0 24 24"><path d="M4 20l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L8 19l-4 1z"/><path d="m14.5 6.5 3 3"/></svg></button></div>'+
+        '<div><button type="button" id="ttTopViews" aria-label="Profile views"><svg viewBox="0 0 24 24"><ellipse cx="8" cy="8" rx="3" ry="5"/><path d="M6 15.5h4v2a2 2 0 0 1-4 0z"/><ellipse cx="16.5" cy="10" rx="3" ry="5"/><path d="M14.5 17.5h4v2a2 2 0 0 1-4 0z"/></svg></button>'+
+        '<button type="button" id="ttTopFriends" aria-label="Find friends"><svg viewBox="0 0 24 24"><circle cx="10" cy="8" r="4"/><path d="M2.5 21v-1.5a6 6 0 0 1 6-6H11M18 14v6M15 17h6"/></svg></button>'+
+        '<button type="button" id="ttTopMenu" aria-label="Settings and privacy"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg><span class="tt-badge" id="ttTopBadge" hidden></span></button></div>';
+      panel.insertBefore(bar,panel.firstChild);
+      document.getElementById('ttTopBack').onclick=function(){closeProfile()};
+      document.getElementById('ttTopEdit').onclick=function(){showProfileEditor();var ed=document.getElementById('profileEditor');if(ed&&!ed.hidden)ed.scrollIntoView({behavior:'smooth',block:'center'})};
+      document.getElementById('ttTopViews').onclick=function(){toast('Profile views are coming soon')};
+      document.getElementById('ttTopFriends').onclick=function(){toast('Find friends is coming soon')};
+      var menu=document.createElement('div');menu.className='tt-menu';menu.id='ttMenu';
+      menu.innerHTML='<div class="tt-menu-card" role="dialog" aria-label="Settings and privacy"><button type="button" data-a="edit">Edit profile</button><button type="button" data-a="share">Share profile</button><button type="button" data-a="auth" id="ttMenuAuth">Sign in</button><button type="button" class="tt-menu-close" data-a="close">Close</button></div>';
+      panel.appendChild(menu);
+      function closeMenu(){menu.classList.remove('open')}
+      menu.addEventListener('click',function(e){
+        if(e.target===menu){closeMenu();return}
+        var a=e.target.getAttribute&&e.target.getAttribute('data-a');if(!a)return;closeMenu();
+        if(a==='edit')document.getElementById('ttTopEdit').click();
+        else if(a==='share')shareProfile();
+        else if(a==='auth')handleAuthAction();
+      });
+      document.getElementById('ttTopMenu').onclick=function(){
+        var au=document.getElementById('ttMenuAuth');if(au)au.textContent=(typeof cloudUser!=='undefined'&&cloudUser)?'Sign out':'Sign in';
+        menu.classList.add('open')};
+    }
+    var src=document.querySelector('.mobile-nav .nav-label-badge i'),badge=document.getElementById('ttTopBadge');
+    var t=src?src.textContent.trim():'';if(badge){badge.textContent=t;badge.hidden=!t||t==='0'}
+  }
   function enhance(){
     try{
-      buildExtra();
+      buildExtra();buildTop();
+      var nameEl=document.getElementById('profileDisplayName');if(nameEl)nameEl.textContent='देउडालय';
       var total=videos.reduce(function(a,v){return a+(Number(v.likes)||0)},0);
       var lb=document.querySelector('#ttProfileLikes b');if(lb)lb.textContent=compact(total);
       var p=pins();
