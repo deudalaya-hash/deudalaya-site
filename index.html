@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preload" as="image" href="dashain.webp" fetchpriority="high"><meta name="theme-color" content="#101014">
 <title>देउडालय</title>
 <meta name="application-name" content="देउडालय">
-<meta name="deudalaya-version" content="2026.10.13.15">
+<meta name="deudalaya-version" content="2026.10.13.16">
 <meta name="apple-mobile-web-app-title" content="देउडालय">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest.webmanifest">
@@ -354,7 +354,7 @@ installAction.addEventListener('click',async()=>{
     }
   },900);
 });
-document.addEventListener('keydown',event=>{if(!gateOpened&&event.key==='Tab'){event.preventDefault();installAction.focus()}if(!gateOpened&&event.key==='Escape')event.preventDefault()});/* gateContinue removed */if(isStandalone()){openInstalledGate()}else{/* continue-in-browser disabled */}function showFeedTab(button){document.querySelectorAll('.feed-tabs button').forEach(item=>item.classList.remove('selected'));button.classList.add('selected')}function openFeedSearch(){const panel=document.getElementById('feedSearchPanel');panel.classList.toggle('visible');if(panel.classList.contains('visible'))document.getElementById('feedSearchInput').focus()}function submitFeedSearch(){const input=document.getElementById('feedSearchInput'),search=document.getElementById('search');if(search){search.value=input.value;search.dispatchEvent(new Event('input',{bubbles:true}));search.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}))}}if(isStandalone()){openInstalledGate()}else{document.body.classList.add('gate-locked');installAction.focus()}const launchSplash=document.getElementById('launchSplash');if(launchSplash&&isStandalone()){launchSplash.hidden=true}else if(launchSplash){const splashStarted=performance.now();let splashDismissed=false;const dismissLaunchSplash=()=>{if(splashDismissed)return;splashDismissed=true;setTimeout(()=>launchSplash.classList.add('fade-out'),Math.max(0,650-(performance.now()-splashStarted)))};if(document.readyState==='complete')dismissLaunchSplash();else window.addEventListener('load',dismissLaunchSplash,{once:true});setTimeout(dismissLaunchSplash,3000)}const siteBuildVersion='2026.10.13.15';
+document.addEventListener('keydown',event=>{if(!gateOpened&&event.key==='Tab'){event.preventDefault();installAction.focus()}if(!gateOpened&&event.key==='Escape')event.preventDefault()});/* gateContinue removed */if(isStandalone()){openInstalledGate()}else{/* continue-in-browser disabled */}function showFeedTab(button){document.querySelectorAll('.feed-tabs button').forEach(item=>item.classList.remove('selected'));button.classList.add('selected')}function openFeedSearch(){const panel=document.getElementById('feedSearchPanel');panel.classList.toggle('visible');if(panel.classList.contains('visible'))document.getElementById('feedSearchInput').focus()}function submitFeedSearch(){const input=document.getElementById('feedSearchInput'),search=document.getElementById('search');if(search){search.value=input.value;search.dispatchEvent(new Event('input',{bubbles:true}));search.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}))}}if(isStandalone()){openInstalledGate()}else{document.body.classList.add('gate-locked');installAction.focus()}const launchSplash=document.getElementById('launchSplash');if(launchSplash&&isStandalone()){launchSplash.hidden=true}else if(launchSplash){const splashStarted=performance.now();let splashDismissed=false;const dismissLaunchSplash=()=>{if(splashDismissed)return;splashDismissed=true;setTimeout(()=>launchSplash.classList.add('fade-out'),Math.max(0,650-(performance.now()-splashStarted)))};if(document.readyState==='complete')dismissLaunchSplash();else window.addEventListener('load',dismissLaunchSplash,{once:true});setTimeout(dismissLaunchSplash,3000)}const siteBuildVersion='2026.10.13.16';
 const updateNotice=document.getElementById('updateNotice');
 const UPDATE_DISMISS_KEY='deudalaya-update-dismissed';
 const UPDATE_LATER_KEY='deudalaya-update-later';
@@ -374,6 +374,7 @@ function showUpdateNotice(remote){
   if(ver)ver.textContent=(remote.version?('New: '+remote.version+' · '):'')+'You have: '+siteBuildVersion;
   updateNotice.hidden=false;
   updateNotice.classList.add('update-banner-pulse');
+  window.dispatchEvent(new CustomEvent('deudalaya:update-available',{detail:remote}));
 }
 function hideUpdateNotice(){if(updateNotice){updateNotice.hidden=true;updateNotice.classList.remove('update-banner-pulse')}}
 async function checkForSiteUpdate(opts){
@@ -387,7 +388,7 @@ async function checkForSiteUpdate(opts){
       return null;
     }
     const remote=await response.json();
-    if(remote.version&&remote.version!==siteBuildVersion){
+    if(remote.version&&compareVersionNumbers(remote.version,siteBuildVersion)>0){
       showUpdateNotice(remote);
       if(opts.manual)showCheckToast('Update available', remote.version+' is ready.');
       return remote;
@@ -398,6 +399,12 @@ async function checkForSiteUpdate(opts){
     if(opts.manual)showCheckToast('Could not check', 'Offline or version file missing.');
     return null;
   }
+}
+function compareVersionNumbers(left,right){
+  const a=String(left||'').split(/[^0-9]+/).filter(Boolean).map(Number);
+  const b=String(right||'').split(/[^0-9]+/).filter(Boolean).map(Number);
+  for(let i=0;i<Math.max(a.length,b.length);i++){const x=a[i]||0,y=b[i]||0;if(x!==y)return x>y?1:-1}
+  return 0;
 }
 function showCheckToast(title, msg){
   const el=document.getElementById('updateCheckToast');
@@ -468,7 +475,7 @@ setInterval(function(){if(document.visibilityState==='visible')checkForSiteUpdat
 document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')checkForSiteUpdate()});
 window.checkForSiteUpdate=checkForSiteUpdate;
 window.applySiteUpdate=applySiteUpdate;
-</script><script src="social.js?v=2026.10.13.15"></script>
+</script><script src="social.js?v=2026.10.13.16"></script>
 <!-- ADDED: TikTok-style grid of all posts (new, standalone; no existing code changed) -->
 <style>
 .gridview{position:fixed;inset:0;z-index:9000;background:#101014;color:#fff;display:none;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
@@ -1388,23 +1395,28 @@ fix();
     };
   }
 
-  // Update available → also push notification entry
-  if(typeof window.showUpdateNotice==='function'){
-    // already have update system; watch banner visibility
+  // Create one unread inbox entry per available site version so the notification badge updates.
+  function notifyUpdateAvailable(remote){
+    remote=remote||{};
+    var version=String(remote.version||'new');
+    var items=loadAll();
+    var existing=items.find(function(n){return n.type==='system'&&n.updateVersion==='new'});
+    if(version!=='new'&&existing){existing.updateVersion=version;saveAll(items);return}
+    if(items.some(function(n){return n.type==='system'&&n.updateVersion===version}))return;
+    var versionText=remote.version?' ('+remote.version+')':'';
+    pushLocal({type:'system',title:'देउडालय अपडेट उपलब्ध',body:'A new version'+versionText+' is ready. Open the update banner to install it.',updateVersion:version});
+    showBrowserNotification('देउडालय अपडेट उपलब्ध','A new version'+versionText+' is ready.');
   }
+  window.addEventListener('deudalaya:update-available',function(event){notifyUpdateAvailable(event.detail)});
   var upd=document.getElementById('updateNotice');
   if(upd){
     var obs=new MutationObserver(function(){
       if(!upd.hidden){
-        var items=loadAll();
-        var exists=items.some(function(n){return n.type==='system'&&n.title&&n.title.indexOf('अपडेट')>=0&&(Date.now()-n.ts)<86400000});
-        if(!exists){
-          pushLocal({type:'system',title:'देउडालय अपडेट उपलब्ध',body:'A new version is ready. Open notifications or the update banner.'});
-          showBrowserNotification('देउडालय अपडेट उपलब्ध','A new version is ready.');
-        }
+        notifyUpdateAvailable({version:document.getElementById('updateVersions')?.textContent.match(/New:\s*([^ ·]+)/)?.[1]||'new'});
       }
     });
     obs.observe(upd,{attributes:true,attributeFilter:['hidden']});
+    if(!upd.hidden)notifyUpdateAvailable({version:document.getElementById('updateVersions')?.textContent.match(/New:\s*([^ ·]+)/)?.[1]||'new'});
   }
 
   updateBadges();
