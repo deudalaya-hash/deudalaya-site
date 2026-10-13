@@ -224,6 +224,12 @@
     const avatar = document.getElementById('avatar');
     avatar.src = post.profile?.avatar_path ? publicAvatar(post.profile) : (String(post.avatar || '').startsWith('http') ? post.avatar : asset('deudalaya_icon.webp'));
     avatar.style.objectFit = 'cover';
+    const disc = document.getElementById('disc');
+    if (disc) {
+      disc.src = post.profile?.avatar_path ? publicAvatar(post.profile) : asset('deudalaya_icon.webp');
+      disc.style.objectFit = 'cover';
+      disc.style.background = 'transparent';
+    }
     document.getElementById('likes').textContent = formatCount(post.likes);
     document.getElementById('like').classList.toggle('on', liked);
     document.getElementById('like').setAttribute('aria-pressed', String(liked));

@@ -293,4 +293,28 @@ function fill(){
 window.openProfile=function(){var r=orig.apply(this,arguments);try{fill()}catch(e){console.warn(e)}return r};
 })();
 </script>
+
+<!-- ADDED: remember that the app is installed so the install gate does not show again on this device/browser. Original gate code is unchanged. -->
+<script>
+(function(){
+var KEY='deudalaya-app-installed';
+function get(){try{return localStorage.getItem(KEY)==='1'}catch(e){return false}}
+function set(){try{localStorage.setItem(KEY,'1')}catch(e){}}
+function skipGate(){
+ try{gateOpened=true}catch(e){}
+ var g=document.getElementById('installGate');
+ if(g){g.hidden=true;g.setAttribute('aria-hidden','true')}
+ document.body.classList.remove('gate-locked')}
+var standalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+if(standalone)set();
+window.addEventListener('appinstalled',set);
+if(get()){skipGate();return}
+var action=document.getElementById('installAction');
+if(action&&action.parentNode){
+ var b=document.createElement('button');b.type='button';b.id='alreadyInstalled';b.textContent='I already installed the app';
+ b.style.cssText='display:block;margin:14px auto 0;background:none;border:0;color:#ddd;text-decoration:underline;cursor:pointer;font:inherit;font-size:13px;padding:6px 10px';
+ b.addEventListener('click',function(){set();skipGate()});
+ action.parentNode.insertBefore(b,action.nextSibling)}
+})();
+</script>
 </body></html>
