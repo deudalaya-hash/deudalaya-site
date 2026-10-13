@@ -154,9 +154,6 @@ document.addEventListener('keydown',e=>{if(e.key==='ArrowDown'){e.preventDefault
 let deferredInstallPrompt=null;const installGate=document.getElementById('installGate'),installAction=document.getElementById('installAction'),installHint=document.getElementById('installHint');const isStandalone=()=>window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;let gateOpened=false;function openInstalledGate(){if(gateOpened)return;gateOpened=true;installGate.classList.add('opening');installGate.setAttribute('aria-hidden','true');document.body.classList.remove('gate-locked');setTimeout(()=>{installGate.hidden=true},1450)}function showInstallInstructions(){const ios=/iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);installHint.textContent=ios?'Tap Share, choose “Add to Home Screen,” then tap Add.':'Open your browser menu and choose “Install app” or “Add to Home screen.”';installAction.textContent=ios?'How to install':'Install from browser menu';installAction.onclick=()=>{installHint.textContent=ios?'In Safari, tap the Share icon, then “Add to Home Screen.”':'In Chrome, tap ⋮, then “Install app” or “Add to Home screen.”'};}window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();deferredInstallPrompt=event});window.addEventListener('appinstalled',()=>{deferredInstallPrompt=null;openInstalledGate()});installAction.addEventListener('click',async()=>{if(deferredInstallPrompt){deferredInstallPrompt.prompt();const choice=await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;if(choice.outcome==='accepted'){installHint.textContent='Finish installing देउडालय to open the gate.'}else{installHint.textContent='Installation was cancelled. Tap Install to try again.'}return}showInstallInstructions()});document.addEventListener('keydown',event=>{if(!gateOpened&&event.key==='Tab'){event.preventDefault();installAction.focus()}if(!gateOpened&&event.key==='Escape')event.preventDefault()});function showFeedTab(button){document.querySelectorAll('.feed-tabs button').forEach(item=>item.classList.remove('selected'));button.classList.add('selected')}function openFeedSearch(){const panel=document.getElementById('feedSearchPanel');panel.classList.toggle('visible');if(panel.classList.contains('visible'))document.getElementById('feedSearchInput').focus()}function submitFeedSearch(){const input=document.getElementById('feedSearchInput'),search=document.getElementById('search');if(search){search.value=input.value;search.dispatchEvent(new Event('input',{bubbles:true}));search.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}))}}if(isStandalone()){openInstalledGate()}else{document.body.classList.add('gate-locked');installAction.focus()}const launchSplash=document.getElementById('launchSplash');if(launchSplash&&isStandalone()){launchSplash.hidden=true}else if(launchSplash){const splashStarted=performance.now();let splashDismissed=false;const dismissLaunchSplash=()=>{if(splashDismissed)return;splashDismissed=true;setTimeout(()=>launchSplash.classList.add('fade-out'),Math.max(0,650-(performance.now()-splashStarted)))};if(document.readyState==='complete')dismissLaunchSplash();else window.addEventListener('load',dismissLaunchSplash,{once:true});setTimeout(dismissLaunchSplash,3000)}const siteBuildVersion='2026.10.13.13';const updateNotice=document.getElementById('updateNotice');async function checkForSiteUpdate(){try{const checkUrl=new URL('version.json',document.baseURI);checkUrl.searchParams.set('check',String(Date.now()));const response=await fetch(checkUrl,{cache:'no-store',credentials:'same-origin'});if(!response.ok)return;const remote=await response.json();if(remote.version&&remote.version!==siteBuildVersion){updateNotice.hidden=false}}catch{}}document.getElementById('applyUpdate').addEventListener('click',()=>{const fresh=new URL(location.href);fresh.searchParams.set('refresh',String(Date.now()));location.replace(fresh.href)});document.getElementById('dismissUpdate').addEventListener('click',()=>{updateNotice.hidden=true});checkForSiteUpdate();setInterval(()=>{if(document.visibilityState==='visible')checkForSiteUpdate()},90000);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')checkForSiteUpdate()});</script><script src="social.js?v=2026.10.13.13"></script>
 <!-- ADDED: TikTok-style grid of all posts (new, standalone; no existing code changed) -->
 <style>
-.gridfab{position:fixed;z-index:60;right:24px;bottom:24px;width:48px;height:48px;border-radius:50%;border:1px solid #ffffff40;background:#101014cc;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(6px);box-shadow:0 6px 24px #0008;padding:0}
-.gridfab svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2}
-body.gate-locked .gridfab{display:none}
 .gridview{position:fixed;inset:0;z-index:9000;background:#101014;color:#fff;display:none;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
 .gridview.open{display:flex}
 .gridview-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid #ffffff1f;font-weight:700}
@@ -167,15 +164,13 @@ body.gate-locked .gridfab{display:none}
 .gridview-item img,.gridview-item video{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
 .gridview-item .gv-play{position:absolute;right:6px;bottom:6px;background:#0009;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:10px}
 @media(max-width:700px){
-.gridfab{right:auto;left:10px;bottom:auto;top:50%;transform:translateY(-50%);width:42px;height:42px}
 .gridview-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 </style>
-<button class="gridfab" id="gridFab" type="button" aria-label="Show all posts as a grid" title="Grid view"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></button>
 <section class="gridview" id="gridView" role="dialog" aria-modal="true" aria-label="All posts" aria-hidden="true"><div class="gridview-top"><button type="button" id="gridClose">← Back to feed</button><span id="gridCount">Posts</span><button type="button" id="gridClose2" aria-label="Close">✕</button></div><div class="gridview-body"><div class="gridview-grid" id="gridViewGrid"></div></div></section>
 <script>
 (function(){
-var view=document.getElementById('gridView'),grid=document.getElementById('gridViewGrid'),fab=document.getElementById('gridFab');
+var view=document.getElementById('gridView'),grid=document.getElementById('gridViewGrid');
 function thumbSrc(v){try{if(!v.image)return '';return v.image.indexOf('photo-')===0?photo(v.image,400):asset(v.image)}catch(e){return v.image||''}}
 function openGrid(){
  grid.innerHTML='';
@@ -189,7 +184,15 @@ function openGrid(){
   grid.appendChild(b)});
  view.classList.add('open');view.setAttribute('aria-hidden','false')}
 function closeGrid(){view.classList.remove('open');view.setAttribute('aria-hidden','true');grid.innerHTML=''}
-fab.addEventListener('click',openGrid);
+var icon='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>';
+function addNavButtons(){
+ var mn=document.querySelector('.mobile-nav'),dn=document.querySelector('nav.nav');
+ [[mn,''],[dn,'nav-item']].forEach(function(p){
+  var host=p[0];if(!host||host.querySelector('.grid-nav'))return;
+  var prof=host.querySelector('button[onclick="openProfile()"]');if(!prof)return;
+  var b=document.createElement('button');b.type='button';b.className=(p[1]+' grid-nav').trim();b.innerHTML=icon+'Grid';b.addEventListener('click',openGrid);
+  host.insertBefore(b,prof)})}
+addNavButtons();
 document.getElementById('gridClose').addEventListener('click',closeGrid);
 document.getElementById('gridClose2').addEventListener('click',closeGrid);
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&view.classList.contains('open'))closeGrid()});
