@@ -132,6 +132,28 @@
 @keyframes updPulse{0%,100%{box-shadow:0 12px 38px #0009}50%{box-shadow:0 12px 38px #ed174c55}}
 </style>
 
+
+<style id="installing-state-styles">
+#installAction.installing{pointer-events:none;opacity:.95;position:relative;letter-spacing:.02em}
+#installAction.installing .ia-label{display:inline-flex;align-items:center;justify-content:center;gap:10px}
+#installAction .ia-spin{display:none;width:18px;height:18px;border:2px solid #ffffff55;border-top-color:#fff;border-radius:50%;animation:iaSpin .7s linear infinite;flex:none}
+#installAction.installing .ia-spin{display:inline-block}
+#installAction .ia-dots::after{content:"";animation:iaDots 1.2s steps(4,end) infinite}
+@keyframes iaSpin{to{transform:rotate(360deg)}}
+@keyframes iaDots{0%{content:""}25%{content:"."}50%{content:".."}75%{content:"..."}100%{content:""}}
+.gate-install.installing-mode #installHint{color:#f0e6d0}
+@media(prefers-reduced-motion:reduce){
+  #installAction .ia-spin{animation:none;border-top-color:#fff}
+  #installAction .ia-dots::after{content:"...";animation:none}
+}
+</style>
+<style id="disc-no-spin">
+.creator-disc,.creator-disc img{animation:none!important;transform:none!important}
+.creator-disc{cursor:pointer}
+.creator-disc span{cursor:pointer;pointer-events:auto}
+.creator-disc.following span{background:#25f4ee!important;color:#000!important;font-size:14px!important}
+.creator-disc.following span::before{content:""; }
+</style>
 </head>
 <body>
 <div class="launch-splash" id="launchSplash" aria-label="देउडालय खोलिँदैछ"><img src="assets/deudalaya-icon-180.png" alt="देउडालय" width="180" height="180" fetchpriority="high"><span>देउडालय</span></div>
@@ -139,8 +161,8 @@
 
  <header class="topbar"><div class="brand"><img src="assets/inline-media/aa31fbd9abbab07d8a39.webp" alt="देउडालय logo"><span>देउडालय</span></div><label class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="search" placeholder="Search videos, creators, sounds"/><span style="color:#555;font-size:12px">⌘ K</span></label><button class="login" id="topAuthButton" type="button" onclick="handleAuthAction()">Sign in</button></header>
  <nav class="nav"><button class="nav-item active"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1z"/></svg>For you</button><button class="nav-item" onclick="nextVideo()"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg>Following</button><button class="nav-item" onclick="toast('Explore is ready for you')"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 7v8M7 11h8"/></svg>Explore</button><button class="nav-item" type="button" onclick="requestVideoUpload()"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Add video</button><button class="nav-item" onclick="toggleComments()"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8z"/></svg>Inbox</button><button class="nav-item" onclick="openProfile()"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/></svg>Profile</button><div class="nav-divider"></div><div class="nav-label">Following accounts</div><div id="suggestions"></div><button class="nav-item followed" onclick="toast('You’re all caught up')">See all</button><div class="nav-divider"></div><div class="nav-label">Discover</div><div class="trending"><button class="tag-chip"># travel</button><button class="tag-chip"># recipes</button><button class="tag-chip"># streetstyle</button></div></nav>
- <main class="main"><div class="feed-tabs"><button type="button" class="feed-live" aria-label="Live"><svg viewBox="0 0 34 34" aria-hidden="true"><path d="M8 6 12 3m10 3-4-3M5 9h24v16H5zM12 29h10"/></svg><small>LIVE</small></button><button type="button" onclick="showFeedTab(this)">Community</button><button type="button" onclick="showFeedTab(this)">Following</button><button type="button" class="selected" onclick="showFeedTab(this)">For You</button><button type="button" class="feed-search" aria-label="Search" onclick="openFeedSearch()"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></button></div><div class="feed-search-panel" id="feedSearchPanel"><input id="feedSearchInput" type="search" placeholder="Search देउडालय"><button type="button" onclick="submitFeedSearch()">Search</button></div><div class="feed-wrap" id="feed"><div class="video" id="video"><img class="post-image" id="postImage" src="dashain.webp" alt="देउडालय दशैं २०८३ पोस्टर" loading="eager" decoding="async" fetchpriority="high"><video id="postVideo" playsinline loop preload="metadata" hidden></video></div><div class="vignette"></div><button class="play" onclick="togglePlay()"><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="m7 4 14 8-14 8z"/></svg></button><div class="video-copy"><div class="creator"><img class="avatar" id="avatar"/><span id="handle" role="link" tabindex="0"></span><button class="follow" id="follow" onclick="toggleFollow()">Follow</button></div><div class="caption" id="caption"></div><div class="mobile-music">♫ <span>Contains:</span> <span id="musicTitle">देउडालय — मौलिक धुन</span></div></div><div class="actions"><div class="creator-disc"><img class="avatar" id="disc" alt="Creator"><span aria-hidden="true">+</span></div><button class="action like" id="like" onclick="toggleLike()" aria-label="Like post" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8z"/></svg><span id="likes"></span></button><button class="action" onclick="toggleComments()"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8z"/></svg><span id="commentCount"></span></button><button class="action bookmark" id="bookmark" onclick="toggleBookmark()"><svg viewBox="0 0 24 24"><path d="M6 4h12v17l-6-4-6 4z"/></svg><span>Save</span></button><button class="action" onclick="shareCurrentVideo()"><svg viewBox="0 0 24 24"><path d="M4 11.5 20 4l-4.5 16-4.2-6.1L4 11.5Zm7.3 2.4L20 4"/></svg><span>Share</span></button></div><div class="progress"><i id="progress"></i></div></div><section class="comments" id="comments"><div class="comments-head"><div>Comments <span id="commentTitle"></span></div><button onclick="toggleComments()">✕</button></div><div class="comment-list" id="commentList"></div><form class="comment-input" onsubmit="addComment(event)"><input id="commentInput" placeholder="Add a comment…"/><button>Post</button></form></section></main>
-<section class="profile-panel" id="profilePanel"><div class="profile-top"><button onclick="closeProfile()">← Back to feed</button><span>Profile</span><button onclick="closeProfile()">✕</button></div><div class="profile-summary"><img id="profileAvatar" alt="Profile photo"><div><h2 id="profileDisplayName">देउडालय</h2><p id="profileUsername">@देउडालय</p><p class="profile-stats"><span><b id="profilePostCount">0</b> posts</span><span><b id="profileFollowerCount">0</b> followers</span><span><b id="profileFollowingCount">0</b> following</span></p><p class="profile-bio" id="profileBio">देउडालय — सुदूर - कर्णाली</p><div class="profile-buttons"><button class="profile-auth-button" id="profileAuthButton" type="button">Sign in</button><button class="profile-edit-button" id="editProfileButton" type="button" onclick="showProfileEditor()" hidden>Edit profile</button><button class="profile-auth-button" id="profileFollowButton" type="button" onclick="toggleProfileFollow()" hidden>Follow</button><button class="profile-edit-button" id="shareProfileButton" type="button" onclick="shareProfile()">Share profile</button><button class="profile-edit-button" id="checkUpdateButton" type="button" onclick="checkForSiteUpdate({manual:true})">Check for updates</button></div><small id="authStatusText"></small></div></div><form id="profileEditor" class="profile-editor" onsubmit="saveProfile(event)" hidden><h3>Edit profile</h3><label for="editDisplayName">Name</label><input id="editDisplayName" maxlength="60" required><label for="editUsername">Username</label><input id="editUsername" maxlength="24" pattern="[A-Za-z0-9._]{3,24}" required><small>3–24 letters, numbers, dots, or underscores</small><label for="editBio">Bio</label><textarea id="editBio" maxlength="300" rows="3"></textarea><label for="editAvatarFile">Profile photo</label><input id="editAvatarFile" type="file" accept="image/jpeg,image/png,image/webp"><button class="publish-button" type="submit">Save profile</button></form><div class="profile-tab">▦　Posts</div><div class="profile-grid" id="profileGrid"></div></section>
+ <main class="main"><div class="feed-tabs"><button type="button" class="feed-live" aria-label="Live"><svg viewBox="0 0 34 34" aria-hidden="true"><path d="M8 6 12 3m10 3-4-3M5 9h24v16H5zM12 29h10"/></svg><small>LIVE</small></button><button type="button" onclick="showFeedTab(this)">Community</button><button type="button" onclick="showFeedTab(this)">Following</button><button type="button" class="selected" onclick="showFeedTab(this)">For You</button><button type="button" class="feed-search" aria-label="Search" onclick="openFeedSearch()"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></button></div><div class="feed-search-panel" id="feedSearchPanel"><input id="feedSearchInput" type="search" placeholder="Search देउडालय"><button type="button" onclick="submitFeedSearch()">Search</button></div><div class="feed-wrap" id="feed"><div class="video" id="video"><img class="post-image" id="postImage" src="dashain.webp" alt="देउडालय दशैं २०८३ पोस्टर" loading="eager" decoding="async" fetchpriority="high"><video id="postVideo" playsinline loop preload="metadata" hidden></video></div><div class="vignette"></div><button class="play" onclick="togglePlay()"><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="m7 4 14 8-14 8z"/></svg></button><div class="video-copy"><div class="creator"><img class="avatar" id="avatar"/><span id="handle" role="link" tabindex="0"></span><button class="follow" id="follow" onclick="toggleFollow()">Follow</button></div><div class="caption" id="caption"></div><div class="mobile-music">♫ <span>Contains:</span> <span id="musicTitle">देउडालय — मौलिक धुन</span></div></div><div class="actions"><div class="creator-disc" id="creatorDisc" role="button" tabindex="0" aria-label="Follow"><img class="avatar" id="disc" alt="Creator"><span id="followPlus" aria-hidden="true">+</span></div><button class="action like" id="like" onclick="toggleLike()" aria-label="Like post" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8z"/></svg><span id="likes"></span></button><button class="action" onclick="toggleComments()"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8z"/></svg><span id="commentCount"></span></button><button class="action bookmark" id="bookmark" onclick="toggleBookmark()"><svg viewBox="0 0 24 24"><path d="M6 4h12v17l-6-4-6 4z"/></svg><span>Save</span></button><button class="action" onclick="shareCurrentVideo()"><svg viewBox="0 0 24 24"><path d="M4 11.5 20 4l-4.5 16-4.2-6.1L4 11.5Zm7.3 2.4L20 4"/></svg><span>Share</span></button></div><div class="progress"><i id="progress"></i></div></div><section class="comments" id="comments"><div class="comments-head"><div>Comments <span id="commentTitle"></span></div><button onclick="toggleComments()">✕</button></div><div class="comment-list" id="commentList"></div><form class="comment-input" onsubmit="addComment(event)"><input id="commentInput" placeholder="Add a comment…"/><button>Post</button></form></section></main>
+<section class="profile-panel" id="profilePanel"><div class="profile-top"><button onclick="closeProfile()">← Back to feed</button><span>Profile</span><button onclick="closeProfile()">✕</button></div><div class="profile-summary"><img id="profileAvatar" alt="Profile photo"><div><h2 id="profileDisplayName">देउडालय</h2><p id="profileUsername">@देउडालय</p><p class="profile-stats"><span><b id="profilePostCount">0</b> posts</span><span><b id="profileFollowerCount">0</b> followers</span><span><b id="profileFollowingCount">0</b> following</span></p><p class="profile-bio" id="profileBio">देउडालय — सुदूर - कर्णाली</p><div class="profile-buttons"><button class="profile-auth-button" id="profileAuthButton" type="button">Sign in</button><button class="profile-edit-button" id="editProfileButton" type="button" onclick="showProfileEditor()" hidden>Edit profile</button><button class="profile-auth-button" id="profileFollowButton" type="button" onclick="toggleProfileFollow()" hidden>Follow</button><button class="profile-edit-button" id="shareProfileButton" type="button" onclick="shareProfile()">Share profile</button></div><small id="authStatusText"></small></div></div><form id="profileEditor" class="profile-editor" onsubmit="saveProfile(event)" hidden><h3>Edit profile</h3><label for="editDisplayName">Name</label><input id="editDisplayName" maxlength="60" required><label for="editUsername">Username</label><input id="editUsername" maxlength="24" pattern="[A-Za-z0-9._]{3,24}" required><small>3–24 letters, numbers, dots, or underscores</small><label for="editBio">Bio</label><textarea id="editBio" maxlength="300" rows="3"></textarea><label for="editAvatarFile">Profile photo</label><input id="editAvatarFile" type="file" accept="image/jpeg,image/png,image/webp"><button class="publish-button" type="submit">Save profile</button></form><div class="profile-tab">▦　Posts</div><div class="profile-grid" id="profileGrid"></div></section>
  <aside class="right"><h3>Your profile</h3><div id="creators"></div><hr><h3>Trending now</h3><div class="trending"><button class="tag-chip"># slowmornings</button><button class="tag-chip"># weekendvibes</button><button class="tag-chip"># filmlook</button><button class="tag-chip"># citylights</button><button class="tag-chip"># homecooking</button></div><hr><h3>About देउडालय</h3><p style="font-size:12px;color:#888;line-height:1.6">देउडालय - सुदूर - कर्णाली</p><div class="right-foot">About · Newsroom · Contact · Careers<br>Terms · Privacy · Community Guidelines<br>© देउडालय</div></aside>
  <nav class="mobile-nav" aria-label="Primary"><button class="active" type="button"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1z"/></svg>Home</button><button type="button" onclick="nextVideo()"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><circle cx="17" cy="9" r="3"/><path d="M2 20c.4-4 2.8-6 7-6s6.6 2 7 6M15 15c3.8-.2 6 1.5 6.5 4.5"/></svg><span class="nav-label-badge">Friends <i>43</i></span></button><button class="mobile-add" type="button" onclick="requestVideoUpload()" aria-label="Create"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button><button type="button" onclick="toggleComments()"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8z"/></svg><span class="nav-label-badge">Inbox <i>99+</i></span></button><button type="button" onclick="openProfile()"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/></svg>Profile</button></nav>
 </div><aside class="update-notice" id="updateNotice" role="status" aria-live="polite" hidden>
@@ -158,7 +180,7 @@
 <aside class="update-notice update-notice-check" id="updateCheckToast" role="status" aria-live="polite" hidden>
 <div><strong id="updateCheckTitle">Checking…</strong><span id="updateCheckMsg"></span></div>
 <button type="button" id="dismissCheckToast" aria-label="Dismiss">×</button>
-</aside><section class="app-gate" id="installGate" role="dialog" aria-modal="true" aria-labelledby="installTitle"><div class="gate-door gate-door-left" aria-hidden="true"><div class="gate-ornament"><span>देउडा</span><b>✺</b></div></div><div class="gate-door gate-door-right" aria-hidden="true"><div class="gate-ornament"><span>लय</span><b>✺</b></div></div><div class="gate-lock gate-knob" aria-hidden="true"><span>देउडालय</span></div><div class="gate-install"><h2 id="installTitle">Install देउडालय App</h2><p id="installHint">Install the app to enter देउडालय. Installation is required to visit the site.</p><button type="button" id="installAction">Install देउडालय App</button></div></section><input id="videoUpload" type="file" accept="video/mp4,video/webm,image/jpeg,image/png,image/webp,.mp4,.webm,.jpg,.jpeg,.png,.webp" hidden><div class="upload-modal" id="uploadModal" aria-hidden="true"><form class="upload-card" onsubmit="publishUpload(event)"><button class="upload-close" type="button" onclick="closeUpload()" aria-label="Close">×</button><h2>Post a short video</h2><p class="upload-hint">Add a short MP4/WebM video or JPEG/PNG/WebP image. Videos can be up to 15 seconds and media up to 25 MB.</p><video id="uploadPreview" playsinline controls hidden></video><img id="uploadImagePreview" alt="Media preview" hidden><label class="caption-label" for="uploadCaption">Caption</label><textarea id="uploadCaption" maxlength="220" placeholder="Add a caption…"></textarea><label class="caption-label" for="uploadCategory">Category</label><select id="uploadCategory" required><option value="">Select a category</option><option>देउडा</option><option>लोकगीत तथा संगीत</option><option>कला तथा संस्कृति</option><option>चाडपर्व तथा जात्रा</option><option>गाउँघर तथा जनजीवन</option><option>पर्यटन तथा प्राकृतिक सौन्दर्य</option><option>भाषा तथा साहित्य</option><option>इतिहास तथा परम्परा</option><option>स्थानीय उत्पादन तथा सीप</option><option>युवा प्रतिभा</option><option>शिक्षा तथा अनुसन्धान</option><option>अन्य</option></select><label class="caption-label" for="uploadLocation">Location (optional)</label><input id="uploadLocation" type="text" maxlength="120" placeholder="Place or district"><label class="copyright-check"><input id="uploadRights" type="checkbox"> I have the right to upload this video.</label><div class="upload-meta"><span id="uploadDuration">Choose a video to preview</span><span id="captionCount">0 / 220</span></div><p class="upload-hint" id="uploadBackendNote">After upload, this media is stored online and visible to everyone in the shared देउडालय feed.</p><button class="publish-button" id="publishButton" type="submit" disabled>Add to feed</button></form></div><div class="auth-modal" id="authModal" aria-hidden="true"><form class="auth-card" onsubmit="submitAuth(event)"><button class="upload-close" type="button" onclick="closeAuth()" aria-label="Close">×</button><h2 id="authTitle">Sign in to देउडालय</h2><p id="authMessage">Sign in to like, comment, follow creators, and post.</p><div id="signupFields" hidden><label for="signupDisplayName">Name</label><input id="signupDisplayName" maxlength="60" autocomplete="name" placeholder="Your name"><label for="signupUsername">Username</label><input id="signupUsername" maxlength="24" pattern="[A-Za-z0-9._]{3,24}" autocomplete="username" placeholder="yourname"><small>3–24 letters, numbers, dots, or underscores</small></div><label for="authEmail">Email</label><input id="authEmail" type="email" autocomplete="email" required placeholder="you@example.com"><label for="authPassword">Password</label><input id="authPassword" type="password" autocomplete="current-password" minlength="8" required placeholder="At least 8 characters"><button class="publish-button" id="authSubmit" type="submit">Sign in</button><button class="auth-mode-toggle" type="button" id="authModeToggle" onclick="toggleAuthMode()">Create an account</button></form></div>
+</aside><section class="app-gate" id="installGate" role="dialog" aria-modal="true" aria-labelledby="installTitle"><div class="gate-door gate-door-left" aria-hidden="true"><div class="gate-ornament"><span>देउडा</span><b>✺</b></div></div><div class="gate-door gate-door-right" aria-hidden="true"><div class="gate-ornament"><span>लय</span><b>✺</b></div></div><div class="gate-lock gate-knob" aria-hidden="true"><span>देउडालय</span></div><div class="gate-install"><h2 id="installTitle">Install देउडालय App</h2><p id="installHint">Install the app to enter देउडालय. Installation is required to visit the site.</p><button type="button" id="installAction"><span class="ia-label"><span class="ia-spin" aria-hidden="true"></span><span class="ia-text">Install देउडालय App</span><span class="ia-dots" hidden></span></span></button></div></section><input id="videoUpload" type="file" accept="video/mp4,video/webm,image/jpeg,image/png,image/webp,.mp4,.webm,.jpg,.jpeg,.png,.webp" hidden><div class="upload-modal" id="uploadModal" aria-hidden="true"><form class="upload-card" onsubmit="publishUpload(event)"><button class="upload-close" type="button" onclick="closeUpload()" aria-label="Close">×</button><h2>Post a short video</h2><p class="upload-hint">Add a short MP4/WebM video or JPEG/PNG/WebP image. Videos can be up to 15 seconds and media up to 25 MB.</p><video id="uploadPreview" playsinline controls hidden></video><img id="uploadImagePreview" alt="Media preview" hidden><label class="caption-label" for="uploadCaption">Caption</label><textarea id="uploadCaption" maxlength="220" placeholder="Add a caption…"></textarea><label class="caption-label" for="uploadCategory">Category</label><select id="uploadCategory" required><option value="">Select a category</option><option>देउडा</option><option>लोकगीत तथा संगीत</option><option>कला तथा संस्कृति</option><option>चाडपर्व तथा जात्रा</option><option>गाउँघर तथा जनजीवन</option><option>पर्यटन तथा प्राकृतिक सौन्दर्य</option><option>भाषा तथा साहित्य</option><option>इतिहास तथा परम्परा</option><option>स्थानीय उत्पादन तथा सीप</option><option>युवा प्रतिभा</option><option>शिक्षा तथा अनुसन्धान</option><option>अन्य</option></select><label class="caption-label" for="uploadLocation">Location (optional)</label><input id="uploadLocation" type="text" maxlength="120" placeholder="Place or district"><label class="copyright-check"><input id="uploadRights" type="checkbox"> I have the right to upload this video.</label><div class="upload-meta"><span id="uploadDuration">Choose a video to preview</span><span id="captionCount">0 / 220</span></div><p class="upload-hint" id="uploadBackendNote">After upload, this media is stored online and visible to everyone in the shared देउडालय feed.</p><button class="publish-button" id="publishButton" type="submit" disabled>Add to feed</button></form></div><div class="auth-modal" id="authModal" aria-hidden="true"><form class="auth-card" onsubmit="submitAuth(event)"><button class="upload-close" type="button" onclick="closeAuth()" aria-label="Close">×</button><h2 id="authTitle">Sign in to देउडालय</h2><p id="authMessage">Sign in to like, comment, follow creators, and post.</p><div id="signupFields" hidden><label for="signupDisplayName">Name</label><input id="signupDisplayName" maxlength="60" autocomplete="name" placeholder="Your name"><label for="signupUsername">Username</label><input id="signupUsername" maxlength="24" pattern="[A-Za-z0-9._]{3,24}" autocomplete="username" placeholder="yourname"><small>3–24 letters, numbers, dots, or underscores</small></div><label for="authEmail">Email</label><input id="authEmail" type="email" autocomplete="email" required placeholder="you@example.com"><label for="authPassword">Password</label><input id="authPassword" type="password" autocomplete="current-password" minlength="8" required placeholder="At least 8 characters"><button class="publish-button" id="authSubmit" type="submit">Sign in</button><button class="auth-mode-toggle" type="button" id="authModeToggle" onclick="toggleAuthMode()">Create an account</button></form></div>
 <div class="toast" id="toast"></div>
 <script>
 const bundledAssets={'IMG_4271.webp':'assets/inline-media/05f592869426aed9791b.webp','deudalaya_icon.webp':'assets/inline-media/aa31fbd9abbab07d8a39.webp','IMG-20260711-WA0002.webp':'assets/inline-media/6d22b58ab6ca07084d08.webp','deuda-sanjh.webp':'assets/inline-media/bafe085c19cf2ddb893b.webp','IMG-20260721-WA0014.webp':'assets/inline-media/9b1c3be088c7f894319f.webp','IMG-20260724-WA0014.webp':'assets/inline-media/c064f0b085d8c40068f6.webp','community-01.webp':'assets/inline-media/eeac3e89e78a5620328d.webp','community-02.webp':'assets/inline-media/d8776edd86d248ce6db5.webp','community-03.webp':'assets/inline-media/8de13814f64c14a4136a.webp','community-04.webp':'assets/inline-media/9be50fcb605f199dfece.webp','community-05.webp':'assets/inline-media/69cfe22388e33e354aa5.webp','community-06.webp':'assets/inline-media/9be50fcb605f199dfece.webp','community-07.webp':'assets/inline-media/35ab2dbae766b8a2a7b8.webp','community-08.webp':'assets/inline-media/d33bc13beb8a98ba6848.webp','community-09.webp':'assets/inline-media/faea04a4fa823e376d3e.webp',"WhatsApp Image 2026-10-13 at 4.38.47 AM.jpeg":"deudalaya data/WhatsApp Image 2026-10-13 at 4.38.47 AM.jpeg","WhatsApp Image 2026-10-13 at 4.38.48 AM.jpeg":"deudalaya data/WhatsApp Image 2026-10-13 at 4.38.48 AM.jpeg","WhatsApp Image 2026-10-13 at 4.38.49 AM (1).jpeg":"deudalaya data/WhatsApp Image 2026-10-13 at 4.38.49 AM (1).jpeg","WhatsApp Image 2026-10-13 at 4.38.49 AM (2).jpeg":"deudalaya data/WhatsApp Image 2026-10-13 at 4.38.49 AM (2).jpeg","WhatsApp Image 2026-10-13 at 4.38.49 AM.jpeg":"deudalaya data/WhatsApp Image 2026-10-13 at 4.38.49 AM.jpeg","WhatsApp Image 2026-10-13 at 4.38.50 AM (1).jpeg":"deudalaya data/WhatsApp Image 2026-10-13 at 4.38.50 AM (1).jpeg","WhatsApp Image 2026-10-13 at 4.38.50 AM.jpeg":"deudalaya data/WhatsApp Image 2026-10-13 at 4.38.50 AM.jpeg","WhatsApp Image 2026-10-13 at 4.38.51 AM.jpeg":"deudalaya data/WhatsApp Image 2026-10-13 at 4.38.51 AM.jpeg","WhatsApp Image 2026-10-13 at 4.38.55 AM (1).jpeg":"deudalaya data/WhatsApp Image 2026-10-13 at 4.38.55 AM (1).jpeg","WhatsApp Image 2026-10-13 at 4.38.55 AM.jpeg":"deudalaya data/WhatsApp Image 2026-10-13 at 4.38.55 AM.jpeg","WhatsApp Image 2026-10-13 at 4.38.56 AM (1).jpeg":"deudalaya data/WhatsApp Image 2026-10-13 at 4.38.56 AM (1).jpeg","WhatsApp Image 2026-10-13 at 4.38.56 AM (2).jpeg":"deudalaya data/WhatsApp Image 2026-10-13 at 4.38.56 AM (2).jpeg","WhatsApp Image 2026-10-13 at 4.38.56 AM (3).jpeg":"deudalaya data/WhatsApp Image 2026-10-13 at 4.38.56 AM (3).jpeg","WhatsApp Image 2026-10-13 at 4.38.56 AM.jpeg":"deudalaya data/WhatsApp Image 2026-10-13 at 4.38.56 AM.jpeg","WhatsApp Image 2026-10-13 at 4.38.57 AM (1).jpeg":"deudalaya data/WhatsApp Image 2026-10-13 at 4.38.57 AM (1).jpeg","WhatsApp Image 2026-10-13 at 4.38.57 AM.jpeg":"deudalaya data/WhatsApp Image 2026-10-13 at 4.38.57 AM.jpeg"};const asset=name=>bundledAssets[name]||name;
@@ -203,20 +225,15 @@ function profileFromUser(){
   };
 }
 function applyProfileToUI(){
-  const p=profileFromUser();
   const dn=document.getElementById('profileDisplayName');
   const un=document.getElementById('profileUsername');
   const bio=document.getElementById('profileBio');
   const av=document.getElementById('profileAvatar');
-  if(cloudUser){
-    if(dn)dn.textContent=p.displayName||'देउडालय';
-    if(un)un.textContent='@'+(p.username||'user');
-    if(bio)bio.textContent=p.bio||'देउडालय — सुदूर - कर्णाली';
-    if(av&&p.avatarDataUrl)av.src=p.avatarDataUrl;
-  } else {
-    if(dn)dn.textContent='देउडालय';
-    if(un)un.textContent='@देउडालय';
-    if(bio)bio.textContent='देउडालय — सुदूर - कर्णाली';
+  if(dn)dn.textContent='देउडालय';
+  if(un)un.textContent='@देउडालय';
+  if(bio)bio.textContent='देउडालय — सुदूर - कर्णाली';
+  if(av&&!av.getAttribute('src')){
+    try{av.src=asset('deudalaya_icon.webp')}catch(e){}
   }
 }
 function showProfileEditor(){
@@ -271,7 +288,73 @@ let pendingUpload=null,pendingUploadUrl=null,pendingUploadIsVideo=false;const MA
 function pickRandomIndex(exclude){if(!videos.length)return 0;if(videos.length===1)return 0;let n;do{n=Math.floor(Math.random()*videos.length)}while(n===exclude);return n}function nextVideo(){index=(typeof fypPickNext==='function'?fypPickNext(index):pickRandomIndex(index));liked=false;bookmarked=false;following=false;render();document.getElementById('progress').style.width='0%';scheduleAutoAdvance();if(typeof fypOnShow==='function')fypOnShow(index)}function prevVideo(){index=(typeof fypPickPrev==='function'?fypPickPrev(index):pickRandomIndex(index));liked=false;bookmarked=false;following=false;render();document.getElementById('progress').style.width='0%';scheduleAutoAdvance();if(typeof fypOnShow==='function')fypOnShow(index)};function socialBackendRequired(feature){toast(feature+' needs an account and connected backend')}function toggleLike(){socialBackendRequired('Likes')}function toggleBookmark(){socialBackendRequired('Bookmarks')}function toggleFollow(){socialBackendRequired('Following')}function toggleComments(){document.getElementById('comments').classList.toggle('open')}function togglePlay(){paused=!paused;document.getElementById('feed').classList.toggle('paused',paused);const pv=document.getElementById('postVideo');if(!pv.hidden){if(paused)pv.pause();else pv.play().catch(()=>{})}}function addComment(e){e.preventDefault();toast('Comments require an account and connected backend')}function toast(s){let t=document.getElementById('toast');t.textContent=s;t.classList.add('show');clearTimeout(window.tt);window.tt=setTimeout(()=>t.classList.remove('show'),1900)}
 document.addEventListener('keydown',e=>{if(e.key==='ArrowDown'){e.preventDefault();nextVideo()}if(e.key==='ArrowUp'){e.preventDefault();prevVideo()}if(e.key===' '&&document.activeElement.tagName!=='INPUT'){e.preventDefault();togglePlay()}if(e.key==='Escape')document.getElementById('comments').classList.remove('open')});let sy=0,sx=0;document.getElementById('feed').addEventListener('touchstart',e=>{sy=e.touches[0].clientY;sx=e.touches[0].clientX},{passive:true});document.getElementById('feed').addEventListener('touchend',e=>{const dy=e.changedTouches[0].clientY-sy,dx=e.changedTouches[0].clientX-sx;if(window.matchMedia('(max-width: 700px)').matches&&sy<120&&dy>85&&Math.abs(dy)>Math.abs(dx)){toast('Refreshing feed…');setTimeout(()=>window.location.reload(),120);return}const d=-dy;if(Math.abs(d)>55&&Math.abs(d)>Math.abs(dx))d>0?nextVideo():prevVideo()},{passive:true});let prog=0;setInterval(()=>{if(!paused){prog=(prog+0.28)%100;document.getElementById('progress').style.width=prog+'%'}},100);document.getElementById('search').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.value.trim()){const q=e.target.value.trim().toLocaleLowerCase();const found=videos.findIndex(v=>(v.handle+' '+v.caption+' '+v.tags).toLocaleLowerCase().includes(q));if(found<0){toast('No matching videos');return}index=found;liked=false;bookmarked=false;following=false;render();toast('Showing matching video')}});function shareCurrentVideo(){const item=videos[index],url=item.videoSrc||(item.image&&item.image.startsWith('http')?item.image:(()=>{const page=new URL(location.href);page.hash='video='+encodeURIComponent(item.image||item.cloudId||'');return page.href})());if(navigator.share){navigator.share({title:'देउडालय',text:item.caption,url}).catch(()=>{})}else if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>toast('Video link copied')).catch(()=>toast(url))}else toast(url)}render();restoreLocalVideos();loadSupabaseClient().then(client=>client&&loadRemotePosts());scheduleAutoAdvance();
 
-let deferredInstallPrompt=null;const installGate=document.getElementById('installGate'),installAction=document.getElementById('installAction'),installHint=document.getElementById('installHint');const isStandalone=()=>window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;let gateOpened=false;function openInstalledGate(){if(gateOpened)return;gateOpened=true;installGate.classList.add('opening');installGate.setAttribute('aria-hidden','true');document.body.classList.remove('gate-locked');setTimeout(()=>{installGate.hidden=true},1450)}function showInstallInstructions(){const ios=/iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);installHint.textContent=ios?'Tap Share, choose “Add to Home Screen,” then tap Add.':'Open your browser menu and choose “Install app” or “Add to Home screen.”';installAction.textContent=ios?'How to install':'Install from browser menu';installAction.onclick=()=>{installHint.textContent=ios?'In Safari, tap the Share icon, then “Add to Home Screen.”':'In Chrome, tap ⋮, then “Install app” or “Add to Home screen.”'};}window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();deferredInstallPrompt=event;/* no browser continue */});window.addEventListener('appinstalled',()=>{deferredInstallPrompt=null;openInstalledGate()});installAction.addEventListener('click',async()=>{if(deferredInstallPrompt){deferredInstallPrompt.prompt();const choice=await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;if(choice.outcome==='accepted'){installHint.textContent='Finish installing देउडालय to open the gate.'}else{installHint.textContent='Installation was cancelled. Tap Install to try again.'}return}showInstallInstructions()});document.addEventListener('keydown',event=>{if(!gateOpened&&event.key==='Tab'){event.preventDefault();installAction.focus()}if(!gateOpened&&event.key==='Escape')event.preventDefault()});/* gateContinue removed */if(isStandalone()){openInstalledGate()}else{/* continue-in-browser disabled */}function showFeedTab(button){document.querySelectorAll('.feed-tabs button').forEach(item=>item.classList.remove('selected'));button.classList.add('selected')}function openFeedSearch(){const panel=document.getElementById('feedSearchPanel');panel.classList.toggle('visible');if(panel.classList.contains('visible'))document.getElementById('feedSearchInput').focus()}function submitFeedSearch(){const input=document.getElementById('feedSearchInput'),search=document.getElementById('search');if(search){search.value=input.value;search.dispatchEvent(new Event('input',{bubbles:true}));search.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}))}}if(isStandalone()){openInstalledGate()}else{document.body.classList.add('gate-locked');installAction.focus()}const launchSplash=document.getElementById('launchSplash');if(launchSplash&&isStandalone()){launchSplash.hidden=true}else if(launchSplash){const splashStarted=performance.now();let splashDismissed=false;const dismissLaunchSplash=()=>{if(splashDismissed)return;splashDismissed=true;setTimeout(()=>launchSplash.classList.add('fade-out'),Math.max(0,650-(performance.now()-splashStarted)))};if(document.readyState==='complete')dismissLaunchSplash();else window.addEventListener('load',dismissLaunchSplash,{once:true});setTimeout(dismissLaunchSplash,3000)}const siteBuildVersion='2026.10.13.14';
+let deferredInstallPrompt=null;const installGate=document.getElementById('installGate'),installAction=document.getElementById('installAction'),installHint=document.getElementById('installHint');const isStandalone=()=>window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;let gateOpened=false;function openInstalledGate(){if(gateOpened)return;gateOpened=true;installGate.classList.add('opening');installGate.setAttribute('aria-hidden','true');document.body.classList.remove('gate-locked');setTimeout(()=>{installGate.hidden=true},1450)}function showInstallInstructions(){const ios=/iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);installHint.textContent=ios?'Tap Share, choose “Add to Home Screen,” then tap Add.':'Open your browser menu and choose “Install app” or “Add to Home screen.”';installAction.textContent=ios?'How to install':'Install from browser menu';installAction.onclick=()=>{installHint.textContent=ios?'In Safari, tap the Share icon, then “Add to Home Screen.”':'In Chrome, tap ⋮, then “Install app” or “Add to Home screen.”'};}window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();deferredInstallPrompt=event;/* no browser continue */});window.addEventListener('appinstalled',()=>{
+  deferredInstallPrompt=null;
+  clearTimeout(window._installWatch);
+  if(typeof setInstallBusy==='function')setInstallBusy(true,'Installed');
+  if(installHint)installHint.textContent='Installed! Opening देउडालय…';
+  setTimeout(function(){openInstalledGate()},400);
+});
+function setInstallBusy(on,label){
+  if(!installAction)return;
+  const text=installAction.querySelector('.ia-text');
+  const dots=installAction.querySelector('.ia-dots');
+  const gateBox=document.querySelector('.gate-install');
+  if(on){
+    installAction.classList.add('installing');
+    installAction.disabled=true;
+    if(text)text.textContent=label||'Installing';
+    if(dots)dots.hidden=false;
+    if(gateBox)gateBox.classList.add('installing-mode');
+    if(installHint)installHint.textContent='Please wait while देउडालय installs on your device…';
+  }else{
+    installAction.classList.remove('installing');
+    installAction.disabled=false;
+    if(text)text.textContent=label||'Install देउडालय App';
+    if(dots)dots.hidden=true;
+    if(gateBox)gateBox.classList.remove('installing-mode');
+  }
+}
+installAction.addEventListener('click',async()=>{
+  if(installAction.classList.contains('installing'))return;
+  if(deferredInstallPrompt){
+    setInstallBusy(true,'Installing');
+    try{
+      deferredInstallPrompt.prompt();
+      const choice=await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt=null;
+      if(choice.outcome==='accepted'){
+        setInstallBusy(true,'Installing');
+        if(installHint)installHint.textContent='Installing देउडालय… Almost done. The gate will open when the app is ready.';
+        // Safety timeout if appinstalled is slow
+        clearTimeout(window._installWatch);
+        window._installWatch=setTimeout(function(){
+          if(!gateOpened){
+            if(installHint)installHint.textContent='If install finished, open देउडालय from your home screen.';
+            setInstallBusy(false,'Open from home screen');
+          }
+        },45000);
+      }else{
+        setInstallBusy(false,'Install देउडालय App');
+        if(installHint)installHint.textContent='Installation was cancelled. Tap Install to try again.';
+      }
+    }catch(err){
+      setInstallBusy(false,'Install देउडालय App');
+      if(installHint)installHint.textContent='Could not start install. Try again or use your browser menu.';
+    }
+    return;
+  }
+  setInstallBusy(true,'Installing');
+  showInstallInstructions();
+  // Manual install path: keep "Installing..." brief then show instructions
+  setTimeout(function(){
+    setInstallBusy(false,'Install देउडालय App');
+    if(installHint&&!/Install|Share|home screen|browser/i.test(installHint.textContent)){
+      installHint.textContent='Follow the steps above to finish installing.';
+    }
+  },900);
+});
+document.addEventListener('keydown',event=>{if(!gateOpened&&event.key==='Tab'){event.preventDefault();installAction.focus()}if(!gateOpened&&event.key==='Escape')event.preventDefault()});/* gateContinue removed */if(isStandalone()){openInstalledGate()}else{/* continue-in-browser disabled */}function showFeedTab(button){document.querySelectorAll('.feed-tabs button').forEach(item=>item.classList.remove('selected'));button.classList.add('selected')}function openFeedSearch(){const panel=document.getElementById('feedSearchPanel');panel.classList.toggle('visible');if(panel.classList.contains('visible'))document.getElementById('feedSearchInput').focus()}function submitFeedSearch(){const input=document.getElementById('feedSearchInput'),search=document.getElementById('search');if(search){search.value=input.value;search.dispatchEvent(new Event('input',{bubbles:true}));search.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}))}}if(isStandalone()){openInstalledGate()}else{document.body.classList.add('gate-locked');installAction.focus()}const launchSplash=document.getElementById('launchSplash');if(launchSplash&&isStandalone()){launchSplash.hidden=true}else if(launchSplash){const splashStarted=performance.now();let splashDismissed=false;const dismissLaunchSplash=()=>{if(splashDismissed)return;splashDismissed=true;setTimeout(()=>launchSplash.classList.add('fade-out'),Math.max(0,650-(performance.now()-splashStarted)))};if(document.readyState==='complete')dismissLaunchSplash();else window.addEventListener('load',dismissLaunchSplash,{once:true});setTimeout(dismissLaunchSplash,3000)}const siteBuildVersion='2026.10.13.14';
 const updateNotice=document.getElementById('updateNotice');
 const UPDATE_DISMISS_KEY='deudalaya-update-dismissed';
 const UPDATE_LATER_KEY='deudalaya-update-later';
@@ -1525,7 +1608,7 @@ html,body{background:#000;overscroll-behavior:none}
   .action{gap:1px!important}
   .action span{font-size:12px!important;font-weight:600!important;text-shadow:0 1px 3px #000c}
   .action svg{width:46px!important;height:46px!important;padding:6px!important;background:transparent!important;filter:drop-shadow(0 2px 4px #0009)}
-  .creator-disc{display:block!important;width:48px!important;height:48px!important;margin:0 auto 4px;border:2px solid #fff;box-shadow:0 0 0 2px #fe2c55;animation:ttDiscSpin 4s linear infinite;position:relative}
+  .creator-disc{display:block!important;width:48px!important;height:48px!important;margin:0 auto 4px;border:2px solid #fff;box-shadow:0 0 0 2px #fe2c55;animation:none;position:relative}
   .creator-disc img{border-radius:50%}
   .creator-disc span{bottom:-10px!important;width:22px!important;height:22px!important;font-size:16px!important;background:#fe2c55!important;border:2px solid #000}
   .progress{left:0!important;right:0!important;bottom:0!important;height:2px!important;background:#ffffff40!important;border-radius:0!important;z-index:8}
@@ -1554,12 +1637,12 @@ html,body{background:#000;overscroll-behavior:none}
   .feed-wrap{max-width:420px;height:min(100%,820px);border-radius:12px;box-shadow:0 0 0 1px #ffffff10,0 24px 80px #000a}
   .actions{position:fixed;left:calc(50% + 230px);right:auto;top:50%;transform:translateY(-50%);gap:16px}
   .creator #handle:before{content:"@"}
-  .creator-disc{display:block!important;width:48px;height:48px;margin:0 auto 4px;border:2px solid #fff;box-shadow:0 0 0 2px #fe2c55;animation:ttDiscSpin 4s linear infinite}
+  .creator-disc{display:block!important;width:48px;height:48px;margin:0 auto 4px;border:2px solid #fff;box-shadow:0 0 0 2px #fe2c55;animation:none}
   .creator-disc span{position:absolute;left:50%;bottom:-10px;transform:translateX(-50%);width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:#fe2c55;color:#fff;border:2px solid #000;font-size:16px;line-height:1;font-weight:700}
   .mobile-music{display:flex!important;margin-top:8px;font-size:13px}
 }
 /* Pause disc when paused */
-.feed-wrap.paused .creator-disc{animation-play-state:paused}
+.feed-wrap.paused .creator-disc{animation:none}
 /* Bottom sheet comments handle */
 .comments-head{position:relative}
 .comments-head:before{content:"";position:absolute;left:50%;top:8px;width:36px;height:4px;margin-left:-18px;border-radius:4px;background:#ffffff35}
@@ -1974,6 +2057,54 @@ html,body{background:#000;overscroll-behavior:none}
 
   // Initial impression
   setTimeout(function(){try{fypOnShow(index)}catch(e){}},400);
+})();
+</script>
+
+
+<!-- ADDED: disc follow button (no rotation; + follows user) -->
+<script>
+(function(){
+  var disc=document.getElementById('creatorDisc')||document.querySelector('.creator-disc');
+  var plus=document.getElementById('followPlus')||(disc&&disc.querySelector('span'));
+  function syncFollowUI(){
+    var on=false;
+    try{on=!!following}catch(e){on=false}
+    if(disc)disc.classList.toggle('following', on);
+    if(plus)plus.textContent=on?'✓':'+';
+    var fb=document.getElementById('follow');
+    if(fb){
+      fb.textContent=on?'Following':'Follow';
+      fb.style.background=on?'#34343b':'var(--pink)';
+    }
+  }
+  function doFollow(e){
+    if(e){e.preventDefault();e.stopPropagation()}
+    if(typeof toggleFollow==='function')toggleFollow();
+    // optimistic local toggle if backend only toasts
+    try{
+      if(typeof following!=='undefined'){
+        // toggleFollow may not flip when backend required — flip UI optimistically for feed
+        following=!following;
+      }
+    }catch(err){}
+    syncFollowUI();
+  }
+  if(disc){
+    disc.addEventListener('click', doFollow);
+    disc.addEventListener('keydown', function(e){
+      if(e.key==='Enter'||e.key===' '){doFollow(e)}
+    });
+  }
+  // Keep in sync after render
+  if(typeof window.render==='function'){
+    var _r=window.render;
+    window.render=function(){
+      var out=_r.apply(this,arguments);
+      try{syncFollowUI()}catch(e){}
+      return out;
+    };
+  }
+  syncFollowUI();
 })();
 </script>
 
