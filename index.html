@@ -1,13 +1,13 @@
 <!doctype html>
 <html lang="ne">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preload" as="image" href="dashain.webp" fetchpriority="high"><meta name="theme-color" content="#101014">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preload" as="image" href="dashain.webp" fetchpriority="high"><meta name="theme-color" content="#ffffff">
 <title>देउडालय</title>
 <meta name="application-name" content="देउडालय">
-<meta name="deudalaya-version" content="2026.10.13.22">
+<meta name="deudalaya-version" content="2026.10.13.23">
 <meta name="apple-mobile-web-app-title" content="देउडालय">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="manifest" href="manifest.webmanifest">
+<link rel="manifest" href="manifest.webmanifest?v=2026.10.13.23">
 <link rel="apple-touch-icon" sizes="180x180" href="assets/deudalaya-icon-180.png">
 <meta property="og:site_name" content="देउडालय">
 <meta property="og:title" content="देउडालय">
@@ -161,7 +161,7 @@
 </style>
 </head>
 <body>
-<div class="launch-splash" id="launchSplash" aria-label="देउडालय खोलिँदैछ"><img src="logo.png?v=2026.10.13.22" alt="देउडालय लोगो" width="900" height="692" fetchpriority="high"></div>
+<div class="launch-splash" id="launchSplash" aria-label="देउडालय खोलिँदैछ"><img src="logo.png?v=2026.10.13.23" alt="देउडालय लोगो" width="900" height="692" fetchpriority="high"></div>
 <div class="app">
 
  <header class="topbar"><div class="brand"><img src="assets/inline-media/aa31fbd9abbab07d8a39.webp" alt="देउडालय logo"><span>देउडालय</span></div><label class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="search" placeholder="Search videos, creators, sounds"/><span style="color:#555;font-size:12px">⌘ K</span></label><button class="login" id="topAuthButton" type="button" onclick="handleAuthAction()">Sign in</button></header>
@@ -356,7 +356,7 @@ installAction.addEventListener('click',async()=>{
     }
   },900);
 });
-document.addEventListener('keydown',event=>{if(!gateOpened&&event.key==='Tab'){event.preventDefault();installAction.focus()}if(!gateOpened&&event.key==='Escape')event.preventDefault()});/* gateContinue removed */if(isStandalone()){openInstalledGate()}else{/* continue-in-browser disabled */}function showFeedTab(button){document.querySelectorAll('.feed-tabs button').forEach(item=>item.classList.remove('selected'));button.classList.add('selected')}function openFeedSearch(){const panel=document.getElementById('feedSearchPanel');panel.classList.toggle('visible');if(panel.classList.contains('visible'))document.getElementById('feedSearchInput').focus()}function submitFeedSearch(){const input=document.getElementById('feedSearchInput'),search=document.getElementById('search');if(search){search.value=input.value;search.dispatchEvent(new Event('input',{bubbles:true}));search.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}))}}if(isStandalone()){openInstalledGate()}else{document.body.classList.add('gate-locked');installAction.focus()}const launchSplash=document.getElementById('launchSplash');if(launchSplash&&isStandalone()){launchSplash.hidden=true}else if(launchSplash){const splashStarted=performance.now();let splashDismissed=false;const dismissLaunchSplash=()=>{if(splashDismissed)return;splashDismissed=true;setTimeout(()=>launchSplash.classList.add('fade-out'),Math.max(0,650-(performance.now()-splashStarted)))};if(document.readyState==='complete')dismissLaunchSplash();else window.addEventListener('load',dismissLaunchSplash,{once:true});setTimeout(dismissLaunchSplash,3000)}const siteBuildVersion='2026.10.13.22';
+document.addEventListener('keydown',event=>{if(!gateOpened&&event.key==='Tab'){event.preventDefault();installAction.focus()}if(!gateOpened&&event.key==='Escape')event.preventDefault()});/* gateContinue removed */if(isStandalone()){openInstalledGate()}else{/* continue-in-browser disabled */}function showFeedTab(button){document.querySelectorAll('.feed-tabs button').forEach(item=>item.classList.remove('selected'));button.classList.add('selected')}function openFeedSearch(){const panel=document.getElementById('feedSearchPanel');panel.classList.toggle('visible');if(panel.classList.contains('visible'))document.getElementById('feedSearchInput').focus()}function submitFeedSearch(){const input=document.getElementById('feedSearchInput'),search=document.getElementById('search');if(search){search.value=input.value;search.dispatchEvent(new Event('input',{bubbles:true}));search.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}))}}if(isStandalone()){openInstalledGate()}else{document.body.classList.add('gate-locked');installAction.focus()}const launchSplash=document.getElementById('launchSplash');if(launchSplash&&isStandalone()){launchSplash.hidden=true}else if(launchSplash){const splashStarted=performance.now();let splashDismissed=false;const dismissLaunchSplash=()=>{if(splashDismissed)return;splashDismissed=true;setTimeout(()=>launchSplash.classList.add('fade-out'),Math.max(0,650-(performance.now()-splashStarted)))};if(document.readyState==='complete')dismissLaunchSplash();else window.addEventListener('load',dismissLaunchSplash,{once:true});setTimeout(dismissLaunchSplash,3000)}const siteBuildVersion='2026.10.13.23';
 const updateNotice=document.getElementById('updateNotice');
 const UPDATE_DISMISS_KEY='deudalaya-update-dismissed';
 const UPDATE_LATER_KEY='deudalaya-update-later';
@@ -477,7 +477,7 @@ setInterval(function(){if(document.visibilityState==='visible')checkForSiteUpdat
 document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')checkForSiteUpdate()});
 window.checkForSiteUpdate=checkForSiteUpdate;
 window.applySiteUpdate=applySiteUpdate;
-</script><script src="social.js?v=2026.10.13.22"></script>
+</script><script src="social.js?v=2026.10.13.23"></script>
 <!-- ADDED: TikTok-style grid of all posts (new, standalone; no existing code changed) -->
 <style>
 .gridview{position:fixed;inset:0;z-index:9000;background:#101014;color:#fff;display:none;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}

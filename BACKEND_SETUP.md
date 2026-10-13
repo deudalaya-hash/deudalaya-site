@@ -6,6 +6,7 @@ The site remains deployable as a static GitHub Pages site. This repository curre
 
 - Existing home/feed and poster retained, including optimized `dashain.webp`.
 - Upload preview accepts MP4/WebM and enforces 50 MB and 15 seconds in the browser.
+- Video files larger than 6 MB use resumable uploads, with a 50 MB application limit.
 - The interface explicitly reports that submission is unavailable until backend setup; it never reports a successful upload.
 - Share uses a stable URL hash and native share or clipboard where available. Opening a shared hash selects that feed item.
 - Search finds matching current feed entries by creator, caption, or tags.
@@ -16,6 +17,8 @@ Social action buttons explain that a connected account/backend is required; they
 ## Free plan notes checked 2026-10-12
 
 Supabase is the proposed single backend (Auth, Postgres, Storage, and server functions) because the site is already static. Current published Free quotas include 50,000 monthly active users, 500 MB database size, 1 GB file storage, 5 GB egress, 500,000 Edge Function invocations, and at most two active free projects; free projects may pause after a week of inactivity. These are provider quotas, not a cost or availability guarantee. For a video feed, the 5 GB egress quota is likely the practical constraint: 1 GB storage holds at most about 40 files at the 50 MB cap before overhead, and repeated viewing consumes egress quickly. Monitor use and stop accepting uploads before quotas are exceeded. Supabase documents a 50 MB maximum file setting on Free, so this app's 50 MB bucket limit fits; for uploads above 6 MB, its docs recommend resumable upload for reliability.
+
+For an existing project, apply `supabase/migrations/202610130002_increase_video_upload_limit.sql` and set the global file size limit in Supabase Storage settings to at least 50 MB; the global setting overrides a bucket limit.
 
 See [Supabase pricing](https://supabase.com/pricing), [usage quotas](https://supabase.com/docs/guides/platform/billing-on-supabase), [file size limits](https://supabase.com/docs/guides/storage/uploads/file-limits), and [upload guidance](https://supabase.com/docs/guides/storage/uploads/standard-uploads). Recheck these before launch because provider limits can change.
 
