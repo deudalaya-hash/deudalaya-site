@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preload" as="image" href="dashain.webp" fetchpriority="high"><meta name="theme-color" content="#101014">
 <title>देउडालय</title>
 <meta name="application-name" content="देउडालय">
-<meta name="deudalaya-version" content="2026.10.13.19">
+<meta name="deudalaya-version" content="2026.10.13.20">
 <meta name="apple-mobile-web-app-title" content="देउडालय">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest.webmanifest">
@@ -351,7 +351,7 @@ installAction.addEventListener('click',async()=>{
     }
   },900);
 });
-document.addEventListener('keydown',event=>{if(!gateOpened&&event.key==='Tab'){event.preventDefault();installAction.focus()}if(!gateOpened&&event.key==='Escape')event.preventDefault()});/* gateContinue removed */if(isStandalone()){openInstalledGate()}else{/* continue-in-browser disabled */}function showFeedTab(button){document.querySelectorAll('.feed-tabs button').forEach(item=>item.classList.remove('selected'));button.classList.add('selected')}function openFeedSearch(){const panel=document.getElementById('feedSearchPanel');panel.classList.toggle('visible');if(panel.classList.contains('visible'))document.getElementById('feedSearchInput').focus()}function submitFeedSearch(){const input=document.getElementById('feedSearchInput'),search=document.getElementById('search');if(search){search.value=input.value;search.dispatchEvent(new Event('input',{bubbles:true}));search.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}))}}if(isStandalone()){openInstalledGate()}else{document.body.classList.add('gate-locked');installAction.focus()}const launchSplash=document.getElementById('launchSplash');if(launchSplash&&isStandalone()){launchSplash.hidden=true}else if(launchSplash){const splashStarted=performance.now();let splashDismissed=false;const dismissLaunchSplash=()=>{if(splashDismissed)return;splashDismissed=true;setTimeout(()=>launchSplash.classList.add('fade-out'),Math.max(0,650-(performance.now()-splashStarted)))};if(document.readyState==='complete')dismissLaunchSplash();else window.addEventListener('load',dismissLaunchSplash,{once:true});setTimeout(dismissLaunchSplash,3000)}const siteBuildVersion='2026.10.13.19';
+document.addEventListener('keydown',event=>{if(!gateOpened&&event.key==='Tab'){event.preventDefault();installAction.focus()}if(!gateOpened&&event.key==='Escape')event.preventDefault()});/* gateContinue removed */if(isStandalone()){openInstalledGate()}else{/* continue-in-browser disabled */}function showFeedTab(button){document.querySelectorAll('.feed-tabs button').forEach(item=>item.classList.remove('selected'));button.classList.add('selected')}function openFeedSearch(){const panel=document.getElementById('feedSearchPanel');panel.classList.toggle('visible');if(panel.classList.contains('visible'))document.getElementById('feedSearchInput').focus()}function submitFeedSearch(){const input=document.getElementById('feedSearchInput'),search=document.getElementById('search');if(search){search.value=input.value;search.dispatchEvent(new Event('input',{bubbles:true}));search.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}))}}if(isStandalone()){openInstalledGate()}else{document.body.classList.add('gate-locked');installAction.focus()}const launchSplash=document.getElementById('launchSplash');if(launchSplash&&isStandalone()){launchSplash.hidden=true}else if(launchSplash){const splashStarted=performance.now();let splashDismissed=false;const dismissLaunchSplash=()=>{if(splashDismissed)return;splashDismissed=true;setTimeout(()=>launchSplash.classList.add('fade-out'),Math.max(0,650-(performance.now()-splashStarted)))};if(document.readyState==='complete')dismissLaunchSplash();else window.addEventListener('load',dismissLaunchSplash,{once:true});setTimeout(dismissLaunchSplash,3000)}const siteBuildVersion='2026.10.13.20';
 const updateNotice=document.getElementById('updateNotice');
 const UPDATE_DISMISS_KEY='deudalaya-update-dismissed';
 const UPDATE_LATER_KEY='deudalaya-update-later';
@@ -472,7 +472,7 @@ setInterval(function(){if(document.visibilityState==='visible')checkForSiteUpdat
 document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')checkForSiteUpdate()});
 window.checkForSiteUpdate=checkForSiteUpdate;
 window.applySiteUpdate=applySiteUpdate;
-</script><script src="social.js?v=2026.10.13.19"></script>
+</script><script src="social.js?v=2026.10.13.20"></script>
 <!-- ADDED: TikTok-style grid of all posts (new, standalone; no existing code changed) -->
 <style>
 .gridview{position:fixed;inset:0;z-index:9000;background:#101014;color:#fff;display:none;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
@@ -2135,7 +2135,7 @@ html,body{background:#000;overscroll-behavior:none}
 #profilePanel{background:#000}
 #profilePanel .profile-summary{flex-direction:row-reverse;align-items:flex-start;justify-content:space-between;max-width:900px;gap:14px}
 #profilePanel .profile-summary>img{width:96px;height:96px;border-radius:50%;object-fit:contain;background:#fff;flex:none}
-#profilePanel .profile-summary>div{min-width:0;flex:1}
+#profilePanel .profile-summary>div{min-width:0;flex:1;padding-right:110px}
 #profilePanel #profileDisplayName{font-size:32px;font-weight:800;line-height:1.15;margin:0}
 #profilePanel #profileUsername{color:#8a8b91;margin:4px 0 14px;font-size:15px}
 #profilePanel .profile-stats{gap:22px;margin:0 0 12px}
@@ -2316,7 +2316,7 @@ body.tt-profile-open .mobile-nav button[onclick="openProfile()"]{color:#fff!impo
 body.tt-profile-open .mobile-nav button[onclick="openProfile()"] svg{fill:#fff!important;stroke:#fff!important}
 body.tt-hide-nav .mobile-nav{display:none!important}
 /* avatar with + and note bubble */
-#profilePanel .tt-avatar-wrap{position:relative;flex:0 0 96px;width:96px;height:96px;margin-top:32px}
+#profilePanel .tt-avatar-wrap{position:absolute;z-index:4;right:16px;top:calc(env(safe-area-inset-top,0px) + 104px);width:96px;height:96px;margin:0}
 #profilePanel .tt-avatar-wrap>img{width:96px;height:96px;border:0;border-radius:50%;object-fit:contain;background:#fff;display:block}
 .tt-avatar-plus{position:absolute;right:0;bottom:0;width:30px;height:30px;border-radius:50%;border:3px solid #000;background:#20d5ec;color:#fff;font-size:20px;font-weight:700;line-height:1;display:grid;place-items:center;padding:0}
 .tt-note{position:absolute;right:-4px;bottom:calc(100% + 8px);padding:8px 14px;border-radius:16px;background:#3b3b3f;color:#d0d0d4;font-size:14px;font-weight:600;white-space:nowrap;border:0}
