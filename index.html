@@ -305,7 +305,7 @@ function skipGate(){
  var g=document.getElementById('installGate');
  if(g){g.hidden=true;g.setAttribute('aria-hidden','true')}
  document.body.classList.remove('gate-locked')}
-var standalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+var standalone=['standalone','minimal-ui','fullscreen','window-controls-overlay'].some(function(m){return window.matchMedia('(display-mode: '+m+')').matches})||navigator.standalone===true||(document.referrer||'').indexOf('android-app://')===0;
 if(standalone)set();
 window.addEventListener('appinstalled',set);
 if(get()){skipGate();return}
