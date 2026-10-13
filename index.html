@@ -2451,4 +2451,19 @@ body.tt-hide-nav .mobile-nav{display:none!important}
 })();
 </script>
 
+<script>
+// Start upload directly from the center + button and preserve the selected media
+// while the user signs in, if a session is required to publish.
+(function(){
+  requestVideoUpload=function(){var picker=document.getElementById('videoUpload');picker.value='';picker.click()};
+  var publishWithMusic=publishUpload;
+  publishUpload=async function(event){
+    event.preventDefault();
+    var client=await loadSupabaseClient();
+    if(!client){toast('Could not connect to Supabase. Your selected video is still here.');return}
+    if(!cloudUser){openAuth();document.getElementById('authMessage').textContent='Sign in to publish this video. Your selected video will stay in the composer.';return}
+    return publishWithMusic(event);
+  };
+})();
+</script>
 </body></html>
