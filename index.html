@@ -159,6 +159,14 @@
 .launch-splash img{width:min(76vw,340px);height:auto;max-height:55vh;display:block;object-fit:contain;border-radius:0;background:transparent!important;box-shadow:none!important;animation:none}
 .launch-splash span{display:none}
 </style>
+<script>
+// Capture the browser install event before the feed scripts finish loading.
+window.deudalayaInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', function (event) {
+  event.preventDefault();
+  window.deudalayaInstallPrompt = event;
+});
+</script>
 </head>
 <body>
 <div class="launch-splash" id="launchSplash" aria-label="देउडालय खोलिँदैछ"><img src="logo.png?v=2026.10.13.23" alt="देउडालय लोगो" width="900" height="692" fetchpriority="high"></div>
@@ -290,8 +298,9 @@ let pendingUpload=null,pendingUploadUrl=null,pendingUploadIsVideo=false;const MA
 function pickRandomIndex(exclude){if(!videos.length)return 0;if(videos.length===1)return 0;let n;do{n=Math.floor(Math.random()*videos.length)}while(n===exclude);return n}function nextVideo(){index=(typeof fypPickNext==='function'?fypPickNext(index):pickRandomIndex(index));liked=false;bookmarked=false;following=false;render();document.getElementById('progress').style.width='0%';scheduleAutoAdvance();if(typeof fypOnShow==='function')fypOnShow(index)}function prevVideo(){index=(typeof fypPickPrev==='function'?fypPickPrev(index):pickRandomIndex(index));liked=false;bookmarked=false;following=false;render();document.getElementById('progress').style.width='0%';scheduleAutoAdvance();if(typeof fypOnShow==='function')fypOnShow(index)};function socialBackendRequired(feature){toast(feature+' needs an account and connected backend')}function toggleLike(){socialBackendRequired('Likes')}function toggleBookmark(){socialBackendRequired('Bookmarks')}function toggleFollow(){socialBackendRequired('Following')}function toggleComments(){document.getElementById('comments').classList.toggle('open')}function togglePlay(){paused=!paused;document.getElementById('feed').classList.toggle('paused',paused);const pv=document.getElementById('postVideo');if(!pv.hidden){if(paused)pv.pause();else pv.play().catch(()=>{})}}function addComment(e){e.preventDefault();toast('Comments require an account and connected backend')}function toast(s){let t=document.getElementById('toast');t.textContent=s;t.classList.add('show');clearTimeout(window.tt);window.tt=setTimeout(()=>t.classList.remove('show'),1900)}
 document.addEventListener('keydown',e=>{if(e.key==='ArrowDown'){e.preventDefault();nextVideo()}if(e.key==='ArrowUp'){e.preventDefault();prevVideo()}if(e.key===' '&&document.activeElement.tagName!=='INPUT'){e.preventDefault();togglePlay()}if(e.key==='Escape')document.getElementById('comments').classList.remove('open')});let sy=0,sx=0;document.getElementById('feed').addEventListener('touchstart',e=>{sy=e.touches[0].clientY;sx=e.touches[0].clientX},{passive:true});document.getElementById('feed').addEventListener('touchend',e=>{const dy=e.changedTouches[0].clientY-sy,dx=e.changedTouches[0].clientX-sx;if(window.matchMedia('(max-width: 700px)').matches&&sy<120&&dy>85&&Math.abs(dy)>Math.abs(dx)){toast('Refreshing feed…');setTimeout(()=>window.location.reload(),120);return}const d=-dy;if(Math.abs(d)>55&&Math.abs(d)>Math.abs(dx))d>0?nextVideo():prevVideo()},{passive:true});let prog=0;setInterval(()=>{if(!paused){prog=(prog+0.28)%100;document.getElementById('progress').style.width=prog+'%'}},100);document.getElementById('search').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.value.trim()){const q=e.target.value.trim().toLocaleLowerCase();const found=videos.findIndex(v=>(v.handle+' '+v.caption+' '+v.tags).toLocaleLowerCase().includes(q));if(found<0){toast('No matching videos');return}index=found;liked=false;bookmarked=false;following=false;render();toast('Showing matching video')}});function shareCurrentVideo(){const item=videos[index],url=item.videoSrc||(item.image&&item.image.startsWith('http')?item.image:(()=>{const page=new URL(location.href);page.hash='video='+encodeURIComponent(item.image||item.cloudId||'');return page.href})());if(navigator.share){navigator.share({title:'देउडालय',text:item.caption,url}).catch(()=>{})}else if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>toast('Video link copied')).catch(()=>toast(url))}else toast(url)}render();restoreLocalVideos();loadSupabaseClient().then(client=>client&&loadRemotePosts());scheduleAutoAdvance();
 
-let deferredInstallPrompt=null;const installGate=document.getElementById('installGate'),installAction=document.getElementById('installAction'),installHint=document.getElementById('installHint');const isStandalone=()=>window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;let gateOpened=false;function openInstalledGate(){if(gateOpened)return;gateOpened=true;installGate.classList.add('opening');installGate.setAttribute('aria-hidden','true');document.body.classList.remove('gate-locked');setTimeout(()=>{installGate.hidden=true},1450)}function showInstallInstructions(){const ios=/iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);installHint.textContent=ios?'Tap Share, choose “Add to Home Screen,” then tap Add.':'Open your browser menu and choose “Install app” or “Add to Home screen.”';installAction.textContent=ios?'How to install':'Install from browser menu';installAction.onclick=()=>{installHint.textContent=ios?'In Safari, tap the Share icon, then “Add to Home Screen.”':'In Chrome, tap ⋮, then “Install app” or “Add to Home screen.”'};}window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();deferredInstallPrompt=event;/* no browser continue */});window.addEventListener('appinstalled',()=>{
+let deferredInstallPrompt=window.deudalayaInstallPrompt||null;const installGate=document.getElementById('installGate'),installAction=document.getElementById('installAction'),installHint=document.getElementById('installHint');const isStandalone=()=>window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;let gateOpened=false;function openInstalledGate(){if(gateOpened)return;gateOpened=true;installGate.classList.add('opening');installGate.setAttribute('aria-hidden','true');document.body.classList.remove('gate-locked');setTimeout(()=>{installGate.hidden=true},1450)}function showInstallInstructions(){const ios=/iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);if(installHint)installHint.textContent=ios?'To install देउडालय, tap Share, choose “Add to Home Screen,” then tap Add.':'If the install prompt does not appear, open your browser menu and choose “Install देउडालय” or “Add to Home screen.”';const label=installAction.querySelector('.ia-text');if(label)label.textContent=ios?'Show install steps':'Install from browser menu';installAction.onclick=null;}window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();deferredInstallPrompt=event;window.deudalayaInstallPrompt=event;installAction.onclick=null;const label=installAction.querySelector('.ia-text');if(label)label.textContent='Install देउडालय App';if(installHint)installHint.textContent='देउडालय is ready to install. Tap the button to continue.';});window.addEventListener('appinstalled',()=>{
   deferredInstallPrompt=null;
+  window.deudalayaInstallPrompt=null;
   clearTimeout(window._installWatch);
   if(typeof setInstallBusy==='function')setInstallBusy(true,'Installed');
   if(installHint)installHint.textContent='Installed! Opening देउडालय…';
@@ -325,6 +334,7 @@ installAction.addEventListener('click',async()=>{
       deferredInstallPrompt.prompt();
       const choice=await deferredInstallPrompt.userChoice;
       deferredInstallPrompt=null;
+      window.deudalayaInstallPrompt=null;
       if(choice.outcome==='accepted'){
         setInstallBusy(true,'Installing');
         if(installHint)installHint.textContent='Installing देउडालय… Almost done. The gate will open when the app is ready.';
@@ -346,15 +356,8 @@ installAction.addEventListener('click',async()=>{
     }
     return;
   }
-  setInstallBusy(true,'Installing');
   showInstallInstructions();
-  // Manual install path: keep "Installing..." brief then show instructions
-  setTimeout(function(){
-    setInstallBusy(false,'Install देउडालय App');
-    if(installHint&&!/Install|Share|home screen|browser/i.test(installHint.textContent)){
-      installHint.textContent='Follow the steps above to finish installing.';
-    }
-  },900);
+  setInstallBusy(false,'Install देउडालय App');
 });
 document.addEventListener('keydown',event=>{if(!gateOpened&&event.key==='Tab'){event.preventDefault();installAction.focus()}if(!gateOpened&&event.key==='Escape')event.preventDefault()});/* gateContinue removed */if(isStandalone()){openInstalledGate()}else{/* continue-in-browser disabled */}function showFeedTab(button){document.querySelectorAll('.feed-tabs button').forEach(item=>item.classList.remove('selected'));button.classList.add('selected')}function openFeedSearch(){const panel=document.getElementById('feedSearchPanel');panel.classList.toggle('visible');if(panel.classList.contains('visible'))document.getElementById('feedSearchInput').focus()}function submitFeedSearch(){const input=document.getElementById('feedSearchInput'),search=document.getElementById('search');if(search){search.value=input.value;search.dispatchEvent(new Event('input',{bubbles:true}));search.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}))}}if(isStandalone()){openInstalledGate()}else{document.body.classList.add('gate-locked');installAction.focus()}const launchSplash=document.getElementById('launchSplash');if(launchSplash&&isStandalone()){launchSplash.hidden=true}else if(launchSplash){const splashStarted=performance.now();let splashDismissed=false;const dismissLaunchSplash=()=>{if(splashDismissed)return;splashDismissed=true;setTimeout(()=>launchSplash.classList.add('fade-out'),Math.max(0,650-(performance.now()-splashStarted)))};if(document.readyState==='complete')dismissLaunchSplash();else window.addEventListener('load',dismissLaunchSplash,{once:true});setTimeout(dismissLaunchSplash,3000)}const siteBuildVersion='2026.10.13.23';
 const updateNotice=document.getElementById('updateNotice');
@@ -2485,16 +2488,18 @@ async function uploadToStorage(client,path,file,button){
 }
 </script><style>
 /* Switch between the main Deudalaya feed and the Layapur profile. */
-#profileSwitcher{position:fixed;z-index:100001;top:78px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:24px;padding:7px 12px 9px;background:#10101455;border-radius:0 0 12px 12px;backdrop-filter:blur(8px)}
-#profileSwitcher button{position:relative;padding:4px 2px 8px;background:transparent;color:#c9c9d1;font-size:15px;font-weight:650;white-space:nowrap;text-shadow:0 1px 5px #000}
+#profileSwitcher{position:fixed;z-index:100001;top:78px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:20px;padding:8px 12px;background:#101014d9;border:1px solid #ffffff2a;border-radius:999px;box-shadow:0 6px 24px #0008;backdrop-filter:blur(10px);cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+#profileSwitcher.dragging{cursor:grabbing;opacity:.94}
+#profileSwitcher[data-edge="left"],#profileSwitcher[data-edge="right"]{flex-direction:column;gap:5px;padding:10px 9px}
+#profileSwitcher button{position:relative;padding:5px 3px 8px;background:transparent;color:#c9c9d1;font-size:15px;font-weight:650;white-space:nowrap;text-shadow:0 1px 5px #000;cursor:pointer}
 #profileSwitcher button[aria-pressed="true"]{color:#fff;font-weight:800}
 #profileSwitcher button[aria-pressed="true"]:after{content:"";position:absolute;left:50%;bottom:0;width:24px;height:3px;transform:translateX(-50%);border-radius:3px;background:#fff}
 #layapurFrame{display:none;position:fixed;inset:0;width:100%;height:100dvh;border:0;background:#101014;z-index:100000}
 body.layapur-active> :not(#layapurFrame):not(#profileSwitcher){display:none!important}
 body.layapur-active #layapurFrame{display:block}
-@media(max-width:700px){#profileSwitcher{top:calc(env(safe-area-inset-top,0px) + 12px);gap:20px;padding:6px 12px 8px}#profileSwitcher button{font-size:14px}}
+@media(max-width:700px){#profileSwitcher{top:calc(env(safe-area-inset-top,0px) + 12px);gap:16px;padding:7px 10px}#profileSwitcher[data-edge="left"],#profileSwitcher[data-edge="right"]{gap:4px;padding:9px 7px}#profileSwitcher button{font-size:14px}}
 </style>
-<nav id="profileSwitcher" aria-label="प्रोफाइल बदल्नुहोस्">
+<nav id="profileSwitcher" aria-label="देउडालय र लयपुर प्रोफाइल" aria-description="Drag the empty space to move this switch to a screen edge." data-edge="top">
   <button type="button" id="feedProfileButton" aria-pressed="true">देउडालय</button>
   <button type="button" id="layapurProfileButton" aria-pressed="false">लयपुर</button>
 </nav>
@@ -2504,6 +2509,31 @@ body.layapur-active #layapurFrame{display:block}
   const feed=document.getElementById('feedProfileButton');
   const layapur=document.getElementById('layapurProfileButton');
   const frame=document.getElementById('layapurFrame');
+  const dock=document.getElementById('profileSwitcher');
+  const positionKey='deudalaya-profile-switch-position';
+  let savedPosition=null,drag=null;
+  const clamp=(value,min,max)=>Math.max(min,Math.min(value,Math.max(min,max)));
+  function placeDock(left,top,edge,save){
+    dock.dataset.edge=edge;
+    const rect=dock.getBoundingClientRect();
+    const maxLeft=window.innerWidth-rect.width-12;
+    const maxTop=window.innerHeight-rect.height-12;
+    left=clamp(left,12,maxLeft);top=clamp(top,12,maxTop);
+    if(edge==='left')left=12;
+    if(edge==='right')left=maxLeft;
+    if(edge==='top')top=12;
+    if(edge==='bottom')top=maxTop;
+    dock.style.left=left+'px';dock.style.top=top+'px';
+    dock.style.right='auto';dock.style.bottom='auto';dock.style.transform='none';
+    savedPosition={left:left,top:top,edge:edge};
+    if(save){try{localStorage.setItem(positionKey,JSON.stringify(savedPosition))}catch(_){}}
+  }
+  try{
+    const saved=JSON.parse(localStorage.getItem(positionKey)||'null');
+    if(saved&&Number.isFinite(saved.left)&&Number.isFinite(saved.top)&&['left','right','top','bottom'].includes(saved.edge)){
+      placeDock(saved.left,saved.top,saved.edge,false);
+    }
+  }catch(_){}
   function selectProfile(profile){
     const isLayapur=profile==='layapur';
     document.body.classList.toggle('layapur-active',isLayapur);
@@ -2511,6 +2541,36 @@ body.layapur-active #layapurFrame{display:block}
     layapur.setAttribute('aria-pressed',String(isLayapur));
     if(isLayapur&&!frame.src) frame.src=new URL('index2.html',document.baseURI).href;
   }
+  dock.addEventListener('pointerdown',event=>{
+    if(event.target.closest('button')||(event.button!==undefined&&event.button!==0))return;
+    const rect=dock.getBoundingClientRect();
+    drag={id:event.pointerId,x:event.clientX,y:event.clientY,left:rect.left,top:rect.top,moved:false};
+    dock.setPointerCapture(event.pointerId);
+    dock.classList.add('dragging');
+    event.preventDefault();
+  });
+  dock.addEventListener('pointermove',event=>{
+    if(!drag||event.pointerId!==drag.id)return;
+    const dx=event.clientX-drag.x,dy=event.clientY-drag.y;
+    if(!drag.moved&&Math.hypot(dx,dy)<5)return;
+    drag.moved=true;
+    const rect=dock.getBoundingClientRect();
+    dock.style.left=clamp(drag.left+dx,12,window.innerWidth-rect.width-12)+'px';
+    dock.style.top=clamp(drag.top+dy,12,window.innerHeight-rect.height-12)+'px';
+    dock.style.right='auto';dock.style.bottom='auto';dock.style.transform='none';
+  });
+  function finishDrag(event){
+    if(!drag||event.pointerId!==drag.id)return;
+    const didMove=drag.moved;drag=null;dock.classList.remove('dragging');
+    if(!didMove)return;
+    const rect=dock.getBoundingClientRect();
+    const edges=[['left',rect.left],['right',window.innerWidth-rect.right],['top',rect.top],['bottom',window.innerHeight-rect.bottom]];
+    edges.sort((a,b)=>a[1]-b[1]);
+    placeDock(rect.left,rect.top,edges[0][0],true);
+  }
+  dock.addEventListener('pointerup',finishDrag);
+  dock.addEventListener('pointercancel',finishDrag);
+  window.addEventListener('resize',()=>{if(savedPosition)placeDock(savedPosition.left,savedPosition.top,savedPosition.edge,false)});
   feed.addEventListener('click',()=>selectProfile('feed'));
   layapur.addEventListener('click',()=>selectProfile('layapur'));
 })();

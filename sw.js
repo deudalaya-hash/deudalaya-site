@@ -1,8 +1,7 @@
 /* Deudalaya service worker
-   Purpose: lets browsers treat the site as an installable app.
-   It does NOT cache anything and does NOT intercept requests, so the feed,
-   Supabase calls, uploads and the version.json update check behave exactly
-   as they do today. */
+   Purpose: supports PWA installation and passes requests straight to network.
+   No response is cached; Supabase calls, uploads and update checks continue
+   to use their normal network requests. */
 
 self.addEventListener('install', () => self.skipWaiting());
 
@@ -10,6 +9,8 @@ self.addEventListener('activate', event => {
   event.waitUntil(self.clients.claim());
 });
 
-// Present so the app qualifies as installable. No respondWith() call,
-// so every request goes to the network exactly as normal.
-self.addEventListener('fetch', () => {});
+// Pass requests through to the network without caching them. A real response
+// keeps Chromium's installability check from treating this as an empty handler.
+self.addEventListener('fetch', event => {
+  event.respondWith(fetch(event.request));
+});
