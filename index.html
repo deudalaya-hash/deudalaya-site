@@ -2483,4 +2483,37 @@ async function uploadToStorage(client,path,file,button){
   var endpoint=SUPABASE_URL.replace('.supabase.co','.storage.supabase.co')+'/storage/v1/upload/resumable';
   await new Promise(function(resolve,reject){var upload=new window.tus.Upload(file,{endpoint:endpoint,chunkSize:6*1024*1024,retryDelays:[0,1000,3000,5000,10000],headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+token},metadata:{bucketName:'videos',objectName:path,contentType:file.type,cacheControl:'3600'},uploadDataDuringCreation:true,removeFingerprintOnSuccess:true,onError:reject,onProgress:function(sent,total){button.textContent='Uploading '+Math.floor(sent/total*100)+'%'},onSuccess:resolve});upload.start()});
 }
-</script></body></html>
+</script><style>
+/* Switch between the main Deudalaya feed and the Layapur profile. */
+#profileSwitcher{position:fixed;z-index:100001;top:12px;left:50%;transform:translateX(-50%);display:flex;gap:4px;padding:4px;border:1px solid #ffffff28;border-radius:999px;background:#17171eeF;box-shadow:0 6px 24px #0008;backdrop-filter:blur(10px)}
+#profileSwitcher .switch-label{align-self:center;padding:0 5px 0 9px;color:#92929c;font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase}
+#profileSwitcher button{min-height:36px;padding:0 14px;border-radius:999px;background:transparent;color:#c9c9d1;font-size:13px;font-weight:750;white-space:nowrap}
+#profileSwitcher button[aria-pressed="true"]{background:#ff315b;color:#fff}
+#layapurFrame{display:none;position:fixed;inset:0;width:100%;height:100dvh;border:0;background:#101014;z-index:100000}
+body.layapur-active> :not(#layapurFrame):not(#profileSwitcher){display:none!important}
+body.layapur-active #layapurFrame{display:block}
+@media(max-width:700px){#profileSwitcher{top:calc(env(safe-area-inset-top,0px) + 10px);left:auto;right:12px;transform:none}#profileSwitcher button{min-height:34px;padding:0 11px;font-size:12px}}
+</style>
+<nav id="profileSwitcher" aria-label="Switch profile">
+  <span class="switch-label" aria-hidden="true">Profile</span>
+  <button type="button" id="feedProfileButton" aria-pressed="true">Deudalaya</button>
+  <button type="button" id="layapurProfileButton" aria-pressed="false">लयपुर</button>
+</nav>
+<iframe id="layapurFrame" title="लयपुर profile" loading="lazy"></iframe>
+<script>
+(()=>{
+  const feed=document.getElementById('feedProfileButton');
+  const layapur=document.getElementById('layapurProfileButton');
+  const frame=document.getElementById('layapurFrame');
+  function selectProfile(profile){
+    const isLayapur=profile==='layapur';
+    document.body.classList.toggle('layapur-active',isLayapur);
+    feed.setAttribute('aria-pressed',String(!isLayapur));
+    layapur.setAttribute('aria-pressed',String(isLayapur));
+    if(isLayapur&&!frame.src) frame.src=new URL('index2.html',document.baseURI).href;
+  }
+  feed.addEventListener('click',()=>selectProfile('feed'));
+  layapur.addEventListener('click',()=>selectProfile('layapur'));
+})();
+</script>
+</body></html>
