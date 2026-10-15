@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>देउडालय</title>
-<meta name="application-name" content="देउडालय">
-<meta name="apple-mobile-web-app-title" content="देउडालय">
+<title>लयपुर — देउडालय</title>
+<meta name="application-name" content="लयपुर">
+<meta name="apple-mobile-web-app-title" content="लयपुर">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="manifest" href="manifest.webmanifest">
+<link rel="manifest" href="layapur.webmanifest?v=2026.10.15.1">
 <link rel="apple-touch-icon" sizes="180x180" href="assets/deudalaya-icon-180.png">
 <meta name="description" content="देउडालय - सुदूर कर्णालीको संस्कृति, देउडा, कविता, कला र कथा। हरेक शुक्रबार शंखमूल पार्क, काठमाडौंमा देउडा साँझ।">
 <meta name="robots" content="index,follow">
@@ -1007,8 +1007,45 @@ h1{text-shadow:1px 1px 0 var(--depth-1),2px 2px 0 var(--depth-2),3px 3px 0 var(-
 @media(hover:hover){h1:hover{text-shadow:1px 1px 0 var(--depth-1),2px 2px 0 var(--depth-2),3px 3px 0 var(--depth-3),4px 4px 0 var(--depth-4),0 18px 30px var(--glow)}}
 .brand{mix-blend-mode:normal}
 </style>
+
+<script>
+// Keep Layapur's install prompt available for its own install button.
+window.layapurInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', function (event) {
+  event.preventDefault();
+  window.layapurInstallPrompt = event;
+});
+if('serviceWorker' in navigator&&window.top===window) navigator.serviceWorker.register(new URL('./sw.js',document.baseURI).href,{scope:new URL('./',document.baseURI).pathname}).catch(function(){});
+(function(){
+  const modes=['standalone','minimal-ui','fullscreen','window-controls-overlay'];
+  function installed(win){try{return modes.some(mode=>win.matchMedia('(display-mode: '+mode+')').matches)||win.navigator.standalone===true||(win.document.referrer||'').indexOf('android-app://')===0}catch(_){return false}}
+  let active=installed(window);
+  try{if(!active&&window.top!==window)active=installed(window.top)}catch(_){}
+  if(active)document.documentElement.classList.add('layapur-installed');
+})();
+</script>
+<style id="layapur-install-gate-styles">
+.layapur-install-gate{position:fixed;inset:0;z-index:1000000;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(ellipse at top,#31271f,#17140f 72%);color:#f5eee3;font:400 16px/1.5 system-ui,"Nirmala UI",sans-serif}
+.layapur-install-gate[hidden],html.layapur-installed .layapur-install-gate{display:none!important}
+.layapur-install-card{width:min(440px,100%);padding:30px 24px;border:1px solid #d6b46d66;border-radius:22px;background:#17140fee;box-shadow:0 20px 70px #000b;text-align:center}
+.layapur-install-card .install-mark{width:76px;height:76px;margin:0 auto 16px;border:2px solid #d6b46d;border-radius:50%;display:grid;place-items:center;color:#e8c98a;font:700 28px/1 serif}
+.layapur-install-card h1{margin:0 0 8px;font-size:25px}
+.layapur-install-card p{margin:0 0 18px;color:#d7cfc2;font-size:14px}
+#layapurInstallButton{width:100%;min-height:52px;border:0;border-radius:28px;background:#ed174c;color:#fff;font-size:16px;font-weight:800;cursor:pointer}
+#layapurInstallHint{min-height:42px;margin-top:14px!important;font-size:13px!important}
+</style>
 </head>
 <body>
+<section class="layapur-install-gate" id="layapurInstallGate" role="dialog" aria-modal="true" aria-labelledby="layapurInstallTitle">
+  <div class="layapur-install-card">
+    <div class="install-mark" aria-hidden="true">लय</div>
+    <h1 id="layapurInstallTitle">लयपुर एप स्थापना</h1>
+    <p>लयपुर खोल्न पहिले यसको एप स्थापना गर्नुहोस्। स्थापना गरेपछि होम स्क्रिनबाट लयपुर एप खोल्नुहोस्।</p>
+    <button type="button" id="layapurInstallButton">लयपुर एप स्थापना गर्नुहोस्</button>
+    <p id="layapurInstallHint" role="status" aria-live="polite"></p>
+  </div>
+</section>
+
 <div class="door" id="door" aria-hidden="true"><span><b class="door-inner" style="font-size:18px">देउडा</b></span><span><b class="door-inner">लय</b></span><div class="door-lock"><svg viewBox="0 0 30 38" aria-hidden="true"><defs><linearGradient id="lkg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3d889"/><stop offset="1" stop-color="#b98a2f"/></linearGradient></defs><path class="shackle" d="M8 17V11a7 7 0 0 1 14 0v6" fill="none" stroke="#e8c98a" stroke-width="3.5" stroke-linecap="round"/><rect x="3" y="16" width="24" height="20" rx="4" fill="url(#lkg)" stroke="#5a3a10" stroke-width="1.5"/><circle cx="15" cy="24.5" r="3" fill="#3a0e0e"/><rect x="13.7" y="25.5" width="2.6" height="6" rx="1" fill="#3a0e0e"/></svg></div><button class="door-key" type="button" aria-label="Unlock with key"><svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="#e8c98a" stroke-width="3" stroke-linecap="round"><circle cx="9" cy="9" r="6"/><path d="M13.5 13.5L27 27M21 21l3.5-3.5M25 25l3.5-3.5"/></svg><small>चाबी</small></button><div class="door-pass" id="door-pass" role="dialog" aria-label="Enter key"><form class="pass-card" id="pass-form" autocomplete="off"><h3>🔑 कोड मिलाउनुस् / Enter code</h3><div class="dials" id="pass-dials"></div><div class="pass-err" id="pass-err" role="alert"></div><div class="pass-btns"><button type="submit">खोल्नुस् / Unlock</button><button type="button" id="pass-cancel">रद्द</button></div><button type="button" class="pass-link" id="pass-forgot">भुल्नुभयो? / Forgot code?</button></form><form class="pass-card" id="rec-form" hidden autocomplete="off"><h3>🛟 रिकभरी / Recovery</h3><p class="pass-note" id="rec-q"></p><input data-pw type="password" id="rec-a" placeholder="Your answer" aria-label="Recovery answer" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"><label class="pw-show"><input type="checkbox"> पासवर्ड देखाउनुस् / Show password</label><div class="pass-err" id="rec-err" role="alert"></div><div class="pass-btns"><button type="submit">रिसेट / Reset lock</button><button type="button" id="rec-back">पछाडि</button></div></form><div class="pass-card" id="ch-card" hidden><h3>🔑 ताला राख्ने? / Add a lock?</h3><p class="pass-note">४ अंकको कोडले ढोका सुरक्षित राख्न सकिन्छ — वा पछि गर्नुस्। / Protect this door with a 4-digit code, or do it later.</p><div class="pass-btns"><button type="button" class="primary" id="ch-set">🔒 ताला सेट गर्नुस् / Set lock</button><button type="button" id="ch-later">पछि / Later</button></div></div></div></div>
 <div class="lock-dlg" id="lock-dlg" role="dialog" aria-label="Door lock"><form class="pass-card" id="lock-form" autocomplete="off"><h3>🔒 ताला / Door lock</h3><p class="pass-note" id="lk-note"></p><div id="lk-cur-wrap"><p class="dl-label">Current code</p><div class="dials" id="lk-cur"></div></div><p class="dl-label" id="lk-newlabel">Choose a 4-digit code</p><div class="dials" id="lk-new"></div><input type="text" data-tx id="lk-q" placeholder="Recovery question (optional), e.g. first school?" aria-label="Recovery question" autocomplete="off" autocapitalize="off" spellcheck="false"><input data-pw type="password" id="lk-a" placeholder="Recovery answer" aria-label="Recovery answer" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"><label class="pw-show"><input type="checkbox"> पासवर्ड देखाउनुस् / Show password</label><div class="pass-err" id="lk-err" role="alert"></div><div class="pass-btns"><button type="submit">सेभ / Save lock</button><button type="button" id="lk-remove">हटाउनुस् / Remove</button><button type="button" id="lk-cancel">रद्द</button></div></form></div>
 <div class="progress" id="progress" aria-hidden="true"></div>
@@ -3077,6 +3114,68 @@ tbtn.addEventListener("click", () => setTheme(document.documentElement.dataset.t
 
   paint();
   if (LANG === "en") { apply(); watch(); }
+})();
+</script>
+<script>
+(()=>{
+  const gate=document.getElementById('layapurInstallGate');
+  const button=document.getElementById('layapurInstallButton');
+  const hint=document.getElementById('layapurInstallHint');
+  let installPrompt=window.layapurInstallPrompt||null;
+  const installedKey='layapur-app-installed';
+  const standaloneModes=['standalone','minimal-ui','fullscreen','window-controls-overlay'];
+  function isStandalone(win){
+    try{return standaloneModes.some(mode=>win.matchMedia('(display-mode: '+mode+')').matches)||win.navigator.standalone===true||(win.document.referrer||'').indexOf('android-app://')===0}catch(_){return false}
+  }
+  function installedContext(){
+    if(isStandalone(window))return true;
+    try{if(window.top!==window&&isStandalone(window.top))return true}catch(_){}
+    return false;
+  }
+  function updateGate(){
+    const active=installedContext();
+    gate.hidden=active;
+    document.documentElement.classList.toggle('layapur-installed',active);
+    if(!active){
+      try{if(localStorage.getItem(installedKey)==='1'){
+        button.textContent='होम स्क्रिनबाट लयपुर खोल्नुहोस्';
+        hint.textContent='लयपुर एप स्थापना भइसकेको छ। यो ट्याब बन्द गरेर होम स्क्रिनबाट एप खोल्नुहोस्।';
+      }}catch(_){}
+    }
+  }
+  window.addEventListener('beforeinstallprompt',event=>{
+    event.preventDefault();installPrompt=event;window.layapurInstallPrompt=event;
+    button.textContent='लयपुर एप स्थापना गर्नुहोस्';
+    hint.textContent='लयपुर एप स्थापना गर्न तयार छ। बटन थिच्नुहोस्।';
+  });
+  window.addEventListener('appinstalled',()=>{
+    installPrompt=null;window.layapurInstallPrompt=null;
+    try{localStorage.setItem(installedKey,'1')}catch(_){}
+    button.textContent='होम स्क्रिनबाट लयपुर खोल्नुहोस्';
+    hint.textContent='लयपुर स्थापना भयो। यो ट्याब बन्द गरेर होम स्क्रिनबाट लयपुर एप खोल्नुहोस्।';
+  });
+  button.addEventListener('click',async()=>{
+    if(window.top!==window&&!installedContext()){
+      window.top.location.assign(new URL('./index2.html',document.baseURI).href);
+      return;
+    }
+    if(installPrompt){
+      const promptEvent=installPrompt;
+      try{
+        promptEvent.prompt();
+        const result=await promptEvent.userChoice;
+        installPrompt=null;window.layapurInstallPrompt=null;
+        hint.textContent=result.outcome==='accepted'?'स्थापना भयो। यो ट्याब बन्द गरेर होम स्क्रिनबाट लयपुर एप खोल्नुहोस्।':'स्थापना रद्द भयो। खोल्न लयपुर एप स्थापना गर्नुहोस्।';
+        button.textContent=result.outcome==='accepted'?'होम स्क्रिनबाट लयपुर खोल्नुहोस्':'लयपुर एप स्थापना गर्नुहोस्';
+      }catch(_){hint.textContent='स्थापना सुरु हुन सकेन। ब्राउजर मेनुबाट Install app छान्नुहोस्।'}
+      return;
+    }
+    let alreadyInstalled=false;try{alreadyInstalled=localStorage.getItem(installedKey)==='1'}catch(_){}
+    if(alreadyInstalled){hint.textContent='लयपुर एप पहिले नै स्थापना भएको छ। यो ट्याब बन्द गरेर होम स्क्रिनबाट लयपुर एप खोल्नुहोस्।';button.textContent='होम स्क्रिनबाट लयपुर खोल्नुहोस्';return}
+    const ios=/iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+    hint.textContent=ios?'Safari मा Share थिच्नुहोस्, Add to Home Screen छान्नुहोस्, अनि Add थिच्नुहोस्।':'ब्राउजर मेनु खोल्नुहोस् र “Install लयपुर” वा “Add to Home screen” छान्नुहोस्। स्थापना गरेपछि होम स्क्रिनबाट लयपुर एप खोल्नुहोस्।';
+  });
+  updateGate();
 })();
 </script>
 </body>
