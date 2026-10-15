@@ -364,51 +364,53 @@ function setInstallBusy(on,label){
 }
 installAction.addEventListener('click',async()=>{
   if(installAction.classList.contains('installing'))return;
-  let promptEvent=deferredInstallPrompt||window.deudalayaInstallPrompt;
+
+  /* The native PWA prompt must be called directly from the user's click.
+     Waiting for a later beforeinstallprompt event can lose browser user activation. */
+  const promptEvent=deferredInstallPrompt||window.deudalayaInstallPrompt||null;
+
   if(!promptEvent){
-    /* Chrome may fire beforeinstallprompt a moment late; a tap stays "active" for a few seconds, so wait briefly and prompt right away. */
-    const label=installAction.querySelector('.ia-text'),prevText=label?label.textContent:'';
-    if(label)label.textContent='Checking…';
-    installAction.disabled=true;
-    promptEvent=await new Promise(function(resolve){
-      let done=false;
-      function finish(e){if(done)return;done=true;window.removeEventListener('beforeinstallprompt',on);resolve(e||null)}
-      function on(e){e.preventDefault();window.deudalayaInstallPrompt=e;deferredInstallPrompt=e;finish(e)}
-      window.addEventListener('beforeinstallprompt',on);
-      setTimeout(function(){finish(deferredInstallPrompt||window.deudalayaInstallPrompt||null)},2500);
-    });
-    installAction.disabled=false;
-    if(label)label.textContent=prevText||'Install देउडालय App';
-  }
-  if(promptEvent){
-    deferredInstallPrompt=null;
-    setInstallBusy(true,'Installing');
-    try{
-      promptEvent.prompt();
-      const choice=await promptEvent.userChoice;
-      window.deudalayaInstallPrompt=null;
-      if(choice.outcome==='accepted'){
-        setInstallBusy(true,'Installing');
-        if(installHint)installHint.textContent='Installing देउडालय… Almost done. The gate will open when the app is ready.';
-        clearTimeout(window._installWatch);
-        window._installWatch=setTimeout(function(){
-          if(!gateOpened){
-            if(installHint)installHint.textContent='If already installed, open देउडालय from your home screen.';
-            setInstallBusy(false,'Install देउडालय App');
-          }
-        },45000);
-      }else{
-        setInstallBusy(false,'Install देउडालय App');
-        if(installHint)installHint.textContent='Installation was cancelled. Tap Install to try again.';
-      }
-    }catch(err){
-      setInstallBusy(false,'Install देउडालय App');
-      if(installHint)installHint.textContent='Could not start install. Try again or use your browser menu.';
-    }
+    showInstallInstructions();
+    setInstallBusy(false,'Install देउडालय App');
     return;
   }
-  showInstallInstructions();
-  setInstallBusy(false,'Install देउडालय App');
+
+  deferredInstallPrompt=null;
+  setInstallBusy(true,'Installing');
+
+  try{
+    promptEvent.prompt();
+    const choice=await promptEvent.userChoice;
+    window.deudalayaInstallPrompt=null;
+
+    if(choice && choice.outcome==='accepted'){
+      setInstallBusy(true,'Installing');
+      if(installHint){
+        installHint.textContent='Installation started. When it finishes, open देउडालय from your home screen.';
+        installHint.classList.add('is-visible');
+      }
+      clearTimeout(window._installWatch);
+      window._installWatch=setTimeout(function(){
+        if(!gateOpened){
+          if(installHint){
+            installHint.textContent='If installation finished, close this tab and open देउडालय from your home screen. If not, try the browser menu.';
+            installHint.classList.add('is-visible');
+          }
+          setInstallBusy(false,'Install देउडालय App');
+        }
+      },45000);
+    }else{
+      setInstallBusy(false,'Install देउडालय App');
+      if(installHint){
+        installHint.textContent='Installation was cancelled. Tap Install to try again.';
+        installHint.classList.add('is-visible');
+      }
+    }
+  }catch(err){
+    console.warn('[install] PWA installation prompt failed:',err);
+    setInstallBusy(false,'Install देउडालय App');
+    showInstallInstructions();
+  }
 });
 document.addEventListener('keydown',event=>{if(!gateOpened&&event.key==='Tab'){event.preventDefault();installAction.focus()}if(!gateOpened&&event.key==='Escape')event.preventDefault()});/* gateContinue removed */if(isStandalone()){openInstalledGate()}else{/* continue-in-browser disabled */}function showFeedTab(button){document.querySelectorAll('.feed-tabs button').forEach(item=>item.classList.remove('selected'));button.classList.add('selected')}function openFeedSearch(){const panel=document.getElementById('feedSearchPanel');panel.classList.toggle('visible');if(panel.classList.contains('visible'))document.getElementById('feedSearchInput').focus()}function submitFeedSearch(){const input=document.getElementById('feedSearchInput'),search=document.getElementById('search');if(search){search.value=input.value;search.dispatchEvent(new Event('input',{bubbles:true}));search.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}))}}if(isStandalone()){openInstalledGate()}else{document.body.classList.add('gate-locked');installAction.focus()}const launchSplash=document.getElementById('launchSplash');if(launchSplash&&isStandalone()){launchSplash.hidden=true}else if(launchSplash){const splashStarted=performance.now();let splashDismissed=false;const dismissLaunchSplash=()=>{if(splashDismissed)return;splashDismissed=true;setTimeout(()=>launchSplash.classList.add('fade-out'),Math.max(0,650-(performance.now()-splashStarted)))};if(document.readyState==='complete')dismissLaunchSplash();else window.addEventListener('load',dismissLaunchSplash,{once:true});setTimeout(dismissLaunchSplash,3000)}const siteBuildVersion='2026.10.15.4';
 const updateNotice=document.getElementById('updateNotice');
@@ -2535,6 +2537,8 @@ async function uploadToStorage(client,path,file,button){
 /* Switch between the main Deudalaya feed and the Layapur profile. */
 #profileSwitcher{position:fixed;z-index:1000001;top:78px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:20px;padding:8px 12px;background:#101014d9;border:1px solid #ffffff2a;border-radius:999px;box-shadow:0 6px 24px #0008;backdrop-filter:blur(10px);cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
 body.gate-locked #profileSwitcher{display:none}
+/* Keep the profile switcher inside the app, never on the locked opening gate. */
+body.gate-locked #profileSwitcher{visibility:hidden;pointer-events:none}
 #profileSwitcher .switcher-collapse{display:grid;place-items:center;min-width:30px;min-height:30px;padding:4px;border:0;border-radius:50%;background:#ffffff16;color:#fff;font-size:19px;line-height:1;cursor:pointer}
 #profileSwitcher.is-collapsed{gap:0;padding:5px}
 #profileSwitcher.is-collapsed #feedProfileButton,#profileSwitcher.is-collapsed #layapurProfileButton{display:none}
