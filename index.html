@@ -177,6 +177,10 @@ if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catc
 </script>
 <link rel="stylesheet" href="install-gate.css?v=2026.10.15.2">
 <style id="compact-deudalaya-install-gate">
+ #installGate{align-items:flex-start;padding:0;background:transparent}
+ html.deudalaya-installed .app-gate{display:none!important}
+ #installGate .required-install-card{position:absolute;left:50%;top:calc(50% + 132px);transform:translateX(-50%);width:auto;max-width:calc(100vw - 32px);padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
+ #installGate .required-install-card .install-mark{display:none}
 #installGate .required-install-card{width:auto;max-width:calc(100vw - 32px);padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;display:flex;flex-direction:column;align-items:center;gap:12px}
 #installGate .required-install-card .install-mark{width:64px;height:64px;margin:0;font-size:24px}
 #installGate .required-install-card h1,#installGate .required-install-card>p:not(#installHint){display:none}
@@ -210,7 +214,7 @@ if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catc
 <aside class="update-notice update-notice-check" id="updateCheckToast" role="status" aria-live="polite" hidden>
 <div><strong id="updateCheckTitle">Checking…</strong><span id="updateCheckMsg"></span></div>
 <button type="button" id="dismissCheckToast" aria-label="Dismiss">×</button>
-</aside><section class="required-install-gate" id="installGate" role="dialog" aria-modal="true" aria-labelledby="installTitle">
+</aside><section class="app-gate" id="deudalayaGate" aria-hidden="true"><div class="gate-door gate-door-left"><div class="gate-ornament"><b>देउडा</b><span>देउडालय</span></div></div><div class="gate-door gate-door-right"><div class="gate-ornament"><b>देउडा</b><span>देउडालय</span></div></div><div class="gate-lock"><span>देउडालय</span></div></section><section class="required-install-gate" id="installGate" role="dialog" aria-modal="true" aria-labelledby="installTitle">
   <div class="required-install-card" id="deudalayaInstallCard">
     <div class="install-mark" aria-hidden="true">देउडा</div>
     <h1 id="installTitle">Install देउडालय App</h1>
