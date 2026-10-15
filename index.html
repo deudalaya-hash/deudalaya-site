@@ -4,10 +4,10 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preload" as="image" href="dashain.webp" fetchpriority="high"><meta name="theme-color" content="#ffffff">
 <title>देउडालय</title>
 <meta name="application-name" content="देउडालय">
-<meta name="deudalaya-version" content="2026.10.13.23">
+<meta name="deudalaya-version" content="2026.10.15.3">
 <meta name="apple-mobile-web-app-title" content="देउडालय">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="manifest" href="manifest.webmanifest?v=2026.10.13.23">
+<link rel="manifest" href="manifest.webmanifest?v=2026.10.15.3">
 <link rel="apple-touch-icon" sizes="180x180" href="assets/deudalaya-icon-180.png">
 <meta property="og:site_name" content="देउडालय">
 <meta property="og:title" content="देउडालय">
@@ -153,12 +153,13 @@ window.addEventListener('beforeinstallprompt', function (event) {
   event.preventDefault();
   window.deudalayaInstallPrompt = event;
 });
-if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function(){});
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js',{scope:'./'}).catch(function(e){console.warn('[install] service worker failed to register:',e&&e.message||e)});
 (function(){
   var modes=['standalone','minimal-ui','fullscreen','window-controls-overlay'];
   function installed(win){try{return modes.some(function(mode){return win.matchMedia('(display-mode: '+mode+')').matches})||win.navigator.standalone===true||(win.document.referrer||'').indexOf('android-app://')===0}catch(_){return false}}
   var active=installed(window);
   try{if(!active&&window.top!==window)active=installed(window.top)}catch(_){}
+  try{if(sessionStorage.getItem('deudalaya-browser-ok')==='1')active=true}catch(_){}
   if(active)document.documentElement.classList.add('deudalaya-installed');
 })();
 </script>
@@ -190,10 +191,12 @@ if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catc
 #installGate #installAction:disabled{opacity:.85;cursor:default}
 #installGate #installHint{display:none;min-height:0;max-width:calc(100vw - 40px);margin:0;font-size:12px;line-height:1.5;text-align:center;color:#f6e7c1;text-shadow:0 1px 6px #000}
 #installGate #installHint.is-visible{display:block}
+#installGate .continue-browser{background:none;border:0;padding:6px 10px;color:#f6e7c1;font:600 13px/1 "Segoe UI",Helvetica,Arial,sans-serif;text-decoration:underline;text-underline-offset:3px;cursor:pointer;text-shadow:0 1px 6px #000}
+#installGate .continue-browser[hidden]{display:none}
 </style>
 </head>
 <body>
-<div class="launch-splash" id="launchSplash" aria-label="देउडालय खोलिँदैछ"><img src="logo.png?v=2026.10.13.23" alt="देउडालय लोगो" width="900" height="692" fetchpriority="high"></div>
+<div class="launch-splash" id="launchSplash" aria-label="देउडालय खोलिँदैछ"><img src="logo.png?v=2026.10.15.3" alt="देउडालय लोगो" width="900" height="692" fetchpriority="high"></div>
 <div class="app">
 
  <header class="topbar"><div class="brand"><img src="assets/inline-media/aa31fbd9abbab07d8a39.webp" alt="देउडालय logo"><span>देउडालय</span></div><label class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="search" placeholder="Search videos, creators, sounds"/><span style="color:#555;font-size:12px">⌘ K</span></label><button class="login" id="topAuthButton" type="button" onclick="handleAuthAction()">Sign in</button></header>
@@ -224,6 +227,7 @@ if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catc
     <p>Install the देउडालय app to continue. After installation, open देउडालय from your home screen.</p>
     <button type="button" id="installAction" class="required-install-action"><span class="ia-text">Install देउडालय App</span></button>
     <p id="installHint" class="required-install-hint" role="status" aria-live="polite"></p>
+    <button type="button" id="continueBrowser" class="continue-browser" hidden>Continue in browser</button>
   </div>
 </section><input id="videoUpload" type="file" accept="video/*,image/jpeg,image/png,image/webp,.mp4,.webm,.jpg,.jpeg,.png,.webp" hidden><div class="upload-modal" id="uploadModal" aria-hidden="true"><form class="upload-card" onsubmit="publishUpload(event)"><button class="upload-close" type="button" onclick="closeUpload()" aria-label="Close">×</button><h2>Post a short video</h2><p class="upload-hint">Add a short MP4/WebM video or JPEG/PNG/WebP image. Videos can be up to 15 seconds and media up to 50 MB.</p><video id="uploadPreview" playsinline controls hidden></video><img id="uploadImagePreview" alt="Media preview" hidden><label class="caption-label" for="uploadCaption">Caption</label><textarea id="uploadCaption" maxlength="220" placeholder="Add a caption…"></textarea><label class="caption-label" for="uploadCategory">Category</label><select id="uploadCategory" required><option value="">Select a category</option><option>देउडा</option><option>लोकगीत तथा संगीत</option><option>कला तथा संस्कृति</option><option>चाडपर्व तथा जात्रा</option><option>गाउँघर तथा जनजीवन</option><option>पर्यटन तथा प्राकृतिक सौन्दर्य</option><option>भाषा तथा साहित्य</option><option>इतिहास तथा परम्परा</option><option>स्थानीय उत्पादन तथा सीप</option><option>युवा प्रतिभा</option><option>शिक्षा तथा अनुसन्धान</option><option>अन्य</option></select><label class="caption-label" for="uploadLocation">Location (optional)</label><input id="uploadLocation" type="text" maxlength="120" placeholder="Place or district"><label class="copyright-check"><input id="uploadRights" type="checkbox"> I have the right to upload this video.</label><div class="upload-meta"><span id="uploadDuration">Choose a video to preview</span><span id="captionCount">0 / 220</span></div><p class="upload-hint" id="uploadBackendNote">After upload, this media is stored online and visible to everyone in the shared देउडालय feed.</p><button class="publish-button" id="publishButton" type="submit" disabled>Add to feed</button></form></div><div class="auth-modal" id="authModal" aria-hidden="true"><form class="auth-card" onsubmit="submitAuth(event)"><button class="upload-close" type="button" onclick="closeAuth()" aria-label="Close">×</button><h2 id="authTitle">Sign in to देउडालय</h2><p id="authMessage">Sign in to like, comment, follow creators, and post.</p><div id="signupFields" hidden><label for="signupDisplayName">Name</label><input id="signupDisplayName" maxlength="60" autocomplete="name" placeholder="Your name"><label for="signupUsername">Username</label><input id="signupUsername" maxlength="24" pattern="[A-Za-z0-9._]{3,24}" autocomplete="username" placeholder="yourname"><small>3–24 letters, numbers, dots, or underscores</small></div><label for="authEmail">Email</label><input id="authEmail" type="email" autocomplete="email" required placeholder="you@example.com"><label for="authPassword">Password</label><input id="authPassword" type="password" autocomplete="current-password" minlength="8" required placeholder="At least 8 characters"><button class="publish-button" id="authSubmit" type="submit">Sign in</button><button class="auth-mode-toggle" type="button" id="authModeToggle" onclick="toggleAuthMode()">Create an account</button></form></div>
 <div class="toast" id="toast"></div>
@@ -392,7 +396,7 @@ installAction.addEventListener('click',async()=>{
   showInstallInstructions();
   setInstallBusy(false,'Install देउडालय App');
 });
-document.addEventListener('keydown',event=>{if(!gateOpened&&event.key==='Tab'){event.preventDefault();installAction.focus()}if(!gateOpened&&event.key==='Escape')event.preventDefault()});/* gateContinue removed */if(isStandalone()){openInstalledGate()}else{/* continue-in-browser disabled */}function showFeedTab(button){document.querySelectorAll('.feed-tabs button').forEach(item=>item.classList.remove('selected'));button.classList.add('selected')}function openFeedSearch(){const panel=document.getElementById('feedSearchPanel');panel.classList.toggle('visible');if(panel.classList.contains('visible'))document.getElementById('feedSearchInput').focus()}function submitFeedSearch(){const input=document.getElementById('feedSearchInput'),search=document.getElementById('search');if(search){search.value=input.value;search.dispatchEvent(new Event('input',{bubbles:true}));search.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}))}}if(isStandalone()){openInstalledGate()}else{document.body.classList.add('gate-locked');installAction.focus()}const launchSplash=document.getElementById('launchSplash');if(launchSplash&&isStandalone()){launchSplash.hidden=true}else if(launchSplash){const splashStarted=performance.now();let splashDismissed=false;const dismissLaunchSplash=()=>{if(splashDismissed)return;splashDismissed=true;setTimeout(()=>launchSplash.classList.add('fade-out'),Math.max(0,650-(performance.now()-splashStarted)))};if(document.readyState==='complete')dismissLaunchSplash();else window.addEventListener('load',dismissLaunchSplash,{once:true});setTimeout(dismissLaunchSplash,3000)}const siteBuildVersion='2026.10.13.23';
+document.addEventListener('keydown',event=>{if(!gateOpened&&event.key==='Tab'){event.preventDefault();installAction.focus()}if(!gateOpened&&event.key==='Escape')event.preventDefault()});/* gateContinue removed */if(isStandalone()){openInstalledGate()}else{/* continue-in-browser disabled */}function showFeedTab(button){document.querySelectorAll('.feed-tabs button').forEach(item=>item.classList.remove('selected'));button.classList.add('selected')}function openFeedSearch(){const panel=document.getElementById('feedSearchPanel');panel.classList.toggle('visible');if(panel.classList.contains('visible'))document.getElementById('feedSearchInput').focus()}function submitFeedSearch(){const input=document.getElementById('feedSearchInput'),search=document.getElementById('search');if(search){search.value=input.value;search.dispatchEvent(new Event('input',{bubbles:true}));search.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}))}}if(isStandalone()){openInstalledGate()}else{document.body.classList.add('gate-locked');installAction.focus()}const launchSplash=document.getElementById('launchSplash');if(launchSplash&&isStandalone()){launchSplash.hidden=true}else if(launchSplash){const splashStarted=performance.now();let splashDismissed=false;const dismissLaunchSplash=()=>{if(splashDismissed)return;splashDismissed=true;setTimeout(()=>launchSplash.classList.add('fade-out'),Math.max(0,650-(performance.now()-splashStarted)))};if(document.readyState==='complete')dismissLaunchSplash();else window.addEventListener('load',dismissLaunchSplash,{once:true});setTimeout(dismissLaunchSplash,3000)}const siteBuildVersion='2026.10.15.3';
 const updateNotice=document.getElementById('updateNotice');
 const UPDATE_DISMISS_KEY='deudalaya-update-dismissed';
 const UPDATE_LATER_KEY='deudalaya-update-later';
@@ -513,7 +517,7 @@ setInterval(function(){if(document.visibilityState==='visible')checkForSiteUpdat
 document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')checkForSiteUpdate()});
 window.checkForSiteUpdate=checkForSiteUpdate;
 window.applySiteUpdate=applySiteUpdate;
-</script><script src="social.js?v=2026.10.13.23"></script>
+</script><script src="social.js?v=2026.10.15.3"></script>
 <!-- ADDED: TikTok-style grid of all posts (new, standalone; no existing code changed) -->
 <style>
 .gridview{position:fixed;inset:0;z-index:9000;background:#101014;color:#fff;display:none;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
@@ -670,8 +674,9 @@ function isRealStandalone(){
   }) || navigator.standalone===true || (document.referrer||'').indexOf('android-app://')===0;
 }
 window.addEventListener('appinstalled', setFlag);
-if(isRealStandalone()){
-  setFlag();
+var bok=false;try{bok=sessionStorage.getItem('deudalaya-browser-ok')==='1'}catch(e){}
+if(isRealStandalone()||bok){
+  if(!bok)setFlag();
   try{gateOpened=true}catch(e){}
   var g=document.getElementById('installGate');
   if(g){g.hidden=true;g.setAttribute('aria-hidden','true');g.classList.add('opening')}
@@ -2599,6 +2604,80 @@ body.layapur-active #layapurFrame{display:block}
   window.addEventListener('resize',()=>{if(savedPosition)placeDock(savedPosition.left,savedPosition.top,savedPosition.edge,false)});
   feed.addEventListener('click',()=>selectProfile('feed'));
   layapur.addEventListener('click',()=>selectProfile('layapur'));
+})();
+</script>
+
+<!-- ADDED: "Continue in browser" way out. It only appears when installing is impossible (no install prompt after a few seconds,
+     app already installed, iOS/Firefox, in-app browser) so nobody is locked out. If the browser offers the real install, it never shows. -->
+<script>
+(function(){
+  var btn=document.getElementById('continueBrowser'),hint=document.getElementById('installHint'),
+      action=document.getElementById('installAction'),gate=document.getElementById('installGate'),door=document.getElementById('deudalayaDoor');
+  if(!btn)return;
+  var modes=['standalone','minimal-ui','fullscreen','window-controls-overlay'];
+  function standalone(){try{return modes.some(function(m){return window.matchMedia('(display-mode: '+m+')').matches})||navigator.standalone===true}catch(e){return false}}
+  function reveal(){
+    if(standalone()||window.deudalayaInstallPrompt)return;
+    btn.hidden=false;
+    if(hint&&!hint.textContent){
+      var ios=/iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+      hint.textContent=ios?'On iPhone/iPad: tap Share, then “Add to Home Screen”.':'Install is not available in this browser right now. If you already installed देउडालय, tap “Open in app” in the address bar or open it from your home screen.';
+      hint.classList.add('is-visible');
+    }
+  }
+  window.addEventListener('beforeinstallprompt',function(){btn.hidden=true});
+  window.addEventListener('load',function(){setTimeout(reveal,4000)});
+  if(action)action.addEventListener('click',function(){setTimeout(reveal,0)});
+  btn.addEventListener('click',function(){
+    try{sessionStorage.setItem('deudalaya-browser-ok','1')}catch(e){}
+    try{gateOpened=true}catch(e){}
+    document.documentElement.classList.add('deudalaya-installed');
+    document.body.classList.remove('gate-locked');
+    if(gate){gate.hidden=true;gate.setAttribute('aria-hidden','true')}
+    if(door)door.hidden=true;
+  });
+})();
+</script>
+
+<!-- ADDED: install diagnostics. Open the browser console (or run deudalayaInstallDiag()) to see exactly why install is not available. -->
+<script>
+(function(){
+  async function diag(){
+    var out=[],ok=true;
+    function bad(m){ok=false;out.push('✗ '+m)}function good(m){out.push('✓ '+m)}
+    (location.protocol==='https:'||location.hostname==='localhost'||location.hostname==='127.0.0.1')?good('Secure origin ('+location.origin+')'):bad('Page is not HTTPS — browsers will not offer install');
+    var link=document.querySelector('link[rel=manifest]');
+    if(!link)bad('No <link rel="manifest">');
+    else{
+      try{
+        var r=await fetch(link.href,{cache:'no-store'});
+        if(!r.ok)bad('Manifest request failed: HTTP '+r.status+' ('+link.href+')');
+        else{
+          var m=await r.json();good('Manifest loads');
+          (m.name||m.short_name)?good('name present'):bad('Manifest needs name or short_name');
+          m.start_url?good('start_url: '+m.start_url):bad('Manifest needs start_url');
+          ['standalone','fullscreen','minimal-ui'].indexOf(m.display)>-1?good('display: '+m.display):bad('display must be standalone/fullscreen/minimal-ui (is "'+m.display+'")');
+          var icons=m.icons||[];
+          var has=function(n){return icons.some(function(i){return String(i.sizes||'').split(' ').some(function(z){return z===n+'x'+n||z==='any'})})};
+          has(192)?good('192x192 icon declared'):bad('No 192x192 icon in manifest');
+          has(512)?good('512x512 icon declared'):bad('No 512x512 icon in manifest');
+          for(var i=0;i<icons.length;i++){try{var ir=await fetch(new URL(icons[i].src,r.url).href,{cache:'no-store'});ir.ok?good('Icon loads: '+icons[i].src):bad('Icon missing (HTTP '+ir.status+'): '+icons[i].src)}catch(e){bad('Icon failed: '+icons[i].src)}}
+        }
+      }catch(e){bad('Manifest error: '+(e&&e.message||e))}
+    }
+    if(!('serviceWorker' in navigator))bad('Service workers unsupported in this browser');
+    else{
+      var reg=await navigator.serviceWorker.getRegistration();
+      reg?good('Service worker registered (scope '+reg.scope+')'):bad('No service worker registered — check that sw.js exists next to index.html');
+    }
+    if(/FBAN|FBAV|Instagram|Messenger|Line\/|; wv\)/i.test(navigator.userAgent))bad('This looks like an in-app browser/WebView — open the link in Chrome or Safari');
+    if(window.deudalayaInstallPrompt)good('beforeinstallprompt has fired — install is available');
+    else out.push('… beforeinstallprompt has NOT fired. If Chrome shows "Open in app" in the address bar, the app is ALREADY INSTALLED and Chrome will not offer install again (uninstall at chrome://apps to test). Also normal on iOS/Safari/Firefox.');
+    console[ok?'log':'warn']('[install] diagnostics\n'+out.join('\n'));
+    return out;
+  }
+  window.deudalayaInstallDiag=diag;
+  window.addEventListener('load',function(){setTimeout(function(){if(!window.deudalayaInstallPrompt)diag().catch(function(){})},3000)});
 })();
 </script>
 </body></html>
