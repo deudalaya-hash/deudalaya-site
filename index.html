@@ -2684,4 +2684,53 @@ body.layapur-active #layapurFrame{display:block}
 </script>
 
 
+
+<script>
+/* देउडालय: automatically request installation when the browser exposes the PWA prompt.
+   Browsers still require user approval and may block prompts without a user gesture. */
+(function(){
+  var promptEvent = window.deudalayaInstallPrompt || null;
+  var installButton = document.getElementById('installAction');
+  var installHint = document.getElementById('installHint');
+  var alreadyStandalone = function(){
+    try {
+      return ['standalone','minimal-ui','fullscreen','window-controls-overlay'].some(function(mode){
+        return window.matchMedia('(display-mode: '+mode+')').matches;
+      }) || navigator.standalone === true ||
+      (document.referrer || '').indexOf('android-app://') === 0;
+    } catch (_) { return false; }
+  };
+
+  if (alreadyStandalone()) return;
+
+  window.addEventListener('beforeinstallprompt', function(event){
+    event.preventDefault();
+    promptEvent = event;
+    window.deudalayaInstallPrompt = event;
+    /* Do not call prompt() automatically: supported browsers require a user gesture. */
+    if (installButton) {
+      var label = installButton.querySelector('.ia-text');
+      if (label) label.textContent = 'Install देउडालय App';
+    }
+    if (installHint) {
+      installHint.textContent = 'देउडालय is ready to install. Tap Install to continue.';
+      installHint.classList.add('is-visible');
+    }
+  });
+
+  window.addEventListener('load', function(){
+    setTimeout(function(){
+      if (alreadyStandalone()) return;
+      if (promptEvent && installButton) {
+        /* Browsers can reject prompt() without a fresh click; the button remains available. */
+        installButton.classList.add('install-ready');
+      } else if (installHint) {
+        installHint.textContent = 'To install देउडालय, use your browser menu and choose “Install app” or “Add to Home screen”.';
+        installHint.classList.add('is-visible');
+      }
+    }, 700);
+  });
+})();
+</script>
+
 </body></html>
