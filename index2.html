@@ -1030,9 +1030,9 @@ if('serviceWorker' in navigator&&window.top===window) navigator.serviceWorker.re
 <section class="required-install-gate" id="layapurInstallGate" role="dialog" aria-modal="true" aria-labelledby="layapurInstallTitle">
   <div class="required-install-card">
     <div class="install-mark" aria-hidden="true">लय</div>
-    <h1 id="layapurInstallTitle">लयपुर एप स्थापना</h1>
-    <p>लयपुर खोल्न पहिले यसको एप स्थापना गर्नुहोस्। स्थापना गरेपछि होम स्क्रिनबाट लयपुर एप खोल्नुहोस्।</p>
-    <button type="button" id="layapurInstallButton" class="required-install-action">लयपुर एप स्थापना गर्नुहोस्</button>
+    <h1 id="layapurInstallTitle">Install लयपुर App</h1>
+    <p>Install the लयपुर app to continue. After installation, open लयपुर from your home screen.</p>
+    <button type="button" id="layapurInstallButton" class="required-install-action">Install लयपुर App</button>
     <p id="layapurInstallHint" class="required-install-hint" role="status" aria-live="polite"></p>
   </div>
 </section>
@@ -3129,21 +3129,21 @@ tbtn.addEventListener("click", () => setTheme(document.documentElement.dataset.t
     document.documentElement.classList.toggle('layapur-installed',active);
     if(!active){
       try{if(localStorage.getItem(installedKey)==='1'){
-        button.textContent='होम स्क्रिनबाट लयपुर खोल्नुहोस्';
-        hint.textContent='लयपुर एप स्थापना भइसकेको छ। यो ट्याब बन्द गरेर होम स्क्रिनबाट एप खोल्नुहोस्।';
+        button.textContent='Open लयपुर from home screen';
+        hint.textContent='लयपुर is already installed. Close this tab and open the app from your home screen.';
       }}catch(_){}
     }
   }
   window.addEventListener('beforeinstallprompt',event=>{
     event.preventDefault();installPrompt=event;window.layapurInstallPrompt=event;
-    button.textContent='लयपुर एप स्थापना गर्नुहोस्';
-    hint.textContent='लयपुर एप स्थापना गर्न तयार छ। बटन थिच्नुहोस्।';
+    button.textContent='Install लयपुर App';
+    hint.textContent='लयपुर is ready to install. Tap the button to continue.';
   });
   window.addEventListener('appinstalled',()=>{
     installPrompt=null;window.layapurInstallPrompt=null;
     try{localStorage.setItem(installedKey,'1')}catch(_){}
-    button.textContent='होम स्क्रिनबाट लयपुर खोल्नुहोस्';
-    hint.textContent='लयपुर स्थापना भयो। यो ट्याब बन्द गरेर होम स्क्रिनबाट लयपुर एप खोल्नुहोस्।';
+    button.textContent='Open लयपुर from home screen';
+    hint.textContent='लयपुर is installed. Close this tab and open the app from your home screen.';
   });
   button.addEventListener('click',async()=>{
     if(window.top!==window&&!installedContext()){
@@ -3156,15 +3156,15 @@ tbtn.addEventListener("click", () => setTheme(document.documentElement.dataset.t
         promptEvent.prompt();
         const result=await promptEvent.userChoice;
         installPrompt=null;window.layapurInstallPrompt=null;
-        hint.textContent=result.outcome==='accepted'?'स्थापना भयो। यो ट्याब बन्द गरेर होम स्क्रिनबाट लयपुर एप खोल्नुहोस्।':'स्थापना रद्द भयो। खोल्न लयपुर एप स्थापना गर्नुहोस्।';
-        button.textContent=result.outcome==='accepted'?'होम स्क्रिनबाट लयपुर खोल्नुहोस्':'लयपुर एप स्थापना गर्नुहोस्';
-      }catch(_){hint.textContent='स्थापना सुरु हुन सकेन। ब्राउजर मेनुबाट Install app छान्नुहोस्।'}
+        hint.textContent=result.outcome==='accepted'?'Installation complete. Close this tab and open लयपुर from your home screen.':'Installation was cancelled. Tap Install लयपुर App to try again.';
+        button.textContent=result.outcome==='accepted'?'Open लयपुर from home screen':'Install लयपुर App';
+      }catch(_){hint.textContent='Could not start installation. Open your browser menu and choose Install app.'}
       return;
     }
     let alreadyInstalled=false;try{alreadyInstalled=localStorage.getItem(installedKey)==='1'}catch(_){}
-    if(alreadyInstalled){hint.textContent='लयपुर एप पहिले नै स्थापना भएको छ। यो ट्याब बन्द गरेर होम स्क्रिनबाट लयपुर एप खोल्नुहोस्।';button.textContent='होम स्क्रिनबाट लयपुर खोल्नुहोस्';return}
+    if(alreadyInstalled){hint.textContent='लयपुर is already installed. Close this tab and open the app from your home screen.';button.textContent='Open लयपुर from home screen';return}
     const ios=/iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-    hint.textContent=ios?'Safari मा Share थिच्नुहोस्, Add to Home Screen छान्नुहोस्, अनि Add थिच्नुहोस्।':'ब्राउजर मेनु खोल्नुहोस् र “Install लयपुर” वा “Add to Home screen” छान्नुहोस्। स्थापना गरेपछि होम स्क्रिनबाट लयपुर एप खोल्नुहोस्।';
+    hint.textContent=ios?'On iPhone or iPad, tap Share, choose “Add to Home Screen,” then tap Add.':'If no install prompt appears, open your browser menu and choose “Install लयपुर” or “Add to Home screen.” After installation, open लयपुर from your home screen.';
   });
   updateGate();
 })();
