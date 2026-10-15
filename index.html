@@ -2485,18 +2485,17 @@ async function uploadToStorage(client,path,file,button){
 }
 </script><style>
 /* Switch between the main Deudalaya feed and the Layapur profile. */
-#profileSwitcher{position:fixed;z-index:100001;top:12px;left:50%;transform:translateX(-50%);display:flex;gap:4px;padding:4px;border:1px solid #ffffff28;border-radius:999px;background:#17171eeF;box-shadow:0 6px 24px #0008;backdrop-filter:blur(10px)}
-#profileSwitcher .switch-label{align-self:center;padding:0 5px 0 9px;color:#92929c;font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase}
-#profileSwitcher button{min-height:36px;padding:0 14px;border-radius:999px;background:transparent;color:#c9c9d1;font-size:13px;font-weight:750;white-space:nowrap}
-#profileSwitcher button[aria-pressed="true"]{background:#ff315b;color:#fff}
+#profileSwitcher{position:fixed;z-index:100001;top:78px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:24px;padding:7px 12px 9px;background:#10101455;border-radius:0 0 12px 12px;backdrop-filter:blur(8px)}
+#profileSwitcher button{position:relative;padding:4px 2px 8px;background:transparent;color:#c9c9d1;font-size:15px;font-weight:650;white-space:nowrap;text-shadow:0 1px 5px #000}
+#profileSwitcher button[aria-pressed="true"]{color:#fff;font-weight:800}
+#profileSwitcher button[aria-pressed="true"]:after{content:"";position:absolute;left:50%;bottom:0;width:24px;height:3px;transform:translateX(-50%);border-radius:3px;background:#fff}
 #layapurFrame{display:none;position:fixed;inset:0;width:100%;height:100dvh;border:0;background:#101014;z-index:100000}
 body.layapur-active> :not(#layapurFrame):not(#profileSwitcher){display:none!important}
 body.layapur-active #layapurFrame{display:block}
-@media(max-width:700px){#profileSwitcher{top:calc(env(safe-area-inset-top,0px) + 10px);left:auto;right:12px;transform:none}#profileSwitcher button{min-height:34px;padding:0 11px;font-size:12px}}
+@media(max-width:700px){#profileSwitcher{top:calc(env(safe-area-inset-top,0px) + 12px);gap:20px;padding:6px 12px 8px}#profileSwitcher button{font-size:14px}}
 </style>
-<nav id="profileSwitcher" aria-label="Switch profile">
-  <span class="switch-label" aria-hidden="true">Profile</span>
-  <button type="button" id="feedProfileButton" aria-pressed="true">Deudalaya</button>
+<nav id="profileSwitcher" aria-label="प्रोफाइल बदल्नुहोस्">
+  <button type="button" id="feedProfileButton" aria-pressed="true">देउडालय</button>
   <button type="button" id="layapurProfileButton" aria-pressed="false">लयपुर</button>
 </nav>
 <iframe id="layapurFrame" title="लयपुर profile" loading="lazy"></iframe>
