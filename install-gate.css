@@ -11,3 +11,11 @@
 .required-install-action .ia-label{display:inline-flex;align-items:center;justify-content:center;gap:10px}
 .required-install-hint{min-height:42px;margin:14px 0 0!important;font-size:13px!important}
 @media(max-width:480px){.required-install-card{padding:26px 20px}.required-install-card h1{font-size:23px}}
+/* Layapur keeps its door visible; the install card becomes one small action below the lock. */
+#layapurInstallGate{align-items:flex-start;padding:0;background:transparent}
+#layapurInstallGate .required-install-card{position:absolute;left:50%;top:calc(50% + 132px);transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;width:auto;max-width:calc(100vw - 32px);padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
+#layapurInstallGate .install-mark,#layapurInstallGate h1,#layapurInstallGate .required-install-card>p:not(.required-install-hint){display:none}
+#layapurInstallGate .required-install-action{width:auto;min-width:190px;max-width:calc(100vw - 40px);min-height:42px;padding:9px 18px;border-radius:999px;font-size:14px;box-shadow:0 4px 14px #0008}
+#layapurInstallGate .required-install-hint{display:none;min-height:0;max-width:calc(100vw - 40px);margin:0!important;font-size:12px!important}
+#layapurInstallGate .required-install-hint:not(:empty){display:block}
+@media(max-height:560px){#layapurInstallGate .required-install-card{top:calc(50% + 112px)}}
