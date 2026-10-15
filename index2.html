@@ -1024,25 +1024,16 @@ if('serviceWorker' in navigator&&window.top===window) navigator.serviceWorker.re
   if(active)document.documentElement.classList.add('layapur-installed');
 })();
 </script>
-<style id="layapur-install-gate-styles">
-.layapur-install-gate{position:fixed;inset:0;z-index:1000000;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(ellipse at top,#31271f,#17140f 72%);color:#f5eee3;font:400 16px/1.5 system-ui,"Nirmala UI",sans-serif}
-.layapur-install-gate[hidden],html.layapur-installed .layapur-install-gate{display:none!important}
-.layapur-install-card{width:min(440px,100%);padding:30px 24px;border:1px solid #d6b46d66;border-radius:22px;background:#17140fee;box-shadow:0 20px 70px #000b;text-align:center}
-.layapur-install-card .install-mark{width:76px;height:76px;margin:0 auto 16px;border:2px solid #d6b46d;border-radius:50%;display:grid;place-items:center;color:#e8c98a;font:700 28px/1 serif}
-.layapur-install-card h1{margin:0 0 8px;font-size:25px}
-.layapur-install-card p{margin:0 0 18px;color:#d7cfc2;font-size:14px}
-#layapurInstallButton{width:100%;min-height:52px;border:0;border-radius:28px;background:#ed174c;color:#fff;font-size:16px;font-weight:800;cursor:pointer}
-#layapurInstallHint{min-height:42px;margin-top:14px!important;font-size:13px!important}
-</style>
+<link rel="stylesheet" href="install-gate.css?v=2026.10.15.2">
 </head>
 <body>
-<section class="layapur-install-gate" id="layapurInstallGate" role="dialog" aria-modal="true" aria-labelledby="layapurInstallTitle">
-  <div class="layapur-install-card">
+<section class="required-install-gate" id="layapurInstallGate" role="dialog" aria-modal="true" aria-labelledby="layapurInstallTitle">
+  <div class="required-install-card">
     <div class="install-mark" aria-hidden="true">लय</div>
     <h1 id="layapurInstallTitle">लयपुर एप स्थापना</h1>
     <p>लयपुर खोल्न पहिले यसको एप स्थापना गर्नुहोस्। स्थापना गरेपछि होम स्क्रिनबाट लयपुर एप खोल्नुहोस्।</p>
-    <button type="button" id="layapurInstallButton">लयपुर एप स्थापना गर्नुहोस्</button>
-    <p id="layapurInstallHint" role="status" aria-live="polite"></p>
+    <button type="button" id="layapurInstallButton" class="required-install-action">लयपुर एप स्थापना गर्नुहोस्</button>
+    <p id="layapurInstallHint" class="required-install-hint" role="status" aria-live="polite"></p>
   </div>
 </section>
 

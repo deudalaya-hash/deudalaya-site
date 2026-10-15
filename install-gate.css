@@ -1,0 +1,13 @@
+/* Shared mandatory app-install gate used by देउडालय and लयपुर. */
+.required-install-gate{position:fixed;inset:0;z-index:1000000;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(ellipse at top,#31271f,#17140f 72%);color:#f5eee3;font:400 16px/1.5 system-ui,"Nirmala UI",sans-serif}
+.required-install-gate[hidden],html.layapur-installed .required-install-gate,html.deudalaya-installed .required-install-gate{display:none!important}
+.required-install-gate.opening{opacity:0;pointer-events:none;transition:opacity .5s ease}
+.required-install-card{width:min(440px,100%);padding:30px 24px;border:1px solid #d6b46d66;border-radius:22px;background:#17140fee;box-shadow:0 20px 70px #000b;text-align:center;color:#f5eee3}
+.required-install-card .install-mark{width:76px;height:76px;margin:0 auto 16px;border:2px solid #d6b46d;border-radius:50%;display:grid;place-items:center;color:#e8c98a;font:700 28px/1 serif}
+.required-install-card h1{margin:0 0 8px;font-size:25px;color:#f5eee3;text-shadow:none}
+.required-install-card p{margin:0 0 18px;color:#d7cfc2;font-size:14px}
+.required-install-action{width:100%;min-height:52px;border:0;border-radius:28px;background:#ed174c;color:#fff;font:800 16px/1.2 system-ui,"Nirmala UI",sans-serif;box-shadow:none;cursor:pointer;touch-action:manipulation}
+.required-install-action:disabled{cursor:wait}
+.required-install-action .ia-label{display:inline-flex;align-items:center;justify-content:center;gap:10px}
+.required-install-hint{min-height:42px;margin:14px 0 0!important;font-size:13px!important}
+@media(max-width:480px){.required-install-card{padding:26px 20px}.required-install-card h1{font-size:23px}}
