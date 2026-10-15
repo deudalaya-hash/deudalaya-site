@@ -163,7 +163,7 @@ if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js',{scope
   if(active)document.documentElement.classList.add('deudalaya-installed');
 })();
 </script>
-<link rel="stylesheet" href="install-gate.css?v=2026.10.15.2">
+<link rel="stylesheet" href="install-gate.css?v=2026.10.15.3">
 <style id="deudalaya-install-gate-clean">
 /* Same gate as Layapur (index2.html): red double door + one pink install pill.
    Door rules are copied from index2.html .door; keep both files in sync. */
@@ -2534,6 +2534,10 @@ async function uploadToStorage(client,path,file,button){
 </script><style>
 /* Switch between the main Deudalaya feed and the Layapur profile. */
 #profileSwitcher{position:fixed;z-index:1000001;top:78px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:20px;padding:8px 12px;background:#101014d9;border:1px solid #ffffff2a;border-radius:999px;box-shadow:0 6px 24px #0008;backdrop-filter:blur(10px);cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+body.gate-locked #profileSwitcher{display:none}
+#profileSwitcher .switcher-collapse{display:grid;place-items:center;min-width:30px;min-height:30px;padding:4px;border:0;border-radius:50%;background:#ffffff16;color:#fff;font-size:19px;line-height:1;cursor:pointer}
+#profileSwitcher.is-collapsed{gap:0;padding:5px}
+#profileSwitcher.is-collapsed #feedProfileButton,#profileSwitcher.is-collapsed #layapurProfileButton{display:none}
 #profileSwitcher.dragging{cursor:grabbing;opacity:.94}
 #profileSwitcher[data-edge="left"],#profileSwitcher[data-edge="right"]{flex-direction:column;gap:5px;padding:10px 9px}
 #profileSwitcher button{position:relative;padding:5px 3px 8px;background:transparent;color:#c9c9d1;font-size:15px;font-weight:650;white-space:nowrap;text-shadow:0 1px 5px #000;cursor:pointer}
@@ -2545,6 +2549,7 @@ body.layapur-active #layapurFrame{display:block}
 @media(max-width:700px){#profileSwitcher{top:calc(env(safe-area-inset-top,0px) + 12px);gap:16px;padding:7px 10px}#profileSwitcher[data-edge="left"],#profileSwitcher[data-edge="right"]{gap:4px;padding:9px 7px}#profileSwitcher button{font-size:14px}}
 </style>
 <nav id="profileSwitcher" aria-label="देउडालय र लयपुर प्रोफाइल" aria-description="Drag the empty space to move this switch to a screen edge." data-edge="top">
+  <button type="button" class="switcher-collapse" id="profileSwitcherToggle" aria-label="Expand profile switcher" aria-expanded="false">⇄</button>
   <button type="button" id="feedProfileButton" aria-pressed="true">देउडालय</button>
   <button type="button" id="layapurProfileButton" aria-pressed="false">लयपुर</button>
 </nav>
@@ -2555,7 +2560,9 @@ body.layapur-active #layapurFrame{display:block}
   const layapur=document.getElementById('layapurProfileButton');
   const frame=document.getElementById('layapurFrame');
   const dock=document.getElementById('profileSwitcher');
+  const toggle=document.getElementById('profileSwitcherToggle');
   const positionKey='deudalaya-profile-switch-position';
+  const collapsedKey='deudalaya-profile-switch-collapsed';
   let savedPosition=null,drag=null;
   const clamp=(value,min,max)=>Math.max(min,Math.min(value,Math.max(min,max)));
   function placeDock(left,top,edge,save){
@@ -2579,6 +2586,16 @@ body.layapur-active #layapurFrame{display:block}
       placeDock(saved.left,saved.top,saved.edge,false);
     }
   }catch(_){}
+  function setCollapsed(collapsed,save){
+    dock.classList.toggle('is-collapsed',collapsed);
+    toggle.setAttribute('aria-expanded',String(!collapsed));
+    toggle.setAttribute('aria-label',collapsed?'Expand profile switcher':'Collapse profile switcher');
+    if(save){try{localStorage.setItem(collapsedKey,collapsed?'1':'0')}catch(_){}}
+  }
+  let startCollapsed=true;
+  try{const saved=localStorage.getItem(collapsedKey);if(saved!==null)startCollapsed=saved==='1'}catch(_){}
+  setCollapsed(startCollapsed,false);
+  toggle.addEventListener('click',()=>setCollapsed(!dock.classList.contains('is-collapsed'),true));
   function selectProfile(profile){
     const isLayapur=profile==='layapur';
     document.body.classList.toggle('layapur-active',isLayapur);

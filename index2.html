@@ -1024,7 +1024,7 @@ if('serviceWorker' in navigator&&window.top===window) navigator.serviceWorker.re
   if(active)document.documentElement.classList.add('layapur-installed');
 })();
 </script>
-<link rel="stylesheet" href="install-gate.css?v=2026.10.15.2">
+<link rel="stylesheet" href="install-gate.css?v=2026.10.15.3">
 </head>
 <body>
 <section class="required-install-gate" id="layapurInstallGate" role="dialog" aria-modal="true" aria-labelledby="layapurInstallTitle">
@@ -3153,12 +3153,14 @@ tbtn.addEventListener("click", () => setTheme(document.documentElement.dataset.t
     if(installPrompt){
       const promptEvent=installPrompt;
       try{
+        button.disabled=true;
         promptEvent.prompt();
         const result=await promptEvent.userChoice;
         installPrompt=null;window.layapurInstallPrompt=null;
-        hint.textContent=result.outcome==='accepted'?'Installation complete. Close this tab and open लयपुर from your home screen.':'Installation was cancelled. Tap Install लयपुर App to try again.';
+        hint.textContent=result.outcome==='accepted'?'Installation started. Close this tab and open लयपुर from your home screen.':'Installation was cancelled. Tap Install लयपुर App to try again.';
         button.textContent=result.outcome==='accepted'?'Open लयपुर from home screen':'Install लयपुर App';
       }catch(_){hint.textContent='Could not start installation. Open your browser menu and choose Install app.'}
+      finally{button.disabled=false}
       return;
     }
     let alreadyInstalled=false;try{alreadyInstalled=localStorage.getItem(installedKey)==='1'}catch(_){}
