@@ -4,10 +4,12 @@
 
   var base = location.origin;
   var apps = {
-    deudalaya: { id: base + '/', manifest: base + '/manifest.webmanifest', href: '/?app=deudalaya' },
-    sabdalaya: { id: base + '/sabdalaya/', manifest: base + '/sabdalaya/manifest.webmanifest', href: '/sabdalaya/' },
-    chalchitralaya: { id: base + '/chalchitralaya/', manifest: base + '/chalchitralaya/manifest.webmanifest', href: '/chalchitralaya/' },
-    phonelaya: { id: base + '/phonelaya/', manifest: base + '/phonelaya/manifest.webmanifest', href: '/phonelaya/' }
+    layapur: { id: new URL('/index2.html', base).href, manifest: new URL('/layapur.webmanifest', base).href, href: '/index2.html' },
+    deudalaya: { id: new URL('/', base).href, manifest: new URL('/manifest.webmanifest', base).href, href: '/?app=deudalaya' },
+    sabdalaya: { id: new URL('/sabdalaya/', base).href, manifest: new URL('/sabdalaya/manifest.webmanifest', base).href, href: '/sabdalaya/' },
+    chalchitralaya: { id: new URL('/chalchitralaya/', base).href, manifest: new URL('/chalchitralaya/manifest.webmanifest', base).href, href: '/chalchitralaya/' },
+    phonelaya: { id: new URL('/phonelaya/', base).href, manifest: new URL('/phonelaya/manifest.webmanifest', base).href, href: '/phonelaya/' },
+    kakchhayalaya: { id: new URL('/kakchhayalaya/', base).href, manifest: new URL('/kakchhayalaya/manifest.webmanifest', base).href, href: '/kakchhayalaya/' }
   };
 
   function setStatus(name, state, message) {
@@ -16,49 +18,14 @@
     if (!status || !open) return;
     status.dataset.state = state;
     status.textContent = message;
-    open.hidden = state !== 'installed' && state !== 'previously-installed';
+    open.hidden = state !== 'installed';
     open.href = apps[name].href;
   }
-  function wasInstalled(name) {
-    try { return localStorage.getItem('ecosystem-install-' + name) === 'reported'; }
-    catch (_) { return false; }
-  }
-  function rememberInstall(name) {
-    try { localStorage.setItem('ecosystem-install-' + name, 'reported'); } catch (_) {}
-  }
-  function manualInstallMessage(status) {
-    var isApple = /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
-      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    status.textContent = isApple
-      ? 'Safari: Share → Add to Home Screen.'
-      : 'Open the browser menu → Install app / Add to Home screen.';
-  }
-  document.querySelector('[data-install="deudalaya"]').addEventListener('click', async function () {
-    var status = document.querySelector('[data-status="deudalaya"]');
-    var prompt = window.deudalayaInstallPrompt;
-    if (!prompt) { manualInstallMessage(status); return; }
-    window.deudalayaInstallPrompt = null;
-    try {
-      await prompt.prompt();
-      var result = await prompt.userChoice;
-      if (result && result.outcome === 'accepted') {
-        rememberInstall('deudalaya');
-        setStatus('deudalaya', 'installed', 'Install prompt accepted · open app from your launcher.');
-      } else manualInstallMessage(status);
-    } catch (_) { manualInstallMessage(status); }
-  });
-
-  window.addEventListener('appinstalled', function () {
-    rememberInstall('deudalaya');
-    setStatus('deudalaya', 'installed', 'Browser confirmed install · open from your app launcher.');
-  });
 
   async function checkInstalledApps() {
     if (typeof navigator.getInstalledRelatedApps !== 'function') {
       Object.keys(apps).forEach(function (name) {
-        setStatus(name, wasInstalled(name) ? 'previously-installed' : 'unknown', wasInstalled(name)
-          ? 'Previously confirmed · current status may have changed.'
-          : 'Install status is not available in this browser.');
+        setStatus(name, 'unknown', 'This browser cannot verify installation status.');
       });
       return;
     }
@@ -69,16 +36,13 @@
         var found = installed.some(function (item) {
           return item.id === app.id || item.url === app.manifest;
         });
-        var remembered = wasInstalled(name);
-        setStatus(name, found ? 'installed' : (remembered ? 'previously-installed' : 'not-detected'), found
-          ? 'Installed · open from your app launcher.'
-          : (remembered ? 'Previously confirmed · current status may have changed.' : 'Not detected by this browser · install status may be limited.'));
+        setStatus(name, found ? 'installed' : 'not-detected', found
+          ? 'Installed · Open App is available.'
+          : 'Installation was not confirmed by this browser.');
       });
     } catch (_) {
       Object.keys(apps).forEach(function (name) {
-        setStatus(name, wasInstalled(name) ? 'previously-installed' : 'unknown', wasInstalled(name)
-          ? 'Previously confirmed · current status may have changed.'
-          : 'Install status is not available in this browser.');
+        setStatus(name, 'unknown', 'This browser cannot verify installation status.');
       });
     }
   }

@@ -80,10 +80,7 @@
       await promptEvent.prompt();
       var result = await promptEvent.userChoice;
       if (result && result.outcome === 'accepted') {
-        try { localStorage.setItem('ecosystem-install-deudalaya', 'reported'); } catch (_) {}
-        hint.textContent = 'Installation was accepted. If Open App stays in the browser, launch Deudalaya from your home screen.';
-        action.hidden = true;
-        document.getElementById('deudalayaOpenInstalled').hidden = false;
+        hint.textContent = 'Install request accepted. Waiting for browser confirmation before enabling Open App.';
       } else {
         hint.textContent = 'Installation was cancelled. Install Deudalaya to continue.';
         action.textContent = 'Show browser install steps';
@@ -103,9 +100,18 @@
   });
 
   window.addEventListener('appinstalled', function () {
-    try { localStorage.setItem('ecosystem-install-deudalaya', 'reported'); } catch (_) {}
     hint.textContent = 'The browser confirmed installation. Use Open App, or launch Deudalaya from your home screen.';
     action.hidden = true;
     document.getElementById('deudalayaOpenInstalled').hidden = false;
   });
+  if (navigator.getInstalledRelatedApps) {
+    navigator.getInstalledRelatedApps().then(function (apps) {
+      var manifestUrl = new URL('/manifest.webmanifest', location.origin).href;
+      if (apps.some(function (app) { return app.id === location.origin + '/' || app.url === manifestUrl; })) {
+        hint.textContent = 'This browser confirmed installation. Open App is available.';
+        action.hidden = true;
+        document.getElementById('deudalayaOpenInstalled').hidden = false;
+      }
+    }).catch(function () {});
+  }
 })();

@@ -9,6 +9,9 @@
   "display": "standalone",
   "background_color": "#fdfdfb",
   "theme_color": "#fdfdfb",
+  "related_applications": [
+    { "platform": "webapp", "id": "https://deudalaya.com/index2.html", "url": "https://deudalaya.com/layapur.webmanifest" }
+  ],
   "icons": [
     {
       "src": "assets/deudalaya-launch-192.png",

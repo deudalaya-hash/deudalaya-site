@@ -57,8 +57,7 @@
     installPrompt = event;
   });
   window.addEventListener('appinstalled', () => {
-    try { localStorage.setItem('ecosystem-install-sabdalaya', 'reported'); } catch (_) {}
-    installHint.textContent = 'ब्राउजरले शब्दलय स्थापना भएको पुष्टि गर्‍यो। एप launcher बाट खोल्नुहोस्।';
+    installHint.textContent = 'Your browser confirmed installation. Open App is now available.';
     document.getElementById('openInstalledApp').hidden = false;
   });
   installAction.addEventListener('click', async () => {
@@ -66,8 +65,8 @@
       const apple = /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
         (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
       installHint.textContent = apple
-        ? 'Safari मा Share थिच्नुहोस्, “Add to Home Screen” छान्नुहोस्।'
-        : 'ब्राउजर मेनुबाट “Install शब्दलय” वा “Add to Home screen” छान्नुहोस्।';
+        ? 'Safari on iPhone or iPad: tap Share, choose “Add to Home Screen,” then tap Add.'
+        : 'Chrome or Edge: select Install from the address bar or browser menu. Other browsers: choose “Add to Home Screen.”';
       return;
     }
     const prompt = installPrompt;
@@ -76,21 +75,17 @@
       await prompt.prompt();
       const result = await prompt.userChoice;
       installHint.textContent = result.outcome === 'accepted'
-        ? 'स्थापना अनुरोध स्वीकार भयो। launcher बाट शब्दलय खोल्नुहोस्।'
-        : 'स्थापना रद्द भयो। फिड खोल्न एप स्थापना आवश्यक छ।';
-      if (result.outcome === 'accepted') document.getElementById('openInstalledApp').hidden = false;
-      if (result.outcome === 'accepted') {
-        try { localStorage.setItem('ecosystem-install-sabdalaya', 'reported'); } catch (_) {}
-      }
-    } catch (_) { installHint.textContent = 'ब्राउजर मेनुबाट शब्दलय स्थापना गर्नुहोस्।'; }
+        ? 'Install request accepted. Waiting for browser confirmation before enabling Open App.'
+        : 'Installation was cancelled. Select Install App to try again.';
+    } catch (_) { installHint.textContent = 'Could not start installation. Follow the browser instructions above.'; }
   });
 
   if (navigator.getInstalledRelatedApps) {
     navigator.getInstalledRelatedApps().then(apps => {
       const appId = new URL('/sabdalaya/', location.origin).href;
-      if (apps.some(app => app.id === appId)) {
-        try { localStorage.setItem('ecosystem-install-sabdalaya', 'reported'); } catch (_) {}
-        installHint.textContent = 'यो ब्राउजरले शब्दलय स्थापना भएको देखाएको छ। यदि यो पृष्ठ फिडमै नखुलेमा launcher प्रयोग गर्नुहोस्।';
+      const manifestUrl = new URL('/sabdalaya/manifest.webmanifest', location.origin).href;
+      if (apps.some(app => app.id === appId || app.url === manifestUrl)) {
+        installHint.textContent = 'This browser confirmed installation. Open App is available.';
         document.getElementById('openInstalledApp').hidden = false;
       }
     }).catch(() => {});

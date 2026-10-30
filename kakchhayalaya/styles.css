@@ -1,0 +1,86 @@
+:root{
+  color-scheme:light;
+  --ground:#f4f7f4;
+  --paper:#fff;
+  --ink:#162b35;
+  --muted:#5c706f;
+  --accent:#176f66;
+  --rule:#dfe8e2;
+  --gutter:clamp(20px,5vw,72px);
+}
+*{box-sizing:border-box}
+html{min-height:100%;background:var(--ground);scroll-behavior:smooth}
+body{min-width:320px;min-height:100vh;margin:0;color:var(--ink);font-family:"Nirmala UI","Noto Sans Devanagari","Mangal",system-ui,sans-serif;font-size:16px;line-height:1.6}
+a{color:inherit}
+a:focus-visible{outline:3px solid #d85b42;outline-offset:4px}
+.site-header{height:76px;padding:0 var(--gutter);display:flex;align-items:center;justify-content:space-between;background:var(--ground)}
+.brand{display:inline-flex;align-items:center;gap:12px;text-decoration:none}
+.brand-mark,.class-mark{width:44px;height:44px;display:grid;place-items:center;background:#dcebe3;color:var(--accent);border-radius:14px}
+.brand-mark svg,.class-mark svg{width:36px;height:36px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.brand-name{font-size:19px;font-weight:750;line-height:1.2}
+.brand-name small{display:block;margin-top:2px;color:var(--muted);font-size:11px;font-weight:450}
+.header-actions{display:flex;align-items:center;gap:18px}
+.install-button{min-height:38px;padding:7px 13px;border:0;border-radius:5px;background:var(--accent);color:#fff;font:inherit;font-size:13px;font-weight:650;cursor:pointer;transition:background-color .15s ease,transform .15s ease}
+.install-button:hover{background:#105e56;transform:translateY(-1px)}
+.install-button:focus-visible{outline:3px solid #d85b42;outline-offset:4px}
+.gateway-link{padding:8px 0;color:var(--muted);font-size:13px;text-decoration:none}
+.gateway-link:hover,.back-link:hover{color:var(--accent)}
+.gateway-link span{margin-left:4px;color:var(--accent)}
+.page-shell{width:min(1192px,calc(100% - var(--gutter)*2));min-height:calc(100vh - 134px);margin:0 auto;padding:54px 0 48px}
+.intro-copy{max-width:760px;margin:0 auto 36px;text-align:center}
+.welcome-line{margin:0;color:var(--accent);font-size:14px;font-weight:650}
+h1{margin:7px 0 10px;font-size:clamp(28px,4vw,42px);font-weight:750;letter-spacing:-.035em;line-height:1.28}
+.intro-description{max-width:610px;margin:0 auto;color:var(--muted);font-size:15px}
+.class-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+.class-card{position:relative;min-height:153px;padding:15px 16px 14px;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;overflow:hidden;border-radius:7px;background:var(--tile);text-decoration:none;transition:transform .16s ease,background-color .16s ease}
+.class-card::after{position:absolute;right:-20px;bottom:-48px;width:112px;height:112px;border:1px solid color-mix(in srgb,var(--tile-ink) 17%,transparent);border-radius:50%;content:"";pointer-events:none}
+.class-card:hover{transform:translateY(-3px);background:var(--tile-hover)}
+.class-card:active{transform:translateY(-1px)}
+.class-number{color:var(--tile-ink);font-size:42px;font-weight:760;line-height:1}
+.class-label{color:var(--ink);font-size:15px;font-weight:700}
+.class-arrow{position:absolute;right:15px;bottom:12px;color:var(--tile-ink);font-family:system-ui,sans-serif;font-size:16px;opacity:0;transform:translate(-3px,3px);transition:transform .16s ease,opacity .16s ease}
+.class-card:hover .class-arrow,.class-card:focus-visible .class-arrow{opacity:1;transform:translate(0,0)}
+.class-1{--tile:#e1f0e8;--tile-hover:#d5eadf;--tile-ink:#176f66}.class-2{--tile:#e5edf4;--tile-hover:#d9e6f0;--tile-ink:#345e81}.class-3{--tile:#f5e9d7;--tile-hover:#f0dfc5;--tile-ink:#90612b}.class-4{--tile:#e8e8f4;--tile-hover:#dcdced;--tile-ink:#595b91}.class-5{--tile:#f4e4e1;--tile-hover:#efd8d3;--tile-ink:#a44f45}.class-6{--tile:#e0eeed;--tile-hover:#d2e7e5;--tile-ink:#347875}.class-7{--tile:#ece9d9;--tile-hover:#e5dfc8;--tile-ink:#77703d}.class-8{--tile:#e4eaf5;--tile-hover:#d8e2f2;--tile-ink:#4b6693}.class-9{--tile:#f1e4ed;--tile-hover:#ead7e4;--tile-ink:#8b4f76}.class-10{--tile:#e4ece0;--tile-hover:#d7e6d1;--tile-ink:#54744d}
+.coming-note{margin:24px 0 0;color:var(--muted);font-size:13px;text-align:center}
+.coming-note span{margin-right:6px;color:var(--accent)}
+.install-notice{position:fixed;z-index:3;top:78px;right:var(--gutter);max-width:min(420px,calc(100% - 36px));margin:0;padding:11px 15px;background:var(--ink);color:#fff;border-radius:5px;font-size:13px}
+.install-notice[hidden]{display:none}
+.class-view{max-width:840px;margin:0 auto}
+.class-view[hidden],.classes-view[hidden]{display:none}
+.back-link{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:14px;text-decoration:none}
+.class-welcome{margin-top:48px;display:flex;align-items:center;gap:16px}
+.class-mark{width:58px;height:58px;flex:none;border-radius:17px}
+.class-mark svg{width:44px;height:44px}
+.class-welcome .welcome-line{font-size:14px}
+.class-welcome h1{margin:2px 0 0;font-size:36px}
+.welcome-copy{margin:17px 0 28px;color:var(--muted);font-size:16px}
+.lesson-placeholder{padding:24px 26px;background:var(--paper);border-radius:7px}
+.placeholder-heading{display:flex;align-items:center;justify-content:space-between;gap:15px}
+.placeholder-heading h2{margin:0;font-size:20px}
+.placeholder-heading span{padding:3px 10px;background:#e1f0e8;color:#176f66;border-radius:4px;font-size:12px;font-weight:650}
+.lesson-placeholder>p{max-width:640px;color:var(--muted);font-size:14px}
+.lesson-lines{margin:20px 0;display:grid;gap:9px}
+.lesson-lines span{height:8px;max-width:100%;background:#edf2ee;border-radius:5px}
+.lesson-lines span:nth-child(2){max-width:78%}.lesson-lines span:nth-child(3){max-width:52%}
+.lesson-placeholder .placeholder-foot{margin:18px 0 0;padding-top:14px;border-top:1px solid var(--rule);font-size:13px}
+.back-button{min-height:44px;margin-top:24px;padding:9px 17px;display:inline-flex;align-items:center;background:var(--accent);color:#fff;border-radius:5px;font-size:14px;font-weight:650;text-decoration:none;transition:background-color .15s ease,transform .15s ease}
+.back-button:hover{background:#105e56;transform:translateY(-1px)}
+.site-footer{min-height:58px;padding:14px var(--gutter);display:flex;justify-content:space-between;gap:12px;background:#e9efea;color:var(--muted);font-size:12px}
+.site-footer span:first-child{color:var(--ink);font-weight:700}
+.class-install-gate{position:fixed;z-index:20;inset:0;align-items:center;justify-content:center;padding:20px;background:var(--ground);color:var(--ink)}
+.class-install-gate[hidden]{display:none!important}
+.class-install-required body>*:not(#classInstallGate):not(script){display:none!important}
+.class-install-required #classInstallGate{display:flex!important}
+.class-install-card{width:min(420px,100%);padding:28px 24px;background:var(--paper);border-radius:8px;text-align:center}
+.class-install-card .brand-mark{width:62px;height:62px;margin:0 auto 14px;border-radius:18px}
+.class-install-card .brand-mark svg{width:48px;height:48px}
+.class-install-card h2{margin:0 0 8px;font-size:26px}
+.class-install-card p{color:var(--muted);font-size:14px}
+.class-install-card .install-button,.class-install-card .open-app-button{width:100%;min-height:48px;margin-top:8px}
+.open-app-button{display:flex;align-items:center;justify-content:center;border-radius:5px;background:#dcebe3;color:var(--accent);font-size:14px;font-weight:700;text-decoration:none}
+.open-app-button[hidden]{display:none}
+.install-status{min-height:44px;margin:12px 0!important}
+.class-install-card .gateway-link{display:inline-block;margin-top:8px}
+@media(max-width:900px){.page-shell{padding-top:42px}.class-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.class-card{min-height:140px}}
+@media(max-width:560px){:root{--gutter:18px}.site-header{height:66px}.brand-mark{width:39px;height:39px}.brand-name{font-size:17px}.header-actions{gap:10px}.install-button{min-height:34px;padding:6px 9px;font-size:11px}.gateway-link{font-size:11px}.page-shell{min-height:calc(100vh - 118px);padding-top:32px}.intro-copy{margin-bottom:25px}.welcome-line{font-size:12px}h1{font-size:28px}.intro-description{font-size:14px}.class-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.class-card{min-height:125px;padding:13px}.class-number{font-size:36px}.class-label{font-size:14px}.class-view{padding-top:4px}.class-welcome{margin-top:34px;gap:12px}.class-mark{width:48px;height:48px}.class-welcome h1{font-size:30px}.welcome-copy{font-size:14px}.lesson-placeholder{padding:19px 16px}.placeholder-heading h2{font-size:17px}.site-footer{min-height:52px;font-size:11px}.install-notice{top:70px;left:18px;right:18px;max-width:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important}}

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ne">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -14,23 +14,23 @@
 </head>
 <body>
   <div class="app-shell">
-    <aside class="sidebar" id="sidebar" aria-label="मुख्य नेभिगेसन">
+    <aside class="sidebar" id="sidebar" aria-label="Main navigation">
       <a class="brand" href="#overview" aria-label="phoneलय गृहपृष्ठ">
         <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M13 5.5h14A3.5 3.5 0 0 1 30.5 9v22a3.5 3.5 0 0 1-3.5 3.5H13A3.5 3.5 0 0 1 9.5 31V9A3.5 3.5 0 0 1 13 5.5Z"/><path d="M15 14h10m-10 5h10m-10 5h6"/><circle cx="26" cy="25" r="5.5" class="mark-dot"/><path d="m23.8 25 1.5 1.5 3-3" class="mark-check"/></svg></span>
         <span class="brand-word"><strong>phoneलय</strong><small>फोनलय · तपाईंका सम्पर्क</small></span>
       </a>
-      <p class="nav-caption">तपाईंको ठाउँ</p>
+      <p class="nav-caption">Workspace</p>
       <nav class="nav-list">
-        <button class="nav-link active" type="button" data-view-target="overview"><span class="nav-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1z"/></svg></span> अवलोकन</button>
-        <button class="nav-link" type="button" data-view-target="contacts"><span class="nav-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><path d="M2.5 19v-1.2A5.5 5.5 0 0 1 8 12.3a5.5 5.5 0 0 1 5.5 5.5V19zM16 5.4a3 3 0 0 1 0 5.8m2 2.2a4.6 4.6 0 0 1 3.5 4.4V19h-5"/></svg></span> सम्पर्कहरू <span class="nav-count" id="navContactCount">०</span></button>
-        <button class="nav-link" type="button" data-view-target="backup"><span class="nav-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 16V4m-4 4 4-4 4 4M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/></svg></span> ब्याकअप</button>
-        <button class="nav-link" type="button" data-view-target="restore"><span class="nav-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4v12m4-4-4 4-4-4M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg></span> पुनः प्राप्ति</button>
+        <button class="nav-link active" type="button" data-view-target="overview"><span class="nav-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1z"/></svg></span> Dashboard</button>
+        <button class="nav-link" type="button" data-view-target="contacts"><span class="nav-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><path d="M2.5 19v-1.2A5.5 5.5 0 0 1 8 12.3a5.5 5.5 0 0 1 5.5 5.5V19zM16 5.4a3 3 0 0 1 0 5.8m2 2.2a4.6 4.6 0 0 1 3.5 4.4V19h-5"/></svg></span> Contacts <span class="nav-count" id="navContactCount">0</span></button>
+        <button class="nav-link" type="button" data-view-target="backup"><span class="nav-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 16V4m-4 4 4-4 4 4M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/></svg></span> Backup</button>
+        <button class="nav-link" type="button" data-view-target="restore"><span class="nav-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4v12m4-4-4 4-4-4M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg></span> Restore Contacts</button>
       </nav>
-      <p class="nav-caption nav-caption-lower">खाता</p>
-      <nav class="nav-list"><button class="nav-link" type="button" data-view-target="account"><span class="nav-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M4 20v-1.5a8 8 0 0 1 16 0V20z"/></svg></span> खाता र गोपनीयता</button></nav>
+      <p class="nav-caption nav-caption-lower">Account</p>
+      <nav class="nav-list"><button class="nav-link" type="button" data-view-target="account"><span class="nav-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M4 20v-1.5a8 8 0 0 1 16 0V20z"/></svg></span> Account & Privacy</button></nav>
       <div class="sidebar-bottom">
-        <div class="local-state"><span class="state-dot"></span><span><strong>नमुना मोड</strong><small>डेटा यस ट्याबमै रहन्छ</small></span></div>
-        <a class="gateway-link" href="/?gateway=1">← एपहरूको मुख्य पृष्ठ</a>
+        <div class="local-state"><span class="state-dot"></span><span><strong>Demo mode</strong><small>Data stays in this tab</small></span></div>
+        <a class="gateway-link" href="/?gateway=1">← Explore Apps</a>
       </div>
     </aside>
 
@@ -44,10 +44,10 @@
       <div class="workspace-inner">
         <div class="workspace-head">
           <div><p class="eyebrow">सम्पर्क सुरक्षा · DEMO</p><h1 id="pageTitle">तपाईंका सम्पर्कहरू</h1><p class="page-description" id="pageDescription">फोन परिवर्तन भए पनि चिनजान हराउन नदिनुहोस्।</p></div>
-          <div class="head-actions"><button class="button button-secondary" type="button" id="installAction">Install app</button><span class="demo-pill">प्रदर्शन नमुना</span><button class="button button-primary" type="button" data-open-view="backup"><span aria-hidden="true">↑</span> ब्याकअप प्रयास गर्नुहोस्</button></div>
+        <div class="head-actions"><button class="button button-secondary" type="button" id="installAction">Install App</button><span class="demo-pill">Demo preview</span><button class="button button-primary" type="button" data-open-view="backup"><span aria-hidden="true">↑</span> Create Demo Backup</button></div>
         </div>
 
-        <div class="privacy-strip" role="note"><span class="privacy-mark" aria-hidden="true">i</span><p><strong>यो स्थानीय प्रदर्शन मात्र हो।</strong> सम्पर्कहरू यस browser tab को memory मा मात्र छन्। कुनै server मा पठाइँदैन; cloud backup, account र encryption जडान भएका छैनन्।</p><button type="button" data-view-target="account">गोपनीयता हेर्नुहोस्</button></div>
+        <div class="privacy-strip" role="note"><span class="privacy-mark" aria-hidden="true">i</span><p><strong>This is a local demo only.</strong> Contacts stay in this browser tab's memory. Nothing is sent to a server; cloud backup, accounts and encryption are not connected.</p><button type="button" data-view-target="account">View Privacy</button></div>
 
         <section class="view active" id="view-overview" data-view="overview" aria-label="अवलोकन">
           <section class="summary-panel" aria-label="ब्याकअप सारांश">
@@ -121,6 +121,7 @@
 
   <dialog class="contact-dialog" id="contactDialog" aria-labelledby="detailName"><form method="dialog"><button class="dialog-close" aria-label="बन्द गर्नुहोस्">×</button></form><p class="eyebrow">CONTACT DETAIL · SAMPLE</p><h2 id="detailName"></h2><dl><div><dt>फोन</dt><dd id="detailPhone"></dd></div><div><dt>इमेल</dt><dd id="detailEmail"></dd></div><div><dt>स्रोत</dt><dd id="detailSource"></dd></div></dl><p class="dialog-private">यस demo मा यो सम्पर्क तपाईंको browser tab बाहिर पठाइएको छैन।</p></dialog>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <section class="phone-install-gate" id="phoneInstallGate" hidden role="dialog" aria-modal="true" aria-labelledby="phoneInstallTitle" aria-describedby="phoneInstallDescription"><div class="phone-install-card"><span class="brand-mark" aria-hidden="true">✓</span><h2 id="phoneInstallTitle">Install phoneलय</h2><p id="phoneInstallDescription">Install the phoneलय app to continue to Contact Backup and Restore.</p><button class="button button-primary" id="phoneInstallAction" type="button">Install App</button><a class="button button-secondary" id="phoneOpenInstalled" href="/phonelaya/" hidden>Open App</a><p id="phoneInstallStatus" role="status" aria-live="polite">Your browser will show available installation options.</p><a class="gateway-link" href="/?gateway=1">Back to Explore Apps</a></div></section>
   <script src="contacts.js" defer></script>
   <script src="app.js" defer></script>
 </body>

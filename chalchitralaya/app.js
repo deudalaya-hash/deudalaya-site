@@ -25,7 +25,7 @@
   let selectedCategory = 'all';
   let selectedMovie = movies[0];
   let currentHero = 0;
-  let language = 'ne';
+  let language = 'en';
   let toastTimer;
   let playerTime = Number(sessionStorage.getItem('chalchitralaya-demo-resume') || 0);
   let playerPlaying = false;
@@ -264,8 +264,7 @@
     }
   });
 
-  document.getElementById('languageToggle').addEventListener('click', () => {
-    language = language === 'ne' ? 'en' : 'ne';
+  function applyLanguage() {
     document.documentElement.lang = language;
     document.getElementById('languageToggle').textContent = language === 'ne' ? 'EN' : 'नेपाली';
     document.querySelectorAll('[data-en]').forEach(node => {
@@ -288,7 +287,12 @@
     renderMovies();
     renderCollections();
     updateWatchlistButtons();
+  }
+  document.getElementById('languageToggle').addEventListener('click', () => {
+    language = language === 'ne' ? 'en' : 'ne';
+    applyLanguage();
   });
+  applyLanguage();
 
   function setNotice(title, body, eyebrow) {
     document.getElementById('noticeTitle').textContent = title;
@@ -481,18 +485,12 @@
       await prompt.prompt();
       const result = await prompt.userChoice;
       document.getElementById('installStatus').textContent = result.outcome === 'accepted'
-        ? 'स्थापना अनुरोध स्वीकार भयो। एप launcher बाट चलचित्रलय खोल्नुहोस्।'
-        : 'स्थापना रद्द भयो। सामग्री हेर्न एप स्थापना आवश्यक छ।';
-      if (result.outcome === 'accepted') {
-        try { localStorage.setItem('ecosystem-install-chalchitralaya', 'reported'); } catch (_) {}
-        document.getElementById('openInstalledApp').hidden = false;
-      }
-    } catch (_) { document.getElementById('installStatus').textContent = 'ब्राउजरको Add to Home Screen मेनु प्रयोग गर्नुहोस्।'; }
+        ? 'Install request accepted. Waiting for browser confirmation before enabling Open App.'
+        : 'Installation was cancelled. Select Install App to try again.';
+    } catch (_) { document.getElementById('installStatus').textContent = 'Could not start installation. Follow the browser instructions above.'; }
   });
   window.addEventListener('appinstalled', () => {
-    try { localStorage.setItem('ecosystem-install-chalchitralaya', 'reported'); } catch (_) {}
-    sessionStorage.setItem('chalchitralaya-install-requested', 'yes');
-    document.getElementById('installStatus').textContent = 'स्थापना भयो भन्ने ब्राउजर सूचना प्राप्त भयो। एप launcher बाट खोल्नुहोस्।';
+    document.getElementById('installStatus').textContent = 'Your browser confirmed installation. Open App is now available.';
     document.getElementById('openInstalledApp').hidden = false;
   });
   document.getElementById('openInstalledApp').addEventListener('click', () => {
@@ -509,9 +507,9 @@
     try {
       const related = await navigator.getInstalledRelatedApps?.();
       const appId = new URL('/chalchitralaya/', location.origin).href;
-      if (related && related.some(app => app.id === appId)) {
-        try { localStorage.setItem('ecosystem-install-chalchitralaya', 'reported'); } catch (_) {}
-        document.getElementById('installStatus').textContent = 'यो ब्राउजरले चलचित्रलय स्थापना भएको रिपोर्ट गरेको छ। launcher बाट खोल्नुहोस्।';
+      const manifestUrl = new URL('/chalchitralaya/manifest.webmanifest', location.origin).href;
+      if (related && related.some(app => app.id === appId || app.url === manifestUrl)) {
+        document.getElementById('installStatus').textContent = 'This browser confirmed installation. Open App is available.';
         document.getElementById('openInstalledApp').hidden = false;
       } else if (related) {
         document.getElementById('installStatus').textContent = 'यो ब्राउजरले चलचित्रलय स्थापना भएको देखाएको छैन।';

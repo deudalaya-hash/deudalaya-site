@@ -1,13 +1,17 @@
 # Deudalaya app ecosystem
 
-The custom domain is a hosting arrangement. The gateway introduces three separate PWAs; it does not share application logic or state between them.
+The custom domain is a hosting arrangement. The gateway introduces six app destinations and shares no application logic or state between the dedicated child apps.
 
 | App | URL and source | Manifest / worker scope |
 | --- | --- | --- |
+| लयपुर | `/index2.html` | `/layapur.webmanifest` / `/` (existing root scope) |
 | देउडालय | `/` (existing root app) | `/` |
 | शब्दलय | `/sabdalaya/` | `/sabdalaya/` |
 | चलचित्रलय | `/chalchitralaya/` | `/chalchitralaya/` |
 | phoneलय | `/phonelaya/` | `/phonelaya/` |
+| कक्षालय | `/kakchhayalaya/` | `/kakchhayalaya/` |
+
+लयपुर is the existing `/index2.html` application and keeps its existing root-scoped manifest and service-worker registration. The gateway links to that page; it does not create a second copy or change the Deudalaya–लयपुर in-app switch.
 
 The gateway shell is in the root page, with its own `ecosystem-gateway.css` and `ecosystem-gateway.js`. A normal visit to `/` shows the gateway. The Deudalaya PWA starts at `/?app=deudalaya`; `/?gateway=1` is the explicit route back to the gateway, including from a standalone Deudalaya window.
 
