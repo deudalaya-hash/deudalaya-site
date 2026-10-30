@@ -7,6 +7,7 @@ The custom domain is a hosting arrangement. The gateway introduces three separat
 | देउडालय | `/` (existing root app) | `/` |
 | शब्दलय | `/sabdalaya/` | `/sabdalaya/` |
 | चलचित्रलय | `/chalchitralaya/` | `/chalchitralaya/` |
+| phoneलय | `/phonelaya/` | `/phonelaya/` |
 
 The gateway shell is in the root page, with its own `ecosystem-gateway.css` and `ecosystem-gateway.js`. A normal visit to `/` shows the gateway. The Deudalaya PWA starts at `/?app=deudalaya`; `/?gateway=1` is the explicit route back to the gateway, including from a standalone Deudalaya window.
 

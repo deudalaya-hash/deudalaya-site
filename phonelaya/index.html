@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ne">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f4f6f3">
+  <meta name="application-name" content="phoneलय">
+  <meta name="description" content="फोनलय — तपाईंका सम्पर्क, सधैँ सुरक्षित। Contact backup and recovery demonstration.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+  <title>phoneलय — सम्पर्क सुरक्षित राख्नुहोस्</title>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="मुख्य नेभिगेसन">
+      <a class="brand" href="#overview" aria-label="phoneलय गृहपृष्ठ">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M13 5.5h14A3.5 3.5 0 0 1 30.5 9v22a3.5 3.5 0 0 1-3.5 3.5H13A3.5 3.5 0 0 1 9.5 31V9A3.5 3.5 0 0 1 13 5.5Z"/><path d="M15 14h10m-10 5h10m-10 5h6"/><circle cx="26" cy="25" r="5.5" class="mark-dot"/><path d="m23.8 25 1.5 1.5 3-3" class="mark-check"/></svg></span>
+        <span class="brand-word"><strong>phoneलय</strong><small>फोनलय · तपाईंका सम्पर्क</small></span>
+      </a>
+      <p class="nav-caption">तपाईंको ठाउँ</p>
+      <nav class="nav-list">
+        <button class="nav-link active" type="button" data-view-target="overview"><span class="nav-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1z"/></svg></span> अवलोकन</button>
+        <button class="nav-link" type="button" data-view-target="contacts"><span class="nav-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><path d="M2.5 19v-1.2A5.5 5.5 0 0 1 8 12.3a5.5 5.5 0 0 1 5.5 5.5V19zM16 5.4a3 3 0 0 1 0 5.8m2 2.2a4.6 4.6 0 0 1 3.5 4.4V19h-5"/></svg></span> सम्पर्कहरू <span class="nav-count" id="navContactCount">०</span></button>
+        <button class="nav-link" type="button" data-view-target="backup"><span class="nav-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 16V4m-4 4 4-4 4 4M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/></svg></span> ब्याकअप</button>
+        <button class="nav-link" type="button" data-view-target="restore"><span class="nav-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4v12m4-4-4 4-4-4M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg></span> पुनः प्राप्ति</button>
+      </nav>
+      <p class="nav-caption nav-caption-lower">खाता</p>
+      <nav class="nav-list"><button class="nav-link" type="button" data-view-target="account"><span class="nav-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M4 20v-1.5a8 8 0 0 1 16 0V20z"/></svg></span> खाता र गोपनीयता</button></nav>
+      <div class="sidebar-bottom">
+        <div class="local-state"><span class="state-dot"></span><span><strong>नमुना मोड</strong><small>डेटा यस ट्याबमै रहन्छ</small></span></div>
+        <a class="gateway-link" href="/?gateway=1">← एपहरूको मुख्य पृष्ठ</a>
+      </div>
+    </aside>
+
+    <main class="workspace">
+      <header class="mobile-bar">
+        <button type="button" class="menu-button" id="menuButton" aria-label="नेभिगेसन खोल्नुहोस्" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <a class="mobile-brand" href="#overview">phoneलय</a>
+        <button type="button" class="mobile-install" id="installButton" aria-label="phoneलय स्थापना गर्नुहोस्">Install</button>
+      </header>
+
+      <div class="workspace-inner">
+        <div class="workspace-head">
+          <div><p class="eyebrow">सम्पर्क सुरक्षा · DEMO</p><h1 id="pageTitle">तपाईंका सम्पर्कहरू</h1><p class="page-description" id="pageDescription">फोन परिवर्तन भए पनि चिनजान हराउन नदिनुहोस्।</p></div>
+          <div class="head-actions"><button class="button button-secondary" type="button" id="installAction">Install app</button><span class="demo-pill">प्रदर्शन नमुना</span><button class="button button-primary" type="button" data-open-view="backup"><span aria-hidden="true">↑</span> ब्याकअप प्रयास गर्नुहोस्</button></div>
+        </div>
+
+        <div class="privacy-strip" role="note"><span class="privacy-mark" aria-hidden="true">i</span><p><strong>यो स्थानीय प्रदर्शन मात्र हो।</strong> सम्पर्कहरू यस browser tab को memory मा मात्र छन्। कुनै server मा पठाइँदैन; cloud backup, account र encryption जडान भएका छैनन्।</p><button type="button" data-view-target="account">गोपनीयता हेर्नुहोस्</button></div>
+
+        <section class="view active" id="view-overview" data-view="overview" aria-label="अवलोकन">
+          <section class="summary-panel" aria-label="ब्याकअप सारांश">
+            <div class="summary-item"><span>यस ट्याबका नमुना सम्पर्क</span><strong id="summaryCount">०</strong><small>ब्राउजर memory · नमुना</small></div>
+            <div class="summary-item"><span>Cloud backup</span><strong class="value-muted">जोडिएको छैन</strong><small>वास्तविक cloud मा सुरक्षित छैन</small></div>
+            <div class="summary-item"><span>अन्तिम demo प्रयास</span><strong class="value-muted" id="lastBackup">—</strong><small id="lastBackupCaption">अझै प्रयास गरिएको छैन</small></div>
+            <div class="summary-item"><span>Cloud storage</span><strong class="value-muted">० MB</strong><small>भण्डारण सेवा जडान छैन</small></div>
+          </section>
+
+          <div class="dashboard-grid">
+            <section class="panel contact-panel" aria-labelledby="contactPanelTitle">
+              <div class="panel-heading"><div><h2 id="contactPanelTitle">सम्पर्कहरू</h2><p>तपाईंले यस सत्रमा आयात गरेका वा नमुना सूचीमा रहेका सम्पर्कहरू।</p></div><button class="text-button" type="button" data-view-target="contacts">सबै हेर्नुहोस् <span aria-hidden="true">→</span></button></div>
+              <label class="search-field"><span aria-hidden="true">⌕</span><input type="search" id="overviewSearch" placeholder="नाम, फोन वा इमेल खोज्नुहोस्" autocomplete="off"><kbd>/</kbd></label>
+              <div class="contact-list" id="overviewContacts" aria-live="polite"></div>
+              <p class="empty-state" id="overviewEmpty" hidden>यो खोजमा सम्पर्क भेटिएन। अर्को नाम वा नम्बर प्रयास गर्नुहोस्।</p>
+            </section>
+
+            <div class="right-stack">
+              <section class="panel backup-panel" aria-labelledby="backupPanelTitle">
+                <div class="panel-heading"><div><h2 id="backupPanelTitle">आजको काम</h2><p>आफ्नो सम्पर्क सूचीको demo snapshot बनाउनुहोस्।</p></div><span class="cloud-mark" aria-hidden="true"><svg viewBox="0 0 40 32"><path d="M10 24.5h20a7 7 0 0 0 .4-14 10.3 10.3 0 0 0-19.1 1.1 6.6 6.6 0 0 0-1.3 12.9Z"/><path d="M20 14v12m-4-4 4 4 4-4"/></svg></span></div>
+                <div class="backup-callout"><span class="backup-numeral" id="backupContactCount">०</span><span>सम्पर्कहरू<small>यस tab मा समेटिने</small></span></div>
+                <div class="progress-track" id="backupProgress" role="progressbar" aria-label="Demo backup progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden><span></span></div>
+                <button class="button button-primary wide-button" id="backupAction" type="button">Demo backup सुरु गर्नुहोस्</button>
+                <p class="fine-print" id="backupStatus" role="status" aria-live="polite">यो बटनले memory भित्रको demo snapshot मात्र बनाउँछ।</p>
+              </section>
+
+              <section class="panel duplicate-panel" aria-labelledby="duplicateTitle">
+                <div class="panel-heading"><div><h2 id="duplicateTitle">दोहोरिएका नम्बर</h2><p id="duplicateSummary">नमुना सूची जाँचिँदैछ…</p></div><span class="duplicate-count" id="duplicateCount">०</span></div>
+                <div id="duplicateList" class="duplicate-list"></div>
+                <button class="text-button" type="button" data-view-target="contacts">सम्पर्कमा हेर्नुहोस् <span aria-hidden="true">→</span></button>
+              </section>
+
+              <section class="device-note" aria-labelledby="deviceTitle"><div class="device-illustration" aria-hidden="true"><svg viewBox="0 0 72 54"><rect x="7" y="5" width="36" height="43" rx="4"/><path d="M16 14h18m-18 7h18m-18 7h10"/><rect x="46" y="17" width="19" height="31" rx="3"/><path d="M52 24h7m-7 5h7"/></svg></div><div><h2 id="deviceTitle">अर्को उपकरणमा पहुँच</h2><p>वास्तविक सेवामा एउटै खाताबाट नयाँ फोन वा computer मा sign in गरी backup खोल्न सकिन्छ। यो demo अर्को उपकरणमा data पठाउँदैन।</p></div></section>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="view-contacts" data-view="contacts" aria-label="सम्पर्क व्यवस्थापन" hidden>
+          <div class="view-toolbar"><div><h2>सम्पर्क सूची</h2><p><span id="contactsPageCount">०</span> नमुना / यस सत्रका सम्पर्क · cloud मा सुरक्षित छैन</p></div><button class="button button-secondary" type="button" data-open-view="backup">＋ CSV / VCF आयात</button></div>
+          <label class="search-field contact-search"><span aria-hidden="true">⌕</span><input type="search" id="contactSearch" placeholder="सम्पर्क खोज्नुहोस्" autocomplete="off"><kbd>/</kbd></label>
+          <div class="contact-workspace"><div class="panel full-contact-panel"><div class="list-head"><span>नाम</span><span>फोन नम्बर</span><span>इमेल</span><span>स्रोत</span></div><div id="allContacts" class="all-contact-list" aria-live="polite"></div><p class="empty-state" id="contactsEmpty" hidden>सम्पर्क भेटिएन।</p></div><aside class="panel contact-detail-hint"><p class="eyebrow">DETAILS</p><h3>सम्पर्क छान्नुहोस्</h3><p>नाममा थिचेर विवरण खोल्नुहोस्। दोहोरिएका नम्बरहरूलाई छुट्टै चिन्ह लगाइन्छ।</p><div class="hint-privacy"><strong>निजी डेटा</strong><span>यस प्रदर्शनमा सूची server मा पठाइँदैन।</span></div></aside></div>
+        </section>
+
+        <section class="view" id="view-backup" data-view="backup" aria-label="सम्पर्क आयात र ब्याकअप" hidden>
+          <div class="view-toolbar"><div><h2>सम्पर्कको demo backup</h2><p>पहिले CSV वा vCard आयात गर्नुहोस्, त्यसपछि memory मा मात्र demo snapshot बनाउनुहोस्।</p></div></div>
+          <div class="backup-page-grid"><section class="panel import-panel"><p class="eyebrow">STEP 01 · IMPORT</p><h3>आफ्नो contact file छान्नुहोस्</h3><p>CSV वा VCF file यो पृष्ठभित्र मात्र पढिन्छ। फाइल कतै upload हुँदैन।</p><label class="file-drop" for="contactFile"><span class="file-icon" aria-hidden="true">＋</span><strong>CSV वा VCF छान्नुहोस्</strong><small>अधिकतम 2 MB · .csv, .vcf</small><input id="contactFile" type="file" accept=".csv,.vcf,text/csv,text/vcard" aria-describedby="importFileHint"></label><small class="field-hint" id="importFileHint">आयातपछि सम्पर्क यो tab को memory मा मात्र हुन्छ। tab बन्द गरेपछि हराउँछ।</small><p class="form-status" id="importStatus" role="status" aria-live="polite"></p></section>
+            <section class="panel import-preview"><p class="eyebrow">STEP 02 · REVIEW</p><h3>Backup अघि सूची हेर्नुहोस्</h3><div class="preview-total"><strong id="backupPageCount">०</strong><span>सम्पर्कहरू<br><small>नमुना + आयातित</small></span></div><div class="preview-line"><span>दोहोरिएका नम्बर</span><strong id="backupDuplicateCount">०</strong></div><div class="preview-line"><span>Cloud मा पठाइएको</span><strong>होइन</strong></div><button class="button button-primary wide-button" id="backupPageAction" type="button">Demo snapshot बनाउनुहोस्</button><p class="fine-print">कुनै real cloud backup वा encryption सेवा जोडिएको छैन।</p></section>
+          </div>
+          <section class="security-explainer"><h3>फाइल आयात हुँदा के हुन्छ?</h3><p>phoneलय ले यो demo मा file text लाई तपाईंको tab मै पढेर सम्पर्कहरू देखाउँछ। File, फोन नम्बर वा इमेल server मा पठाइँदैन। कुनै cloud account वा encrypted storage प्रयोग भएको छैन।</p></section>
+        </section>
+
+        <section class="view" id="view-restore" data-view="restore" aria-label="सम्पर्क पुनः प्राप्ति" hidden>
+          <div class="view-toolbar"><div><h2>सम्पर्क पुनः प्राप्ति</h2><p>नयाँ फोनमा सार्ने demo flow। यहाँको snapshot यही tab को memory मा मात्र रहन्छ।</p></div></div>
+          <div class="restore-grid"><section class="panel restore-card"><p class="eyebrow">DEMO RECOVERY POINT</p><h3>उदाहरण snapshot</h3><p>यो app सँग आएको sample सूची हो; तपाईंको पुरानो फोनबाट आएको backup होइन।</p><div class="restore-stat"><strong id="restoreSnapshotCount">०</strong><span>नमुना सम्पर्कहरू</span></div><div class="restore-actions"><button class="button button-primary" id="restoreAction" type="button">नमुना सूची फर्काउनुहोस्</button><button class="button button-secondary" id="downloadVcf" type="button">VCF फाइल डाउनलोड</button></div><p class="fine-print" id="restoreStatus" role="status" aria-live="polite">पुनः प्राप्तिले यस tab को हालको सूचीलाई नमुना सूचीले बदल्छ।</p></section>
+            <section class="restore-steps"><p class="eyebrow">नयाँ फोनमा सार्ने</p><h3>तीन चरण</h3><ol><li><span>१</span><div><strong>VCF डाउनलोड गर्नुहोस्</strong><p>सम्पर्कहरूलाई एउटा standard vCard file मा निकाल्नुहोस्।</p></div></li><li><span>२</span><div><strong>नयाँ फोनमा फाइल खोल्नुहोस्</strong><p>Downloads मा रहेको `.vcf` file मा थिच्नुहोस्।</p></div></li><li><span>३</span><div><strong>Import पुष्टि गर्नुहोस्</strong><p>फोनको Contacts app ले सम्पर्क थप्ने विकल्प देखाउँछ। फोनअनुसार चरण फरक हुन सक्छ।</p></div></li></ol><p class="notice-small">Demo बाट export भएको VCF मा देखिएका नमुना र यस tab मा आयात गरिएका सम्पर्कहरू मात्र हुन्छन्।</p></section>
+          </div>
+        </section>
+
+        <section class="view" id="view-account" data-view="account" aria-label="खाता र गोपनीयता" hidden>
+          <div class="view-toolbar"><div><h2>खाता र गोपनीयता</h2><p>सुरक्षित account अनुभवको योजना। हाल login र cloud सेवा जोडिएका छैनन्।</p></div></div>
+          <div class="settings-layout"><section class="settings-copy"><h3>फोनलय खाता</h3><p>अर्को उपकरणबाट सम्पर्क backup खोल्नका लागि भविष्यमा सुरक्षित sign-in चाहिन्छ।</p></section><section class="panel settings-panel"><span class="setting-state">DEMO · NOT CONNECTED</span><form id="accountForm"><label>इमेल<input type="email" placeholder="इमेल ठेगाना" autocomplete="off"></label><label>पासवर्ड<input type="password" placeholder="••••••••" autocomplete="off"></label><div class="form-buttons"><button class="button button-primary" type="submit">Sign in demo</button><button class="button button-secondary" type="button" id="registerAction">खाता खोल्ने demo</button></div><p class="fine-print" id="accountStatus" role="status" aria-live="polite">यो form ले विवरण जाँच वा पठाउँदैन। कुनै account बनाइँदैन।</p></form></section>
+            <section class="settings-copy"><h3>गोपनीयता र सुरक्षा</h3><p>व्यक्तिगत सम्पर्क विवरणलाई सार्वजनिक फाइल वा shared cache मा राखिँदैन।</p></section><section class="panel settings-panel privacy-settings"><div class="security-row"><span><strong>यस सत्रमा local processing</strong><small>आयातित सम्पर्कहरू server मा नपठाई हालको पृष्ठमा प्रशोधन हुन्छन्।</small></span><b>सक्रिय</b></div><div class="security-row"><span><strong>Encrypted transfer</strong><small>भविष्यको production सेवा जोडिएपछि TLS र server-side encryption चाहिन्छ। अहिले कुनै cloud transfer हुँदैन।</small></span><b class="not-active">जडान छैन</b></div><div class="security-row"><span><strong>Backup history</strong><small>Demo history यो tab मा मात्र देखिन्छ; बन्द गर्दा हट्छ।</small></span><b id="historyCount">०</b></div></section>
+            <section class="settings-copy"><h3>अर्को उपकरण</h3><p>भविष्यमा आफ्नो खाताबाट जुनसुकै device मा sign in गर्नुहोस्।</p></section><section class="panel settings-panel"><p>यो demo मा multi-device access छैन। वास्तविक सेवाले user-owned access rules, private storage, encryption keys र recovery verification आवश्यक पार्छ।</p><a class="gateway-return" href="/?gateway=1">← Deudalaya एपहरूको gateway</a></section>
+          </div>
+        </section>
+
+        <footer class="app-footer"><span>phoneलय · फोनलय — तपाईंका सम्पर्क, सधैँ सुरक्षित।</span><span>Demo · cloud backup सक्रिय छैन</span></footer>
+      </div>
+    </main>
+  </div>
+
+  <dialog class="contact-dialog" id="contactDialog" aria-labelledby="detailName"><form method="dialog"><button class="dialog-close" aria-label="बन्द गर्नुहोस्">×</button></form><p class="eyebrow">CONTACT DETAIL · SAMPLE</p><h2 id="detailName"></h2><dl><div><dt>फोन</dt><dd id="detailPhone"></dd></div><div><dt>इमेल</dt><dd id="detailEmail"></dd></div><div><dt>स्रोत</dt><dd id="detailSource"></dd></div></dl><p class="dialog-private">यस demo मा यो सम्पर्क तपाईंको browser tab बाहिर पठाइएको छैन।</p></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="contacts.js" defer></script>
+  <script src="app.js" defer></script>
+</body>
+</html>

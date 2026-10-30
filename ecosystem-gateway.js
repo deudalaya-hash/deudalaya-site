@@ -6,7 +6,8 @@
   var apps = {
     deudalaya: { id: base + '/', manifest: base + '/manifest.webmanifest', href: '/?app=deudalaya' },
     sabdalaya: { id: base + '/sabdalaya/', manifest: base + '/sabdalaya/manifest.webmanifest', href: '/sabdalaya/' },
-    chalchitralaya: { id: base + '/chalchitralaya/', manifest: base + '/chalchitralaya/manifest.webmanifest', href: '/chalchitralaya/' }
+    chalchitralaya: { id: base + '/chalchitralaya/', manifest: base + '/chalchitralaya/manifest.webmanifest', href: '/chalchitralaya/' },
+    phonelaya: { id: base + '/phonelaya/', manifest: base + '/phonelaya/manifest.webmanifest', href: '/phonelaya/' }
   };
 
   function setStatus(name, state, message) {

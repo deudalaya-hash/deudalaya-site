@@ -25,7 +25,7 @@ html.ecosystem-gateway #ecosystemGateway{display:flex;flex-direction:column}
 .gateway-intro h1{margin:14px 0 10px;font-size:clamp(30px,5vw,54px);font-weight:600;letter-spacing:-1.9px;line-height:1.12}
 .gateway-intro h1 em{color:#d8bd8e;font-style:normal}
 .gateway-lede{max-width:580px;margin:0 auto;color:#aaa9a4;font-size:12px;line-height:1.7}
-.gateway-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.gateway-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}
 .gateway-card{min-width:0;overflow:hidden;border:1px solid #ffffff17;border-radius:10px;background:linear-gradient(158deg,#191a1f,#101115 74%);transition:border-color .2s,transform .2s,box-shadow .2s}
 .gateway-card:hover{transform:translateY(-3px);border-color:#d9b77871;box-shadow:0 20px 55px #0006}
 .gateway-card-top{height:154px;position:relative;padding:18px;display:flex;align-items:flex-start;justify-content:space-between;overflow:hidden;background:radial-gradient(ellipse at 70% 30%,#4f4738,#202025 52%,#141519 86%)}
@@ -35,6 +35,8 @@ html.ecosystem-gateway #ecosystemGateway{display:flex;flex-direction:column}
 .gateway-sabda .gateway-card-top{background:radial-gradient(ellipse at 68% 25%,#182c38,#151523 52%,#101116 88%)}
 .gateway-sabda .gateway-card-top:after{border-color:#44c9d645;box-shadow:0 0 0 14px #11c8d80a,0 0 0 34px #ed378808,0 0 38px #00c9ec15}
 .gateway-cinema .gateway-card-top{background:radial-gradient(ellipse at 68% 26%,#453526,#25221f 50%,#101115 88%)}
+.gateway-phone .gateway-card-top{background:radial-gradient(ellipse at 68% 26%,#24453d,#1c2927 50%,#101115 88%)}
+.gateway-phone .gateway-card-top:after{border-color:#80c8a545;box-shadow:0 0 0 14px #80c8a508,0 0 0 34px #53aa7808,0 0 38px #53aa7815}
 .gateway-card-copy{padding:16px 18px 11px}
 .gateway-card-copy h2{margin:0 0 8px;font-size:23px;font-weight:650;letter-spacing:-.6px}
 .gateway-card-copy p{min-height:54px;margin:0;color:#aaa9a4;font-size:10px;line-height:1.6}

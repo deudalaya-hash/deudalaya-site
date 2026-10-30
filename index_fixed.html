@@ -479,14 +479,11 @@ async function applySiteUpdate(){
   hideUpdateNotice();
   try{
     if('serviceWorker' in navigator){
-      const regs=await navigator.serviceWorker.getRegistrations();
-      for(const reg of regs){
+      const rootScope=new URL('/',location.origin).href;
+      const reg=await navigator.serviceWorker.getRegistration(rootScope);
+      if(reg){
         if(reg.waiting)reg.waiting.postMessage&&reg.waiting.postMessage({type:'SKIP_WAITING'});
         await reg.update().catch(function(){});
-      }
-      if('caches' in window){
-        const keys=await caches.keys();
-        await Promise.all(keys.map(function(k){return caches.delete(k)}));
       }
     }
   }catch(e){}

@@ -12,7 +12,8 @@
   "related_applications": [
     { "platform": "webapp", "id": "https://deudalaya.com/", "url": "https://deudalaya.com/manifest.webmanifest" },
     { "platform": "webapp", "id": "https://deudalaya.com/sabdalaya/", "url": "https://deudalaya.com/sabdalaya/manifest.webmanifest" },
-    { "platform": "webapp", "id": "https://deudalaya.com/chalchitralaya/", "url": "https://deudalaya.com/chalchitralaya/manifest.webmanifest" }
+    { "platform": "webapp", "id": "https://deudalaya.com/chalchitralaya/", "url": "https://deudalaya.com/chalchitralaya/manifest.webmanifest" },
+    { "platform": "webapp", "id": "https://deudalaya.com/phonelaya/", "url": "https://deudalaya.com/phonelaya/manifest.webmanifest" }
   ],
   "icons": [
     {
