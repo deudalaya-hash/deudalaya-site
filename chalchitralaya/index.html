@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ne">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#090a0e">
+  <meta name="application-name" content="चलचित्रलय">
+  <meta name="apple-mobile-web-app-title" content="चलचित्रलय">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="description" content="चलचित्रलय — नेपाली कथाहरूका लागि सिनेमा घर।">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" sizes="192x192" href="icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+  <script>(function(){try{var s=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;if(s)document.documentElement.classList.add('cinema-installed');else document.documentElement.classList.add('cinema-install-required')}catch(_){document.documentElement.classList.add('cinema-install-required')}})();</script>
+  <title>चलचित्रलय — नेपाली सिनेमा घर</title>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="चलचित्रलय गृहपृष्ठ">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 36 36"><path d="M7 6h22M18 6v10m0 0-7 7m7-7 7 7M10 25h16v5H10z"/><circle cx="18" cy="16" r="2"/></svg></span>
+      <span><strong>चलचित्रलय</strong><small>नेपाली कथाहरूको घर</small></span>
+    </a>
+    <nav class="main-nav" aria-label="मुख्य मेनु"><a href="#home" data-en="Home">गृहपृष्ठ</a><a href="#catalog" data-en="Movies">चलचित्र</a><button type="button" data-open="library" data-en="My library">मेरो संग्रह</button></nav>
+    <div class="header-actions">
+      <label class="search-box"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input type="search" id="searchInput" placeholder="चलचित्र खोज्नुहोस्" aria-label="चलचित्र खोज्नुहोस्"><kbd>⌘ K</kbd></label>
+      <button class="language-button" id="languageToggle" type="button" aria-label="Switch language">EN</button>
+      <button class="profile-button" type="button" data-open="account">लगइन</button>
+    </div>
+    <button class="mobile-search" id="mobileSearch" type="button" aria-label="Search"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg></button>
+  </header>
+
+  <main id="home">
+    <section class="hero" aria-labelledby="heroTitle">
+      <div class="hero-art" role="img" aria-label="चलचित्रको दृश्य सम्झाउने मौलिक अमूर्त कला"><div class="hero-grain"></div><div class="hero-mountain mountain-back"></div><div class="hero-mountain mountain-front"></div><div class="hero-orbit"></div><div class="hero-credit">मौलिक नमुना कला · demo artwork</div></div>
+      <div class="hero-shade"></div>
+      <div class="hero-content"><p class="eyebrow"><span class="live-dot"></span> चलचित्रलय ओरिजिनल्स <i>· DEMO</i></p><h1 id="heroTitle">पहाडले सुनाएको कथा</h1><p class="hero-meta">२०८३ <span>•</span> सामाजिक नाटक <span>•</span> १ घण्टा ५२ मिनेट</p><p class="hero-description">आफ्नो माटो, सम्झना र घर फर्किने बाटोको कथा। यो चलचित्रलयको मौलिक अवधारणा कला सहितको नमुना सूची हो।</p><div class="hero-actions"><button class="button button-primary" id="heroDetails" type="button">विवरण हेर्नुहोस् <span aria-hidden="true">→</span></button><button class="button button-quiet" id="heroDemo" type="button">▷ नमुना दृश्य</button></div><span class="hero-demo-label">कन्सेप्ट चलचित्र · टिकट बिक्री खुला छैन</span></div>
+      <div class="hero-pagination" aria-label="Featured selection"><button class="current" aria-label="Feature 1"></button><button aria-label="Feature 2" data-feature="1"></button><button aria-label="Feature 3" data-feature="2"></button><span>01 <i>/</i> 03</span></div>
+    </section>
+
+    <section class="demo-banner" aria-label="Demo catalog notice"><span class="demo-icon">i</span><p><strong>प्रदर्शन नमुना</strong><span>यहाँ देखाइएका चलचित्र, कलाकार, वर्ष र मूल्य उदाहरणका लागि हुन्। टिकट, खाता र चलचित्र प्लेब्याक सेवा अझै जोडिएको छैन।</span></p><button type="button" data-open="platform">प्लेटफर्मबारे</button></section>
+
+    <section class="catalog-section categories-section" id="catalog">
+      <div class="section-heading"><div><span class="eyebrow">कथाको खोजी</span><h2>श्रेणी अनुसार हेर्नुहोस्</h2></div><button class="text-link" data-clear-filter type="button">सबै चलचित्र <span>→</span></button></div>
+      <div class="category-rail" id="categoryRail" role="group" aria-label="चलचित्र श्रेणी">
+        <button class="category-chip selected" data-category="all" type="button">सबै</button><button class="category-chip" data-category="नेपाली चलचित्र" type="button">नेपाली चलचित्र</button><button class="category-chip" data-category="सुदूरपश्चिमेली चलचित्र" type="button">सुदूरपश्चिमेली चलचित्र</button><button class="category-chip" data-category="कर्णाली चलचित्र" type="button">कर्णाली चलचित्र</button><button class="category-chip" data-category="ऐतिहासिक चलचित्र" type="button">ऐतिहासिक चलचित्र</button><button class="category-chip" data-category="सामाजिक चलचित्र" type="button">सामाजिक चलचित्र</button><button class="category-chip" data-category="प्रेमकथा" type="button">प्रेमकथा</button><button class="category-chip" data-category="वृत्तचित्र" type="button">वृत्तचित्र</button><button class="category-chip" data-category="छोटा चलचित्र" type="button">छोटा चलचित्र</button>
+      </div>
+    </section>
+
+    <section class="catalog-section" aria-labelledby="trendingTitle"><div class="section-heading"><div><span class="eyebrow">Trending · आजका छनोट</span><h2 id="trendingTitle">चर्चामा रहेका चलचित्र</h2></div><span class="section-note">नमुना चलचित्र · कुनै स्ट्रिमिङ उपलब्ध छैन</span></div><div class="movie-grid" id="movieGrid" aria-live="polite"></div><p class="empty-state" id="emptyState" hidden>यस खोजमा चलचित्र भेटिएन। अर्को शीर्षक वा श्रेणी प्रयास गर्नुहोस्।</p></section>
+
+    <section class="catalog-section collection-section"><div class="section-heading"><div><span class="eyebrow">नयाँ अवधारणा</span><h2>Recently added · हालै थपिएका</h2></div><span class="section-note">नमुना सूची</span></div><div class="collection-grid" id="recentGrid"></div></section>
+
+    <section class="catalog-section collection-section"><div class="section-heading"><div><span class="eyebrow">सम्पादकीय छनोट</span><h2>Recommended · सिफारिस गरिएका</h2></div><span class="section-note">व्यक्तिगत सिफारिस सक्रिय छैन</span></div><div class="collection-grid" id="recommendedGrid"></div></section>
+
+    <section class="editorial-section"><div class="section-heading"><div><span class="eyebrow">Coming soon · चाँडै आउँदै</span><h2>आगामी कथाहरू</h2></div><span class="section-note">निर्माणाधीन कन्सेप्ट</span></div><div class="upcoming-grid"><article class="upcoming-card upcoming-one"><span>आगामी · २०८४</span><h3>हिउँपारिको बाटो</h3><p>एक यात्राले जोडेको दुई पुस्ताको कथा।</p></article><article class="upcoming-card upcoming-two"><span>विकास चरण · २०८४</span><h3>कर्णालीका पत्रहरू</h3><p>नदी किनारबाट लेखिएका अधुरा चिठीहरू।</p></article></div></section>
+
+    <section class="filmmaker-callout"><div><span class="eyebrow">चलचित्रकर्मीहरूको लागि</span><h2>तपाईंको कथा पनि पर्दामा ल्याउनुहोस्।</h2><p>चलचित्र पेस गर्ने र बिक्री हेर्ने ड्यासबोर्ड भविष्यका लागि योजना गरिएको छ।</p></div><button class="button button-quiet" type="button" data-open="filmmaker">फिल्ममेकर डेमो हेर्नुहोस् <span>→</span></button></section>
+  </main>
+
+  <footer class="site-footer"><a class="footer-brand" href="#home">चलचित्रलय</a><span>नेपाली सिनेमाका लागि बनाइएको नमुना प्लेटफर्म</span><div><button type="button" data-open="admin">प्रशासन डेमो</button><a href="/?gateway=1">देउडालय ↗</a></div></footer>
+
+  <dialog class="app-dialog movie-dialog" id="movieDialog" aria-labelledby="movieTitle"><button class="dialog-close" type="button" data-close aria-label="बन्द गर्नुहोस्">×</button><div class="detail-art" id="detailArt"></div><div class="detail-content"><span class="eyebrow" id="movieBadge">नमुना चलचित्र</span><h2 id="movieTitle"></h2><div class="detail-meta" id="movieMeta"></div><p id="movieStory"></p><div class="credit-grid"><div><small>निर्देशक</small><strong id="movieDirector"></strong></div><div><small>निर्माता</small><strong id="movieProducer"></strong></div><div class="cast-line"><small>कलाकार</small><strong id="movieCast"></strong></div></div><p class="price-note" id="moviePrice"></p><div class="dialog-actions"><button class="button button-primary" id="buyTicketButton" type="button">टिकट जानकारी</button><button class="button button-quiet" id="watchDemoButton" type="button">▷ मौलिक demo दृश्य</button><button class="button button-quiet" id="watchMovieButton" type="button" disabled>चलचित्र हेर्नुहोस् · उपलब्ध छैन</button><button class="watchlist-button" id="watchlistButton" type="button" aria-pressed="false">＋ मेरो सूचीमा</button></div><section class="review-demo"><h3>डेमो समीक्षा र rating</h3><p>यो rating र समीक्षा यस पृष्ठमा मात्रै छन्, प्रकाशित हुँदैनन्।</p><div class="rating-row" id="ratingRow" aria-label="नमुना rating"><button type="button" data-rating="1" aria-label="१ तारा">☆</button><button type="button" data-rating="2" aria-label="२ तारा">☆</button><button type="button" data-rating="3" aria-label="३ तारा">☆</button><button type="button" data-rating="4" aria-label="४ तारा">☆</button><button type="button" data-rating="5" aria-label="५ तारा">☆</button></div><form id="reviewForm"><label for="reviewText">नमुना समीक्षा</label><textarea id="reviewText" maxlength="240" placeholder="समीक्षा लेख्नुहोस्…"></textarea><button class="watchlist-button" type="submit">समीक्षा preview</button></form><small id="reviewStatus" aria-live="polite"></small></section><p class="backend-hint">टिकट किन्न र पूरा चलचित्र हेर्न वास्तविक भुक्तानी, अधिकार प्राप्त फिल्म फाइल, प्रयोगकर्ता खाता र सुरक्षित भण्डारण आवश्यक हुन्छ।</p></div></dialog>
+
+  <dialog class="app-dialog checkout-dialog" id="checkoutDialog" aria-labelledby="checkoutTitle"><button class="dialog-close" type="button" data-close aria-label="बन्द गर्नुहोस्">×</button><span class="eyebrow">DEMONSTRATION ONLY · DEMO CHECKOUT · भुक्तानी छैन</span><h2 id="checkoutTitle">टिकट जानकारी</h2><p id="checkoutMovie"></p><div class="checkout-summary"><span>उदाहरण टिकट मूल्य</span><strong id="checkoutPrice"></strong></div><div class="checkout-warning"><b>यो checkout प्रदर्शन मात्र हो।</b><span>कुनै पैसा लिइँदैन, टिकट जारी हुँदैन, र तपाईंको पुस्तकालयमा चलचित्र थपिँदैन। वास्तविक कारोबारका लागि payment gateway र टिकट प्रणाली जडान हुनुपर्छ।</span></div><button class="button button-primary full-button" data-close type="button">बुझें, फर्कनुहोस्</button></dialog>
+
+  <dialog class="app-dialog player-dialog" id="playerDialog" aria-labelledby="playerTitle"><button class="dialog-close player-close" type="button" data-close aria-label="बन्द गर्नुहोस्">×</button><div class="player-screen"><canvas id="demoCanvas" aria-label="चलचित्रलयका लागि बनाइएको मौलिक एनिमेटेड दृश्य"></canvas><button class="canvas-play" id="canvasPlay" type="button" aria-label="नमुना दृश्य रोक्नुहोस्">Ⅱ</button><span class="player-watermark">ORIGINAL DEMO ART · चलचित्र फुटेज होइन</span></div><div class="player-controls"><h2 id="playerTitle">चलचित्रलय मौलिक नमुना दृश्य</h2><p>अधिकार प्राप्त चलचित्र उपलब्ध नभएसम्म यो दृश्यले प्लेयर नियन्त्रण मात्र देखाउँछ।</p><div class="timeline-row"><span id="playerCurrent">०:००</span><input id="playerTimeline" type="range" min="0" max="18" value="0" step="0.1" aria-label="Demo दृश्य timeline"><span>०:१८</span></div><div class="control-row"><button id="playerToggle" type="button" aria-label="Pause">Ⅱ</button><label>आवाज <input id="playerVolume" type="range" min="0" max="1" value="0.7" step="0.1" aria-label="Volume"></label><button id="fullscreenButton" type="button">⛶ Fullscreen</button><span class="resume-state" id="resumeState">यो सत्रको demo</span></div></div></dialog>
+
+  <dialog class="app-dialog notice-dialog" id="noticeDialog" aria-labelledby="noticeTitle"><button class="dialog-close" type="button" data-close aria-label="बन्द गर्नुहोस्">×</button><span class="eyebrow" id="noticeEyebrow">चलचित्रलय</span><h2 id="noticeTitle"></h2><div class="notice-body" id="noticeBody"></div><button class="button button-quiet full-button" data-close type="button">बन्द गर्नुहोस्</button></dialog>
+  <nav class="mobile-nav" aria-label="मोबाइल मेनु"><a href="#home">⌂<small>गृहपृष्ठ</small></a><button type="button" id="mobileNavSearch">⌕<small>खोजी</small></button><button type="button" data-open="library">▣<small>मेरो संग्रह</small></button><button type="button" data-open="account">♙<small>खाता</small></button></nav>
+  <section class="app-install-gate" id="installGate" hidden aria-labelledby="installTitle"><div class="install-card"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 36 36"><path d="M7 6h22M18 6v10m0 0-7 7m7-7 7 7M10 25h16v5H10z"/><circle cx="18" cy="16" r="2"/></svg></span><span class="eyebrow">एप स्थापना</span><h1 id="installTitle">चलचित्रलय आफ्नो फोनमा राख्नुहोस्</h1><p>नेपाली चलचित्रका लागि छुट्टै एप। चलचित्रको मुख्य अनुभव खोल्न यो एप पहिले स्थापना गर्नुहोस्।</p><button class="button button-primary full-button" id="installAppAction" type="button">Install चलचित्रलय</button><button class="button button-quiet full-button open-installed" id="openInstalledApp" type="button" hidden>App launcher बाट चलचित्रलय खोल्नुहोस्</button><p id="installStatus" role="status" aria-live="polite">स्थापना प्रस्ताव ब्राउजर र उपकरणमा निर्भर हुन्छ।</p><a class="gateway-link" href="/?gateway=1">← तीन एपको मुख्य पृष्ठ</a></div></section>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js" defer></script>
+</body>
+</html>

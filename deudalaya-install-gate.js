@@ -1,6 +1,10 @@
 (function () {
   'use strict';
 
+  // The normal root URL now hosts the app-discovery gateway. Keep the
+  // Deudalaya install gate for the app launch URL and its standalone window.
+  if (document.documentElement.classList.contains('ecosystem-gateway')) return;
+
   var gate = document.getElementById('deudalayaInstallGate');
   var action = document.getElementById('deudalayaInstallAction');
   var hint = document.getElementById('deudalayaInstallHint');
@@ -76,8 +80,10 @@
       await promptEvent.prompt();
       var result = await promptEvent.userChoice;
       if (result && result.outcome === 'accepted') {
-        hint.textContent = 'Installed. Close this tab and open Deudalaya from your home screen or app launcher.';
-        action.textContent = 'Open Deudalaya from your app launcher';
+        try { localStorage.setItem('ecosystem-install-deudalaya', 'reported'); } catch (_) {}
+        hint.textContent = 'Installation was accepted. If Open App stays in the browser, launch Deudalaya from your home screen.';
+        action.hidden = true;
+        document.getElementById('deudalayaOpenInstalled').hidden = false;
       } else {
         hint.textContent = 'Installation was cancelled. Install Deudalaya to continue.';
         action.textContent = 'Show browser install steps';
@@ -97,7 +103,9 @@
   });
 
   window.addEventListener('appinstalled', function () {
-    hint.textContent = 'Deudalaya is installed. Close this tab and open the app from your home screen or app launcher.';
-    action.textContent = 'Open Deudalaya from your app launcher';
+    try { localStorage.setItem('ecosystem-install-deudalaya', 'reported'); } catch (_) {}
+    hint.textContent = 'The browser confirmed installation. Use Open App, or launch Deudalaya from your home screen.';
+    action.hidden = true;
+    document.getElementById('deudalayaOpenInstalled').hidden = false;
   });
 })();

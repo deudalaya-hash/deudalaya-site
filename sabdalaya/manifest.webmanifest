@@ -1,0 +1,19 @@
+{
+  "id": "/sabdalaya/",
+  "name": "शब्दलय",
+  "short_name": "शब्दलय",
+  "description": "आवाजको आफ्नै संसार। नेपाली आवाज र कथाहरूको साझा फिड।",
+  "lang": "ne",
+  "start_url": "/sabdalaya/",
+  "scope": "/sabdalaya/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#050510",
+  "related_applications": [
+    { "platform": "webapp", "id": "https://deudalaya.com/sabdalaya/", "url": "https://deudalaya.com/sabdalaya/manifest.webmanifest" }
+  ],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

@@ -1,0 +1,8 @@
+html.sabdalaya-install-required body{overflow:hidden}
+html.sabdalaya-install-required body>*:not(#installGate):not(script){display:none!important}
+html.sabdalaya-install-required #installGate{display:grid!important}
+.install-gate .continue-button{display:none}
+.sabdalaya-installed .install-gate .continue-button{display:block}
+.open-installed-link{display:block;margin:8px 0;padding:12px;border:1px solid #ffffff35;border-radius:99px;background:#111122;color:#fff;text-decoration:none;font-size:12px;font-weight:700}
+.sabdalaya-install-required .open-installed-link{display:none}
+.gateway-link{display:inline-block;margin-top:10px;color:#c0c4da;font-size:10px;text-decoration:none}
