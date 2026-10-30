@@ -19,3 +19,17 @@
 #layapurInstallGate .required-install-hint{display:none;min-height:0;max-width:calc(100vw - 40px);margin:0!important;font-size:12px!important}
 #layapurInstallGate .required-install-hint:not(:empty){display:block}
 @media(max-height:560px){#layapurInstallGate .required-install-card{top:calc(50% + 112px)}}
+
+/* Deudalaya stays behind this install gate in browser tabs. */
+#deudalayaInstallGate{z-index:1000000;padding:max(20px,env(safe-area-inset-top)) 20px max(20px,env(safe-area-inset-bottom));background:#101014;color:#f7f7fa}
+#deudalayaInstallGate[hidden],html.deudalaya-installed #deudalayaInstallGate{display:none!important}
+#deudalayaInstallGate .required-install-card{width:min(440px,100%);padding:30px 24px;border:1px solid #ffffff1a;border-radius:18px;background:#19191f;box-shadow:0 18px 60px #0009;color:#f7f7fa}
+#deudalayaInstallGate .install-mark{width:88px;height:88px;margin:0 auto 18px;border:0;border-radius:14px;object-fit:contain;background:#fff}
+#deudalayaInstallGate h1{margin:0 0 8px;color:#f7f7fa;font-size:25px}
+#deudalayaInstallGate .required-install-card>p{color:#d1d1d8}
+#deudalayaInstallGate #deudalayaInstallAction{min-height:52px;border-radius:10px;background:#ff315b;color:#fff;font-weight:800}
+#deudalayaInstallGate #deudalayaInstallAction:focus-visible{outline:3px solid #25e5dc;outline-offset:3px}
+#deudalayaInstallGate #deudalayaInstallHint{min-height:0;margin:14px 0 0!important;color:#d1d1d8}
+body.install-required{overflow:hidden}
+@media(max-width:480px){#deudalayaInstallGate .required-install-card{padding:26px 20px}}
+@media(prefers-reduced-motion:reduce){#deudalayaInstallGate *{scroll-behavior:auto!important;transition:none!important}}

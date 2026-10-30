@@ -4,6 +4,12 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preload" as="image" href="dashain.webp" fetchpriority="high"><meta name="theme-color" content="#ffffff">
 <title>देउडालय</title>
 <meta name="deudalaya-version" content="2026.10.15.4">
+<meta name="application-name" content="देउडालय">
+<meta name="apple-mobile-web-app-title" content="देउडालय">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/deudalaya-icon-180.png">
+<link rel="stylesheet" href="install-gate.css">
 <meta property="og:site_name" content="देउडालय">
 <meta property="og:title" content="देउडालय">
 <meta name="description" content="कर्णाली र सुदूरपश्चिमको कला, संस्कृति, भाषा र पहिचानका लागि साझा अभियान। One Circle • One Nepal">
@@ -141,10 +147,23 @@
 @media(prefers-reduced-motion:reduce){.entry-door-panel,.door-splash-seam{transition:none}}
 </style>
 <script>
+(function(){try{var modes=['standalone','minimal-ui','fullscreen','window-controls-overlay'];if(modes.some(function(mode){return window.matchMedia('(display-mode: '+mode+')').matches})||navigator.standalone===true||(document.referrer||'').indexOf('android-app://')===0)document.documentElement.classList.add('deudalaya-installed')}catch(_){}})();
+window.deudalayaInstallPrompt=null;
+window.addEventListener('beforeinstallprompt',function(event){event.preventDefault();window.deudalayaInstallPrompt=event});
 if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js',{scope:'./'}).catch(function(e){console.warn('Service worker registration failed:',e&&e.message||e)});
 </script>
 </head>
 <body>
+<section class="required-install-gate" id="deudalayaInstallGate" role="dialog" aria-modal="true" aria-labelledby="deudalayaInstallTitle" aria-describedby="deudalayaInstallDescription">
+  <div class="required-install-card">
+    <img class="install-mark" src="assets/deudalaya-launch-192.png" alt="">
+    <h1 id="deudalayaInstallTitle">देउडालय</h1>
+    <p id="deudalayaInstallDescription">Install the Deudalaya app to continue.</p>
+    <button type="button" class="required-install-action" id="deudalayaInstallAction">Install देउडालय App</button>
+    <p class="required-install-hint" id="deudalayaInstallHint" role="status" aria-live="polite">This website is available after you install and open the app.</p>
+  </div>
+</section>
+<script src="deudalaya-install-gate.js"></script>
 <div class="launch-splash door-splash" id="launchSplash" aria-label="देउडालय ढोका खुल्दैछ"><div class="entry-door-panel entry-door-left"><span class="entry-door-knocker">देउडा</span></div><div class="entry-door-panel entry-door-right"><span class="entry-door-knocker">लय</span></div><div class="door-splash-seam" aria-hidden="true"></div></div>
 <div class="app">
 
