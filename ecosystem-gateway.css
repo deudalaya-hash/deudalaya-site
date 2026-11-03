@@ -128,3 +128,14 @@ html.ecosystem-gateway body{min-height:100dvh!important;background:#090a0e!impor
  #ecosystemGateway .gateway-card-copy h2{font-size:23px}
  #ecosystemGateway .gateway-card-copy p{font-size:12px}
 }
+
+#ecosystemGateway [hidden]{display:none!important}
+#ecosystemGateway .deudalaya-install-progress{position:fixed;z-index:1000;inset:0;min-height:100dvh;padding:32px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:radial-gradient(ellipse at 50% 42%,#28231a 0,#111216 48%,#090a0e 82%);color:#f4efe5}
+#ecosystemGateway .deudalaya-progress-logo{width:92px;height:92px;object-fit:contain;margin-bottom:30px;border-radius:18px}
+#ecosystemGateway .deudalaya-install-progress h2{margin:0 0 24px;font-size:clamp(25px,6vw,36px);font-weight:700;letter-spacing:-.7px}
+#ecosystemGateway .deudalaya-progress-spinner{width:54px;height:54px;margin:0 auto 23px;border:4px solid #d9b77840;border-top-color:#e2c17f;border-right-color:#e2c17f;border-radius:50%;animation:deudalaya-install-spin .8s linear infinite}
+#ecosystemGateway .deudalaya-install-progress p{max-width:330px;margin:0;color:#c6c1b7;font-size:15px;line-height:1.6}
+#ecosystemGateway .deudalaya-open-installed{width:min(340px,100%);min-height:54px;margin-top:30px;font-size:15px}
+#ecosystemGateway .deudalaya-install-progress[aria-busy="false"] .deudalaya-progress-logo{margin-bottom:24px}
+@keyframes deudalaya-install-spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){#ecosystemGateway .deudalaya-progress-spinner{animation-duration:2s}}

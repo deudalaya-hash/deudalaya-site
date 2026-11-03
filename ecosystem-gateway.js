@@ -5,15 +5,64 @@
 
   var installButton = document.getElementById('deudalayaInstallAction');
   var installHint = document.getElementById('deudalayaInstallHint');
-  if (!installButton || !installHint) return;
+  var installCard = document.getElementById('deudalayaInstallCard');
+  var progressScreen = document.getElementById('deudalayaInstallProgress');
+  var progressTitle = document.getElementById('deudalayaInstallProgressTitle');
+  var progressMessage = document.getElementById('deudalayaInstallProgressMessage');
+  var spinner = document.getElementById('deudalayaInstallSpinner');
+  var openButton = document.getElementById('deudalayaOpenInstalled');
+  if (!installButton || !installHint || !installCard || !progressScreen || !progressTitle || !progressMessage || !spinner || !openButton) return;
 
   var deferredInstallPrompt = window.deudalayaInstallPrompt || null;
+  var installTimeout = null;
+  var installationConfirmed = false;
+
+  function clearInstallTimeout() {
+    if (installTimeout !== null) {
+      window.clearTimeout(installTimeout);
+      installTimeout = null;
+    }
+  }
+
+  function showInstallCard(message) {
+    clearInstallTimeout();
+    progressScreen.hidden = true;
+    progressScreen.setAttribute('aria-busy', 'false');
+    installCard.hidden = false;
+    installButton.hidden = false;
+    installButton.disabled = false;
+    spinner.hidden = false;
+    openButton.hidden = true;
+    installHint.textContent = message;
+  }
+
+  function showInstalling() {
+    installCard.hidden = true;
+    progressScreen.hidden = false;
+    progressScreen.setAttribute('aria-busy', 'true');
+    progressTitle.textContent = 'Installing Deudalaya...';
+    progressMessage.textContent = 'Please wait while your app is being installed.';
+    spinner.hidden = false;
+    openButton.hidden = true;
+    installTimeout = window.setTimeout(function () {
+      if (installationConfirmed) return;
+      showInstallCard('Your browser could not confirm installation. Check your app list, or tap Install App to try again.');
+    }, 20000);
+  }
 
   function markInstalled() {
+    installationConfirmed = true;
     deferredInstallPrompt = null;
     window.deudalayaInstallPrompt = null;
+    clearInstallTimeout();
+    installCard.hidden = true;
     installButton.hidden = true;
-    installHint.textContent = 'Installed. Open Deudalaya from its app icon.';
+    progressScreen.hidden = false;
+    progressScreen.setAttribute('aria-busy', 'false');
+    progressTitle.textContent = 'Installation Complete';
+    progressMessage.textContent = 'Deudalaya is installed and ready to open.';
+    spinner.hidden = true;
+    openButton.hidden = false;
   }
 
   window.addEventListener('beforeinstallprompt', function (event) {
@@ -25,22 +74,20 @@
 
   installButton.addEventListener('click', function (clickEvent) {
     clickEvent.preventDefault();
-
     var promptEvent = deferredInstallPrompt;
     if (!promptEvent) {
       installHint.textContent = 'Installation is not currently available in this browser.';
       return;
     }
 
-    // Call prompt() synchronously in the tap handler so the browser keeps the
-    // user's activation and can show its native installation dialog.
+    // Keep prompt() in the tap handler so Chrome retains the user's activation.
     var promptResult;
     try {
       promptResult = promptEvent.prompt();
     } catch (_) {
       deferredInstallPrompt = null;
       window.deudalayaInstallPrompt = null;
-      installHint.textContent = 'Installation is not currently available in this browser.';
+      showInstallCard('Installation could not be started. Tap Install App to try again.');
       return;
     }
 
@@ -52,15 +99,22 @@
       return promptEvent.userChoice;
     }).then(function (choice) {
       if (choice && choice.outcome === 'accepted') {
-        installHint.textContent = 'Install request accepted. Waiting for browser confirmation.';
+        if (!installationConfirmed) showInstalling();
       } else if (choice && choice.outcome === 'dismissed') {
-        installHint.textContent = 'Installation was cancelled. Reload the page to try again.';
+        showInstallCard('Installation was cancelled. Tap Install App to try again.');
+      } else {
+        showInstallCard('Your browser could not confirm the installation request.');
       }
     }).catch(function () {
-      installHint.textContent = 'Installation is not currently available in this browser.';
+      showInstallCard('Installation could not be confirmed. Tap Install App to try again.');
     }).finally(function () {
       installButton.disabled = false;
     });
+  });
+
+  openButton.addEventListener('click', function (clickEvent) {
+    clickEvent.preventDefault();
+    window.location.assign('/?app=deudalaya');
   });
 
   window.addEventListener('appinstalled', markInstalled);
