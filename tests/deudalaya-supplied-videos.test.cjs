@@ -22,7 +22,7 @@ test('the first two supplied videos are separate playable feed and profile posts
     const video = fs.readFileSync(path.join(root, media));
     assert.equal(video.toString('ascii', 4, 8), 'ftyp', `${media} is an MP4 container`);
   }
-  assert.equal((feed.match(/videoSrc:/g) || []).length, 17, 'all seventeen starter posts are playable videos');
+  assert.equal((feed.match(/videoSrc:/g) || []).length, 18, 'all eighteen starter posts are playable videos');
   assert.match(html, /if\(v\.videoSrc\)[\s\S]{0,180}createElement\('video'\)/, 'feed and profile render video entries as video elements');
   assert.match(html, /if\(!isSupportedFeedVideo\(row\)\)continue;/, 'unsupported remote media is not added to the feed');
   assert.ok(html.includes("readLocalVideos()).filter(item=>{const file=item&&item.file;return !!file&&file.size>0&&isSupportedFeedVideo({file:file,media_type:file.type})"), 'only supported local videos are restored into the feed');
