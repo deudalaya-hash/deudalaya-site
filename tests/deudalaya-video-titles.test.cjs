@@ -25,7 +25,9 @@ const expectedTitles = new Map([
   ['assets/deudalaya-video-2026-11-03-green-hills-deuda.mp4', 'हरियाली डाँडामुनि देउडाको ठूलो घेरा'],
   ['assets/deudalaya-video-2026-11-03-sudurpashchim-travel.mp4', 'हिमाली बाटोमा गाईवस्तुको बथान'],
   ['assets/deudalaya-video-2026-11-03-141359.mp4', 'पहाडी भेलामा देउडा गायन सुन्दै समुदाय'],
-  ['assets/deudalaya-video-2026-11-03-141222.mp4', 'हिमाली गाउँमा घेरा बाँधेर देउडा नाच']
+  ['assets/deudalaya-video-2026-11-03-141222.mp4', 'हिमाली गाउँमा घेरा बाँधेर देउडा नाच'],
+  ['assets/deudalaya-video-2026-11-03-141448.mp4', 'देउडा साँझ १०: खुला मैदानमा देउडा नाच'],
+  ['assets/deudalaya-video-2026-11-03-bajhang-deuda.mp4', 'बझाङको पहाडी आँगनमा देउडा भाका']
 ]);
 
 test('each bundled video has its own content-based title', () => {
