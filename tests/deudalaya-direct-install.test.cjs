@@ -5,15 +5,13 @@ const test = require('node:test');
 
 const html = fs.readFileSync(path.resolve(__dirname, '..', 'index.html'), 'utf8');
 
-test('the root URL shows Deudalaya installation first and offers a website continuation', () => {
+test('the root URL shows the single Deudalaya install entry page', () => {
   assert.match(html, /var gatewayLaunch=query\.get\('gateway'\)==='1';/);
-  assert.match(html, /else if\(gatewayLaunch\)document\.documentElement\.classList\.add\('ecosystem-gateway'\)/);
-  assert.match(html, /id="deudalayaInstallGate"[\s\S]*?deudalaya\.com[\s\S]*?Install App/);
-  assert.match(html, /href="\/\?app=deudalaya&amp;continue=1"[^>]*>Continue to Website/);
-  assert.match(html, /id="deudalayaInstallGate"/);
-  assert.match(html, /href="\/\?gateway=1"/);
-  const installScript = fs.readFileSync(path.resolve(__dirname, '..', 'deudalaya-install-gate.js'), 'utf8');
-  assert.match(installScript, /query\.get\('continue'\)\s*===\s*'1'/);
-  assert.match(installScript, /promptEvent\.prompt\(\)/);
-  assert.match(installScript, /isStandalone\(\)/);
+  assert.match(html, /else if\(gatewayLaunch\|\|!standalone\)document\.documentElement\.classList\.add\('ecosystem-gateway'\)/);
+  assert.match(html, /gateway-brand[\s\S]*?ONE CIRCLE[\s\S]*?ONE NEPAL/);
+  assert.match(html, /gateway-intro h1|One community\. <em>Many stories\.<\/em>/);
+  assert.match(html, /id="deudalayaInstallAction" type="button">Install App<\/button>/);
+  assert.doesNotMatch(html, /deudalayaInstallGate|deudalayaOpenInstalled|ecosystem-install-exit|gateway-footnote|gateway-footer/);
+  assert.match(html, /id="launchSplash"[\s\S]*?id="feed"/);
+  assert.match(fs.readFileSync(path.resolve(__dirname, '..', 'manifest.webmanifest'), 'utf8'), /"start_url": "\/\?app=deudalaya"/);
 });

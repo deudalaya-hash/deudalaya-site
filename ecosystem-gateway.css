@@ -66,3 +66,65 @@ html.ecosystem-gateway #ecosystemGateway{display:flex;flex-direction:column}
 @media(max-width:800px){.gateway-header{height:65px;padding:0 20px}.gateway-main{width:min(540px,calc(100% - 32px));padding:40px 0 28px}.gateway-intro{margin-bottom:24px}.gateway-intro h1{font-size:clamp(29px,7vw,40px)}.gateway-lede{font-size:11px}.gateway-cards{grid-template-columns:1fr;gap:10px}.gateway-card{display:grid;grid-template-columns:116px 1fr;grid-template-rows:1fr auto}.gateway-card-top{height:auto;min-height:170px;grid-row:1/3;padding:12px}.gateway-card-top img{width:43px;height:43px}.gateway-type{position:absolute;left:12px;bottom:10px;font-size:6px}.gateway-card-copy{padding:14px 12px 8px}.gateway-card-copy h2{font-size:20px;margin-bottom:4px}.gateway-card-copy p{min-height:0;font-size:9px}.gateway-card-foot{margin-top:9px;padding-top:8px}.gateway-card-actions{padding:5px 12px 12px;gap:6px}.gateway-install,.gateway-open{min-height:32px;font-size:8px}.gateway-footnote{margin-top:14px;padding:10px}.gateway-kicker{font-size:7px;letter-spacing:.8px}.gateway-home-link{font-size:0}.gateway-home-link span{font-size:17px}.gateway-footer{padding:12px 16px;flex-wrap:wrap;gap:6px 10px}.gateway-footer span:nth-child(2){max-width:140px}.gateway-footer a{margin-left:auto}}
 @media(max-width:380px){.gateway-header{padding:0 13px}.gateway-kicker{display:none}.gateway-main{width:calc(100% - 24px);padding-top:30px}.gateway-card{grid-template-columns:98px 1fr}.gateway-card-top{min-height:177px}.gateway-card-copy{padding-inline:9px}.gateway-card-actions{padding-inline:9px}.gateway-status{font-size:7px}.gateway-identity{font-size:7px}}
 @media(prefers-reduced-motion:reduce){#ecosystemGateway *{scroll-behavior:auto!important;transition-duration:.01ms!important}}
+
+/* Deudalaya entry page: one branded install card, with the feed kept behind it. */
+html.ecosystem-gateway body{min-height:100dvh!important;background:#090a0e!important;color:#f2eee7!important}
+#ecosystemGateway{min-height:100dvh;background:radial-gradient(ellipse at 52% 32%,#24221d 0,#111216 47%,#090a0e 82%)}
+#ecosystemGateway .gateway-header{height:84px;padding:0 max(28px,calc((100vw - 1180px)/2));border-bottom:1px solid #ffffff12}
+#ecosystemGateway .gateway-brand img{width:56px;height:56px;object-fit:contain;border-radius:0}
+#ecosystemGateway .gateway-brand strong{font-size:22px}
+#ecosystemGateway .gateway-brand small{font-size:10px;letter-spacing:1.8px}
+#ecosystemGateway .gateway-main{width:min(1180px,calc(100% - 56px));padding:clamp(56px,10vh,112px) 0 72px}
+#ecosystemGateway .gateway-intro{margin:0 auto 48px;text-align:center}
+#ecosystemGateway .gateway-eyebrow{margin:0 0 18px;font-size:11px;letter-spacing:2px}
+#ecosystemGateway .gateway-intro h1{margin:0 0 18px;font-size:clamp(38px,5vw,64px);letter-spacing:-2.6px;line-height:1.08}
+#ecosystemGateway .gateway-lede{max-width:650px;font-size:16px;line-height:1.65}
+#ecosystemGateway .gateway-cards{width:min(760px,100%);grid-template-columns:1fr;margin:0 auto}
+#ecosystemGateway .gateway-card{display:grid;grid-template-columns:minmax(190px,31%) minmax(0,1fr);grid-template-rows:1fr;min-height:300px;border-radius:18px}
+#ecosystemGateway .gateway-card-top{height:auto;min-height:300px;grid-row:auto;padding:24px}
+#ecosystemGateway .gateway-card-top img{width:76px;height:76px;border-radius:17px}
+#ecosystemGateway .gateway-type{font-size:9px;letter-spacing:1.4px}
+#ecosystemGateway .gateway-card-copy{display:flex;flex-direction:column;align-items:stretch;padding:28px 28px 24px}
+#ecosystemGateway .gateway-card-copy h2{font-size:34px;letter-spacing:-1px}
+#ecosystemGateway .gateway-card-copy p{min-height:0;color:#b8b7b2;font-size:15px;line-height:1.7}
+#ecosystemGateway .gateway-card-foot{margin-top:auto;padding-top:18px;min-height:38px}
+#ecosystemGateway .gateway-status{font-size:12px}
+#ecosystemGateway .gateway-identity{font-size:12px}
+#ecosystemGateway .gateway-card-actions{padding:18px 0 0}
+#ecosystemGateway .gateway-install{min-height:58px;border:1px solid #e0c17e;border-radius:9px;background:#d9b778;color:#17140e!important;font-size:15px;font-weight:800}
+#ecosystemGateway .gateway-install:hover{background:#e4c887}
+#ecosystemGateway .gateway-card-actions [hidden]{display:none}
+#ecosystemGateway .gateway-footnote,#ecosystemGateway .gateway-footer,#ecosystemGateway .gateway-home-link{display:none!important}
+@media(max-width:700px){
+ #ecosystemGateway .gateway-header{height:72px;padding:0 22px}
+ #ecosystemGateway .gateway-brand img{width:46px;height:46px}
+ #ecosystemGateway .gateway-brand strong{font-size:19px}
+ #ecosystemGateway .gateway-brand small{font-size:8px;letter-spacing:1.35px}
+ #ecosystemGateway .gateway-main{width:calc(100% - 36px);padding:clamp(52px,13vh,130px) 0 54px}
+ #ecosystemGateway .gateway-intro{margin-bottom:42px}
+ #ecosystemGateway .gateway-eyebrow{margin-bottom:17px;font-size:10px}
+ #ecosystemGateway .gateway-intro h1{max-width:590px;margin:0 auto 16px;font-size:clamp(36px,8vw,54px);letter-spacing:-1.8px}
+ #ecosystemGateway .gateway-lede{max-width:540px;font-size:15px}
+ #ecosystemGateway .gateway-card{grid-template-columns:minmax(128px,33%) minmax(0,1fr);min-height:290px}
+ #ecosystemGateway .gateway-card-top{min-height:290px;padding:17px}
+ #ecosystemGateway .gateway-card-top img{width:56px;height:56px;border-radius:13px}
+ #ecosystemGateway .gateway-type{left:15px;bottom:14px;font-size:7px}
+ #ecosystemGateway .gateway-card-copy{padding:22px 19px 18px}
+ #ecosystemGateway .gateway-card-copy h2{font-size:27px;margin-bottom:8px}
+ #ecosystemGateway .gateway-card-copy p{font-size:13px;line-height:1.6}
+ #ecosystemGateway .gateway-card-foot{gap:6px;margin-top:auto;padding-top:12px}
+ #ecosystemGateway .gateway-status,#ecosystemGateway .gateway-identity{font-size:9px}
+ #ecosystemGateway .gateway-card-actions{padding-top:13px}
+ #ecosystemGateway .gateway-install{min-height:50px;font-size:13px}
+}
+@media(max-width:390px){
+ #ecosystemGateway .gateway-header{padding:0 16px}
+ #ecosystemGateway .gateway-main{width:calc(100% - 24px)}
+ #ecosystemGateway .gateway-intro h1{font-size:34px}
+ #ecosystemGateway .gateway-card{grid-template-columns:112px minmax(0,1fr);min-height:276px}
+ #ecosystemGateway .gateway-card-top{min-height:276px;padding:12px}
+ #ecosystemGateway .gateway-type{left:10px;bottom:12px;font-size:6px}
+ #ecosystemGateway .gateway-card-copy{padding:18px 12px 14px}
+ #ecosystemGateway .gateway-card-copy h2{font-size:23px}
+ #ecosystemGateway .gateway-card-copy p{font-size:12px}
+}

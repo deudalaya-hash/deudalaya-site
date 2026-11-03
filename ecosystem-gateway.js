@@ -2,50 +2,61 @@
   'use strict';
   if (!document.documentElement.classList.contains('ecosystem-gateway')) return;
 
-  var base = location.origin;
-  var apps = {
-    layapur: { id: new URL('/index2.html', base).href, manifest: new URL('/layapur.webmanifest', base).href, href: '/index2.html' },
-    deudalaya: { id: new URL('/', base).href, manifest: new URL('/manifest.webmanifest', base).href, href: '/?app=deudalaya' },
-    sabdalaya: { id: new URL('/sabdalaya/', base).href, manifest: new URL('/sabdalaya/manifest.webmanifest', base).href, href: '/sabdalaya/' },
-    chalchitralaya: { id: new URL('/chalchitralaya/', base).href, manifest: new URL('/chalchitralaya/manifest.webmanifest', base).href, href: '/chalchitralaya/' },
-    phonelaya: { id: new URL('/phonelaya/', base).href, manifest: new URL('/phonelaya/manifest.webmanifest', base).href, href: '/phonelaya/' },
-    kakchhayalaya: { id: new URL('/kakchhayalaya/', base).href, manifest: new URL('/kakchhayalaya/manifest.webmanifest', base).href, href: '/kakchhayalaya/' }
-  };
+  var installButton = document.getElementById('deudalayaInstallAction');
+  var installHint = document.getElementById('deudalayaInstallHint');
+  if (!installButton || !installHint) return;
 
-  function setStatus(name, state, message) {
-    var status = document.querySelector('[data-status="' + name + '"]');
-    var open = document.querySelector('[data-open-app="' + name + '"]');
-    if (!status || !open) return;
-    status.dataset.state = state;
-    status.textContent = message;
-    open.hidden = state !== 'installed';
-    open.href = apps[name].href;
+  function markInstalled() {
+    installButton.hidden = true;
+    installHint.textContent = 'Installed. Open Deudalaya from its app icon.';
   }
 
-  async function checkInstalledApps() {
-    if (typeof navigator.getInstalledRelatedApps !== 'function') {
-      Object.keys(apps).forEach(function (name) {
-        setStatus(name, 'unknown', 'This browser cannot verify installation status.');
-      });
+  function installDeudalaya(event) {
+    event.preventDefault();
+    var promptEvent = window.deudalayaInstallPrompt;
+    if (!promptEvent) {
+      installHint.textContent = 'Installation is not currently available in this browser.';
       return;
     }
-    try {
-      var installed = await navigator.getInstalledRelatedApps();
-      Object.keys(apps).forEach(function (name) {
-        var app = apps[name];
-        var found = installed.some(function (item) {
-          return item.id === app.id || item.url === app.manifest;
-        });
-        setStatus(name, found ? 'installed' : 'not-detected', found
-          ? 'Installed · Open App is available.'
-          : 'Installation was not confirmed by this browser.');
-      });
-    } catch (_) {
-      Object.keys(apps).forEach(function (name) {
-        setStatus(name, 'unknown', 'This browser cannot verify installation status.');
-      });
-    }
-  }
 
-  checkInstalledApps();
+    var promptResult;
+    try {
+      promptResult = promptEvent.prompt();
+    } catch (_) {
+      installHint.textContent = 'Installation is not currently available in this browser.';
+      return;
+    }
+    window.deudalayaInstallPrompt = null;
+    installButton.disabled = true;
+    Promise.resolve(promptResult).then(function () {
+      return promptEvent.userChoice;
+    }).then(function (choice) {
+      if (choice && choice.outcome === 'accepted') {
+        installHint.textContent = 'Install request accepted. Waiting for browser confirmation.';
+      } else if (choice && choice.outcome === 'dismissed') {
+        installHint.textContent = 'Installation was cancelled.';
+      }
+    }).catch(function () {
+      installHint.textContent = 'Installation is not currently available in this browser.';
+    }).finally(function () {
+      installButton.disabled = false;
+    });
+  }
+  installButton.addEventListener('click', installDeudalaya);
+
+  window.addEventListener('beforeinstallprompt', function () {
+    if (!installButton.hidden) {
+      installHint.textContent = 'Deudalaya is ready to install.';
+    }
+  });
+  window.addEventListener('appinstalled', markInstalled);
+
+  if (typeof navigator.getInstalledRelatedApps === 'function') {
+    navigator.getInstalledRelatedApps().then(function (installed) {
+      var manifestUrl = new URL('/manifest.webmanifest', location.origin).href;
+      if (installed.some(function (item) {
+        return item.id === location.origin + '/' || item.url === manifestUrl;
+      })) markInstalled();
+    }).catch(function () {});
+  }
 }());
