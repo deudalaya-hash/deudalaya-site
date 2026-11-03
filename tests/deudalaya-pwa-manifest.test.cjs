@@ -25,3 +25,7 @@ test('Deudalaya manifest has install identity, scope, display, and downloadable 
     assert.ok(fs.existsSync(path.join(root, icon.src)), `${icon.src} must exist`);
   }
 });
+
+test('Deudalaya explicitly opts into browser installation', () => {
+  assert.equal(manifest.prefer_related_applications, false);
+});
