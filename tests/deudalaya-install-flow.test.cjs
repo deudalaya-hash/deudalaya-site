@@ -6,7 +6,7 @@ const vm = require('node:vm');
 
 const script = fs.readFileSync(path.resolve(__dirname, '..', 'deudalaya-install-gate.js'), 'utf8');
 
-function createInstallPage(search = '', standalone = false) {
+function createInstallPage(search = '', standalone = false, installedApps) {
   const windowEvents = {};
   const actionEvents = {};
   const documentEvents = {};
@@ -51,7 +51,8 @@ function createInstallPage(search = '', standalone = false) {
     addEventListener(name, handler) { windowEvents[name] = handler; }
   };
   const navigator = { userAgent: 'Android', platform: 'Linux armv8l', maxTouchPoints: 0 };
-  vm.runInNewContext(script, { window, document, navigator, location: { search }, URLSearchParams });
+  if (installedApps) navigator.getInstalledRelatedApps = () => Promise.resolve(installedApps);
+  vm.runInNewContext(script, { window, document, navigator, location: { search, origin: 'https://deudalaya.com' }, URL, URLSearchParams });
   return { action, actionEvents, bodyClasses, continueLink, documentEvents, gate, hint, open, rootClasses, window, windowEvents };
 }
 
@@ -71,18 +72,19 @@ test('native install prompt is triggered by the Install App action and confirmat
     prompt() { prompted = true; },
     userChoice: Promise.resolve({ outcome: 'accepted' })
   });
-  await page.actionEvents.click();
-  assert.equal(prompted, true);
+  const installClick = page.actionEvents.click();
+  assert.equal(prompted, true, 'native prompt starts synchronously from the click');
+  await installClick;
   assert.match(page.hint.textContent, /Waiting for browser confirmation/);
   page.windowEvents.appinstalled();
   assert.equal(page.open.hidden, false);
 });
 
-test('unsupported browsers receive instructions and standalone launches skip the gate', () => {
+test('browsers without a native install event show a simple availability message', async () => {
   const unsupported = createInstallPage();
-  unsupported.actionEvents.click();
-  assert.match(unsupported.hint.textContent, /browser menu/);
-  assert.match(unsupported.action.textContent, /Show browser install steps/);
+  await unsupported.actionEvents.click();
+  assert.match(unsupported.hint.textContent, /installation is not currently available/i);
+  assert.equal(unsupported.action.textContent, 'Install App');
 
   const standalone = createInstallPage('', true);
   assert.equal(standalone.gate.hidden, true);
@@ -99,4 +101,11 @@ test('native install cancellation keeps the native Install App action available'
   assert.equal(page.action.textContent, 'Install App');
   assert.match(page.hint.textContent, /cancelled/i);
   assert.doesNotMatch(page.hint.textContent, /browser menu/);
+});
+
+test('an already installed related Deudalaya app hides the Install App button', async () => {
+  const installed = createInstallPage('', false, [{ id: 'https://deudalaya.com/' }]);
+  await Promise.resolve();
+  assert.equal(installed.action.hidden, true);
+  assert.equal(installed.open.hidden, false);
 });

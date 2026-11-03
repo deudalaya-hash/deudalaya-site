@@ -78,19 +78,15 @@
     if (!gate.contains(event.target)) action.focus();
   }, true);
 
-  function showInstructions() {
-    var isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
-      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    hint.textContent = isIOS
-      ? 'To install, tap Share, choose “Add to Home Screen,” then tap Add.'
-      : 'To install, open your browser menu and choose “Install app” or “Add to Home screen.”';
-    action.textContent = isIOS ? 'Show iPhone install steps' : 'Show browser install steps';
+  function showInstallUnavailable() {
+    hint.textContent = 'Installation is not currently available in this browser.';
+    action.textContent = 'Install App';
   }
 
   action.addEventListener('click', async function () {
     var promptEvent = window.deudalayaInstallPrompt;
     if (!promptEvent) {
-      showInstructions();
+      showInstallUnavailable();
       return;
     }
 
@@ -106,7 +102,7 @@
         action.textContent = 'Install App';
       }
     } catch (_) {
-      showInstructions();
+      showInstallUnavailable();
     } finally {
       action.disabled = false;
     }
