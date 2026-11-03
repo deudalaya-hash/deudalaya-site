@@ -12,32 +12,32 @@ const feed = html.slice(start, end);
 const publishedVideos = [
   {
     file: 'assets/deudalaya-video-2026-11-03-deuda-gathering.mp4',
-    caption: 'सुदूरपश्चिमी देउडा गीत',
+    caption: 'परम्परागत पहिरनमा सुदूरपश्चिमी देउडा जमघट',
     description: 'परम्परागत पहिरनमा समुदायको सांस्कृतिक जमघट र देउडा गीत।'
   },
   {
     file: 'assets/deudalaya-video-2026-11-03-mountain-village-deuda.mp4',
-    caption: 'पहाडी गाउँको सामूहिक देउडा',
+    caption: 'पहाडी गाउँमा सामूहिक देउडा नाच',
     description: 'पहाडी बस्तीमा समुदायले घेरा बनाएर गरेको परम्परागत नाच।'
   },
   {
     file: 'assets/deudalaya-video-2026-11-03-green-hills-deuda.mp4',
-    caption: 'हरियाली डाँडाको देउडा',
+    caption: 'हरियाली डाँडामुनि देउडाको ठूलो घेरा',
     description: 'गाउँको हरियाली आँगनमा ठूलो घेरा बनाएर देउडा नाच्दै समुदाय।'
   },
   {
     file: 'assets/deudalaya-video-2026-11-03-sudurpashchim-travel.mp4',
-    caption: 'सुदूरपश्चिमको सुन्दर यात्रा',
+    caption: 'हिमाली बाटोमा गाईवस्तुको बथान',
     description: 'नेपालका पश्चिमी दृश्यसँग देउडाको धुन।'
   },
   {
     file: 'assets/deudalaya-video-2026-11-03-141359.mp4',
-    caption: 'नयाँ देउडा भिडियो · १४:१३:५९',
+    caption: 'पहाडी भेलामा देउडा गायन सुन्दै समुदाय',
     description: 'देउडालयमा साझा गरिएको।'
   },
   {
     file: 'assets/deudalaya-video-2026-11-03-141222.mp4',
-    caption: 'नयाँ देउडा भिडियो · १४:१२:२२',
+    caption: 'हिमाली गाउँमा घेरा बाँधेर देउडा नाच',
     description: 'देउडालयमा साझा गरिएको।'
   }
 ];

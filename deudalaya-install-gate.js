@@ -10,12 +10,6 @@
   var hint = document.getElementById('deudalayaInstallHint');
   if (!gate || !action || !hint) return;
 
-  var query = new URLSearchParams(location.search);
-  if (query.get('continue') === '1') {
-    gate.hidden = true;
-    return;
-  }
-
   function isStandalone() {
     try {
       var modes = ['standalone', 'minimal-ui', 'fullscreen', 'window-controls-overlay'];

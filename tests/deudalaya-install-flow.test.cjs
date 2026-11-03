@@ -56,10 +56,10 @@ function createInstallPage(search = '', standalone = false, installedApps) {
   return { action, actionEvents, bodyClasses, continueLink, documentEvents, gate, hint, open, rootClasses, window, windowEvents };
 }
 
-test('Continue to Website bypasses the install gate without trapping the visitor', () => {
+test('browser query parameters cannot bypass the Deudalaya install gate', () => {
   const page = createInstallPage('?app=deudalaya&continue=1');
-  assert.equal(page.gate.hidden, true);
-  assert.equal(page.bodyClasses.has('install-required'), false);
+  assert.equal(page.gate.hidden, false);
+  assert.equal(page.bodyClasses.has('install-required'), true);
 });
 
 test('native install prompt is triggered by the Install App action and confirmation is observed', async () => {
