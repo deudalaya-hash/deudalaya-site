@@ -19,12 +19,12 @@ test('root visitor sees only the Deudalaya branded install page', () => {
 });
 
 test('Deudalaya install action immediately invokes the captured native prompt', () => {
-  const handler = entry.match(/function installDeudalaya\(event\)\s*\{([\s\S]*?)\n  \}/);
-  assert.ok(handler, 'gateway defines installDeudalaya click handler');
-  assert.match(handler[1], /event\.preventDefault\(\)/);
-  assert.match(handler[1], /promptEvent\.prompt\(\)/);
-  assert.ok(handler[1].indexOf('promptEvent.prompt()') < handler[1].indexOf('Promise.resolve'), 'prompt is invoked before asynchronous waits');
-  assert.match(handler[1], /Installation is not currently available/);
+  assert.match(entry, /installButton\.addEventListener\('click', function\s*\(clickEvent\)/);
+  assert.match(entry, /clickEvent\.preventDefault\(\)/);
+  const promptAt = entry.indexOf('promptResult = promptEvent.prompt()');
+  const asyncAt = entry.indexOf('Promise.resolve(promptResult)');
+  assert.ok(promptAt !== -1 && asyncAt > promptAt, 'prompt is invoked before asynchronous waits');
+  assert.match(entry, /Installation is not currently available/);
 });
 
 test('entry button calls the native prompt on click and reports when unavailable', async () => {
@@ -41,7 +41,7 @@ test('entry button calls the native prompt on click and reports when unavailable
   vm.runInNewContext(entry, { document, window, navigator: {}, location: { origin: 'https://deudalaya.com' }, URL, Promise, Object });
 
   let prompted = false;
-  window.deudalayaInstallPrompt = { prompt() { prompted = true; return Promise.resolve(); }, userChoice: Promise.resolve({ outcome: 'accepted' }) };
+  windowEvents.beforeinstallprompt({ preventDefault() {}, prompt() { prompted = true; return Promise.resolve(); }, userChoice: Promise.resolve({ outcome: 'accepted' }) });
   const click = buttonEvents.click({ preventDefault() {} });
   assert.equal(prompted, true, 'prompt is invoked synchronously in the click handler');
   await new Promise(resolve => setImmediate(resolve));
@@ -55,6 +55,29 @@ test('entry button calls the native prompt on click and reports when unavailable
   windowEvents.appinstalled();
   assert.equal(button.hidden, true);
   assert.match(hint.textContent, /Installed\. Open Deudalaya from its app icon/);
+});
+
+test('entry script captures beforeinstallprompt and invokes it directly from the button tap', async () => {
+  const buttonEvents = {};
+  const windowEvents = {};
+  const button = { hidden: false, disabled: false, addEventListener(name, fn) { buttonEvents[name] = fn; } };
+  const hint = { textContent: '' };
+  const document = {
+    documentElement: { classList: { contains(name) { return name === 'ecosystem-gateway'; } } },
+    getElementById(id) { return id === 'deudalayaInstallAction' ? button : id === 'deudalayaInstallHint' ? hint : null; }
+  };
+  const window = { deudalayaInstallPrompt: null, addEventListener(name, fn) { windowEvents[name] = fn; } };
+  vm.runInNewContext(entry, { document, window, navigator: {}, location: { origin: 'https://deudalaya.com' }, URL, Promise, Object });
+
+  let prevented = false;
+  let prompts = 0;
+  const prompt = { preventDefault() { prevented = true; }, prompt() { prompts += 1; return Promise.resolve(); }, userChoice: Promise.resolve({ outcome: 'accepted' }) };
+  windowEvents.beforeinstallprompt(prompt);
+  buttonEvents.click({ preventDefault() {} });
+  assert.equal(prevented, true);
+  assert.equal(prompts, 1, 'the native prompt is called during the same click task');
+  await new Promise(resolve => setImmediate(resolve));
+  assert.match(hint.textContent, /Waiting for browser confirmation/);
 });
 
 test('standalone Deudalaya launch goes to the feed instead of the entry screen', () => {
