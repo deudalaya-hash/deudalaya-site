@@ -1,0 +1,36 @@
+.deudalaya-sound-enable {
+  position: absolute;
+  z-index: 15;
+  top: 50%;
+  left: 50%;
+  min-height: 54px;
+  max-width: calc(100% - 36px);
+  padding: 13px 22px;
+  transform: translate(-50%, -50%);
+  border: 2px solid var(--cyan, #25e5dc);
+  border-radius: 999px;
+  background: #ff315b;
+  box-shadow: 0 0 28px #ff315b99;
+  color: #fff;
+  font: 800 15px/1.2 system-ui, sans-serif;
+  white-space: nowrap;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.deudalaya-sound-enable[hidden] {
+  display: none !important;
+}
+
+.deudalaya-sound-enable:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
+@media (max-width: 700px) {
+  .deudalaya-sound-enable {
+    min-height: 52px;
+    padding: 13px 18px;
+    font-size: 14px;
+  }
+}

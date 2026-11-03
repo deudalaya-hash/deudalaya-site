@@ -5,12 +5,15 @@ const test = require('node:test');
 
 const html = fs.readFileSync(path.resolve(__dirname, '..', 'index.html'), 'utf8');
 
-test('the root URL opens the Deudalaya-only gateway with its Install App card', () => {
-  assert.match(html, /var appLaunch=query\.get\('app'\)==='deudalaya';/);
+test('the root URL shows Deudalaya installation first and offers a website continuation', () => {
   assert.match(html, /var gatewayLaunch=query\.get\('gateway'\)==='1';/);
-  assert.match(html, /else if\(gatewayLaunch\|\|!appLaunch\)document\.documentElement\.classList\.add\('ecosystem-gateway'\)/);
-  assert.match(html, /data-app="deudalaya"[\s\S]*?Install App/);
-  assert.match(fs.readFileSync(path.resolve(__dirname, '..', 'ecosystem-gateway.css'), 'utf8'), /gateway-card:not\(\[data-app="deudalaya"\]\)\{display:none\}/);
+  assert.match(html, /else if\(gatewayLaunch\)document\.documentElement\.classList\.add\('ecosystem-gateway'\)/);
+  assert.match(html, /id="deudalayaInstallGate"[\s\S]*?deudalaya\.com[\s\S]*?Install App/);
+  assert.match(html, /href="\/\?app=deudalaya&amp;continue=1"[^>]*>Continue to Website/);
   assert.match(html, /id="deudalayaInstallGate"/);
   assert.match(html, /href="\/\?gateway=1"/);
+  const installScript = fs.readFileSync(path.resolve(__dirname, '..', 'deudalaya-install-gate.js'), 'utf8');
+  assert.match(installScript, /query\.get\('continue'\)\s*===\s*'1'/);
+  assert.match(installScript, /promptEvent\.prompt\(\)/);
+  assert.match(installScript, /isStandalone\(\)/);
 });

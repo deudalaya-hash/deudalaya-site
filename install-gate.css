@@ -27,9 +27,11 @@
 #deudalayaInstallGate .install-mark{width:88px;height:88px;margin:0 auto 18px;border:0;border-radius:14px;object-fit:contain;background:#fff}
 #deudalayaInstallGate h1{margin:0 0 8px;color:#f7f7fa;font-size:25px}
 #deudalayaInstallGate .required-install-card>p{color:#d1d1d8}
+#deudalayaInstallGate .required-install-site{margin:-5px 0 14px;color:#a9aab4;font-size:14px}
 #deudalayaInstallGate #deudalayaInstallAction{min-height:52px;border-radius:10px;background:#ff315b;color:#fff;font-weight:800}
 #deudalayaInstallGate #deudalayaInstallAction:focus-visible{outline:3px solid #25e5dc;outline-offset:3px}
 #deudalayaInstallGate #deudalayaInstallHint{min-height:0;margin:14px 0 0!important;color:#d1d1d8}
+#deudalayaInstallGate .ecosystem-install-exit{margin-top:14px;color:#f2f2f6;font-size:14px;font-weight:650;text-decoration:underline;text-underline-offset:3px}
 body.install-required{overflow:hidden}
 @media(max-width:480px){#deudalayaInstallGate .required-install-card{padding:26px 20px}}
 @media(prefers-reduced-motion:reduce){#deudalayaInstallGate *{scroll-behavior:auto!important;transition:none!important}}

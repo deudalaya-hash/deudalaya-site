@@ -1,14 +1,20 @@
 (function () {
   'use strict';
 
-  // The normal root URL now hosts the app-discovery gateway. Keep the
-  // Deudalaya install gate for the app launch URL and its standalone window.
+  // The gateway is available only by explicit query. The root URL shows the
+  // Deudalaya install gate, while Continue to Website bypasses it on request.
   if (document.documentElement.classList.contains('ecosystem-gateway')) return;
 
   var gate = document.getElementById('deudalayaInstallGate');
   var action = document.getElementById('deudalayaInstallAction');
   var hint = document.getElementById('deudalayaInstallHint');
   if (!gate || !action || !hint) return;
+
+  var query = new URLSearchParams(location.search);
+  if (query.get('continue') === '1') {
+    gate.hidden = true;
+    return;
+  }
 
   function isStandalone() {
     try {
@@ -49,8 +55,22 @@
 
   document.addEventListener('keydown', function (event) {
     if (event.key === 'Tab') {
-      event.preventDefault();
-      action.focus();
+      var focusable = Array.prototype.filter.call(
+        gate.querySelectorAll('button:not([disabled]):not([hidden]), a[href]:not([hidden])'),
+        function (element) { return element.getClientRects().length > 0; }
+      );
+      var first = focusable[0];
+      var last = focusable[focusable.length - 1];
+      if (first && event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (last && !event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      } else if (first && !gate.contains(document.activeElement)) {
+        event.preventDefault();
+        first.focus();
+      }
     }
     event.stopImmediatePropagation();
   }, true);
@@ -83,7 +103,7 @@
         hint.textContent = 'Install request accepted. Waiting for browser confirmation before enabling Open App.';
       } else {
         hint.textContent = 'Installation was cancelled. Install Deudalaya to continue.';
-        action.textContent = 'Show browser install steps';
+        action.textContent = 'Install App';
       }
     } catch (_) {
       showInstructions();
@@ -95,7 +115,7 @@
   window.addEventListener('beforeinstallprompt', function (event) {
     event.preventDefault();
     window.deudalayaInstallPrompt = event;
-    action.textContent = 'Install देउडालय App';
+    action.textContent = 'Install App';
     hint.textContent = 'देउडालय is ready to install. Install it to continue.';
   });
 
