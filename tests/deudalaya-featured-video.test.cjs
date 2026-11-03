@@ -16,7 +16,7 @@ test('the Deudalaya starter feed includes all supplied videos and profiles them 
   assert.notEqual(start, -1, 'feed data is present');
   assert.notEqual(end, -1, 'feed data has an end boundary');
   const seed = html.slice(start, end);
-  assert.equal((seed.match(/handle:/g) || []).length, 9, 'the original post and eight supplied posts are present');
+  assert.equal((seed.match(/handle:/g) || []).length, 15, 'all fifteen starter posts are videos');
   assert.match(seed, /videoSrc:'assets\/deudalaya-video-2026-11-03-feed-01\.mp4'/);
   assert.match(seed, /videoSrc:'assets\/deudalaya-video-2026-11-03-110721\.mp4'/);
   assert.match(seed, /videoSrc:'assets\/deudalaya-featured-video\.mp4'/);
@@ -26,6 +26,6 @@ test('the Deudalaya starter feed includes all supplied videos and profiles them 
 
   const video = fs.readFileSync(mediaPath);
   assert.equal(video.toString('ascii', 4, 8), 'ftyp', 'bundled media is an MP4 container');
-  assert.match(html, /var media=v\.videoSrc\?'<video muted playsinline preload="metadata" src="/);
+  assert.match(html, /var media='<video muted playsinline preload="none" data-profile-src="/);
   assert.match(html, /btn\.addEventListener\('click',function\(\)\{if\(long\)\{long=false;return\}openPost\(i\)\}\)/);
 });
