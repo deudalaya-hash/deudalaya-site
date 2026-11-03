@@ -29,6 +29,12 @@ test('gateway enables Open App only after a live installation check', () => {
   assert.ok(manifest.related_applications.some(app => app.id === 'https://deudalaya.com/index2.html'));
 });
 
+test('the Deudalaya app route does not by itself count as an installed PWA', () => {
+  const html = read('index.html');
+  assert.doesNotMatch(html, /if\(!gatewayLaunch&&\(standalone\|\|appLaunch\)\)document\.documentElement\.classList\.add\('deudalaya-installed'\)/);
+  assert.match(html, /if\(!gatewayLaunch&&standalone\)document\.documentElement\.classList\.add\('deudalaya-installed'\)/);
+});
+
 test('each app page has its own install action and confirmation-gated open action', () => {
   const pages = [
     ['index.html', 'deudalayaInstallAction', 'deudalayaOpenInstalled', 'deudalaya-install-gate.js'],
