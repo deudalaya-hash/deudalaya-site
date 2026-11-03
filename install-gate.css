@@ -1,6 +1,6 @@
-/* Shared mandatory app-install gate used by देउडालय and लयपुर. */
+/* Shared base styling for the legacy root-scoped installation page. */
 .required-install-gate{position:fixed;inset:0;z-index:1000000;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(ellipse at top,#31271f,#17140f 72%);color:#f5eee3;font:400 16px/1.5 system-ui,"Nirmala UI",sans-serif}
-.required-install-gate[hidden],html.layapur-installed .required-install-gate,html.deudalaya-installed .required-install-gate{display:none!important}
+.required-install-gate[hidden],html.layapur-installed .required-install-gate{display:none!important}
 .required-install-gate.opening{opacity:0;pointer-events:none;transition:opacity .5s ease}
 .required-install-card{width:min(440px,100%);padding:30px 24px;border:1px solid #d6b46d66;border-radius:22px;background:#17140fee;box-shadow:0 20px 70px #000b;text-align:center;color:#f5eee3}
 .required-install-card .install-mark{width:76px;height:76px;margin:0 auto 16px;border:2px solid #d6b46d;border-radius:50%;display:grid;place-items:center;color:#e8c98a;font:700 28px/1 serif}
@@ -19,19 +19,3 @@
 #layapurInstallGate .required-install-hint{display:none;min-height:0;max-width:calc(100vw - 40px);margin:0!important;font-size:12px!important}
 #layapurInstallGate .required-install-hint:not(:empty){display:block}
 @media(max-height:560px){#layapurInstallGate .required-install-card{top:calc(50% + 112px)}}
-
-/* Deudalaya stays behind this install gate in browser tabs. */
-#deudalayaInstallGate{z-index:1000000;padding:max(20px,env(safe-area-inset-top)) 20px max(20px,env(safe-area-inset-bottom));background:#101014;color:#f7f7fa}
-#deudalayaInstallGate[hidden],html.deudalaya-installed #deudalayaInstallGate{display:none!important}
-#deudalayaInstallGate .required-install-card{width:min(440px,100%);padding:30px 24px;border:1px solid #ffffff1a;border-radius:18px;background:#19191f;box-shadow:0 18px 60px #0009;color:#f7f7fa}
-#deudalayaInstallGate .install-mark{width:88px;height:88px;margin:0 auto 18px;border:0;border-radius:14px;object-fit:contain;background:#fff}
-#deudalayaInstallGate h1{margin:0 0 8px;color:#f7f7fa;font-size:25px}
-#deudalayaInstallGate .required-install-card>p{color:#d1d1d8}
-#deudalayaInstallGate .required-install-site{margin:-5px 0 14px;color:#a9aab4;font-size:14px}
-#deudalayaInstallGate #deudalayaInstallAction{min-height:52px;border-radius:10px;background:#ff315b;color:#fff;font-weight:800}
-#deudalayaInstallGate #deudalayaInstallAction:focus-visible{outline:3px solid #25e5dc;outline-offset:3px}
-#deudalayaInstallGate #deudalayaInstallHint{min-height:0;margin:14px 0 0!important;color:#d1d1d8}
-#deudalayaInstallGate .ecosystem-install-exit{margin-top:14px;color:#f2f2f6;font-size:14px;font-weight:650;text-decoration:underline;text-underline-offset:3px}
-body.install-required{overflow:hidden}
-@media(max-width:480px){#deudalayaInstallGate .required-install-card{padding:26px 20px}}
-@media(prefers-reduced-motion:reduce){#deudalayaInstallGate *{scroll-behavior:auto!important;transition:none!important}}

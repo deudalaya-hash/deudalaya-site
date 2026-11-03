@@ -6,35 +6,33 @@ const test = require('node:test');
 const root = path.resolve(__dirname, '..');
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 
-test('root entry exposes only Deudalaya installation and no ecosystem gateway choices', () => {
+test('root entry opens Deudalaya directly and preserves separate app routes', () => {
   const html = read('index.html');
-  const cards = [...html.matchAll(/<article class="gateway-card[^>]*data-app="([^"]+)"[\s\S]*?<\/article>/g)];
-  assert.deepEqual(cards.map(card => card[1]), ['deudalaya']);
-  assert.match(cards[0][0], /id="deudalayaInstallAction" type="button" hidden>Install App/);
-  assert.doesNotMatch(html, /gateway-footnote|gateway-footer|Continue to Website/);
-  assert.match(html, /id="deudalayaOpenInstalled"[^>]*hidden[^>]*>Open Deudalaya/);
+  assert.match(html, /<div class="app">[\s\S]*?id="feed"/);
+  assert.doesNotMatch(html, /ecosystemGateway|deudalayaInstallAction|deudalayaInstallProgress|deudalayaOpenInstalled/);
+  assert.doesNotMatch(html, /beforeinstallprompt|appinstalled|ecosystem-gateway\.(?:js|css)/);
   for (const page of ['index2.html', 'sabdalaya/index.html', 'chalchitralaya/index.html', 'phonelaya/index.html', 'kakchhayalaya/index.html']) {
     assert.ok(fs.existsSync(path.join(root, page)), `${page} remains an independent app page`);
   }
-  assert.match(html, /DEUDALAYA/);
-  assert.match(html, /One community\. <em>Many stories\.<\/em>/);
+  assert.match(html, /<meta name="application-name" content="देउडालय">/);
 });
 
-test('Deudalaya install entry uses the native prompt when available and guides Chrome menu installs otherwise', () => {
-  const script = read('ecosystem-gateway.js');
-  assert.match(script, /getInstalledRelatedApps/);
-  assert.match(script, /promptEvent\.prompt\(\)/);
-  assert.match(script, /getMenuInstallGuidance/);
-  assert.match(script, /Install app or Add to Home screen/);
-  assert.match(script, /appinstalled/);
-  const manifest = JSON.parse(read('manifest.webmanifest'));
-  assert.ok(manifest.related_applications.some(app => app.id === 'https://deudalaya.com/index2.html'));
-});
-
-test('the Deudalaya app route does not by itself count as an installed PWA', () => {
+test('Deudalaya PWA remains installable without a blocking install gate', () => {
   const html = read('index.html');
-  assert.doesNotMatch(html, /if\(!gatewayLaunch&&\(standalone\|\|appLaunch\)\)document\.documentElement\.classList\.add\('deudalaya-installed'\)/);
-  assert.match(html, /if\(!gatewayLaunch&&standalone\)document\.documentElement\.classList\.add\('deudalaya-installed'\)/);
+  const manifest = JSON.parse(read('manifest.webmanifest'));
+  assert.match(html, /<link rel="manifest" href="manifest\.webmanifest">/);
+  assert.match(html, /navigator\.serviceWorker\.register\('sw\.js'/);
+  assert.equal(manifest.display, 'standalone');
+  assert.equal(manifest.start_url, '/?app=deudalaya');
+  assert.deepEqual(manifest.related_applications, [
+    { platform: 'webapp', id: 'https://deudalaya.com/', url: 'https://deudalaya.com/manifest.webmanifest' }
+  ]);
+});
+
+test('the Deudalaya route does not depend on browser installation state to reveal the feed', () => {
+  const html = read('index.html');
+  assert.doesNotMatch(html, /gatewayLaunch|display-mode: standalone|deudalaya-installed|install-required/);
+  assert.match(html, /id="feed"/);
 });
 
 test('each app page has its own install action and confirmation-gated open action', () => {
@@ -63,10 +61,11 @@ test('each app page has its own install action and confirmation-gated open actio
 });
 
 test('Deudalaya and class-selection interface languages are English-first', () => {
-  const gateway = read('index.html');
+  const deudalaya = read('index.html');
   const classroom = read('kakchhayalaya/index.html');
-  assert.match(gateway, /DEUDALAYA/);
-  assert.match(gateway, /Install App/);
+  assert.match(deudalaya, /<html lang="en">/);
+  assert.match(deudalaya, />Sign in</);
+  assert.match(deudalaya, /Search videos, creators, sounds/);
   assert.match(classroom, /Select Your Class/);
   assert.match(classroom, /Class 1/);
   assert.match(classroom, /Subjects Coming Soon/);

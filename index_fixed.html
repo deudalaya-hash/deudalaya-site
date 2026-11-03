@@ -1,7 +1,11 @@
 <!doctype html>
 <html lang="ne">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preload" as="image" href="dashain.webp" fetchpriority="high"><meta name="theme-color" content="#ffffff">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta http-equiv="refresh" content="0;url=/">
+  <link rel="canonical" href="https://deudalaya.com/">
+  <script>document.documentElement.hidden=true;window.location.replace('/');</script><link rel="preload" as="image" href="dashain.webp" fetchpriority="high"><meta name="theme-color" content="#ffffff">
 <title>देउडालय</title>
 <meta name="application-name" content="देउडालय">
 <meta name="deudalaya-version" content="2026.10.15.4">
@@ -163,10 +167,9 @@ if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js',{scope
   if(active)document.documentElement.classList.add('deudalaya-installed');
 })();
 </script>
-<link rel="stylesheet" href="install-gate.css?v=2026.10.15.3">
+
 <style id="deudalaya-install-gate-clean">
-/* Same gate as Layapur (index2.html): red double door + one pink install pill.
-   Door rules are copied from index2.html .door; keep both files in sync. */
+/* Legacy Deudalaya install-gate styling; the URL redirects to the canonical feed before this page loads. */
 #deudalayaDoor{position:fixed;inset:0;z-index:99998;display:flex;pointer-events:auto;cursor:default}
 #deudalayaDoor[hidden],html.deudalaya-installed #deudalayaDoor{display:none!important}
 #deudalayaDoor .door-inner{position:absolute;top:50%;width:62px;height:62px;margin-top:-26px;display:grid;place-items:center;text-align:center;color:#e8c98a;font:600 20px/1 "Nirmala UI","Noto Sans Devanagari","Segoe UI",sans-serif;text-shadow:0 2px 8px rgba(0,0,0,.6)}
@@ -2530,116 +2533,7 @@ async function uploadToStorage(client,path,file,button){
   var endpoint=SUPABASE_URL.replace('.supabase.co','.storage.supabase.co')+'/storage/v1/upload/resumable';
   await new Promise(function(resolve,reject){var upload=new window.tus.Upload(file,{endpoint:endpoint,chunkSize:6*1024*1024,retryDelays:[0,1000,3000,5000,10000],headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+token},metadata:{bucketName:'videos',objectName:path,contentType:file.type,cacheControl:'3600'},uploadDataDuringCreation:true,removeFingerprintOnSuccess:true,onError:reject,onProgress:function(sent,total){button.textContent='Uploading '+Math.floor(sent/total*100)+'%'},onSuccess:resolve});upload.start()});
 }
-</script><style>
-/* Switch between the main Deudalaya feed and the Layapur profile. */
-#profileSwitcher{position:fixed;z-index:1000001;top:78px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:20px;padding:8px 12px;background:#101014d9;border:1px solid #ffffff2a;border-radius:999px;box-shadow:0 6px 24px #0008;backdrop-filter:blur(10px);cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
-body.gate-locked #profileSwitcher{display:none}
-/* Keep the profile switcher inside the app, never on the locked opening gate. */
-body.gate-locked #profileSwitcher{visibility:hidden;pointer-events:none}
-#profileSwitcher .switcher-collapse{display:grid;place-items:center;min-width:30px;min-height:30px;padding:4px;border:0;border-radius:50%;background:#ffffff16;color:#fff;font-size:19px;line-height:1;cursor:pointer}
-#profileSwitcher.is-collapsed{gap:0;padding:5px}
-#profileSwitcher.is-collapsed #feedProfileButton,#profileSwitcher.is-collapsed #layapurProfileButton{display:none}
-#profileSwitcher.dragging{cursor:grabbing;opacity:.94}
-#profileSwitcher[data-edge="left"],#profileSwitcher[data-edge="right"]{flex-direction:column;gap:5px;padding:10px 9px}
-#profileSwitcher button{position:relative;padding:5px 3px 8px;background:transparent;color:#c9c9d1;font-size:15px;font-weight:650;white-space:nowrap;text-shadow:0 1px 5px #000;cursor:pointer}
-#profileSwitcher button[aria-pressed="true"]{color:#fff;font-weight:800}
-#profileSwitcher button[aria-pressed="true"]:after{content:"";position:absolute;left:50%;bottom:0;width:24px;height:3px;transform:translateX(-50%);border-radius:3px;background:#fff}
-#layapurFrame{display:none;position:fixed;inset:0;width:100%;height:100dvh;border:0;background:#101014;z-index:100000}
-body.layapur-active> :not(#layapurFrame):not(#profileSwitcher){display:none!important}
-body.layapur-active #layapurFrame{display:block}
-@media(max-width:700px){#profileSwitcher{top:calc(env(safe-area-inset-top,0px) + 12px);gap:16px;padding:7px 10px}#profileSwitcher[data-edge="left"],#profileSwitcher[data-edge="right"]{gap:4px;padding:9px 7px}#profileSwitcher button{font-size:14px}}
-</style>
-<nav id="profileSwitcher" aria-label="देउडालय र लयपुर प्रोफाइल" aria-description="Drag the empty space to move this switch to a screen edge." data-edge="top">
-  <button type="button" class="switcher-collapse" id="profileSwitcherToggle" aria-label="Expand profile switcher" aria-expanded="false">⇄</button>
-  <button type="button" id="feedProfileButton" aria-pressed="true">देउडालय</button>
-  <button type="button" id="layapurProfileButton" aria-pressed="false">लयपुर</button>
-</nav>
-<iframe id="layapurFrame" title="लयपुर profile" loading="lazy"></iframe>
-<script>
-(()=>{
-  const feed=document.getElementById('feedProfileButton');
-  const layapur=document.getElementById('layapurProfileButton');
-  const frame=document.getElementById('layapurFrame');
-  const dock=document.getElementById('profileSwitcher');
-  const toggle=document.getElementById('profileSwitcherToggle');
-  const positionKey='deudalaya-profile-switch-position';
-  const collapsedKey='deudalaya-profile-switch-collapsed';
-  let savedPosition=null,drag=null;
-  const clamp=(value,min,max)=>Math.max(min,Math.min(value,Math.max(min,max)));
-  function placeDock(left,top,edge,save){
-    dock.dataset.edge=edge;
-    const rect=dock.getBoundingClientRect();
-    const maxLeft=window.innerWidth-rect.width-12;
-    const maxTop=window.innerHeight-rect.height-12;
-    left=clamp(left,12,maxLeft);top=clamp(top,12,maxTop);
-    if(edge==='left')left=12;
-    if(edge==='right')left=maxLeft;
-    if(edge==='top')top=12;
-    if(edge==='bottom')top=maxTop;
-    dock.style.left=left+'px';dock.style.top=top+'px';
-    dock.style.right='auto';dock.style.bottom='auto';dock.style.transform='none';
-    savedPosition={left:left,top:top,edge:edge};
-    if(save){try{localStorage.setItem(positionKey,JSON.stringify(savedPosition))}catch(_){}}
-  }
-  try{
-    const saved=JSON.parse(localStorage.getItem(positionKey)||'null');
-    if(saved&&Number.isFinite(saved.left)&&Number.isFinite(saved.top)&&['left','right','top','bottom'].includes(saved.edge)){
-      placeDock(saved.left,saved.top,saved.edge,false);
-    }
-  }catch(_){}
-  function setCollapsed(collapsed,save){
-    dock.classList.toggle('is-collapsed',collapsed);
-    toggle.setAttribute('aria-expanded',String(!collapsed));
-    toggle.setAttribute('aria-label',collapsed?'Expand profile switcher':'Collapse profile switcher');
-    if(save){try{localStorage.setItem(collapsedKey,collapsed?'1':'0')}catch(_){}}
-  }
-  let startCollapsed=true;
-  try{const saved=localStorage.getItem(collapsedKey);if(saved!==null)startCollapsed=saved==='1'}catch(_){}
-  setCollapsed(startCollapsed,false);
-  toggle.addEventListener('click',()=>setCollapsed(!dock.classList.contains('is-collapsed'),true));
-  function selectProfile(profile){
-    const isLayapur=profile==='layapur';
-    document.body.classList.toggle('layapur-active',isLayapur);
-    feed.setAttribute('aria-pressed',String(!isLayapur));
-    layapur.setAttribute('aria-pressed',String(isLayapur));
-    if(isLayapur&&!frame.src) frame.src=new URL('index2.html',document.baseURI).href;
-  }
-  dock.addEventListener('pointerdown',event=>{
-    if(event.target.closest('button')||(event.button!==undefined&&event.button!==0))return;
-    const rect=dock.getBoundingClientRect();
-    drag={id:event.pointerId,x:event.clientX,y:event.clientY,left:rect.left,top:rect.top,moved:false};
-    dock.setPointerCapture(event.pointerId);
-    dock.classList.add('dragging');
-    event.preventDefault();
-  });
-  dock.addEventListener('pointermove',event=>{
-    if(!drag||event.pointerId!==drag.id)return;
-    const dx=event.clientX-drag.x,dy=event.clientY-drag.y;
-    if(!drag.moved&&Math.hypot(dx,dy)<5)return;
-    drag.moved=true;
-    const rect=dock.getBoundingClientRect();
-    dock.style.left=clamp(drag.left+dx,12,window.innerWidth-rect.width-12)+'px';
-    dock.style.top=clamp(drag.top+dy,12,window.innerHeight-rect.height-12)+'px';
-    dock.style.right='auto';dock.style.bottom='auto';dock.style.transform='none';
-  });
-  function finishDrag(event){
-    if(!drag||event.pointerId!==drag.id)return;
-    const didMove=drag.moved;drag=null;dock.classList.remove('dragging');
-    if(!didMove)return;
-    const rect=dock.getBoundingClientRect();
-    const edges=[['left',rect.left],['right',window.innerWidth-rect.right],['top',rect.top],['bottom',window.innerHeight-rect.bottom]];
-    edges.sort((a,b)=>a[1]-b[1]);
-    placeDock(rect.left,rect.top,edges[0][0],true);
-  }
-  dock.addEventListener('pointerup',finishDrag);
-  dock.addEventListener('pointercancel',finishDrag);
-  window.addEventListener('resize',()=>{if(savedPosition)placeDock(savedPosition.left,savedPosition.top,savedPosition.edge,false)});
-  feed.addEventListener('click',()=>selectProfile('feed'));
-  layapur.addEventListener('click',()=>selectProfile('layapur'));
-})();
-</script>
-
-<!-- ADDED: "Continue in browser" way out. It only appears when installing is impossible (no install prompt after a few seconds,
+</script><!-- ADDED: "Continue in browser" way out. It only appears when installing is impossible (no install prompt after a few seconds,
      app already installed, iOS/Firefox, in-app browser) so nobody is locked out. If the browser offers the real install, it never shows. -->
 <script>
 (function(){

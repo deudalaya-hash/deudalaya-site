@@ -11,12 +11,7 @@
   "background_color": "#0b0b10",
   "theme_color": "#0b0b10",
   "related_applications": [
-    { "platform": "webapp", "id": "https://deudalaya.com/index2.html", "url": "https://deudalaya.com/layapur.webmanifest" },
-    { "platform": "webapp", "id": "https://deudalaya.com/", "url": "https://deudalaya.com/manifest.webmanifest" },
-    { "platform": "webapp", "id": "https://deudalaya.com/sabdalaya/", "url": "https://deudalaya.com/sabdalaya/manifest.webmanifest" },
-    { "platform": "webapp", "id": "https://deudalaya.com/chalchitralaya/", "url": "https://deudalaya.com/chalchitralaya/manifest.webmanifest" },
-    { "platform": "webapp", "id": "https://deudalaya.com/phonelaya/", "url": "https://deudalaya.com/phonelaya/manifest.webmanifest" },
-    { "platform": "webapp", "id": "https://deudalaya.com/kakchhayalaya/", "url": "https://deudalaya.com/kakchhayalaya/manifest.webmanifest" }
+    { "platform": "webapp", "id": "https://deudalaya.com/", "url": "https://deudalaya.com/manifest.webmanifest" }
   ],
   "icons": [
     {
