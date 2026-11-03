@@ -47,7 +47,6 @@
     openPanel(installGate);
     installAction.focus();
   });
-  document.getElementById('continueAction').addEventListener('click', () => closePanel(installGate, installButton));
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape' && !installGate.hidden && standalone) closePanel(installGate, installButton);
     if (event.key === 'Escape' && !recordGate.hidden) closeRecordingPanel();
@@ -92,7 +91,7 @@
   }
 
   document.querySelectorAll('[data-needs-backend]').forEach(button => {
-    button.addEventListener('click', () => showToast('यो सुविधा खातासहितको ब्याकएन्ड जोडिएपछि उपलब्ध हुनेछ।'));
+    button.addEventListener('click', () => showToast('This feature will be available after a backend and accounts are connected.'));
   });
 
   function stopDemo() {
@@ -106,7 +105,7 @@
     if (activeButton === button) { stopDemo(); return; }
     stopDemo();
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContextClass) { showToast('यो ब्राउजरले अडियो demo समर्थन गर्दैन।'); return; }
+    if (!AudioContextClass) { showToast('This browser does not support the audio demo.'); return; }
     context = context || new AudioContextClass();
     context.resume();
     const notes = post.dataset.tone.split(',').map(Number);
@@ -135,20 +134,20 @@
     post.querySelector('.like-button').addEventListener('click', event => {
       const button = event.currentTarget;
       button.setAttribute('aria-pressed', String(button.getAttribute('aria-pressed') !== 'true'));
-      showToast('डेमो मात्र · Like यस भ्रमणमा मात्रै देखिन्छ।');
+      showToast('Demo only · Likes are shown for this visit only.');
     });
     post.querySelector('.save-button').addEventListener('click', event => {
       const button = event.currentTarget;
       button.setAttribute('aria-pressed', String(button.getAttribute('aria-pressed') !== 'true'));
-      showToast('डेमो मात्र · Save स्थायी रूपमा सुरक्षित हुँदैन।');
+      showToast('Demo only · Saves are not stored permanently.');
     });
     post.querySelector('.share-button').addEventListener('click', async () => {
       try {
         if (navigator.share) await navigator.share({ title: 'शब्दलय', url: location.href });
         else if (navigator.clipboard) await navigator.clipboard.writeText(location.href);
-        else { showToast('शब्दलय लिंक शेयर गर्न ब्राउजर ठेगाना प्रतिलिपि गर्नुहोस्।'); return; }
-        showToast('शब्दलयको लिंक शेयर भयो। demo अडियो समावेश छैन।');
-      } catch (_) { showToast('शेयर रद्द भयो।'); }
+        else { showToast('Copy the browser address to share a शब्दलय link.'); return; }
+        showToast('शब्दलय link shared. Demo audio is not included.');
+      } catch (_) { showToast('Sharing was cancelled.'); }
     });
   });
 

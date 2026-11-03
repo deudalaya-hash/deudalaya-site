@@ -3,9 +3,8 @@
   const classView = document.getElementById('classView');
   const classesView = document.getElementById('classesView');
   const classTitle = document.getElementById('classTitle');
-  const installButton = document.getElementById('installButton');
   const installGate = document.getElementById('classInstallGate');
-  const installButton = document.getElementById('classInstallAction');
+  const installAction = document.getElementById('classInstallAction');
   const headerInstallButton = document.getElementById('installButton');
   const openInstalled = document.getElementById('classOpenInstalled');
   const installStatus = document.getElementById('classInstallStatus');
@@ -41,7 +40,7 @@
   window.addEventListener('popstate', showRoute);
   showRoute();
 
-  const installButtons = [installButton, headerInstallButton];
+  const installButtons = [installAction, headerInstallButton];
   window.addEventListener('beforeinstallprompt', event => {
     event.preventDefault();
     installPrompt = event;

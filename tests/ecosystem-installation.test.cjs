@@ -6,7 +6,7 @@ const test = require('node:test');
 const root = path.resolve(__dirname, '..');
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 
-test('gateway presents the six applications in the official order and links to their install pages', () => {
+test('gateway retains the ordered app routes and presents Deudalaya alone', () => {
   const html = read('index.html');
   const cards = [...html.matchAll(/<article class="gateway-card[^>]*data-app="([^"]+)"[\s\S]*?<\/article>/g)];
   assert.deepEqual(cards.map(card => card[1]), ['layapur', 'deudalaya', 'sabdalaya', 'chalchitralaya', 'phonelaya', 'kakchhayalaya']);
@@ -16,7 +16,8 @@ test('gateway presents the six applications in the official order and links to t
     assert.match(card[0], /Install App/);
   });
   for (const name of ['लयपुर', 'देउडालय', 'शब्दलय', 'चलचित्रलय', 'phoneलय', 'कक्षालय']) assert.ok(html.includes(name));
-  assert.match(html, /Explore Apps/);
+  assert.match(html, /DEUDALAYA/);
+  assert.match(read('ecosystem-gateway.css'), /gateway-card:not\(\[data-app="deudalaya"\]\)\{display:none\}/);
 });
 
 test('gateway enables Open App only after a live installation check', () => {
@@ -54,10 +55,10 @@ test('each app page has its own install action and confirmation-gated open actio
   assert.equal(JSON.parse(read('layapur.webmanifest')).scope, './');
 });
 
-test('English is the primary gateway and class-selection interface language', () => {
+test('Deudalaya and class-selection interface languages are English-first', () => {
   const gateway = read('index.html');
   const classroom = read('kakchhayalaya/index.html');
-  assert.match(gateway, /Explore Apps/);
+  assert.match(gateway, /DEUDALAYA/);
   assert.match(gateway, /Install App/);
   assert.match(classroom, /Select Your Class/);
   assert.match(classroom, /Class 1/);

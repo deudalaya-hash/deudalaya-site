@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ne">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -21,7 +21,7 @@
       <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 36 36"><path d="M7 6h22M18 6v10m0 0-7 7m7-7 7 7M10 25h16v5H10z"/><circle cx="18" cy="16" r="2"/></svg></span>
       <span><strong>चलचित्रलय</strong><small>नेपाली कथाहरूको घर</small></span>
     </a>
-    <nav class="main-nav" aria-label="मुख्य मेनु"><a href="#home" data-en="Home">गृहपृष्ठ</a><a href="#catalog" data-en="Movies">चलचित्र</a><button type="button" data-open="library" data-en="My library">मेरो संग्रह</button></nav>
+    <nav class="main-nav" aria-label="Main navigation"><a href="#home" data-en="Home">गृहपृष्ठ</a><a href="#catalog" data-en="Movies">चलचित्र</a><button type="button" data-open="library" data-en="My library">मेरो संग्रह</button></nav>
     <div class="header-actions">
       <label class="search-box"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input type="search" id="searchInput" placeholder="चलचित्र खोज्नुहोस्" aria-label="चलचित्र खोज्नुहोस्"><kbd>⌘ K</kbd></label>
       <button class="language-button" id="languageToggle" type="button" aria-label="Switch language">EN</button>
@@ -68,7 +68,7 @@
 
   <dialog class="app-dialog notice-dialog" id="noticeDialog" aria-labelledby="noticeTitle"><button class="dialog-close" type="button" data-close aria-label="बन्द गर्नुहोस्">×</button><span class="eyebrow" id="noticeEyebrow">चलचित्रलय</span><h2 id="noticeTitle"></h2><div class="notice-body" id="noticeBody"></div><button class="button button-quiet full-button" data-close type="button">बन्द गर्नुहोस्</button></dialog>
   <nav class="mobile-nav" aria-label="मोबाइल मेनु"><a href="#home">⌂<small>गृहपृष्ठ</small></a><button type="button" id="mobileNavSearch">⌕<small>खोजी</small></button><button type="button" data-open="library">▣<small>मेरो संग्रह</small></button><button type="button" data-open="account">♙<small>खाता</small></button></nav>
-  <section class="app-install-gate" id="installGate" hidden aria-labelledby="installTitle"><div class="install-card"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 36 36"><path d="M7 6h22M18 6v10m0 0-7 7m7-7 7 7M10 25h16v5H10z"/><circle cx="18" cy="16" r="2"/></svg></span><span class="eyebrow">एप स्थापना</span><h1 id="installTitle">चलचित्रलय आफ्नो फोनमा राख्नुहोस्</h1><p>नेपाली चलचित्रका लागि छुट्टै एप। चलचित्रको मुख्य अनुभव खोल्न यो एप पहिले स्थापना गर्नुहोस्।</p><button class="button button-primary full-button" id="installAppAction" type="button">Install चलचित्रलय</button><button class="button button-quiet full-button open-installed" id="openInstalledApp" type="button" hidden>App launcher बाट चलचित्रलय खोल्नुहोस्</button><p id="installStatus" role="status" aria-live="polite">स्थापना प्रस्ताव ब्राउजर र उपकरणमा निर्भर हुन्छ।</p><a class="gateway-link" href="/?gateway=1">← तीन एपको मुख्य पृष्ठ</a></div></section>
+  <section class="app-install-gate" id="installGate" hidden aria-labelledby="installTitle"><div class="install-card"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 36 36"><path d="M7 6h22M18 6v10m0 0-7 7m7-7 7 7M10 25h16v5H10z"/><circle cx="18" cy="16" r="2"/></svg></span><span class="eyebrow">APP INSTALLATION</span><h1 id="installTitle">Install चलचित्रलय</h1><p>Install this independent app to explore Nepali cinema. The browser will show the available installation options.</p><button class="button button-primary full-button" id="installAppAction" type="button">Install App</button><button class="button button-quiet full-button open-installed" id="openInstalledApp" type="button" hidden>Open App</button><p id="installStatus" role="status" aria-live="polite">Installation availability depends on your browser and device.</p><a class="gateway-link" href="/?gateway=1">← Deudalaya</a></div></section>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="app.js" defer></script>
 </body>

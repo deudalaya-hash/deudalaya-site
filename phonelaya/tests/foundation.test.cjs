@@ -75,8 +75,8 @@ test('VCF export escapes contact data and produces an importable vCard file', ()
 test('phoneलय presents clearly labelled local-only demo flows without network storage', () => {
   const html = read('index.html');
   const script = read('app.js');
-  assert.match(html, /नमूना सम्पर्क|नमुना सम्पर्क/);
-  assert.match(html, /cloud backup.*जडान भएका छैनन्/i);
+  assert.match(html, /Sample contacts in this tab/);
+  assert.match(html, /cloud backup, accounts and encryption are not connected/i);
   assert.match(html, /id="contactFile"/);
   assert.match(html, /id="backupAction"/);
   assert.match(html, /id="restoreAction"/);
@@ -86,14 +86,15 @@ test('phoneलय presents clearly labelled local-only demo flows without networ
   assert.doesNotMatch(script, /\bfetch\s*\(|XMLHttpRequest|localStorage|indexedDB|sessionStorage|supabase/i);
 });
 
-test('the root gateway exposes phoneलय as the fourth independent app', () => {
+test('the root gateway keeps phoneलय available in source while presenting Deudalaya alone', () => {
   const gateway = read('../index.html');
   const gatewayJs = read('../ecosystem-gateway.js');
   const gatewayCss = read('../ecosystem-gateway.css');
   assert.match(gateway, /data-app="phonelaya"/);
   assert.match(gateway, /href="\/phonelaya\/"/);
   assert.match(gateway, /phoneलय/);
-  assert.match(gateway, /CONTACT BACKUP &amp; RECOVERY/);
+  assert.match(gateway, /CONTACT BACKUP · RECOVERY/);
+  assert.match(gatewayCss, /gateway-card:not\(\[data-app="deudalaya"\]\)\{display:none\}/);
   assert.match(gatewayJs, /phonelaya/);
   assert.match(gatewayCss, /gateway-phone/);
 });

@@ -30,6 +30,16 @@ button{color:inherit}
 button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #26877a;outline-offset:3px}
 a{color:inherit}
 .app-shell{min-height:100vh;display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr)}
+.phone-install-gate{position:fixed;z-index:30;inset:0;display:grid;place-items:center;padding:20px;background:#f4f6f3}
+.phone-install-gate[hidden]{display:none!important}
+.phone-install-required body>*:not(#phoneInstallGate):not(script){display:none!important}
+.phone-install-required #phoneInstallGate{display:grid!important}
+.phone-install-card{width:min(420px,100%);padding:28px 24px;border:1px solid var(--border);border-radius:16px;background:#fff;text-align:center;box-shadow:0 20px 70px #1f262410}
+.phone-install-card .brand-mark{width:56px;height:56px;margin:0 auto 16px;display:grid;place-items:center;border-radius:16px;background:var(--accent-soft);color:var(--accent);font-size:30px}
+.phone-install-card h2{margin:0 0 10px;font-size:25px}
+.phone-install-card p{color:var(--muted)}
+.phone-install-card .button{width:100%;margin-top:8px;text-decoration:none}
+.phone-install-card #phoneInstallStatus{min-height:42px;margin:14px 0 4px;font-size:12px}
 .sidebar{position:sticky;top:0;height:100vh;min-height:620px;display:flex;flex-direction:column;padding:27px 15px 17px 20px;background:#fbfcfa;border-right:1px solid var(--border)}
 .brand{display:flex;align-items:center;gap:11px;margin:0 0 44px 3px;text-decoration:none}
 .brand-mark{width:43px;height:43px;flex:none;display:grid;place-items:center;border-radius:13px;background:var(--accent-soft)}

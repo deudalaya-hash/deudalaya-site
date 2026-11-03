@@ -2,12 +2,12 @@
   'use strict';
 
   const samples = [
-    { id:'sample-1', name:'माया कार्की (नमुना)', phone:'+977 980 000 0001', email:'maya@example.test', source:'नमुना', tone:1 },
-    { id:'sample-2', name:'राजु खड्का (नमुना)', phone:'+977 980 000 0002', email:'raju@example.test', source:'नमुना', tone:2 },
-    { id:'sample-3', name:'मिना शाही (नमुना)', phone:'+977 981 000 0003', email:'mina@example.test', source:'नमुना', tone:3 },
-    { id:'sample-4', name:'सीता बुढा (नमुना)', phone:'+977 984 000 0004', email:'sita@example.test', source:'नमुना', tone:4 },
-    { id:'sample-5', name:'नविन बिष्ट (नमुना)', phone:'+977 985 000 0005', email:'nabin@example.test', source:'नमुना', tone:5 },
-    { id:'sample-6', name:'माया के. (डुप्लिकेट नमुना)', phone:'9800000001', email:'maya.k@example.test', source:'नमुना', tone:1 }
+    { id:'sample-1', name:'माया कार्की (Demo)', phone:'+977 980 000 0001', email:'maya@example.test', source:'Demo', tone:1 },
+    { id:'sample-2', name:'राजु खड्का (Demo)', phone:'+977 980 000 0002', email:'raju@example.test', source:'Demo', tone:2 },
+    { id:'sample-3', name:'मिना शाही (Demo)', phone:'+977 981 000 0003', email:'mina@example.test', source:'Demo', tone:3 },
+    { id:'sample-4', name:'सीता बुढा (Demo)', phone:'+977 984 000 0004', email:'sita@example.test', source:'Demo', tone:4 },
+    { id:'sample-5', name:'नविन बिष्ट (Demo)', phone:'+977 985 000 0005', email:'nabin@example.test', source:'Demo', tone:5 },
+    { id:'sample-6', name:'माया के. (डुप्लिकेट Demo)', phone:'9800000001', email:'maya.k@example.test', source:'Demo', tone:1 }
   ];
   let contacts = samples.map(record => ({ ...record }));
   let demoSnapshot = samples.map(record => ({ ...record }));
@@ -16,8 +16,19 @@
   let installPrompt = null;
 
   const $ = selector => document.querySelector(selector);
+  const installGate = $('#phoneInstallGate');
+  const installStatus = $('#phoneInstallStatus');
+  const appId = new URL('/phonelaya/', location.origin).href;
+  const standalone = ['standalone', 'minimal-ui', 'fullscreen', 'window-controls-overlay'].some(mode => window.matchMedia(`(display-mode: ${mode})`).matches) || navigator.standalone === true;
+  document.documentElement.classList.toggle('phone-install-required', !standalone);
+  installGate.hidden = standalone;
+  function markInstalled() {
+    $('#phoneOpenInstalled').hidden = false;
+    $('#phoneInstallAction').hidden = true;
+    installStatus.textContent = 'Your browser confirmed installation. Open App is now available.';
+  }
   const digits = value => String(value || '').replace(/\D/g, '').replace(/^977(?=\d{10}$)/, '');
-  const formatCount = value => Number(value).toLocaleString('ne-NP');
+  const formatCount = value => Number(value).toLocaleString('en-US');
   const initials = name => Array.from(String(name || '?').replace(/\s*\([^)]*\)\s*/g, ' ').trim())[0] || '?';
   function element(tag, className, text) {
     const node = document.createElement(tag);
@@ -39,9 +50,9 @@
       section.classList.toggle('active', active);
     });
     document.querySelectorAll('[data-view-target]').forEach(button => button.classList.toggle('active', button.dataset.viewTarget === view));
-    const title = ({ overview:'तपाईंका सम्पर्कहरू', contacts:'सम्पर्क सूची', backup:'सम्पर्कको demo backup', restore:'सम्पर्क पुनः प्राप्ति', account:'खाता र गोपनीयता' })[view] || 'phoneलय';
+    const title = ({ overview:'Your contacts', contacts:'Contacts', backup:'Contact backup demo', restore:'Restore Contacts', account:'Account & Privacy' })[view] || 'phoneलय';
     $('#pageTitle').textContent = title;
-    $('#pageDescription').textContent = ({ overview:'फोन परिवर्तन भए पनि चिनजान हराउन नदिनुहोस्।', contacts:'यस browser tab मा रहेको sample र आयातित सूची।', backup:'सम्पर्क फाइल पढेर local demo snapshot बनाउनुहोस्।', restore:'यस tab भित्रको उदाहरण snapshot बाट सम्पर्क फर्काउनुहोस्।', account:'Login, cloud backup र encryption उत्पादन सेवामा जोडिएका छैनन्।' })[view] || '';
+    $('#pageDescription').textContent = ({ overview:'Keep the contacts you rely on when you change phones.', contacts:'Sample and imported contacts in this browser tab.', backup:'Read a contact file and create a local demo snapshot.', restore:'Restore contacts from a sample snapshot in this tab.', account:'Login, cloud backup and encryption are not connected.' })[view] || '';
     $('#sidebar').classList.remove('open');
     $('#menuButton').setAttribute('aria-expanded', 'false');
     window.location.hash = view === 'overview' ? '' : view;
@@ -51,14 +62,14 @@
     if (compact) {
       const button = element('button', 'contact-row');
       button.type = 'button';
-      button.setAttribute('aria-label', `${record.name}, ${record.phone}, विवरण हेर्नुहोस्`);
+      button.setAttribute('aria-label', `${record.name}, ${record.phone}, View details`);
       const main = element('span', 'contact-main');
       const avatar = element('span', `contact-avatar tone-${record.tone || ((record.id.length % 5) + 1)}`, initials(record.name));
       avatar.setAttribute('aria-hidden', 'true');
       const copy = element('span', 'contact-copy');
-      copy.append(element('span', 'contact-name', record.name), element('span', 'contact-subline', record.phone || record.email || 'फोन/इमेल उपलब्ध छैन'));
+      copy.append(element('span', 'contact-name', record.name), element('span', 'contact-subline', record.phone || record.email || 'No phone or email'));
       main.append(avatar, copy);
-      button.append(main, element('span', `contact-tag${duplicate ? ' duplicate' : ''}`, duplicate ? 'दोहोरिएको' : record.source || 'नमुना'));
+      button.append(main, element('span', `contact-tag${duplicate ? ' duplicate' : ''}`, duplicate ? 'Duplicate' : record.source || 'Demo'));
       button.addEventListener('click', () => showContact(record));
       return button;
     }
@@ -68,7 +79,7 @@
     nameButton.addEventListener('click', () => showContact(record));
     const phone = element('span', `row-phone${duplicate ? ' row-duplicate' : ''}`, record.phone || '—');
     const email = element('span', 'row-email', record.email || '—');
-    const source = element('span', 'row-source source-label', duplicate ? 'दोहोरिएको' : record.source || 'नमुना');
+    const source = element('span', 'row-source source-label', duplicate ? 'Duplicate' : record.source || 'Demo');
     row.append(nameButton, phone, email, source);
     return row;
   }
@@ -88,8 +99,8 @@
     $('#duplicateCount').textContent = formatCount(groups.length);
     $('#backupDuplicateCount').textContent = formatCount(groups.length);
     $('#duplicateSummary').textContent = groups.length
-      ? `${formatCount(groups.length)} समूहमा समान फोन नम्बर भेटियो।`
-      : 'दोहोरिएको फोन नम्बर भेटिएन।';
+      ? `${formatCount(groups.length)} groups of matching phone numbers found.`
+      : 'No duplicate phone numbers found.';
     const list = $('#duplicateList');
     list.replaceChildren();
     groups.slice(0, 2).forEach(group => {
@@ -100,7 +111,7 @@
       row.append(names, element('span', '', `${group.length} cards`));
       list.append(row);
     });
-    if (!groups.length) list.append(element('p', 'fine-print', 'हाल देखिएका sample र आयातित contact नम्बरहरू जाँचिएको छ।'));
+    if (!groups.length) list.append(element('p', 'fine-print', 'Sample and imported contact numbers currently in the list have been checked.'));
   }
   function updateCounts() {
     const count = formatCount(contacts.length);
@@ -112,41 +123,41 @@
   }
   function showContact(record) {
     $('#detailName').textContent = record.name;
-    $('#detailPhone').textContent = record.phone || 'उपलब्ध छैन';
-    $('#detailEmail').textContent = record.email || 'उपलब्ध छैन';
-    $('#detailSource').textContent = record.source || 'नमुना सूची';
+    $('#detailPhone').textContent = record.phone || 'Not available';
+    $('#detailEmail').textContent = record.email || 'Not available';
+    $('#detailSource').textContent = record.source || 'Demo list';
     $('#contactDialog').showModal();
   }
   async function importContactFile(file) {
     if (!file) return;
     if (file.size > 2 * 1024 * 1024) {
-      $('#importStatus').textContent = 'फाइल 2 MB भन्दा ठूलो छ। सानो CSV वा VCF फाइल छान्नुहोस्।';
+      $('#importStatus').textContent = 'The file is larger than 2 MB. Choose a smaller CSV or VCF file.';
       return;
     }
     const ext = file.name.toLocaleLowerCase().split('.').pop();
     if (!['csv', 'vcf'].includes(ext)) {
-      $('#importStatus').textContent = 'CSV वा VCF format मात्र स्वीकार हुन्छ।';
+      $('#importStatus').textContent = 'Only CSV or VCF files are accepted.';
       return;
     }
     try {
       const text = await file.text();
       const parsed = ext === 'vcf' ? PhoneLayaContacts.parseVCF(text) : PhoneLayaContacts.parseCSV(text);
       if (!parsed.length) {
-        $('#importStatus').textContent = 'सम्पर्क भेटिएन। नाम र फोन भएको CSV वा VCF छान्नुहोस्।';
+        $('#importStatus').textContent = 'No contacts found. Choose a CSV or VCF with names and phone numbers.';
         return;
       }
-      const unique = parsed.map((record, index) => ({ ...record, id:`import-${Date.now()}-${index}`, source:'आयात', tone:(index % 5) + 1 }));
+      const unique = parsed.map((record, index) => ({ ...record, id:`import-${Date.now()}-${index}`, source:'Import', tone:(index % 5) + 1 }));
       contacts = contacts.concat(unique);
-      $('#importStatus').textContent = `${formatCount(unique.length)} सम्पर्क यस tab को memory मा आयात भए। केही पनि server मा पठाइएको छैन।`;
+      $('#importStatus').textContent = `${formatCount(unique.length)} contacts were imported into this tab’s memory. Nothing was sent to a server.`;
       $('#contactFile').value = '';
       updateCounts(); renderContacts($('#contactSearch').value);
-      showToast(`${formatCount(unique.length)} सम्पर्क यो session मा थपिए।`);
+      showToast(`${formatCount(unique.length)} contacts were added to this session.`);
     } catch (_) {
-      $('#importStatus').textContent = 'फाइल पढ्न सकिएन। CSV वा VCF encoding जाँचेर फेरि प्रयास गर्नुहोस्।';
+      $('#importStatus').textContent = 'Could not read the file. Check the CSV or VCF encoding and try again.';
     }
   }
   async function simulateBackup(button) {
-    if (!contacts.length) { showToast('ब्याकअपका लागि सूचीमा सम्पर्क छैन।'); return; }
+    if (!contacts.length) { showToast('There are no contacts to back up.'); return; }
     if (button.disabled) return;
     const progress = $('#backupProgress');
     const fill = progress.querySelector('span');
@@ -154,7 +165,7 @@
     progress.hidden = false;
     button.disabled = true;
     $('#backupPageAction').disabled = true;
-    status.textContent = 'Demo snapshot यस tab को memory मा तयार हुँदैछ… कुनै upload भइरहेको छैन।';
+    status.textContent = 'Preparing a demo snapshot in this tab’s memory… nothing is being uploaded.';
     for (const value of [18, 42, 68, 100]) {
       await new Promise(resolve => setTimeout(resolve, 90));
       progress.setAttribute('aria-valuenow', String(value));
@@ -163,19 +174,19 @@
     demoSnapshot = contacts.map(record => ({ ...record }));
     const now = new Date();
     backupHistory.unshift({ at:now, count:contacts.length });
-    const stamp = new Intl.DateTimeFormat('ne-NP', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }).format(now);
+    const stamp = new Intl.DateTimeFormat('en-US', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }).format(now);
     $('#lastBackup').textContent = stamp;
-    $('#lastBackupCaption').textContent = 'Demo snapshot · यो tab मा मात्र';
+    $('#lastBackupCaption').textContent = 'Demo snapshot · this tab only';
     $('#restoreSnapshotCount').textContent = formatCount(demoSnapshot.length);
-    $('#restoreStatus').textContent = 'यो snapshot अहिलेको tab memory मा मात्र छ; browser बन्द गर्दा मेटिन्छ।';
-    status.textContent = `${formatCount(demoSnapshot.length)} सम्पर्कको demo snapshot तयार भयो। Cloud मा केही पनि सुरक्षित गरिएको छैन।`;
+    $('#restoreStatus').textContent = 'This snapshot is only in this tab’s memory and will be cleared when the browser closes.';
+    status.textContent = `${formatCount(demoSnapshot.length)}  contacts’ demo snapshot is ready. Nothing was saved to the cloud.`;
     button.disabled = false;
     $('#backupPageAction').disabled = false;
     setTimeout(() => { progress.hidden = true; fill.style.width = '0%'; progress.setAttribute('aria-valuenow', '0'); }, 1000);
     updateCounts();
   }
   function downloadVcf() {
-    if (!contacts.length) { showToast('डाउनलोड गर्न सम्पर्क छैन।'); return; }
+    if (!contacts.length) { showToast('There are no contacts to download.'); return; }
     const content = PhoneLayaContacts.toVCF(contacts);
     const blob = new Blob([content], { type:'text/vcard;charset=utf-8' });
     const url = URL.createObjectURL(blob);
@@ -184,7 +195,7 @@
     link.download = 'phonelaya-demo-contacts.vcf';
     document.body.append(link); link.click(); link.remove();
     setTimeout(() => URL.revokeObjectURL(url), 500);
-    showToast('VCF फाइल तपाईंको उपकरणमा डाउनलोड भयो।');
+    showToast('The VCF file was downloaded to your device.');
   }
 
   document.querySelectorAll('[data-view-target]').forEach(button => button.addEventListener('click', () => goToView(button.dataset.viewTarget)));
@@ -210,37 +221,43 @@
   $('#restoreAction').addEventListener('click', () => {
     contacts = demoSnapshot.map(record => ({ ...record }));
     updateCounts(); renderContacts('');
-    $('#restoreStatus').textContent = `${formatCount(contacts.length)} sample contacts यो tab मा फर्काइए। यो device/cloud restore होइन।`;
-    showToast('Demo snapshot बाट सूची फर्काइयो।');
+    $('#restoreStatus').textContent = `${formatCount(contacts.length)} sample contacts  sample contacts restored in this tab. This is not a device or cloud restore.`;
+    showToast('Sample list restored from the demo snapshot.');
   });
   $('#downloadVcf').addEventListener('click', downloadVcf);
   $('#accountForm').addEventListener('submit', event => {
     event.preventDefault(); event.currentTarget.reset();
-    $('#accountStatus').textContent = 'Demo मात्र: कुनै account बनेन र विवरण कतै पठाइएन।';
-    showToast('Sign in सेवा अझै जोडिएको छैन।');
+    $('#accountStatus').textContent = 'Demo only: no account was created and no details were sent.';
+    showToast('Sign-in service is not connected yet.');
   });
   $('#registerAction').addEventListener('click', () => {
-    $('#accountStatus').textContent = 'Registration demo मात्र हो। कुनै account वा profile data सुरक्षित गरिएको छैन।';
-    showToast('वास्तविक registration service जडान भएको छैन।');
+    $('#accountStatus').textContent = 'Registration demo only. No account or profile data was saved.';
+    showToast('A real registration service is not connected.');
   });
 
   const installButtons = [$('#installButton'), $('#installAction')].filter(Boolean);
-  window.addEventListener('beforeinstallprompt', event => { event.preventDefault(); installPrompt = event; installButtons.forEach(button => { button.textContent = 'Install'; }); });
+  window.addEventListener('beforeinstallprompt', event => { event.preventDefault(); installPrompt = event; installButtons.forEach(button => { button.textContent = 'Install App'; }); installStatus.textContent = 'phoneलय is ready to install.'; });
   async function requestInstall() {
     if (!installPrompt) {
       const apple = /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-      showToast(apple ? 'Safari मा Share → Add to Home Screen छान्नुहोस्।' : 'Browser menu बाट Install phoneलय वा Add to Home screen छान्नुहोस्।');
+      installStatus.textContent = apple ? 'Safari on iPhone or iPad: tap Share, choose “Add to Home Screen,” then tap Add.' : 'Chrome or Edge: select Install from the address bar or browser menu. Other browsers: choose “Add to Home Screen.”';
       return;
     }
     const prompt = installPrompt; installPrompt = null;
     try {
       await prompt.prompt();
       const result = await prompt.userChoice;
-      showToast(result.outcome === 'accepted' ? 'Install अनुरोध स्वीकार भयो।' : 'Install अनुरोध रद्द भयो।');
-    } catch (_) { showToast('Browser menu बाट phoneलय स्थापना गर्नुहोस्।'); }
+      installStatus.textContent = result.outcome === 'accepted' ? 'Install request accepted. Waiting for browser confirmation before enabling Open App.' : 'Installation was cancelled. Select Install App to try again.';
+    } catch (_) { installStatus.textContent = 'Could not start installation. Follow the browser instructions above.'; }
   }
-  installButtons.forEach(button => button.addEventListener('click', requestInstall));
-  window.addEventListener('appinstalled', () => showToast('phoneलय यस उपकरणमा स्थापना भयो।'));
+  installButtons.forEach(button => button.addEventListener('click', () => {
+    if (button === $('#installButton') && !standalone) installGate.hidden = false;
+    requestInstall();
+  }));
+  window.addEventListener('appinstalled', markInstalled);
+  if (navigator.getInstalledRelatedApps) navigator.getInstalledRelatedApps().then(apps => {
+    if (apps.some(app => app.id === appId || app.url === new URL('/phonelaya/manifest.webmanifest', location.origin).href)) markInstalled();
+  }).catch(() => {});
 
   const initialView = location.hash.slice(1);
   if (['contacts', 'backup', 'restore', 'account'].includes(initialView)) goToView(initialView);
