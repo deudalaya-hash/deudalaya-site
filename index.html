@@ -135,7 +135,7 @@
 <style id="white-logo-splash">
 .launch-splash{background:#fff!important;background-image:none!important;color:#111!important;gap:0}
 .launch-splash img{width:min(76vw,340px);height:auto;max-height:55vh;display:block;object-fit:contain;border-radius:0;background:transparent!important;box-shadow:none!important;animation:none}
-.launch-splash span{display:none}
+.launch-splash:not(.door-splash) span{display:none}
 .launch-splash.door-splash{display:flex!important;flex-direction:row;gap:0;padding:0;background:#5a1818!important;color:#e8c98a;cursor:pointer}
 .entry-door-panel{position:relative;flex:1;height:100%;background:linear-gradient(180deg,#7c2626 0%,#5a1818 50%,#7c2626 100%);border-top:5px solid #c9a65e;border-bottom:5px solid #c9a65e;transition:transform 1.4s cubic-bezier(.7,0,.2,1)}
 .entry-door-left{border-left:5px solid #c9a65e;border-right:3px solid #d4b46d}
