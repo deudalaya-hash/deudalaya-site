@@ -9,8 +9,9 @@ test('manual next and previous feed navigation animate in the swipe direction', 
   assert.match(html, /function animateFeed\(direction\)/);
   assert.match(html, /function nextVideo\(\)\{[\s\S]*?animateFeed\('up'\)/);
   assert.match(html, /function prevVideo\(\)\{[\s\S]*?animateFeed\('down'\)/);
-  assert.match(html, /#feed\.feed-swipe-up #video/);
-  assert.match(html, /#feed\.feed-swipe-down #video/);
+  assert.match(html, /#feed\.feed-swipe-up\{animation:/);
+  assert.match(html, /#feed\.feed-swipe-down\{animation:/);
+  assert.doesNotMatch(html, /#feed\.feed-swipe-up #video\{animation:/);
   assert.match(html, /prefers-reduced-motion:reduce/);
 });
 

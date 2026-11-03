@@ -2384,10 +2384,10 @@ async function uploadToStorage(client,path,file,button){
 <script src="deudalaya-audio.js"></script>
 
 <style id="deudalaya-vertical-feed-motion">
-#feed.feed-swipe-up #video{animation:deudalaya-swipe-up 240ms cubic-bezier(.2,.7,.2,1)}
-#feed.feed-swipe-down #video{animation:deudalaya-swipe-down 240ms cubic-bezier(.2,.7,.2,1)}
-@keyframes deudalaya-swipe-up{from{transform:translateY(18px);opacity:.55}to{transform:translateY(0);opacity:1}}
-@keyframes deudalaya-swipe-down{from{transform:translateY(-18px);opacity:.55}to{transform:translateY(0);opacity:1}}
-@media(prefers-reduced-motion:reduce){#feed.feed-swipe-up #video,#feed.feed-swipe-down #video{animation:none}}
+#feed.feed-swipe-up{animation:deudalaya-swipe-up 280ms cubic-bezier(.2,.7,.2,1)}
+#feed.feed-swipe-down{animation:deudalaya-swipe-down 280ms cubic-bezier(.2,.7,.2,1)}
+@keyframes deudalaya-swipe-up{from{transform:translateY(38px);opacity:.7}to{transform:translateY(0);opacity:1}}
+@keyframes deudalaya-swipe-down{from{transform:translateY(-38px);opacity:.7}to{transform:translateY(0);opacity:1}}
+@media(prefers-reduced-motion:reduce){#feed.feed-swipe-up,#feed.feed-swipe-down{animation:none}}
 </style>
 </body></html>
