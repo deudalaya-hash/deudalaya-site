@@ -48,6 +48,12 @@ test('entry button calls the native prompt on click and reports when unavailable
   assert.match(ui.progressTitle.textContent, /Installation Complete/);
 });
 
+test('iOS browsers without beforeinstallprompt get Add to Home Screen guidance', () => {
+  const ui = createInstallHarness({ userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 Version/17.0 Mobile/15E148 Safari/604.1' });
+  ui.buttonEvents.click({ preventDefault() {} });
+  assert.match(ui.hint.textContent, /Share.*Add to Home Screen/i);
+});
+
 test('entry script captures beforeinstallprompt and invokes it directly from the button tap', async () => {
   const ui = createInstallHarness();
 
@@ -103,7 +109,7 @@ test('unconfirmed install progress ends with a clear retry state', async () => {
   assert.match(ui.hint.textContent, /could not confirm/i);
 });
 
-function createInstallHarness() {
+function createInstallHarness(options = {}) {
   const buttonEvents = {};
   const openButtonEvents = {};
   const windowEvents = {};
@@ -132,7 +138,7 @@ function createInstallHarness() {
   };
   const location = { origin: 'https://deudalaya.com', href: '', assign(url) { this.href = url; } };
   const window = { deudalayaInstallPrompt: null, addEventListener(name, fn) { windowEvents[name] = fn; }, setTimeout(fn) { timer = fn; return 9; }, clearTimeout() { timer = null; }, location };
-  vm.runInNewContext(entry, { document, window, navigator: {}, location, URL, Promise, Object });
+  vm.runInNewContext(entry, { document, window, navigator: { userAgent: options.userAgent || '', platform: options.platform || '', maxTouchPoints: options.maxTouchPoints || 0 }, location, URL, Promise, Object });
   return {
     buttonEvents,
     openButtonEvents,

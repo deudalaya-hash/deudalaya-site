@@ -8,8 +8,8 @@
   "scope": "./",
   "display": "standalone",
   "prefer_related_applications": false,
-  "background_color": "#ffffff",
-  "theme_color": "#ffffff",
+  "background_color": "#0b0b10",
+  "theme_color": "#0b0b10",
   "related_applications": [
     { "platform": "webapp", "id": "https://deudalaya.com/index2.html", "url": "https://deudalaya.com/layapur.webmanifest" },
     { "platform": "webapp", "id": "https://deudalaya.com/", "url": "https://deudalaya.com/manifest.webmanifest" },
@@ -28,6 +28,12 @@
     {
       "src": "assets/deudalaya-launch-512.png",
       "purpose": "any",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "assets/deudalaya-maskable-512.png",
+      "purpose": "maskable",
       "type": "image/png",
       "sizes": "512x512"
     }

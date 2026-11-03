@@ -17,6 +17,12 @@
   var installTimeout = null;
   var installationConfirmed = false;
 
+  function isIOSBrowser() {
+    var userAgent = navigator.userAgent || '';
+    return /iPhone|iPad|iPod/i.test(userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  }
+
   function clearInstallTimeout() {
     if (installTimeout !== null) {
       window.clearTimeout(installTimeout);
@@ -76,7 +82,9 @@
     clickEvent.preventDefault();
     var promptEvent = deferredInstallPrompt;
     if (!promptEvent) {
-      installHint.textContent = 'Installation is not currently available in this browser.';
+      installHint.textContent = isIOSBrowser()
+        ? 'On iPhone or iPad, tap Share, then Add to Home Screen.'
+        : 'Installation is not currently available in this browser.';
       return;
     }
 

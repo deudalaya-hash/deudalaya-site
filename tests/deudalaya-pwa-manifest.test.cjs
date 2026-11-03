@@ -29,3 +29,22 @@ test('Deudalaya manifest has install identity, scope, display, and downloadable 
 test('Deudalaya explicitly opts into browser installation', () => {
   assert.equal(manifest.prefer_related_applications, false);
 });
+
+test('Deudalaya declares a complete color identity and a maskable 512px icon', () => {
+  assert.match(manifest.theme_color, /^#[0-9a-f]{6}$/i);
+  assert.match(manifest.background_color, /^#[0-9a-f]{6}$/i);
+  const maskable = manifest.icons.find((item) => item.sizes === '512x512' && item.purpose === 'maskable');
+  assert.ok(maskable, 'manifest needs a separately maskable 512px icon');
+  assert.ok(fs.existsSync(path.join(root, maskable.src)), `${maskable.src} must exist`);
+});
+
+test('Deudalaya service worker claims pages and caches only named app-shell files', () => {
+  const worker = fs.readFileSync(path.join(root, 'sw.js'), 'utf8');
+  assert.match(worker, /clients\.claim\(\)/);
+  assert.match(worker, /caches\.open\(CACHE_NAME\)/);
+  assert.match(worker, /self\.addEventListener\('fetch'/);
+  assert.match(worker, /SHELL_ASSETS/);
+  assert.doesNotMatch(worker, /cache\.addAll\(/);
+  assert.match(worker, /deudalaya-shell-/);
+  assert.match(worker, /self\.location\.origin/);
+});
