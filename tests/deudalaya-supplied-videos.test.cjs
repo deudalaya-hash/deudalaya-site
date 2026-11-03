@@ -6,7 +6,7 @@ const test = require('node:test');
 const root = path.resolve(__dirname, '..');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 
-test('both newly supplied videos are separate playable feed and profile posts', () => {
+test('the first two supplied videos are separate playable feed and profile posts', () => {
   const start = html.indexOf('const videos=[');
   const end = html.indexOf('let index=', start);
   assert.notEqual(start, -1, 'feed data is present');
@@ -22,7 +22,7 @@ test('both newly supplied videos are separate playable feed and profile posts', 
     const video = fs.readFileSync(path.join(root, media));
     assert.equal(video.toString('ascii', 4, 8), 'ftyp', `${media} is an MP4 container`);
   }
-  assert.equal((feed.match(/videoSrc:/g) || []).length, 3, 'original post and both supplied videos are present once');
+  assert.equal((feed.match(/videoSrc:/g) || []).length, 6, 'all six starter posts are playable videos');
   assert.match(html, /if\(v\.videoSrc\)[\s\S]{0,180}createElement\('video'\)/, 'feed and profile render video entries as video elements');
   assert.match(html, /if\(!row\.media_type\|\|!row\.media_type\.startsWith\('video\/'\)\)continue;/, 'remote image posts are not added to the feed');
   assert.ok(html.includes("readLocalVideos()).filter(item=>{const file=item&&item.file;return !!file&&(String(file.type||'').toLowerCase().startsWith('video/')"), 'locally saved images are not restored into the feed');
