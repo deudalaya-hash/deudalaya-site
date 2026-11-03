@@ -28,7 +28,27 @@ const expectedTitles = new Map([
   ['assets/deudalaya-video-2026-11-03-141222.mp4', 'हिमाली गाउँमा घेरा बाँधेर देउडा नाच'],
   ['assets/deudalaya-video-2026-11-03-141448.mp4', 'देउडा साँझ १०: खुला मैदानमा देउडा नाच'],
   ['assets/deudalaya-video-2026-11-03-bajhang-deuda.mp4', 'बझाङको पहाडी आँगनमा देउडा भाका'],
-  ['assets/deudalaya-video-2026-11-03-shankhmul.mp4', 'देउडालय, शङ्खमूल।']
+  ['assets/deudalaya-video-2026-11-03-shankhmul.mp4', 'देउडालय, शङ्खमूल।'],
+  ['assets/deudalaya-video-2026-11-04-clip-01.mp4', 'पश्चिम धनगढीको नेपाली देउडा भाका'],
+  ['assets/deudalaya-video-2026-11-04-clip-02.mp4', 'नेपालगञ्जमा “छोटी” देउडा लिपसिङ'],
+  ['assets/deudalaya-video-2026-11-04-clip-03.mp4', 'देउडालयको सांस्कृतिक झलक'],
+  ['assets/deudalaya-video-2026-11-04-clip-04.mp4', 'चैनपुरको देउडा भाकामा आमाप्रतिको माया'],
+  ['assets/deudalaya-video-2026-11-04-clip-05.mp4', 'टुँडिखेलमा देउडा गीतको रौनक'],
+  ['assets/deudalaya-video-2026-11-04-clip-06.mp4', 'बझाङको गाउँघरमा देउडा'],
+  ['assets/deudalaya-video-2026-11-04-clip-07.mp4', 'देउडा झलक ०२:२७:०५'],
+  ['assets/deudalaya-video-2026-11-04-clip-08.mp4', 'देउडा झलक ०२:२७:३९'],
+  ['assets/deudalaya-video-2026-11-04-clip-09.mp4', 'देउडा झलक ०२:२९:०२'],
+  ['assets/deudalaya-video-2026-11-04-clip-10.mp4', 'देउडा झलक ०२:२९:३९'],
+  ['assets/deudalaya-video-2026-11-04-clip-11.mp4', 'देउडा झलक ०२:३०:०५'],
+  ['assets/deudalaya-video-2026-11-04-clip-12.mp4', 'देउडा झलक ०२:३०:३३'],
+  ['assets/deudalaya-video-2026-11-04-clip-13.mp4', 'देउडा झलक ०२:३१:२२'],
+  ['assets/deudalaya-video-2026-11-04-clip-14.mp4', 'देउडा झलक ०२:३१:५६'],
+  ['assets/deudalaya-video-2026-11-04-clip-15.mp4', 'देउडा झलक ०२:३२:२६'],
+  ['assets/deudalaya-video-2026-11-04-clip-16.mp4', 'देउडा झलक ०२:३३:४५'],
+  ['assets/deudalaya-video-2026-11-04-clip-17.mp4', 'देउडा झलक ०२:३५:५६'],
+  ['assets/deudalaya-video-2026-11-04-clip-18.mp4', 'देउडा झलक ०२:३७:५३'],
+  ['assets/deudalaya-video-2026-11-04-clip-19.mp4', 'देउडा झलक ०२:४०:४२'],
+  ['assets/deudalaya-video-2026-11-04-clip-20.mp4', 'देउडा झलक ०२:४२:०१']
 ]);
 
 test('each bundled video has its own content-based title', () => {
