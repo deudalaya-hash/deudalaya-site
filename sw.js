@@ -3,6 +3,8 @@ const CACHE_NAME = 'deudalaya-shell-v1';
 const SHELL_ASSETS = [
   '/',
   '/manifest.webmanifest',
+  '/ecosystem-gateway.css',
+  '/ecosystem-gateway.js',
   '/install-gate.css',
   '/assets/deudalaya-launch-192.png',
   '/assets/deudalaya-launch-512.png',

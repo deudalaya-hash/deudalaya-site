@@ -6,18 +6,18 @@ const test = require('node:test');
 const root = path.resolve(__dirname, '..');
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 
-test('root entry opens Deudalaya directly and preserves separate app routes', () => {
+test('root entry shows the Deudalaya install gate and preserves separate app routes', () => {
   const html = read('index.html');
   assert.match(html, /<div class="app">[\s\S]*?id="feed"/);
-  assert.doesNotMatch(html, /ecosystemGateway|deudalayaInstallAction|deudalayaInstallProgress|deudalayaOpenInstalled/);
-  assert.doesNotMatch(html, /beforeinstallprompt|appinstalled|ecosystem-gateway\.(?:js|css)/);
+  assert.match(html, /id="ecosystemGateway"[\s\S]*?id="deudalayaInstallAction"/);
+  assert.match(html, /beforeinstallprompt|appinstalled|ecosystem-gateway\.(?:js|css)/);
   for (const page of ['index2.html', 'sabdalaya/index.html', 'chalchitralaya/index.html', 'phonelaya/index.html', 'kakchhayalaya/index.html']) {
     assert.ok(fs.existsSync(path.join(root, page)), `${page} remains an independent app page`);
   }
   assert.match(html, /<meta name="application-name" content="देउडालय">/);
 });
 
-test('Deudalaya PWA remains installable without a blocking install gate', () => {
+test('Deudalaya PWA remains installable with its browser installation gate', () => {
   const html = read('index.html');
   const manifest = JSON.parse(read('manifest.webmanifest'));
   assert.match(html, /<link rel="manifest" href="manifest\.webmanifest">/);
@@ -29,9 +29,10 @@ test('Deudalaya PWA remains installable without a blocking install gate', () => 
   ]);
 });
 
-test('the Deudalaya route does not depend on browser installation state to reveal the feed', () => {
+test('standalone mode opens the feed without the browser installation gate', () => {
   const html = read('index.html');
-  assert.doesNotMatch(html, /gatewayLaunch|display-mode: standalone|deudalaya-installed|install-required/);
+  assert.match(html, /display-mode: standalone/);
+  assert.match(html, /ecosystem-gateway/);
   assert.match(html, /id="feed"/);
 });
 

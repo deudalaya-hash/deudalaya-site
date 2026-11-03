@@ -12,8 +12,9 @@ test('Deudalaya root keeps its own feed and installation identity without app cr
   assert.match(html, /<div class="app">[\s\S]*?id="feed"/);
   assert.match(html, /<link rel="manifest" href="manifest\.webmanifest">/);
   assert.match(html, /navigator\.serviceWorker\.register\('sw\.js'/);
-  assert.doesNotMatch(html, /ecosystemGateway|deudalayaInstallAction|deudalayaInstallProgress|deudalayaOpenInstalled/);
-  assert.doesNotMatch(html, /beforeinstallprompt|appinstalled|install-required|ecosystem-gateway\.js|ecosystem-gateway\.css/);
+  assert.match(html, /id="ecosystemGateway"[\s\S]*?id="deudalayaInstallAction"/);
+  assert.match(html, /beforeinstallprompt|appinstalled|ecosystem-gateway\.js|ecosystem-gateway\.css/);
+  assert.doesNotMatch(html, /Show browser install steps|Add to Home Screen|Continue to Website/);
   assert.doesNotMatch(html, otherAppNames);
   assert.doesNotMatch(html, /\/(?:sabdalaya|chalchitralaya|phonelaya|kakchhayalaya)\//i);
   assert.doesNotMatch(html, /\/?gateway=|index2\.html|layapur\.webmanifest|blog\.html/i);
@@ -46,7 +47,7 @@ test('Deudalaya-owned pages and documentation contain no other app names', () =>
   for (const file of ['blog.html', 'APP_ECOSYSTEM.md']) {
     assert.doesNotMatch(read(file), otherAppNames, `${file} should remain Deudalaya-only`);
   }
-  assert.doesNotMatch(read('sw.js'), /ecosystem-gateway\.(?:js|css)/);
+  assert.match(read('sw.js'), /ecosystem-gateway\.(?:js|css)/);
 });
 
 test('the archived root showcase redirects visitors to the Deudalaya app', () => {

@@ -9,6 +9,24 @@
 <meta name="apple-mobile-web-app-title" content="देउडालय">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="ecosystem-gateway.css">
+<script id="deudalayaPwaCapture">
+(function(){
+  if(window.__deudalayaPwaCaptureBound)return;
+  window.__deudalayaPwaCaptureBound=true;
+  var isStandalone=(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true;
+  window.deferredPrompt=null;
+  window.deudalayaInstallState=isStandalone?'standalone':'unavailable';
+  if(!isStandalone)document.documentElement.classList.add('ecosystem-gateway');
+  window.addEventListener('beforeinstallprompt',function(event){
+    event.preventDefault();
+    if(window.deudalayaInstallState==='installed'||window.deferredPrompt)return;
+    window.deferredPrompt=event;
+    window.deudalayaInstallState='available';
+    window.dispatchEvent(new Event('deudalaya-installpromptavailable'));
+  });
+})();
+</script>
 <link rel="apple-touch-icon" sizes="180x180" href="assets/deudalaya-icon-180.png">
 <link rel="stylesheet" href="deudalaya-audio.css">
 <meta property="og:site_name" content="देउडालय">
@@ -158,6 +176,29 @@ if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js',{scope:
 </head>
 <body>
 
+<section id="ecosystemGateway" aria-labelledby="gatewayTitle">
+  <header class="gateway-header">
+    <div class="gateway-brand"><img src="assets/deudalaya-launch-192.png" alt=""><span><strong>देउडालय</strong><small>ONE CIRCLE <i>·</i> ONE NEPAL</small></span></div>
+    <span class="gateway-kicker">DEUDALAYA · VIDEO SHARING</span>
+  </header>
+  <div class="gateway-main">
+    <div class="gateway-intro">
+      <div class="gateway-eyebrow"><span aria-hidden="true"></span>DEUDALAYA</div>
+      <h1 id="gatewayTitle">One community. <em>Many stories.</em></h1>
+      <p>Create and share videos rooted in Deuda and Nepali community life.</p>
+    </div>
+    <div class="gateway-card">
+      <div class="gateway-card-art"><img src="assets/deudalaya-launch-192.png" alt=""><span>VIDEO · COMMUNITY</span></div>
+      <div class="gateway-card-content">
+        <h2>देउडालय</h2>
+        <p>Create and share videos rooted in Deuda and Nepali community life.</p>
+        <div class="gateway-card-foot"><span id="deudalayaInstallHint" role="status" aria-live="polite">Waiting for Chrome to make installation available.</span><span class="gateway-identity">देउडा · Video</span></div>
+        <button class="gateway-install" id="deudalayaInstallAction" type="button" disabled>Install App</button>
+      </div>
+    </div>
+  </div>
+</section>
+<script src="ecosystem-gateway.js" defer></script>
 <div class="launch-splash door-splash" id="launchSplash" aria-label="देउडालय ढोका खुल्दैछ"><div class="entry-door-panel entry-door-left"><span class="entry-door-knocker">देउडा</span></div><div class="entry-door-panel entry-door-right"><span class="entry-door-knocker">लय</span></div><div class="door-splash-seam" aria-hidden="true"></div></div>
 <div class="app">
 

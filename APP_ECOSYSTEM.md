@@ -10,7 +10,7 @@ Deudalaya is the video-sharing application served from the site root. This proje
 - Display mode: `standalone`
 - Root service worker: `/sw.js`
 
-The root page opens the Deudalaya video platform directly without a blocking installation gate. Deudalaya remains installable as a PWA through its manifest and root-scoped service worker; installation is initiated through the browser's own controls.
+The root page shows Deudalaya's installation gate in a browser. Its Install App button invokes Chrome's native prompt only after the browser dispatches `beforeinstallprompt`; the installed standalone app opens the video platform directly.
 
 ## Boundaries
 
