@@ -10,8 +10,9 @@ test('root entry exposes only Deudalaya installation and no ecosystem gateway ch
   const html = read('index.html');
   const cards = [...html.matchAll(/<article class="gateway-card[^>]*data-app="([^"]+)"[\s\S]*?<\/article>/g)];
   assert.deepEqual(cards.map(card => card[1]), ['deudalaya']);
-  assert.match(cards[0][0], /id="deudalayaInstallAction" type="button">Install App/);
-  assert.doesNotMatch(html, /gateway-footnote|gateway-footer|Continue to Website|Open Deudalaya/);
+  assert.match(cards[0][0], /id="deudalayaInstallAction" type="button" hidden>Install App/);
+  assert.doesNotMatch(html, /gateway-footnote|gateway-footer|Continue to Website/);
+  assert.match(html, /id="deudalayaOpenInstalled"[^>]*hidden[^>]*>Open Deudalaya/);
   for (const page of ['index2.html', 'sabdalaya/index.html', 'chalchitralaya/index.html', 'phonelaya/index.html', 'kakchhayalaya/index.html']) {
     assert.ok(fs.existsSync(path.join(root, page)), `${page} remains an independent app page`);
   }
@@ -19,13 +20,13 @@ test('root entry exposes only Deudalaya installation and no ecosystem gateway ch
   assert.match(html, /One community\. <em>Many stories\.<\/em>/);
 });
 
-test('Deudalaya install entry uses the native browser prompt without a manual-step intermediary', () => {
+test('Deudalaya install entry uses the native prompt when available and guides Chrome menu installs otherwise', () => {
   const script = read('ecosystem-gateway.js');
   assert.match(script, /getInstalledRelatedApps/);
   assert.match(script, /promptEvent\.prompt\(\)/);
-  assert.match(script, /Installation is not currently available in this browser/);
+  assert.match(script, /getMenuInstallGuidance/);
+  assert.match(script, /Install app or Add to Home screen/);
   assert.match(script, /appinstalled/);
-  assert.doesNotMatch(script, /browser menu|install steps/i);
   const manifest = JSON.parse(read('manifest.webmanifest'));
   assert.ok(manifest.related_applications.some(app => app.id === 'https://deudalaya.com/index2.html'));
 });

@@ -23,6 +23,17 @@
       (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   }
 
+  function getMenuInstallGuidance() {
+    var userAgent = navigator.userAgent || '';
+    if (isIOSBrowser()) {
+      return 'On iPhone or iPad, tap Share, then Add to Home Screen.';
+    }
+    if (/Android/i.test(userAgent) && /Chrome\//i.test(userAgent)) {
+      return 'To install, open Chrome’s ⋮ menu and choose Install app or Add to Home screen. If this page opened inside another app, choose Open in Chrome first.';
+    }
+    return 'If you are using Chrome, open its ⋮ menu and choose Install app or Add to Home screen.';
+  }
+
   function clearInstallTimeout() {
     if (installTimeout !== null) {
       window.clearTimeout(installTimeout);
@@ -35,11 +46,11 @@
     progressScreen.hidden = true;
     progressScreen.setAttribute('aria-busy', 'false');
     installCard.hidden = false;
-    installButton.hidden = false;
+    installButton.hidden = !deferredInstallPrompt;
     installButton.disabled = false;
     spinner.hidden = false;
     openButton.hidden = true;
-    installHint.textContent = message;
+    installHint.textContent = message || getMenuInstallGuidance();
   }
 
   function showInstalling() {
@@ -52,7 +63,7 @@
     openButton.hidden = true;
     installTimeout = window.setTimeout(function () {
       if (installationConfirmed) return;
-      showInstallCard('Your browser could not confirm installation. Check your app list, or tap Install App to try again.');
+      showInstallCard('Your browser could not confirm installation. ' + getMenuInstallGuidance());
     }, 20000);
   }
 
@@ -75,16 +86,23 @@
     event.preventDefault();
     deferredInstallPrompt = event;
     window.deudalayaInstallPrompt = event;
+    installButton.hidden = false;
     installHint.textContent = 'Deudalaya is ready to install.';
   });
+
+  if (deferredInstallPrompt) {
+    installButton.hidden = false;
+    installHint.textContent = 'Deudalaya is ready to install.';
+  } else {
+    installButton.hidden = true;
+    installHint.textContent = getMenuInstallGuidance();
+  }
 
   installButton.addEventListener('click', function (clickEvent) {
     clickEvent.preventDefault();
     var promptEvent = deferredInstallPrompt;
     if (!promptEvent) {
-      installHint.textContent = isIOSBrowser()
-        ? 'On iPhone or iPad, tap Share, then Add to Home Screen.'
-        : 'Installation is not currently available in this browser.';
+      installHint.textContent = getMenuInstallGuidance();
       return;
     }
 
@@ -95,7 +113,7 @@
     } catch (_) {
       deferredInstallPrompt = null;
       window.deudalayaInstallPrompt = null;
-      showInstallCard('Installation could not be started. Tap Install App to try again.');
+      showInstallCard('Installation could not be started. ' + getMenuInstallGuidance());
       return;
     }
 
@@ -109,12 +127,12 @@
       if (choice && choice.outcome === 'accepted') {
         if (!installationConfirmed) showInstalling();
       } else if (choice && choice.outcome === 'dismissed') {
-        showInstallCard('Installation was cancelled. Tap Install App to try again.');
+        showInstallCard('Installation was cancelled. ' + getMenuInstallGuidance());
       } else {
-        showInstallCard('Your browser could not confirm the installation request.');
+        showInstallCard('Your browser could not confirm the installation request. ' + getMenuInstallGuidance());
       }
     }).catch(function () {
-      showInstallCard('Installation could not be confirmed. Tap Install App to try again.');
+      showInstallCard('Installation could not be confirmed. ' + getMenuInstallGuidance());
     }).finally(function () {
       installButton.disabled = false;
     });

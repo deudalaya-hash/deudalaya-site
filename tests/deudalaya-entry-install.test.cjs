@@ -13,7 +13,7 @@ test('root visitor sees only the Deudalaya branded install page', () => {
   assert.match(html, /ONE CIRCLE[\s\S]*?ONE NEPAL/);
   assert.match(html, /One community\. <em>Many stories\.<\/em>/);
   assert.match(html, /Create and share videos rooted in Deuda and Nepali community life\./);
-  assert.match(html, /id="deudalayaInstallAction"[^>]*>Install App<\/button>/);
+  assert.match(html, /id="deudalayaInstallAction"[^>]*hidden[^>]*>Install App<\/button>/);
   assert.match(html, /id="deudalayaInstallProgress"[\s\S]*?Installing Deudalaya\.\.\./);
   assert.match(html, /id="deudalayaOpenInstalled"[^>]*>Open Deudalaya/);
   assert.doesNotMatch(html, /gateway-footnote|gateway-footer|ecosystem-install-exit/);
@@ -26,7 +26,7 @@ test('Deudalaya install action immediately invokes the captured native prompt', 
   const promptAt = entry.indexOf('promptResult = promptEvent.prompt()');
   const asyncAt = entry.indexOf('Promise.resolve(promptResult)');
   assert.ok(promptAt !== -1 && asyncAt > promptAt, 'prompt is invoked before asynchronous waits');
-  assert.match(entry, /Installation is not currently available/);
+  assert.match(entry, /getMenuInstallGuidance/);
 });
 
 test('entry button calls the native prompt on click and reports when unavailable', async () => {
@@ -41,11 +41,28 @@ test('entry button calls the native prompt on click and reports when unavailable
   await click;
 
   ui.buttonEvents.click({ preventDefault() {} });
-  assert.match(ui.hint.textContent, /Installation is not currently available/);
+  assert.match(ui.hint.textContent, /Chrome.*Install app.*Add to Home screen/i);
 
   ui.windowEvents.appinstalled();
   assert.equal(ui.button.hidden, true);
   assert.match(ui.progressTitle.textContent, /Installation Complete/);
+});
+
+test('custom install action stays hidden until Chromium offers the native prompt', () => {
+  const ui = createInstallHarness();
+  assert.equal(ui.button.hidden, true);
+  assert.match(ui.hint.textContent, /Chrome.*Install app.*Add to Home screen/i);
+
+  ui.windowEvents.beforeinstallprompt({ preventDefault() {}, prompt() { return Promise.resolve(); }, userChoice: Promise.resolve({ outcome: 'dismissed' }) });
+  assert.equal(ui.button.hidden, false);
+  assert.match(ui.hint.textContent, /Deudalaya is ready to install/i);
+});
+
+test('Android Chrome without the native event gets the Chrome menu fallback', () => {
+  const ui = createInstallHarness({ userAgent: 'Mozilla/5.0 (Linux; Android 15) AppleWebKit/537.36 Chrome/132.0.0.0 Mobile Safari/537.36' });
+  assert.equal(ui.button.hidden, true);
+  assert.match(ui.hint.textContent, /open Chrome’s ⋮ menu.*Install app or Add to Home screen/i);
+  assert.match(ui.hint.textContent, /Open in Chrome first/i);
 });
 
 test('iOS browsers without beforeinstallprompt get Add to Home Screen guidance', () => {
@@ -92,8 +109,8 @@ test('cancelled install returns to the Install App card without a progress scree
 
   assert.equal(ui.progress.hidden, true);
   assert.equal(ui.installCard.hidden, false);
-  assert.equal(ui.button.hidden, false);
-  assert.match(ui.hint.textContent, /cancelled/i);
+  assert.equal(ui.button.hidden, true);
+  assert.match(ui.hint.textContent, /cancelled.*Chrome.*Install app/i);
 });
 
 test('unconfirmed install progress ends with a clear retry state', async () => {
