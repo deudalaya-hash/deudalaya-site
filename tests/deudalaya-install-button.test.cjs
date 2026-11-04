@@ -37,12 +37,53 @@ test('an already installed PWA is detected in a regular browser tab', async () =
   assert.ok(capture.dispatched.includes('deudalaya-installstatechange'));
 });
 
-test('Install App is available only after a real prompt event is captured', () => {
+test('the early listener stores Chrome’s genuine prompt and updates the install state', async () => {
+  const capture = createPwaCaptureHarness([]);
+  let prevented = false;
+  const promptEvent = { preventDefault() { prevented = true; } };
+  capture.windowListeners.beforeinstallprompt(promptEvent);
+
+  assert.equal(prevented, true);
+  assert.equal(capture.window.deferredPrompt, promptEvent);
+  assert.equal(capture.window.deudalayaInstallState, 'available');
+  assert.ok(capture.dispatched.includes('deudalaya-installpromptavailable'));
+  await capture.settle();
+});
+
+test('installed state is rechecked when Chrome restores or foregrounds the page', async () => {
+  const capture = createPwaCaptureHarness([]);
+  await capture.settle();
+  const initialQueries = capture.queryCount;
+  assert.equal(typeof capture.windowListeners.pageshow, 'function');
+  capture.windowListeners.pageshow();
+  await capture.settle();
+
+  const afterPageShow = capture.queryCount;
+  assert.ok(afterPageShow > initialQueries);
+  capture.setInstalledApps([{ platform: 'webapp', id: 'https://deudalaya.com/' }]);
+  capture.document.hidden = false;
+  assert.equal(typeof capture.documentListeners.visibilitychange, 'function');
+  capture.documentListeners.visibilitychange();
+  await capture.settle();
+  assert.equal(capture.window.deudalayaInstallState, 'installed');
+  assert.ok(capture.queryCount > afterPageShow);
+});
+
+test('Install App only reports ready after a real prompt event is captured', () => {
   const button = html.match(/<button[^>]*id="deudalayaInstallAction"[^>]*>/);
   assert.ok(button);
-  assert.match(button[0], /disabled/);
+  assert.doesNotMatch(button[0], /disabled/);
   assert.match(gatewayScript, /deudalaya-installpromptavailable/);
-  assert.match(gatewayScript, /installButton\.disabled\s*=\s*!deferredPrompt/);
+  assert.match(gatewayScript, /installHint\.textContent\s*=\s*'Deudalaya is ready to install\.'/);
+});
+
+test('clicking before Chrome offers a prompt shows its install-menu fallback', async () => {
+  const ui = createGatewayHarness({ outcome: 'dismissed', eventAvailable: false });
+
+  assert.equal(ui.button.disabled, false);
+  await ui.buttonListeners.click({ preventDefault() {} });
+  assert.equal(ui.promptCalls, 0);
+  assert.match(ui.hint.textContent, /open Chrome's menu.*Install app/i);
 });
 
 test('button calls prompt synchronously, awaits userChoice, and clears the consumed event', async () => {
@@ -65,7 +106,7 @@ test('dismissed prompt does not reuse the consumed event; appinstalled updates s
   ui.windowListeners['deudalaya-installpromptavailable']();
   await ui.buttonListeners.click({ preventDefault() {} });
   assert.equal(ui.window.deferredPrompt, null);
-  assert.equal(ui.button.disabled, true);
+  assert.equal(ui.button.disabled, false);
   assert.match(ui.hint.textContent, /cancelled/i);
 
   ui.windowListeners.appinstalled();
@@ -90,19 +131,18 @@ test('an existing installation hides the install button and explains its state',
 test('browsers without the native prompt event get an honest fallback', () => {
   const ui = createGatewayHarness({ outcome: 'dismissed', supportsPrompt: false });
 
-  assert.equal(ui.button.disabled, true);
+  assert.equal(ui.button.disabled, false);
   assert.match(ui.hint.textContent, /direct install prompt.*not supported/i);
-  assert.match(ui.hint.textContent, /use the browser's install option/i);
 });
 
 test('gate presents no manual install instructions or alternate actions', () => {
   const gate = html.slice(html.indexOf('<section id="ecosystemGateway"'), html.indexOf('</section>', html.indexOf('<section id="ecosystemGateway"')) + 10);
   assert.equal((gate.match(/<button\b/g) || []).length, 1);
-  assert.doesNotMatch(gate, /Add to Home|browser menu|Continue to Website|Open Deudalaya/i);
-  assert.doesNotMatch(gatewayScript, /Add to Home|browser menu|Continue to Website|Open Deudalaya/i);
+  assert.doesNotMatch(gate, /Continue to Website|Open Deudalaya/i);
+  assert.doesNotMatch(gatewayScript, /Continue to Website|Open Deudalaya/i);
 });
 
-function createGatewayHarness({ outcome, supportsPrompt = true }) {
+function createGatewayHarness({ outcome, supportsPrompt = true, eventAvailable = supportsPrompt }) {
   const buttonListeners = {};
   const windowListeners = {};
   const classes = new Set(['ecosystem-gateway']);
@@ -129,8 +169,8 @@ function createGatewayHarness({ outcome, supportsPrompt = true }) {
     userChoice: Promise.resolve({ outcome })
   };
   const window = {
-    deferredPrompt: supportsPrompt ? promptEvent : null,
-    deudalayaInstallState: supportsPrompt ? 'available' : 'unavailable',
+    deferredPrompt: eventAvailable ? promptEvent : null,
+    deudalayaInstallState: eventAvailable ? 'available' : 'unavailable',
     addEventListener(name, handler) { windowListeners[name] = handler; }
   };
   if (supportsPrompt) window.onbeforeinstallprompt = null;
@@ -144,9 +184,12 @@ function createPwaCaptureHarness(installedApps) {
   const capture = head.match(/<script id="deudalayaPwaCapture">([\s\S]*?)<\/script>/);
   assert.ok(capture, 'capture script is available for the browser-state test');
   const windowListeners = {};
+  const documentListeners = {};
   const dispatched = [];
   const classes = new Set();
   const document = {
+    hidden: true,
+    addEventListener(name, handler) { documentListeners[name] = handler; },
     documentElement: {
       classList: {
         add(name) { classes.add(name); },
@@ -162,9 +205,11 @@ function createPwaCaptureHarness(installedApps) {
     dispatchEvent(event) { dispatched.push(event.type); },
     matchMedia() { return { matches: false }; }
   };
+  let relatedApps = installedApps;
+  let queryCount = 0;
   const navigator = {
     standalone: false,
-    getInstalledRelatedApps() { return Promise.resolve(installedApps); }
+    getInstalledRelatedApps() { queryCount += 1; return Promise.resolve(relatedApps); }
   };
   vm.runInNewContext(capture[1], {
     document,
@@ -175,7 +220,12 @@ function createPwaCaptureHarness(installedApps) {
   return {
     classes,
     dispatched,
+    document,
+    documentListeners,
     window,
+    windowListeners,
+    get queryCount() { return queryCount; },
+    setInstalledApps(apps) { relatedApps = apps; },
     async settle() { await Promise.resolve(); await Promise.resolve(); }
   };
 }

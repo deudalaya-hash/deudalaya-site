@@ -14,16 +14,25 @@
 (function(){
   if(window.__deudalayaPwaCaptureBound)return;
   window.__deudalayaPwaCaptureBound=true;
-  var isStandalone=(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true;
+  function isStandalone(){return(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true}
+  var standaloneAtLaunch=isStandalone();
   window.deferredPrompt=null;
-  window.deudalayaInstallState=isStandalone?'installed':'unavailable';
-  window.deudalayaInstallSource=isStandalone?'standalone':null;
-  if(!isStandalone)document.documentElement.classList.add('ecosystem-gateway');
+  window.deudalayaInstallState=standaloneAtLaunch?'installed':'unavailable';
+  window.deudalayaInstallSource=standaloneAtLaunch?'standalone':null;
+  if(!standaloneAtLaunch)document.documentElement.classList.add('ecosystem-gateway');
   function markInstalled(source){
+    if(window.deudalayaInstallState==='installed'&&window.deudalayaInstallSource===source)return;
     window.deferredPrompt=null;
     window.deudalayaInstallState='installed';
     window.deudalayaInstallSource=source;
     window.dispatchEvent(new Event('deudalaya-installstatechange'));
+  }
+  function checkInstallation(){
+    if(isStandalone()){markInstalled('standalone');return}
+    if(window.deudalayaInstallState==='installed'||typeof navigator.getInstalledRelatedApps!=='function')return;
+    navigator.getInstalledRelatedApps().then(function(apps){
+      if(Array.isArray(apps)&&apps.some(function(app){return app&&app.platform==='webapp'}))markInstalled('related-app');
+    }).catch(function(){});
   }
   window.addEventListener('beforeinstallprompt',function(event){
     if(window.deudalayaInstallState==='installed')return;
@@ -33,11 +42,9 @@
     window.deudalayaInstallState='available';
     window.dispatchEvent(new Event('deudalaya-installpromptavailable'));
   });
-  if(!isStandalone&&typeof navigator.getInstalledRelatedApps==='function'){
-    navigator.getInstalledRelatedApps().then(function(apps){
-      if(Array.isArray(apps)&&apps.some(function(app){return app&&app.platform==='webapp'}))markInstalled('related-app');
-    }).catch(function(){});
-  }
+  checkInstallation();
+  window.addEventListener('pageshow',checkInstallation);
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)checkInstallation()});
 })();
 </script>
 <link rel="apple-touch-icon" sizes="180x180" href="assets/deudalaya-icon-180.png">
@@ -206,7 +213,7 @@ if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js',{scope:
         <h2>देउडालय</h2>
         <p>Create and share videos rooted in Deuda and Nepali community life.</p>
         <div class="gateway-card-foot"><span id="deudalayaInstallHint" role="status" aria-live="polite">Waiting for Chrome to make installation available.</span><span class="gateway-identity">देउडा · Video</span></div>
-        <button class="gateway-install" id="deudalayaInstallAction" type="button" disabled>Install App</button>
+        <button class="gateway-install" id="deudalayaInstallAction" type="button">Install App</button>
       </div>
     </div>
   </div>

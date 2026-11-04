@@ -21,7 +21,7 @@
     }
 
     installButton.hidden = false;
-    installButton.disabled = !deferredPrompt || promptPending;
+    installButton.disabled = promptPending;
     if (deferredPrompt) installHint.textContent = 'Deudalaya is ready to install.';
     else if (!('onbeforeinstallprompt' in window)) {
       installHint.textContent = "A direct install prompt is not supported. Use the browser's install option.";
@@ -51,7 +51,11 @@
 
   installButton.addEventListener('click', async function (event) {
     event.preventDefault();
-    if (!deferredPrompt || promptPending || installed) return;
+    if (promptPending || installed) return;
+    if (!deferredPrompt) {
+      installHint.textContent = "No native install prompt is available. Open Chrome's menu and select Install app or Add to Home screen.";
+      return;
+    }
 
     const promptEvent = deferredPrompt;
     promptPending = true;
@@ -75,7 +79,7 @@
       installHint.textContent = 'Chrome could not complete the installation prompt.';
     } finally {
       promptPending = false;
-      installButton.disabled = !deferredPrompt || installed;
+      installButton.disabled = promptPending || installed;
     }
   });
 
