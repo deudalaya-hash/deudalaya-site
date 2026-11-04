@@ -16,15 +16,28 @@
   window.__deudalayaPwaCaptureBound=true;
   var isStandalone=(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true;
   window.deferredPrompt=null;
-  window.deudalayaInstallState=isStandalone?'standalone':'unavailable';
+  window.deudalayaInstallState=isStandalone?'installed':'unavailable';
+  window.deudalayaInstallSource=isStandalone?'standalone':null;
   if(!isStandalone)document.documentElement.classList.add('ecosystem-gateway');
+  function markInstalled(source){
+    window.deferredPrompt=null;
+    window.deudalayaInstallState='installed';
+    window.deudalayaInstallSource=source;
+    window.dispatchEvent(new Event('deudalaya-installstatechange'));
+  }
   window.addEventListener('beforeinstallprompt',function(event){
+    if(window.deudalayaInstallState==='installed')return;
     event.preventDefault();
-    if(window.deudalayaInstallState==='installed'||window.deferredPrompt)return;
+    if(window.deferredPrompt)return;
     window.deferredPrompt=event;
     window.deudalayaInstallState='available';
     window.dispatchEvent(new Event('deudalaya-installpromptavailable'));
   });
+  if(!isStandalone&&typeof navigator.getInstalledRelatedApps==='function'){
+    navigator.getInstalledRelatedApps().then(function(apps){
+      if(Array.isArray(apps)&&apps.some(function(app){return app&&app.platform==='webapp'}))markInstalled('related-app');
+    }).catch(function(){});
+  }
 })();
 </script>
 <link rel="apple-touch-icon" sizes="180x180" href="assets/deudalaya-icon-180.png">

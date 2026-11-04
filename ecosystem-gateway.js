@@ -8,19 +8,24 @@
 
   let deferredPrompt = window.deferredPrompt || null;
   let promptPending = false;
-  let installed = window.deudalayaInstallState === 'installed';
+  let installed = window.deudalayaInstallState === 'installed' || window.deudalayaInstallState === 'standalone';
 
   function updateButton() {
     if (installed) {
       installButton.disabled = true;
       installButton.hidden = true;
-      installHint.textContent = 'Installation confirmed.';
+      installHint.textContent = window.deudalayaInstallSource === 'related-app'
+        ? 'Deudalaya is already installed. Open it from your home screen.'
+        : 'Installation confirmed.';
       return;
     }
 
     installButton.hidden = false;
     installButton.disabled = !deferredPrompt || promptPending;
     if (deferredPrompt) installHint.textContent = 'Deudalaya is ready to install.';
+    else if (!('onbeforeinstallprompt' in window)) {
+      installHint.textContent = "A direct install prompt is not supported. Use the browser's install option.";
+    }
   }
 
   window.addEventListener('deudalaya-installpromptavailable', function () {
@@ -34,6 +39,13 @@
     deferredPrompt = null;
     window.deferredPrompt = null;
     window.deudalayaInstallState = 'installed';
+    updateButton();
+  });
+
+  window.addEventListener('deudalaya-installstatechange', function () {
+    if (window.deudalayaInstallState !== 'installed') return;
+    installed = true;
+    deferredPrompt = null;
     updateButton();
   });
 
