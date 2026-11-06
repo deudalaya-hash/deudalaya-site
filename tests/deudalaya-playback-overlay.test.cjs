@@ -40,5 +40,5 @@ test('playback feedback follows media play and pause events and fades after star
 });
 
 test('the app shell cache version advances so installed PWAs receive the updated feed', () => {
-  assert.match(serviceWorker, /deudalaya-shell-v3/);
+  assert.match(serviceWorker, /deudalaya-shell-v4/);
 });

@@ -5,9 +5,9 @@ const test = require('node:test');
 
 const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
 
-test('each fresh Deudalaya feed entry chooses a random video from the available posts', () => {
-  assert.match(html, /function pickRandomFeedStart\(\)\{return videos\.length\?Math\.floor\(Math\.random\(\)\*videos\.length\):0\}/);
-  assert.match(html, /let index=pickRandomFeedStart\(\)/);
-  assert.match(html, /if\(saved\.length\)\{index=pickRandomFeedStart\(\);render\(\)\}/);
-  assert.match(html, /\}index=pickRandomFeedStart\(\);render\(\)\}/);
+test('a fresh or resumed feed entry starts from the shuffled session cycle', () => {
+  assert.match(html, /DeudalayaVideoShuffle\.createShuffleCycle/);
+  assert.match(html, /playbackShuffle\.start\(feedKeys\(\)/);
+  assert.match(html, /function fypSelectCurrent\(i\)[\s\S]*?playbackShuffle\.current\(keys\)/);
+  assert.match(html, /sessionStorage/);
 });

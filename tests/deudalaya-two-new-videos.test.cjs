@@ -31,7 +31,7 @@ test('the remaining supplied MP4 is bundled once with its content-based title', 
 
 test('the new posts retain the existing video feed and profile behaviors', () => {
   assert.match(html, /postVideo\.muted\s*=\s*muted/);
-  assert.match(html, /<video id="postVideo"[^>]*\bloop\b/);
+  assert.doesNotMatch(html.match(/<video id="postVideo"[^>]*>/)[0], /\bloop\b/);
   assert.match(html, /function openProfile\(/);
   assert.match(html, /profile-post-title/);
   assert.match(html, /isSupportedFeedVideo\(v\)/);

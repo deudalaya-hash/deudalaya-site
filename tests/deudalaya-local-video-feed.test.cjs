@@ -36,10 +36,10 @@ test('the remaining feed MP4s are bundled once with captions', () => {
   }
 });
 
-test('bundled videos use the existing autoplay, loop, sound, random feed, and profile rendering', () => {
-  assert.match(html, /<video id="postVideo"[^>]*\bloop\b/);
+test('bundled videos use autoplay, shuffled cycling, sound, and profile rendering', () => {
+  assert.doesNotMatch(html.match(/<video id="postVideo"[^>]*>/)[0], /\bloop\b/);
   assert.match(html, /postVideo\.muted\s*=\s*muted/);
-  assert.match(html, /fypPickNext\(index\)|pickRandomIndex\(index\)/);
+  assert.match(html, /playbackShuffle\.next\(keys,currentKey\)/);
   assert.match(html, /list\.forEach\(function\(v,i\)/);
   assert.match(html, /if\(v\.videoSrc\)[\s\S]{0,260}createElement\('video'\)/);
 });
