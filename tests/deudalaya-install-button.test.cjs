@@ -72,6 +72,7 @@ test('installed state is rechecked when Chrome restores or foregrounds the page'
 test('Install App only reports ready after a real prompt event is captured', () => {
   const button = html.match(/<button[^>]*id="deudalayaInstallAction"[^>]*>/);
   assert.ok(button);
+  assert.match(html, /id="deudalayaInstallAction"[^>]*>Install App<\/button>/);
   assert.doesNotMatch(button[0], /disabled/);
   assert.match(gatewayScript, /deudalaya-installpromptavailable/);
   assert.match(gatewayScript, /देउडालय स्थापना गर्न तयार छ।/);

@@ -95,7 +95,7 @@ html.ecosystem-gateway #ecosystemGateway {
   content: "";
 }
 
-.gateway-card-art img { position: relative; z-index: 1; width: 64px; height: 64px; border: 1px solid #ffffff2a; border-radius: 15px; box-shadow: 0 7px 20px #0008; }
+.gateway-card-art img { position: relative; z-index: 1; width: min(100%, 180px); height: auto; aspect-ratio: 1; object-fit: contain; border: 1px solid #ffffff2a; border-radius: 15px; box-shadow: 0 7px 20px #0008; }
 .gateway-card-art span { position: absolute; z-index: 1; bottom: 17px; left: 20px; color: #e4d3b2a8; font-size: 8px; letter-spacing: 1.4px; }
 .gateway-card-content { min-width: 0; padding: 24px 25px 20px; display: flex; flex-direction: column; }
 .gateway-card-content h2 { margin: 0 0 10px; font-size: 26px; font-weight: 650; }
@@ -116,13 +116,13 @@ html.ecosystem-gateway #ecosystemGateway {
   .gateway-brand strong { font-size: 16px; }
   .gateway-brand small { font-size: 8px; }
   .gateway-kicker { display: none; }
-  .gateway-main { width: min(540px, calc(100% - 32px)); padding: clamp(50px, 9vh, 100px) 0 32px; }
+  .gateway-main { width: min(540px, calc(100% - 32px)); padding: clamp(88px, 16.5vh, 138px) 0 32px; }
   .gateway-intro { margin-bottom: 28px; }
   .gateway-intro h1 { font-size: clamp(30px, 7vw, 42px); letter-spacing: -1.3px; }
   .gateway-intro p { font-size: 12px; }
   .gateway-card { grid-template-columns: minmax(92px, 34%) minmax(0, 1fr); min-height: 225px; }
   .gateway-card-art { min-height: 225px; padding: 14px; }
-  .gateway-card-art img { width: 50px; height: 50px; }
+  .gateway-card-art img { width: min(100%, 96px); }
   .gateway-card-art span { bottom: 12px; left: 12px; font-size: 6px; letter-spacing: 1px; }
   .gateway-card-content { padding: 17px 14px 14px; }
   .gateway-card-content h2 { font-size: 22px; }

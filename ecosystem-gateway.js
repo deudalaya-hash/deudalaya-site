@@ -13,7 +13,7 @@
   let installed = window.deudalayaInstallState === 'installed' || window.deudalayaInstallState === 'standalone';
   const environment = detectEnvironment();
   const promptBrowsers = ['Chrome', 'Edge', 'Brave', 'Opera'];
-  installButton.textContent = 'देउडालय स्थापना गर्नुहोस्';
+  installButton.textContent = 'Install App';
 
   function detectEnvironment() {
     const ua = String(navigator.userAgent || '');

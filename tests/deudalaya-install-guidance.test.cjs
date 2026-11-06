@@ -12,9 +12,12 @@ test('installation guide is localized and renders a responsive step list', () =>
   assert.match(html, /id="deudalayaInstallIntro"/);
   assert.match(html, /id="deudalayaInstallSteps"/);
   assert.match(html, /lang="ne"/);
+  assert.match(html, /class="gateway-card-art"><img src="assets\/deudalaya-install-art\.jpeg" alt="देउडालय लोगो"/);
+  assert.ok(fs.existsSync(path.join(root, 'assets', 'deudalaya-install-art.jpeg')));
   const css = fs.readFileSync(path.join(root, 'ecosystem-gateway.css'), 'utf8');
   assert.match(css, /\.gateway-install-steps/);
   assert.match(css, /@media \(max-width: 700px\)/);
+  assert.match(css, /padding: clamp\(88px, 16\.5vh, 138px\) 0 32px/);
 });
 
 test('Android Chrome, Edge, and Brave show their four Nepali Home Screen steps', () => {
@@ -68,7 +71,7 @@ test('Mac Safari and installable Windows Chrome receive only supported guidance'
     prompt: true
   });
   assert.equal(chrome.button.hidden, false);
-  assert.equal(chrome.button.textContent, 'देउडालय स्थापना गर्नुहोस्');
+  assert.equal(chrome.button.textContent, 'Install App');
   assert.match(chrome.steps.innerHTML, /Address bar नजिक/);
   assert.match(chrome.steps.innerHTML, /“Install” छान्नुहोस्/);
 });
