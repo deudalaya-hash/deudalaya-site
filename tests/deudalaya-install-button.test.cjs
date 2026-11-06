@@ -74,16 +74,16 @@ test('Install App only reports ready after a real prompt event is captured', () 
   assert.ok(button);
   assert.doesNotMatch(button[0], /disabled/);
   assert.match(gatewayScript, /deudalaya-installpromptavailable/);
-  assert.match(gatewayScript, /installHint\.textContent\s*=\s*'Deudalaya is ready to install\.'/);
+  assert.match(gatewayScript, /देउडालय स्थापना गर्न तयार छ।/);
 });
 
-test('clicking before Chrome offers a prompt shows its install-menu fallback', async () => {
+test('no native prompt hides the button and does not promise a browser menu option', async () => {
   const ui = createGatewayHarness({ outcome: 'dismissed', eventAvailable: false });
 
-  assert.equal(ui.button.disabled, false);
+  assert.equal(ui.button.hidden, true);
   await ui.buttonListeners.click({ preventDefault() {} });
   assert.equal(ui.promptCalls, 0);
-  assert.match(ui.hint.textContent, /open Chrome's menu.*Install app/i);
+  assert.match(ui.hint.textContent, /अहिले स्थापना विकल्प उपलब्ध छैन/);
 });
 
 test('button calls prompt synchronously, awaits userChoice, and clears the consumed event', async () => {
@@ -97,7 +97,7 @@ test('button calls prompt synchronously, awaits userChoice, and clears the consu
   assert.equal(ui.promptCalls, 1, 'prompt() runs during the click gesture');
   assert.equal(ui.window.deferredPrompt, null, 'the consumed prompt is cleared immediately');
   await click;
-  assert.match(ui.hint.textContent, /accepted/i);
+  assert.match(ui.hint.textContent, /स्वीकार गरियो/);
   assert.match(gatewayScript, /await\s+promptEvent\.userChoice/);
 });
 
@@ -107,13 +107,13 @@ test('dismissed prompt does not reuse the consumed event; appinstalled updates s
   await ui.buttonListeners.click({ preventDefault() {} });
   assert.equal(ui.window.deferredPrompt, null);
   assert.equal(ui.button.disabled, false);
-  assert.match(ui.hint.textContent, /cancelled/i);
+  assert.match(ui.hint.textContent, /रद्द गरियो/);
 
   ui.windowListeners.appinstalled();
   assert.equal(ui.window.deudalayaInstallState, 'installed');
-  assert.equal(ui.document.documentElement.classList.contains('ecosystem-gateway'), true);
+  assert.equal(ui.document.documentElement.classList.contains('ecosystem-gateway'), false);
   assert.equal(ui.button.hidden, true);
-  assert.match(ui.hint.textContent, /installation confirmed/i);
+  assert.match(ui.hint.textContent, /पहिल्यै स्थापित/);
 });
 
 test('an existing installation hides the install button and explains its state', () => {
@@ -125,14 +125,14 @@ test('an existing installation hides the install button and explains its state',
   assert.equal(typeof stateChange, 'function');
   stateChange();
   assert.equal(ui.button.hidden, true);
-  assert.match(ui.hint.textContent, /already installed/i);
+  assert.match(ui.hint.textContent, /पहिल्यै स्थापित/);
 });
 
-test('browsers without the native prompt event get an honest fallback', () => {
+test('browsers without the native prompt event show no install button', () => {
   const ui = createGatewayHarness({ outcome: 'dismissed', supportsPrompt: false });
 
-  assert.equal(ui.button.disabled, false);
-  assert.match(ui.hint.textContent, /direct install prompt.*not supported/i);
+  assert.equal(ui.button.hidden, true);
+  assert.match(ui.hint.textContent, /अहिले स्थापना विकल्प उपलब्ध छैन/);
 });
 
 test('gate presents no manual install instructions or alternate actions', () => {
@@ -174,7 +174,11 @@ function createGatewayHarness({ outcome, supportsPrompt = true, eventAvailable =
     addEventListener(name, handler) { windowListeners[name] = handler; }
   };
   if (supportsPrompt) window.onbeforeinstallprompt = null;
-  vm.runInNewContext(gatewayScript, { document, window, navigator: {}, location: {}, Promise });
+  const navigator = {
+    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/130.0.0.0 Safari/537.36',
+    platform: 'Win32'
+  };
+  vm.runInNewContext(gatewayScript, { document, window, navigator, location: {}, Promise });
   return { button, buttonListeners, document, hint, promptCalls, window, windowListeners,
     get promptCalls() { return promptCalls; } };
 }

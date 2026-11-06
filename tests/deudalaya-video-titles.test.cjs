@@ -21,12 +21,7 @@ const expectedTitles = new Map([
   ['assets/deudalaya-video-2026-11-03-103349.mp4', 'देउडा गीतसँगै समुदायको उल्लासमय पदयात्रा'],
   ['assets/deudalaya-featured-video.mp4', 'देउडा जमघटतर्फ अघि बढ्दै समुदाय'],
   ['assets/deudalaya-video-2026-11-03-deuda-gathering.mp4', 'परम्परागत पहिरनमा सुदूरपश्चिमी देउडा जमघट'],
-  ['assets/deudalaya-video-2026-11-03-mountain-village-deuda.mp4', 'पहाडी गाउँमा सामूहिक देउडा नाच'],
-  ['assets/deudalaya-video-2026-11-03-green-hills-deuda.mp4', 'हरियाली डाँडामुनि देउडाको ठूलो घेरा'],
   ['assets/deudalaya-video-2026-11-03-sudurpashchim-travel.mp4', 'हिमाली बाटोमा गाईवस्तुको बथान'],
-  ['assets/deudalaya-video-2026-11-03-141359.mp4', 'पहाडी भेलामा देउडा गायन सुन्दै समुदाय'],
-  ['assets/deudalaya-video-2026-11-03-141222.mp4', 'हिमाली गाउँमा घेरा बाँधेर देउडा नाच'],
-  ['assets/deudalaya-video-2026-11-03-141448.mp4', 'देउडा साँझ १०: खुला मैदानमा देउडा नाच'],
   ['assets/deudalaya-video-2026-11-03-bajhang-deuda.mp4', 'बझाङको पहाडी आँगनमा देउडा भाका'],
   ['assets/deudalaya-video-2026-11-03-shankhmul.mp4', 'देउडालय, शङ्खमूल।'],
   ['assets/deudalaya-video-2026-11-04-clip-01.mp4', 'पश्चिम धनगढीको नेपाली देउडा भाका'],
@@ -35,20 +30,6 @@ const expectedTitles = new Map([
   ['assets/deudalaya-video-2026-11-04-clip-04.mp4', 'चैनपुरको देउडा भाकामा आमाप्रतिको माया'],
   ['assets/deudalaya-video-2026-11-04-clip-05.mp4', 'टुँडिखेलमा देउडा गीतको रौनक'],
   ['assets/deudalaya-video-2026-11-04-clip-06.mp4', 'बझाङको गाउँघरमा देउडा'],
-  ['assets/deudalaya-video-2026-11-04-clip-07.mp4', 'देउडा झलक ०२:२७:०५'],
-  ['assets/deudalaya-video-2026-11-04-clip-08.mp4', 'देउडा झलक ०२:२७:३९'],
-  ['assets/deudalaya-video-2026-11-04-clip-09.mp4', 'देउडा झलक ०२:२९:०२'],
-  ['assets/deudalaya-video-2026-11-04-clip-10.mp4', 'देउडा झलक ०२:२९:३९'],
-  ['assets/deudalaya-video-2026-11-04-clip-11.mp4', 'देउडा झलक ०२:३०:०५'],
-  ['assets/deudalaya-video-2026-11-04-clip-12.mp4', 'देउडा झलक ०२:३०:३३'],
-  ['assets/deudalaya-video-2026-11-04-clip-13.mp4', 'देउडा झलक ०२:३१:२२'],
-  ['assets/deudalaya-video-2026-11-04-clip-14.mp4', 'देउडा झलक ०२:३१:५६'],
-  ['assets/deudalaya-video-2026-11-04-clip-15.mp4', 'देउडा झलक ०२:३२:२६'],
-  ['assets/deudalaya-video-2026-11-04-clip-16.mp4', 'देउडा झलक ०२:३३:४५'],
-  ['assets/deudalaya-video-2026-11-04-clip-17.mp4', 'देउडा झलक ०२:३५:५६'],
-  ['assets/deudalaya-video-2026-11-04-clip-18.mp4', 'देउडा झलक ०२:३७:५३'],
-  ['assets/deudalaya-video-2026-11-04-clip-19.mp4', 'देउडा झलक ०२:४०:४२'],
-  ['assets/deudalaya-video-2026-11-04-clip-20.mp4', 'देउडा झलक ०२:४२:०१']
 ]);
 
 test('each bundled video has its own content-based title', () => {
@@ -66,10 +47,7 @@ test('each bundled video has its own content-based title', () => {
 test('reviewed captions preserve their existing descriptive text after the title', () => {
   for (const description of [
     'परम्परागत पहिरनमा समुदायको सांस्कृतिक जमघट र देउडा गीत।',
-    'पहाडी बस्तीमा समुदायले घेरा बनाएर गरेको परम्परागत नाच।',
-    'गाउँको हरियाली आँगनमा ठूलो घेरा बनाएर देउडा नाच्दै समुदाय।',
-    'नेपालका पश्चिमी दृश्यसँग देउडाको धुन।',
-    'देउडालयमा साझा गरिएको।'
+    'नेपालका पश्चिमी दृश्यसँग देउडाको धुन।'
   ]) assert.ok(feed.includes(description), `existing caption description is preserved: ${description}`);
 });
 

@@ -16,33 +16,13 @@ const publishedVideos = [
     description: 'परम्परागत पहिरनमा समुदायको सांस्कृतिक जमघट र देउडा गीत।'
   },
   {
-    file: 'assets/deudalaya-video-2026-11-03-mountain-village-deuda.mp4',
-    caption: 'पहाडी गाउँमा सामूहिक देउडा नाच',
-    description: 'पहाडी बस्तीमा समुदायले घेरा बनाएर गरेको परम्परागत नाच।'
-  },
-  {
-    file: 'assets/deudalaya-video-2026-11-03-green-hills-deuda.mp4',
-    caption: 'हरियाली डाँडामुनि देउडाको ठूलो घेरा',
-    description: 'गाउँको हरियाली आँगनमा ठूलो घेरा बनाएर देउडा नाच्दै समुदाय।'
-  },
-  {
     file: 'assets/deudalaya-video-2026-11-03-sudurpashchim-travel.mp4',
     caption: 'हिमाली बाटोमा गाईवस्तुको बथान',
     description: 'नेपालका पश्चिमी दृश्यसँग देउडाको धुन।'
   },
-  {
-    file: 'assets/deudalaya-video-2026-11-03-141359.mp4',
-    caption: 'पहाडी भेलामा देउडा गायन सुन्दै समुदाय',
-    description: 'देउडालयमा साझा गरिएको।'
-  },
-  {
-    file: 'assets/deudalaya-video-2026-11-03-141222.mp4',
-    caption: 'हिमाली गाउँमा घेरा बाँधेर देउडा नाच',
-    description: 'देउडालयमा साझा गरिएको।'
-  }
 ];
 
-test('the six new feed MP4s are bundled once with captions', () => {
+test('the remaining feed MP4s are bundled once with captions', () => {
   for (const item of publishedVideos) {
     const filePath = path.join(root, item.file);
     assert.ok(fs.existsSync(filePath), `${item.file} is bundled`);

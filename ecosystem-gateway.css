@@ -100,6 +100,10 @@ html.ecosystem-gateway #ecosystemGateway {
 .gateway-card-content { min-width: 0; padding: 24px 25px 20px; display: flex; flex-direction: column; }
 .gateway-card-content h2 { margin: 0 0 10px; font-size: 26px; font-weight: 650; }
 .gateway-card-content > p { margin: 0; color: #aaa9a4; font-size: 13px; line-height: 1.7; }
+.gateway-install-steps { margin: 11px 0 0; padding-left: 22px; color: #d7cfc2; font-size: 12px; line-height: 1.55; text-align: left; }
+.gateway-install-steps:empty { display: none; }
+.gateway-install-steps li + li { margin-top: 5px; }
+.gateway-install-steps li::marker { color: #d9b778; font-weight: 700; }
 .gateway-card-foot { margin-top: auto; padding-top: 15px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #ffffff12; }
 .gateway-card-foot [role="status"] { color: #a29f97; font-size: 11px; line-height: 1.45; }
 .gateway-identity { flex: none; color: #d3bc93; font-size: 10px; white-space: nowrap; }
@@ -123,6 +127,8 @@ html.ecosystem-gateway #ecosystemGateway {
   .gateway-card-content { padding: 17px 14px 14px; }
   .gateway-card-content h2 { font-size: 22px; }
   .gateway-card-content > p { font-size: 11px; }
+  .gateway-install-steps { margin-top: 8px; padding-left: 18px; font-size: 10px; line-height: 1.5; }
+  .gateway-install-steps li + li { margin-top: 4px; }
   .gateway-card-foot { margin-top: auto; padding-top: 11px; gap: 6px; }
   .gateway-card-foot [role="status"] { font-size: 9px; }
   .gateway-identity { font-size: 8px; }

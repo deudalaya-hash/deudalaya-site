@@ -4,6 +4,7 @@ const path = require('node:path');
 const test = require('node:test');
 
 const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+const serviceWorker = fs.readFileSync(path.join(__dirname, '..', 'sw.js'), 'utf8');
 
 test('the centered feed playback button shows white play and pause icons', () => {
   const button = html.match(/<button[^>]*id="playPauseButton"[^>]*>[\s\S]*?<\/button>/);
@@ -30,4 +31,8 @@ test('playback feedback follows media play and pause events and fades after star
   assert.match(html, /play-feedback/);
   assert.match(html, /aria-label',playing\?'Pause video':'Play video'/);
   assert.match(html, /function togglePlay\(\)\{[\s\S]*?pv\.paused[\s\S]*?pv\.play\(\)[\s\S]*?pv\.pause\(\)/);
+});
+
+test('the app shell cache version advances so installed PWAs receive the updated feed', () => {
+  assert.match(serviceWorker, /deudalaya-shell-v3/);
 });
