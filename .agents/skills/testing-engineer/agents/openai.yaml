@@ -1,0 +1,4 @@
+interface:
+  display_name: "Testing Engineer"
+  short_description: "Safe functional, browser, backend, and regression testing for Deudalaya"
+  default_prompt: "Inspect Deudalaya's existing test tools and plan safe, reproducible checks for the requested behavior."

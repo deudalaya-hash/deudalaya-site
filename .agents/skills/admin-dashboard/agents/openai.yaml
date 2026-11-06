@@ -1,0 +1,4 @@
+interface:
+  display_name: "Admin Dashboard"
+  short_description: "Secure and accessible Deudalaya admin dashboard engineering"
+  default_prompt: "Inspect Deudalaya's current admin and backend capabilities, then implement the approved dashboard scope with authorization and responsive tests."

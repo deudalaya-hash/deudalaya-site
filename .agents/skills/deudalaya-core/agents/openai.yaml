@@ -1,0 +1,4 @@
+interface:
+  display_name: "Deudalaya Core"
+  short_description: "Project identity, architecture, and safe development workflow"
+  default_prompt: "Inspect Deudalaya project context and follow its architecture and development constraints."

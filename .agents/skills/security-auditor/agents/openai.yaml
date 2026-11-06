@@ -1,0 +1,4 @@
+interface:
+  display_name: "Security Auditor"
+  short_description: "Evidence-based application security audits for Deudalaya"
+  default_prompt: "Audit the requested Deudalaya scope read-only, verify the actual backend, and report evidence-based findings by severity."

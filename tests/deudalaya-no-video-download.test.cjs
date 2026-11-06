@@ -16,3 +16,8 @@ test('all Deudalaya video elements discourage native downloads and block video c
   assert.match(html, /<video muted playsinline preload="none" data-profile-src="[^\"]+" controlsList="nodownload"/);
   assert.match(html, /addEventListener\('contextmenu',\s*function\(event\)\{if\(event\.target&&event\.target\.tagName==='VIDEO'\)event\.preventDefault\(\)\}\)/);
 });
+
+test('the feed does not preload a random video before choosing the active post', () => {
+  assert.doesNotMatch(html, /<link[^>]*as="video"/i);
+  assert.match(html, /<video id="postVideo"[^>]*preload="none"/);
+});

@@ -9,7 +9,8 @@ const mediaPath = path.join(root, 'assets', 'deudalaya-featured-video.mp4');
 
 test('the Deudalaya starter feed includes all supplied videos and profiles them as playable videos', () => {
   assert.doesNotMatch(html, /rel="preload" as="image" href="dashain\.webp"/);
-  assert.match(html, /rel="preload" as="video" href="assets\/deudalaya-video-2026-11-03-feed-01\.mp4" type="video\/mp4"/);
+  assert.doesNotMatch(html, /rel="preload" as="video"/);
+  assert.match(html, /<video id="postVideo"[^>]*preload="none"/);
 
   const start = html.indexOf('const videos=[');
   const end = html.indexOf('let index=', start);

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Firebase Backend"
+  short_description: "Secure Firebase backend engineering for Deudalaya"
+  default_prompt: "Inspect the configured Firebase project and implement the approved backend change with Rules and emulator verification."

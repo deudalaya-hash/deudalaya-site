@@ -15,13 +15,13 @@
   ],
   "icons": [
     {
-      "src": "assets/deudalaya-launch-192.png",
+      "src": "assets/deudalaya-icon-192.png",
       "purpose": "any",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "assets/deudalaya-launch-512.png",
+      "src": "assets/deudalaya-icon-512.png",
       "purpose": "any",
       "type": "image/png",
       "sizes": "512x512"

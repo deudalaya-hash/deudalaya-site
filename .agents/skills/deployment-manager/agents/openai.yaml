@@ -1,0 +1,4 @@
+interface:
+  display_name: "Deployment Manager"
+  short_description: "Permission-gated GitHub Pages releases for Deudalaya"
+  default_prompt: "Inspect Deudalaya's Git state and actual Pages configuration, prepare a tested release plan, and wait for explicit permission before external actions."

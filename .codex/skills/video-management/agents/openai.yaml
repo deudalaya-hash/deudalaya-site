@@ -1,0 +1,4 @@
+interface:
+  display_name: "Video Management"
+  short_description: "Secure Deudalaya video upload, moderation, and playback"
+  default_prompt: "Inspect Deudalaya's current video flow and implement the approved video-management change with authorization and playback tests."

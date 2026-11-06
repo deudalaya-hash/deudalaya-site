@@ -1,5 +1,5 @@
 /* Deudalaya's root-scoped worker caches only its static app shell. */
-const CACHE_NAME = 'deudalaya-shell-v1';
+const CACHE_NAME = 'deudalaya-shell-v2';
 const SHELL_ASSETS = [
   '/',
   '/manifest.webmanifest',
@@ -8,6 +8,9 @@ const SHELL_ASSETS = [
   '/install-gate.css',
   '/assets/deudalaya-launch-192.png',
   '/assets/deudalaya-launch-512.png',
+  '/assets/deudalaya-icon-180.png',
+  '/assets/deudalaya-icon-192.png',
+  '/assets/deudalaya-icon-512.png',
   '/assets/deudalaya-maskable-512.png'
 ];
 const SHELL_PATHS = new Set(SHELL_ASSETS);

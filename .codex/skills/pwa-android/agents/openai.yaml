@@ -1,0 +1,4 @@
+interface:
+  display_name: "PWA & Android"
+  short_description: "Preserve and test Deudalaya PWA and Android packaging"
+  default_prompt: "Inspect Deudalaya's manifest, service worker, and install gate before proposing a minimal PWA or Android change."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Database Architect"
+  short_description: "Secure and performant Deudalaya data architecture"
+  default_prompt: "Inspect Deudalaya's actual schema and migration state, then propose a safe, tested database design change without assuming the live model."

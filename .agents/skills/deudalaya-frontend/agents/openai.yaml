@@ -1,0 +1,4 @@
+interface:
+  display_name: "Deudalaya Frontend"
+  short_description: "Responsive, accessible Deudalaya website frontend engineering"
+  default_prompt: "Inspect Deudalaya's existing UI and make the smallest responsive, accessible change for the requested frontend task."
