@@ -44,6 +44,8 @@ test('Deudalaya service worker claims pages and caches only named app-shell file
   assert.match(worker, /caches\.open\(CACHE_NAME\)/);
   assert.match(worker, /self\.addEventListener\('fetch'/);
   assert.match(worker, /SHELL_ASSETS/);
+  assert.match(worker, /'\/assets\/deudalaya-install-art\.jpeg'/);
+  assert.ok(fs.existsSync(path.join(root, 'assets', 'deudalaya-install-art.jpeg')));
   assert.doesNotMatch(worker, /cache\.addAll\(/);
   assert.match(worker, /deudalaya-shell-/);
   assert.match(worker, /self\.location\.origin/);
