@@ -23,6 +23,12 @@ test('the centered feed playback button shows white play and pause icons', () =>
   assert.match(buttonStyle[0], /background:rgba\(/);
   assert.match(buttonStyle[0], /color:#fff/);
   assert.match(buttonStyle[0], /box-shadow:/);
+
+  const visibleDuringPlayback = html.match(/#feed #playPauseButton\{[^}]*\}/);
+  assert.ok(visibleDuringPlayback, 'the centered control remains visible while the video autoplays');
+  assert.match(visibleDuringPlayback[0], /opacity:1/);
+  assert.match(visibleDuringPlayback[0], /pointer-events:auto/);
+  assert.match(html, /#feed:not\(\.paused\) #playPauseButton \.pause-icon\{display:block/);
 });
 
 test('playback feedback follows media play and pause events and fades after starting', () => {
