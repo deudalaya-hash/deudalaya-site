@@ -1,6 +1,6 @@
 const assert = require('node:assert/strict');
 const test = require('node:test');
-const { createShuffleCycle, videoKey } = require('../video-shuffle.js');
+const { createShuffleCycle, isDuplicatePost, videoKey } = require('../video-shuffle.js');
 
 function ids(count) {
   return Array.from({ length: count }, (_, index) => `video-${index + 1}`);
@@ -102,6 +102,13 @@ test('video identity de-duplicates repeated feed entries that share the same sou
   const cycle = createShuffleCycle({ random: () => 0.5 });
   cycle.start(['/assets/clip.mp4', '/assets/clip.mp4', '/assets/other.mp4']);
   assert.equal(cycle.getState().order.length, 2);
+});
+
+test('remote posts matching an existing local clip caption or file name are recognized as duplicates', () => {
+  const local = { videoSrc: 'assets/deudalaya-video-2026-11-04-clip-03.mp4', caption: 'देउडालयको सांस्कृतिक झलक — नयाँ प्रस्तुति' };
+  assert.equal(isDuplicatePost({ media_path: 'uploads/deudalaya-video-2026-11-04-clip-03.mp4', caption: 'Different caption' }, [local]), true);
+  assert.equal(isDuplicatePost({ media_path: 'uploads/new.mp4', caption: 'देउडालयको सांस्कृतिक झलक — नयाँ प्रस्तुति' }, [local]), true);
+  assert.equal(isDuplicatePost({ media_path: 'uploads/new.mp4', caption: 'अर्को भिडियो' }, [local]), false);
 });
 
 test('cycle and playback history survive recreation during the same browser session', () => {

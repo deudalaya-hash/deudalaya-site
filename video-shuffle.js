@@ -16,6 +16,19 @@
     return '';
   }
 
+  function isDuplicatePost(candidate, existingPosts) {
+    if (!candidate || typeof candidate !== 'object') return false;
+    var caption = String(candidate.caption || '').normalize('NFKC').replace(/\s+/g, ' ').trim().toLocaleLowerCase();
+    var source = String(candidate.videoSrc || candidate.media_path || '').split(/[?#]/, 1)[0].replace(/\\/g, '/').split('/').pop().toLocaleLowerCase();
+    if (!caption && !source) return false;
+    return (Array.isArray(existingPosts) ? existingPosts : []).some(function (post) {
+      if (!post || typeof post !== 'object') return false;
+      var otherCaption = String(post.caption || '').normalize('NFKC').replace(/\s+/g, ' ').trim().toLocaleLowerCase();
+      var otherSource = String(post.videoSrc || post.media_path || '').split(/[?#]/, 1)[0].replace(/\\/g, '/').split('/').pop().toLocaleLowerCase();
+      return !!((caption && otherCaption && caption === otherCaption) || (source && otherSource && source === otherSource));
+    });
+  }
+
   function createShuffleCycle(options) {
     options = options || {};
     var random = typeof options.random === 'function' ? options.random : Math.random;
@@ -267,5 +280,5 @@
     return { start: start, next: next, previous: previous, select: select, peekNext: peekNext, current: current, sync: sync, markStarted: markStarted, getState: getState, reset: reset };
   }
 
-  return { createShuffleCycle: createShuffleCycle, videoKey: videoKey };
+  return { createShuffleCycle: createShuffleCycle, videoKey: videoKey, isDuplicatePost: isDuplicatePost };
 });

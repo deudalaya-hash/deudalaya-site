@@ -31,6 +31,11 @@ test('the centered feed playback button shows white play and pause icons', () =>
   assert.match(html, /#feed:not\(\.paused\) #playPauseButton \.pause-icon\{display:block/);
 });
 
+test('the central Play control is visible before autoplay reports its first playback event', () => {
+  assert.match(html, /<div class="feed-wrap paused" id="feed">/);
+  assert.match(html, /#feed\.paused #playPauseButton \.play-icon,#feed\.paused \.play:focus-visible \.play-icon\{display:block/);
+});
+
 test('playback feedback follows media play and pause events and fades after starting', () => {
   assert.match(html, /feedVideo\.addEventListener\('play',/);
   assert.match(html, /feedVideo\.addEventListener\('pause',/);

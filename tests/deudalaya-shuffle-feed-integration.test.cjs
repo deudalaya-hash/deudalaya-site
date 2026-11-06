@@ -36,3 +36,9 @@ test('the feed progress indicator follows media time without a permanent 100 ms 
   assert.match(html, /feedVideo\.addEventListener\('timeupdate',[\s\S]*?feedVideo\.currentTime\/feedVideo\.duration/);
   assert.doesNotMatch(html, /setInterval\(\(\)=>\{if\(!paused\)\{prog=/);
 });
+
+test('shared feed posts duplicating the bundled cultural clip are excluded from the visible feed list', () => {
+  assert.match(html, /DeudalayaVideoShuffle\.isDuplicatePost\(Object\.assign\(\{\},row,\{videoSrc:url\}\),videos\)\)continue/);
+  assert.match(html, /deudalaya-video-2026-11-04-clip-03\.mp4/);
+  assert.match(html, /देउडालयको सांस्कृतिक झलक — नयाँ प्रस्तुति/);
+});
