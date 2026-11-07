@@ -9,8 +9,8 @@ test('video progress is visible at the mobile video edge and tracks actual playb
   assert.match(html, /<div class="progress" id="progressTrack" role="slider"[^>]*aria-valuenow="0"[^>]*><i id="progress"><\/i><\/div>/);
   assert.match(html, /#feed \.progress\{[^}]*height:20px/);
   assert.match(html, /\.progress\{cursor:pointer;touch-action:none/);
-  assert.match(html, /\.progress::before\{[^}]*height:3px[^}]*background:rgba\(0,0,0/);
-  assert.match(html, /\.progress i\{[^}]*background:#fff/);
+  assert.match(html, /#feed \.progress::before\{[^}]*height:2px[^}]*background:rgba\(0,0,0/);
+  assert.match(html, /#feed \.progress i\{[^}]*height:2px[^}]*background:#fff/);
   assert.match(html, /\.progress\.seeking i\{transition:none/);
   assert.doesNotMatch(html, /\.progress i\{width:16%!important/);
   assert.match(html, /\.progress\{[^}]*bottom:78px!important/);
