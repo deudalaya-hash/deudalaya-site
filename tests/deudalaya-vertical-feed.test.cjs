@@ -21,3 +21,12 @@ test('feed navigation preserves the active video sound preference and existing s
   assert.match(html, /feed\.addEventListener\('wheel'/);
   assert.match(html, /fypPickNext\(index\)/);
 });
+
+test('mobile feed fills the dynamic viewport while keeping complete media frames visible', () => {
+  assert.match(html, /name="viewport" content="[^"]*viewport-fit=cover/);
+  assert.match(html, /\.video\{inset:0!important/);
+  assert.match(html, /\.video video,\.video img\{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center center!important/);
+  assert.match(html, /height:calc\(56px \+ env\(safe-area-inset-bottom,0px\)\)!important/);
+  assert.match(html, /bottom:calc\(56px \+ env\(safe-area-inset-bottom,0px\)\)!important/);
+  assert.doesNotMatch(html, /\.video (?:video|img)\{[^}]*object-fit:cover/);
+});
