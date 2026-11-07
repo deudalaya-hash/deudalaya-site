@@ -66,7 +66,7 @@ test('Deudalaya and class-selection interface languages are English-first', () =
   const classroom = read('kakchhayalaya/index.html');
   assert.match(deudalaya, /<html lang="en">/);
   assert.match(deudalaya, />Sign in</);
-  assert.match(deudalaya, /Search videos, creators, sounds/);
+  assert.match(deudalaya, /id="playPauseButton"/);
   assert.match(classroom, /Select Your Class/);
   assert.match(classroom, /Class 1/);
   assert.match(classroom, /Subjects Coming Soon/);

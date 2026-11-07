@@ -3,33 +3,33 @@ const fs = require('node:fs');
 const path = require('node:path');
 const test = require('node:test');
 
-const root = path.resolve(__dirname, '..');
-const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+const html = fs.readFileSync(path.resolve(__dirname, '..', 'index.html'), 'utf8');
 
-test('the header has one centered Deuda category, left logo, and right search control', () => {
-  const header = html.match(/<header class="topbar">[\s\S]*?<\/header>/);
-  assert.ok(header, 'the actual top header exists');
-  const nav = header[0].match(/<nav class="feed-tabs top-categories"[^>]*>[\s\S]*?<\/nav>/);
-  assert.ok(nav, 'the Deuda category belongs to the actual header');
-  assert.deepEqual([...nav[0].matchAll(/class="category-tab[^>]*>([^<]+)/g)].map((match) => match[1]), ['देउडा']);
-  assert.match(nav[0], /class="category-tab selected"[^>]*aria-current="page"/);
-  assert.match(header[0], /class="brand"><img[^>]*alt="देउडालय logo"/);
-  assert.match(header[0], /class="topbar-actions"[\s\S]*?class="feed-search"/);
-  assert.equal((html.match(/class="feed-tabs top-categories"/g) || []).length, 1, 'there is only one category navigation');
-  assert.doesNotMatch(html, /सुदूर कर्णाली|showComingSoonCategory|setDeudaCategory/);
-  assert.doesNotMatch(html, /showFeedTab\(this\)|<div class="feed-tabs">/);
-  assert.match(html, /\.topbar \.category-tab\{[^}]*font-family:"Noto Sans Devanagari"/);
+test('the feed has no top header or header search UI', () => {
+  assert.doesNotMatch(html, /<header class="topbar"/);
+  assert.doesNotMatch(html, /id="topAuthButton"|id="feedSearchPanel"|id="feedSearchInput"|id="search"/);
+  assert.doesNotMatch(html, /function openFeedSearch\(|function submitFeedSearch\(|getElementById\('search'\)\.addEventListener/);
+  assert.match(html, /id="postVideo"/);
+  assert.match(html, /id="playPauseButton"/);
   assert.match(html, /id="uploadCategory"[\s\S]*?<option>कला तथा संस्कृति<\/option>/);
+});
+
+test('the feed uses the first viewport row without a reserved header gap', () => {
+  assert.match(html, /\.app\{[^}]*grid-template-rows:1fr/);
+  assert.match(html, /\.nav\{grid-row:1/);
+  assert.match(html, /\.main\{grid-row:1/);
+  assert.match(html, /\.right\{grid-row:1/);
+  assert.match(html, /@media\(max-width:700px\)\{body\{overflow:hidden\}\.app\{display:flex;flex-direction:column;height:100dvh/);
+  assert.match(html, /\.video video,\.video img\{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center center!important/);
   assert.match(html, /class="mobile-nav"/);
 });
 
-test('category bar remains visible and compact at mobile widths while desktop uses the header', () => {
-  assert.match(html, /\.topbar \.top-categories\{[^}]*display:flex/);
-  assert.match(html, /@media\(max-width:700px\)\{[\s\S]*?\.topbar\{display:flex!important/);
-  assert.match(html, /\.topbar \.top-categories\{[^}]*position:fixed!important;left:50vw!important;right:auto!important;top:34px!important;transform:translateX\(-50%\)!important/);
-  assert.match(html, /@media\(max-width:700px\)\{[\s\S]*?\.topbar \.top-categories\{top:28px!important/);
-  assert.match(html, /\.topbar-actions\{[^}]*margin-left:auto/);
-  assert.match(html, /\.topbar \.brand span,\.topbar \.topbar-actions>\.search,\.topbar \.topbar-actions>\.login\{display:none!important/);
-  assert.match(html, /@media\(min-width:701px\) and \(max-width:1100px\)/);
-  assert.match(html, /\.topbar-actions>\.search\{display:none\}/);
+test('mobile video viewport reserves space for the safe-area-aware bottom navigation', () => {
+  assert.match(html, /\.app\{[^}]*padding-bottom:calc\(56px \+ env\(safe-area-inset-bottom,0px\)\)!important/);
+  assert.match(html, /\.main\{[^}]*flex:1[^}]*height:auto!important/);
+  assert.match(html, /\.feed-wrap\{[^}]*height:100%!important/);
+  assert.match(html, /\.video-copy\{[^}]*bottom:24px!important/);
+  assert.match(html, /\.actions\{[^}]*bottom:18px!important/);
+  assert.match(html, /\.progress\{[^}]*bottom:0!important/);
+  assert.match(html, /\.mobile-nav\{[^}]*position:fixed[^}]*bottom:0[^}]*height:calc\(56px \+ env\(safe-area-inset-bottom,0px\)\)/);
 });
