@@ -5,6 +5,7 @@ const test = require('node:test');
 
 const root = path.resolve(__dirname, '..');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+const social = fs.readFileSync(path.join(root, 'social.js'), 'utf8');
 const worker = fs.readFileSync(path.join(root, 'sw.js'), 'utf8');
 
 test('the feed loads the small shuffle helper before the feed-ranking hooks', () => {
@@ -38,7 +39,7 @@ test('the feed progress indicator follows media time without a permanent 100 ms 
 });
 
 test('shared feed posts duplicating the bundled cultural clip are excluded from the visible feed list', () => {
-  assert.match(html, /DeudalayaVideoShuffle\.isDuplicatePost\(Object\.assign\(\{\},row,\{videoSrc:url\}\),videos\)\)continue/);
+  assert.match(social, /DeudalayaVideoShuffle\.isDuplicatePost\(post,\s*\[\.\.\.localPosts,\s*\.\.\.newSharedPosts\]\)/);
   assert.match(html, /deudalaya-video-2026-11-04-clip-03\.mp4/);
   assert.match(html, /देउडालयको सांस्कृतिक झलक — नयाँ प्रस्तुति/);
 });

@@ -4,6 +4,7 @@ const path = require('node:path');
 const test = require('node:test');
 
 const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+const social = fs.readFileSync(path.join(__dirname, '..', 'social.js'), 'utf8');
 
 test('profile post videos defer media requests until they approach the visible grid', () => {
   const profileScripts = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].map(match => match[1]);
@@ -13,8 +14,7 @@ test('profile post videos defer media requests until they approach the visible g
   assert.match(profileCode, /preload=["\']none/);
   assert.match(profileCode, /data-profile-src/);
   assert.doesNotMatch(profileCode, /preload="metadata" src="'\+esc\(v\.videoSrc\)/);
-  assert.match(profileCode, /loading=["\']lazy/);
-  assert.match(profileCode, /decoding=["\']async/);
+  assert.match(social, /loading="lazy" decoding="async"/);
 });
 
 test('profile summary can render from the local profile cache without waiting for feed requests', () => {

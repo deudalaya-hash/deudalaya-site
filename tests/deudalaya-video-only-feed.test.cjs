@@ -5,6 +5,7 @@ const test = require('node:test');
 
 const root = path.resolve(__dirname, '..');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+const social = fs.readFileSync(path.join(root, 'social.js'), 'utf8');
 const start = html.indexOf('const videos=[');
 const end = html.indexOf('let index=', start);
 const feed = html.slice(start, end);
@@ -22,7 +23,7 @@ test('the public starter feed contains only valid local MP4 and WebM video posts
 
 test('feed, random navigation, local restoration, and profile reject unsupported media', () => {
   assert.match(html, /function isSupportedFeedVideo\(/);
-  assert.match(html, /isSupportedFeedVideo\(row\)/);
+  assert.match(social, /isSupportedFeedVideo\(row\)/);
   assert.match(html, /isSupportedFeedVideo\(\{file:file/);
   assert.match(html, /list\.forEach\(function\(v,i\)[\s\S]{0,100}isSupportedFeedVideo\(v\)/);
   assert.doesNotMatch(html, /else\{var im=document\.createElement\('img'\)/);

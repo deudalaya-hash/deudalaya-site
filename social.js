@@ -4,6 +4,7 @@
   let profileTargetId = null;
   let sharedPosts = [];
   let activeFeedMode = 'for-you';
+  let remoteFeedRequestId = 0;
   const ownId = () => cloudUser?.id || null;
   const currentPost = () => videos[index];
   const formatCount = value => Number(value || 0).toLocaleString();
@@ -127,50 +128,62 @@
 
   window.loadRemotePosts = async function() {
     if (!cloudClient) return;
-    const { data, error } = await cloudClient.from('feed_posts')
-      .select('id,user_id,media_path,media_type,caption,category,created_at')
-      .order('created_at', { ascending: false }).limit(100);
-    if (error) { console.warn('Could not load shared posts', error); return; }
-    const rows = data || [];
-    const ids = [...new Set(rows.map(row => row.user_id).filter(Boolean))];
-    const [profilesResult, likesResult, commentsResult, followsResult, bookmarksResult] = await Promise.all([
-      ids.length ? cloudClient.from(profileTable).select('id,username,display_name,bio,avatar_path').in('id', ids) : Promise.resolve({ data: [] }),
-      rows.length ? cloudClient.from('post_likes').select('post_id,user_id').in('post_id', rows.map(row => row.id)) : Promise.resolve({ data: [] }),
-      rows.length ? cloudClient.from('post_comments').select('post_id').in('post_id', rows.map(row => row.id)) : Promise.resolve({ data: [] }),
-      ownId() ? cloudClient.from('post_follows').select('followed_id').eq('follower_id', ownId()) : Promise.resolve({ data: [] }),
-      ownId() ? cloudClient.from('post_bookmarks').select('post_id').eq('user_id', ownId()) : Promise.resolve({ data: [] })
-    ]);
-    if (profilesResult.error) console.warn('Could not load author profiles', profilesResult.error);
-    const profiles = new Map((profilesResult.data || []).map(profile => [profile.id, profile]));
-    const likeRows = likesResult.data || [], commentRows = commentsResult.data || [];
-    const followed = new Set((followsResult.data || []).map(row => row.followed_id));
-    const saved = new Set((bookmarksResult.data || []).map(row => row.post_id));
-    const newSharedPosts = [];
-    for (const row of [...rows].reverse()) {
-      const profile = profiles.get(row.user_id) || {};
-      const url = cloudClient.storage.from('videos').getPublicUrl(row.media_path).data.publicUrl;
-      const isVideo = row.media_type.startsWith('video/');
-      const likes = likeRows.filter(like => like.post_id === row.id);
-      newSharedPosts.unshift({
-        handle: profile.username || 'deudalaya', name: profile.display_name || 'देउडालय सदस्य',
-        avatar: profile.avatar_path ? cloudClient.storage.from('videos').getPublicUrl(profile.avatar_path).data.publicUrl : 'deudalaya-avatar',
-        disc: profile.avatar_path ? cloudClient.storage.from('videos').getPublicUrl(profile.avatar_path).data.publicUrl : 'deudalaya-avatar',
-        image: isVideo ? '' : url, videoSrc: isVideo ? url : null, fit: 'contain',
-        caption: row.caption || 'देउडालयमा नयाँ पोस्ट', tags: '#देउडालय #कर्णाली',
-        music: (isVideo ? 'Original sound' : 'Photo') + ' · ' + (row.category || 'देउडा'),
-        likes: likes.length, comments: commentRows.filter(comment => comment.post_id === row.id).length,
-        following: profile.username || 'deudalaya', cloudPost: true, cloudId: row.id,
-        userId: row.user_id, profile, likedByMe: likes.some(like => like.user_id === ownId()),
-        followedByMe: followed.has(row.user_id), bookmarkedByMe: saved.has(row.id)
-      });
+    const requestId = ++remoteFeedRequestId;
+    try {
+      const { data, error } = await cloudClient.from('feed_posts')
+        .select('id,user_id,media_path,media_type,caption,category,created_at')
+        .order('created_at', { ascending: false }).limit(100);
+      if (error) throw error;
+      const videoRows = (data || []).filter(row => isSupportedFeedVideo(row) && row.media_path);
+      const ids = [...new Set(videoRows.map(row => row.user_id).filter(Boolean))];
+      const postIds = videoRows.map(row => row.id);
+      const [profilesResult, likesResult, commentsResult, followsResult, bookmarksResult] = await Promise.all([
+        ids.length ? cloudClient.from(profileTable).select('id,username,display_name,bio,avatar_path').in('id', ids) : Promise.resolve({ data: [] }),
+        postIds.length ? cloudClient.from('post_likes').select('post_id,user_id').in('post_id', postIds) : Promise.resolve({ data: [] }),
+        postIds.length ? cloudClient.from('post_comments').select('post_id').in('post_id', postIds) : Promise.resolve({ data: [] }),
+        ownId() ? cloudClient.from('post_follows').select('followed_id').eq('follower_id', ownId()) : Promise.resolve({ data: [] }),
+        ownId() ? cloudClient.from('post_bookmarks').select('post_id').eq('user_id', ownId()) : Promise.resolve({ data: [] })
+      ]);
+      if (requestId !== remoteFeedRequestId) return;
+      if (profilesResult.error) console.warn('Could not load author profiles', profilesResult.error);
+      const profiles = new Map((profilesResult.data || []).map(profile => [profile.id, profile]));
+      const likeRows = likesResult.data || [], commentRows = commentsResult.data || [];
+      const followed = new Set((followsResult.data || []).map(row => row.followed_id));
+      const saved = new Set((bookmarksResult.data || []).map(row => row.post_id));
+      const localPosts = videos.filter(post => !post.cloudPost && isSupportedFeedVideo(post));
+      const newSharedPosts = [];
+      for (const row of [...videoRows].reverse()) {
+        const profile = profiles.get(row.user_id) || {};
+        const url = cloudClient.storage.from('videos').getPublicUrl(row.media_path).data.publicUrl;
+        if (!url || !/^https?:\/\//i.test(url)) continue;
+        const likes = likeRows.filter(like => like.post_id === row.id);
+        const post = {
+          handle: profile.username || 'deudalaya', name: profile.display_name || 'देउडालय सदस्य',
+          avatar: profile.avatar_path ? cloudClient.storage.from('videos').getPublicUrl(profile.avatar_path).data.publicUrl : 'deudalaya-avatar',
+          disc: profile.avatar_path ? cloudClient.storage.from('videos').getPublicUrl(profile.avatar_path).data.publicUrl : 'deudalaya-avatar',
+          videoSrc: url, mediaType: row.media_type, fit: 'contain',
+          caption: row.caption || 'देउडालयमा नयाँ पोस्ट', tags: '#देउडालय #कर्णाली',
+          music: 'Original sound · ' + (row.category || 'देउडा'),
+          likes: likes.length, comments: commentRows.filter(comment => comment.post_id === row.id).length,
+          following: profile.username || 'deudalaya', cloudPost: true, cloudId: row.id,
+          userId: row.user_id, profile, likedByMe: likes.some(like => like.user_id === ownId()),
+          followedByMe: followed.has(row.user_id), bookmarkedByMe: saved.has(row.id)
+        };
+        if (DeudalayaVideoShuffle.isDuplicatePost(post, [...localPosts, ...newSharedPosts])) continue;
+        newSharedPosts.push(post);
+      }
+      if (requestId !== remoteFeedRequestId) return;
+      sharedPosts = newSharedPosts;
+      applyFeedMode(true);
+    } catch (error) {
+      if (requestId === remoteFeedRequestId) console.warn('Could not load shared posts', error);
     }
-    sharedPosts = newSharedPosts;
-    applyFeedMode(true);
   };
 
   function applyFeedMode(reset = false) {
-    const selected = activeFeedMode === 'following' ? sharedPosts.filter(post => post.followedByMe) : sharedPosts;
-    const localPosts = videos.filter(post => !post.cloudPost);
+    const selected = (activeFeedMode === 'following' ? sharedPosts.filter(post => post.followedByMe) : sharedPosts)
+      .filter(isSupportedFeedVideo);
+    const localPosts = videos.filter(post => !post.cloudPost && isSupportedFeedVideo(post));
     videos.splice(0, videos.length, ...selected, ...localPosts);
     if (reset || index >= videos.length) index = 0;
     render();
@@ -201,11 +214,12 @@
     }
     if (found >= 0) { index = found; render(); closeProfile(); }
   };
-  window.openFeedPostByImage = function(image) {
-    const found = videos.findIndex(post => post.image === image);
-    if (found >= 0) { index = found; render(); closeProfile(); }
+  window.openFeedPostByIndex = function(postIndex) {
+    if (!Number.isInteger(postIndex) || !isSupportedFeedVideo(videos[postIndex])) return;
+    index = postIndex;
+    render();
+    closeProfile();
   };
-
   const originalRender = window.render;
   window.render = function() {
     originalRender();
@@ -395,12 +409,13 @@
     }
     syncProfileButtons();
     const profileSource = profileTargetId ? sharedPosts : videos;
-    const allPosts = profileSource.filter(post => profileTargetId ? post.userId === profileTargetId : !post.cloudPost || post.userId === ownId());
+    const allPosts = profileSource.filter(isSupportedFeedVideo)
+      .filter(post => profileTargetId ? post.userId === profileTargetId : !post.cloudPost || post.userId === ownId());
     document.getElementById('profilePostCount').textContent = formatCount(allPosts.length);
     document.getElementById('profileGrid').innerHTML = allPosts.map(post => {
-      const src = post.videoSrc ? asset('deudalaya_icon.webp') : (post.image.startsWith('http') ? post.image : asset(post.image));
-      const action = post.cloudPost ? `openFeedPostById('${escapeProfileText(post.cloudId)}')` : `openFeedPostByImage('${escapeProfileText(post.image)}')`;
-      return `<button class="profile-post" onclick="${action}"><img loading="lazy" src="${escapeProfileText(src)}" alt="${escapeProfileText(post.caption)}"><span>▶</span></button>`;
+      const src = asset('deudalaya_icon.webp');
+      const action = post.cloudPost ? `openFeedPostById('${escapeProfileText(post.cloudId)}')` : `openFeedPostByIndex(${videos.indexOf(post)})`;
+      return `<button class="profile-post" onclick="${action}"><img loading="lazy" decoding="async" src="${escapeProfileText(src)}" alt="${escapeProfileText(post.caption)}"><span>▶</span></button>`;
     }).join('');
     const target = profileTargetId;
     if (target && cloudClient) {

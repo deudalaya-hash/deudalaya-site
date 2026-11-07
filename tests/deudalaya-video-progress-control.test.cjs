@@ -28,5 +28,5 @@ test('progress updates pause while paused or buffering and reset when the video 
   assert.match(html, /if\(seeking\|\|!videoEl\.duration\|\|videoEl\.paused\|\|progressBuffering\)return/);
   assert.match(html, /videoEl\.addEventListener\('waiting',[\s\S]*?progressBuffering=true/);
   assert.match(html, /videoEl\.addEventListener\('playing',[\s\S]*?progressBuffering=false/);
-  assert.match(html, /if\(postVideo\.src!==new URL\(v\.videoSrc,location\.href\)\.href\)\{[^}]*getElementById\('progress'\)\.style\.width='0%'/);
+  assert.match(html, /if\(postVideo\.src!==feedSource\)\{[^}]*getElementById\('progress'\)\.style\.width='0%'/);
 });

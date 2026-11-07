@@ -5,6 +5,7 @@ const test = require('node:test');
 
 const root = path.resolve(__dirname, '..');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+const social = fs.readFileSync(path.join(root, 'social.js'), 'utf8');
 
 test('the first two supplied videos are separate playable feed and profile posts', () => {
   const start = html.indexOf('const videos=[');
@@ -24,7 +25,7 @@ test('the first two supplied videos are separate playable feed and profile posts
   }
   assert.equal((feed.match(/videoSrc:/g) || []).length, 19, 'all nineteen remaining starter posts are playable videos');
   assert.match(html, /if\(v\.videoSrc\)[\s\S]{0,180}createElement\('video'\)/, 'feed and profile render video entries as video elements');
-  assert.match(html, /if\(!isSupportedFeedVideo\(row\)\)continue;/, 'unsupported remote media is not added to the feed');
+  assert.match(social, /\(data \|\| \[\]\)\.filter\(row => isSupportedFeedVideo\(row\) && row\.media_path\)/, 'unsupported remote media is filtered before it enters the feed');
   assert.ok(html.includes("readLocalVideos()).filter(item=>{const file=item&&item.file;return !!file&&file.size>0&&isSupportedFeedVideo({file:file,media_type:file.type})"), 'only supported local videos are restored into the feed');
 
   const releaseVersion = '2026.11.03.3';
