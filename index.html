@@ -2582,9 +2582,9 @@ async function uploadToStorage(client,path,file,button){
 @keyframes deudalaya-swipe-up{from{transform:translateY(38px);opacity:.7}to{transform:translateY(0);opacity:1}}
 @keyframes deudalaya-swipe-down{from{transform:translateY(-38px);opacity:.7}to{transform:translateY(0);opacity:1}}
 @media(prefers-reduced-motion:reduce){#feed.feed-swipe-up,#feed.feed-swipe-down{animation:none}}
-#feed .play{inset:0;margin:auto;width:clamp(60px,16vw,72px);height:clamp(60px,16vw,72px);padding:0;z-index:2;border:1px solid #ffffffd9;border-radius:50%;background:rgba(8,8,12,.72);color:#fff;font-size:32px;font-weight:700;line-height:1;box-shadow:0 2px 14px #0009,0 0 0 1px #0006;place-items:center}
+#feed .play{inset:0;margin:auto;width:clamp(60px,16vw,72px);height:clamp(60px,16vw,72px);padding:0;z-index:5;border:1px solid #ffffffd9;border-radius:50%;background:rgba(8,8,12,.72);color:#fff;font-size:32px;font-weight:700;line-height:1;box-shadow:0 2px 14px #0009,0 0 0 1px #0006;place-items:center}
 #feed .play .play-icon,#feed .play .pause-icon{display:none}
-#feed #playPauseButton{z-index:2;opacity:0;transform:scale(.88);pointer-events:none;transition:opacity .18s ease,transform .18s ease}
+#feed #playPauseButton{z-index:5;opacity:0;transform:scale(.88);pointer-events:none;transition:opacity .18s ease,transform .18s ease}
 #feed.paused #playPauseButton{opacity:1;transform:scale(1);pointer-events:auto}
 #feed:not(.paused) #playPauseButton:focus-visible{opacity:1;transform:scale(1);pointer-events:auto}
 #feed.paused #playPauseButton .play-icon,#feed.paused .play:focus-visible .play-icon{display:block;transform:translateX(2px)}

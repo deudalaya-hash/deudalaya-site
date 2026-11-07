@@ -6,6 +6,18 @@ const test = require('node:test');
 const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
 const serviceWorker = fs.readFileSync(path.join(__dirname, '..', 'sw.js'), 'utf8');
 
+function extractFunction(name) {
+  const start = html.indexOf(`function ${name}(`);
+  assert.notEqual(start, -1, `${name} exists in the feed source`);
+  const bodyStart = html.indexOf('{', start);
+  let depth = 0;
+  for (let index = bodyStart; index < html.length; index += 1) {
+    if (html[index] === '{') depth += 1;
+    if (html[index] === '}' && --depth === 0) return html.slice(start, index + 1);
+  }
+  assert.fail(`${name} has a complete function body`);
+}
+
 test('the centered feed playback button shows white play and pause icons', () => {
   const button = html.match(/<button[^>]*id="playPauseButton"[^>]*>[\s\S]*?<\/button>/);
   assert.ok(button, 'feed needs one accessible central playback button');
@@ -52,9 +64,30 @@ test('the central playback button does not cover engagement controls and taps on
   const control = html.match(/#feed #playPauseButton\{[^}]*\}/);
   const actions = html.match(/\.actions\{[^}]*z-index:[^;}]+/);
   assert.ok(control && actions);
-  assert.match(control[0], /z-index:2/);
+  assert.match(control[0], /z-index:5/);
+  assert.match(html, /\.vignette\{[^}]*z-index:3/);
   assert.match(actions[0], /z-index:3/);
   assert.match(html, /e\.target\.closest\('button, a, input, textarea, \.actions, \.comments, \.video-copy, \.tt-react, \.progress'\)/);
+});
+
+
+test('togglePlay calls the active video play and pause methods', () => {
+  let playCalls = 0;
+  let pauseCalls = 0;
+  const media = {
+    hidden: false,
+    paused: true,
+    play() { playCalls += 1; this.paused = false; },
+    pause() { pauseCalls += 1; this.paused = true; }
+  };
+  const togglePlay = new Function('feedVideo', 'updateFeedPlaybackUI', `${extractFunction('togglePlay')}; return togglePlay`)(media, () => {});
+
+  togglePlay();
+  togglePlay();
+
+  assert.equal(playCalls, 1);
+  assert.equal(pauseCalls, 1);
+  assert.equal(media.paused, true);
 });
 
 test('the app shell cache version advances so installed PWAs receive the updated feed', () => {
