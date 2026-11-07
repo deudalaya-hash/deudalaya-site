@@ -24,24 +24,37 @@ test('the centered feed playback button shows white play and pause icons', () =>
   assert.match(buttonStyle[0], /color:#fff/);
   assert.match(buttonStyle[0], /box-shadow:/);
 
-  const visibleDuringPlayback = html.match(/#feed #playPauseButton\{[^}]*\}/);
-  assert.ok(visibleDuringPlayback, 'the centered control remains visible while the video autoplays');
-  assert.match(visibleDuringPlayback[0], /opacity:1/);
-  assert.match(visibleDuringPlayback[0], /pointer-events:auto/);
-  assert.match(html, /#feed:not\(\.paused\) #playPauseButton \.pause-icon\{display:block/);
+  const pausedControl = html.match(/#feed\.paused #playPauseButton\{[^}]*\}/);
+  assert.ok(pausedControl, 'paused playback shows the central play button');
+  assert.match(pausedControl[0], /opacity:1/);
+  assert.match(pausedControl[0], /pointer-events:auto/);
+  const playingControl = html.match(/#feed #playPauseButton\{[^}]*\}/);
+  assert.ok(playingControl, 'playing playback fades out the central button');
+  assert.match(playingControl[0], /opacity:0/);
+  assert.match(playingControl[0], /pointer-events:none/);
+  assert.match(html, /#feed #playPauseButton\{[^}]*transition:opacity \.18s ease,transform \.18s ease/);
 });
 
 test('the central Play control is visible before autoplay reports its first playback event', () => {
   assert.match(html, /<div class="feed-wrap paused" id="feed">/);
-  assert.match(html, /#feed\.paused #playPauseButton \.play-icon,#feed\.paused \.play:focus-visible \.play-icon\{display:block/);
+  assert.ok(html.includes('#feed.paused #playPauseButton .play-icon'));
 });
 
-test('playback feedback follows media play and pause events and fades after starting', () => {
+test('playback state follows media play and pause events and shows the paused play icon', () => {
   assert.match(html, /feedVideo\.addEventListener\('play',/);
   assert.match(html, /feedVideo\.addEventListener\('pause',/);
-  assert.match(html, /play-feedback/);
+  assert.ok(html.includes('#feed.paused #playPauseButton .play-icon'));
   assert.match(html, /aria-label',playing\?'Pause video':'Play video'/);
   assert.match(html, /function togglePlay\(\)\{[\s\S]*?pv\.paused[\s\S]*?pv\.play\(\)[\s\S]*?pv\.pause\(\)/);
+});
+
+test('the central playback button does not cover engagement controls and taps on controls are ignored', () => {
+  const control = html.match(/#feed #playPauseButton\{[^}]*\}/);
+  const actions = html.match(/\.actions\{[^}]*z-index:[^;}]+/);
+  assert.ok(control && actions);
+  assert.match(control[0], /z-index:2/);
+  assert.match(actions[0], /z-index:3/);
+  assert.match(html, /e\.target\.closest\('button, a, input, textarea, \.actions, \.comments, \.video-copy, \.tt-react, \.progress'\)/);
 });
 
 test('the app shell cache version advances so installed PWAs receive the updated feed', () => {
