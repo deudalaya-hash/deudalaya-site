@@ -36,15 +36,14 @@ test('the centered feed playback button shows white play and pause icons', () =>
   assert.match(buttonStyle[0], /color:#fff/);
   assert.match(buttonStyle[0], /box-shadow:/);
 
-  const pausedControl = html.match(/#feed\.paused #playPauseButton\{[^}]*\}/);
-  assert.ok(pausedControl, 'paused playback shows the central play button');
-  assert.match(pausedControl[0], /opacity:1/);
-  assert.match(pausedControl[0], /pointer-events:auto/);
-  const playingControl = html.match(/#feed #playPauseButton\{[^}]*\}/);
-  assert.ok(playingControl, 'playing playback fades out the central button');
-  assert.match(playingControl[0], /opacity:0/);
-  assert.match(playingControl[0], /pointer-events:none/);
-  assert.match(html, /#feed #playPauseButton\{[^}]*transition:opacity \.18s ease,transform \.18s ease/);
+  const control = html.match(/#feed #playPauseButton\{[^}]*\}/);
+  assert.ok(control, 'the central playback control has an explicit visible state');
+  assert.match(control[0], /z-index:5/);
+  assert.match(control[0], /opacity:1/);
+  assert.match(control[0], /pointer-events:auto/);
+  assert.match(html, /#feed \.play \.play-icon,#feed \.play \.pause-icon\{[^}]*opacity:0;transition:opacity \.18s ease/);
+  assert.match(html, /#feed\.paused #playPauseButton \.play-icon\{[^}]*opacity:1/);
+  assert.match(html, /#feed:not\(\.paused\) #playPauseButton \.pause-icon\{[^}]*opacity:1/);
 });
 
 test('the central Play control is visible before autoplay reports its first playback event', () => {

@@ -26,7 +26,8 @@ test('the header has one centered Deuda category, left logo, and right search co
 test('category bar remains visible and compact at mobile widths while desktop uses the header', () => {
   assert.match(html, /\.topbar \.top-categories\{[^}]*display:flex/);
   assert.match(html, /@media\(max-width:700px\)\{[\s\S]*?\.topbar\{display:flex!important/);
-  assert.match(html, /\.topbar \.top-categories\{[^}]*left:50%;[^}]*transform:translateX\(-50%\)/);
+  assert.match(html, /\.topbar \.top-categories\{[^}]*position:fixed;left:50vw;top:34px;transform:translate\(-50%,-50%\)/);
+  assert.match(html, /@media\(max-width:700px\)\{[\s\S]*?\.topbar \.top-categories\{top:28px!important/);
   assert.match(html, /\.topbar-actions\{[^}]*margin-left:auto/);
   assert.match(html, /\.topbar \.brand span,\.topbar \.topbar-actions>\.search,\.topbar \.topbar-actions>\.login\{display:none!important/);
   assert.match(html, /@media\(min-width:701px\) and \(max-width:1100px\)/);

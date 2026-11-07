@@ -2583,14 +2583,12 @@ async function uploadToStorage(client,path,file,button){
 @keyframes deudalaya-swipe-down{from{transform:translateY(-38px);opacity:.7}to{transform:translateY(0);opacity:1}}
 @media(prefers-reduced-motion:reduce){#feed.feed-swipe-up,#feed.feed-swipe-down{animation:none}}
 #feed .play{inset:0;margin:auto;width:clamp(60px,16vw,72px);height:clamp(60px,16vw,72px);padding:0;z-index:5;border:1px solid #ffffffd9;border-radius:50%;background:rgba(8,8,12,.72);color:#fff;font-size:32px;font-weight:700;line-height:1;box-shadow:0 2px 14px #0009,0 0 0 1px #0006;place-items:center}
-#feed .play .play-icon,#feed .play .pause-icon{display:none}
-#feed #playPauseButton{z-index:5;opacity:0;transform:scale(.88);pointer-events:none;transition:opacity .18s ease,transform .18s ease}
-#feed.paused #playPauseButton{opacity:1;transform:scale(1);pointer-events:auto}
-#feed:not(.paused) #playPauseButton:focus-visible{opacity:1;transform:scale(1);pointer-events:auto}
-#feed.paused #playPauseButton .play-icon,#feed.paused .play:focus-visible .play-icon{display:block;transform:translateX(2px)}
-#feed:not(.paused) #playPauseButton:focus-visible .pause-icon{display:block;font-size:27px;letter-spacing:-2px}
+#feed .play .play-icon,#feed .play .pause-icon{display:block;grid-area:1/1;opacity:0;transition:opacity .18s ease}
+#feed #playPauseButton{z-index:5;opacity:1;transform:scale(1);pointer-events:auto;transition:transform .18s ease}
+#feed.paused #playPauseButton .play-icon{opacity:1;transform:translateX(2px)}
+#feed:not(.paused) #playPauseButton .pause-icon{opacity:1;font-size:27px;letter-spacing:-2px}
 #feed .play:focus-visible{outline:3px solid #fff;outline-offset:4px}
-@media(prefers-reduced-motion:reduce){#feed #playPauseButton{transition:none}}
+@media(prefers-reduced-motion:reduce){#feed #playPauseButton,#feed .play .play-icon,#feed .play .pause-icon{transition:none}}
 #feed .progress{left:12px;right:12px;bottom:0;height:20px;padding:0;background:transparent;z-index:8;cursor:pointer;touch-action:none}
 #feed .progress::before{content:"";position:absolute;left:0;right:0;top:50%;height:3px;transform:translateY(-50%);border-radius:2px;background:rgba(0,0,0,.68);box-shadow:0 0 1px #ffffffb3;pointer-events:none}
 #feed .progress i{position:absolute;left:0;top:50%;width:0%;height:3px;transform:translateY(-50%);border-radius:2px;background:#fff;transition:width .12s linear;pointer-events:none}
@@ -2602,7 +2600,7 @@ async function uploadToStorage(client,path,file,button){
 </style>
 <style id="deudalaya-top-category-navigation">
 .topbar{position:relative}
-.topbar .top-categories{position:absolute;left:50%;top:0;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;height:100%;margin:0;color:#fff;text-shadow:none}
+.topbar .top-categories{position:fixed;left:50vw;top:34px;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;height:100%;margin:0;color:#fff;text-shadow:none}
 .topbar .category-tab{position:relative;padding:9px 2px;background:none;color:#fff;font-family:"Noto Sans Devanagari","Nirmala UI",system-ui,sans-serif;font-size:15px;font-weight:800;line-height:1.35;white-space:nowrap}
 .topbar .category-tab.selected::after{content:"";position:absolute;left:12%;right:12%;bottom:1px;height:2px;border-radius:2px;background:var(--pink)}
 .topbar-actions{display:flex;align-items:center;margin-left:auto;gap:12px}
@@ -2630,7 +2628,7 @@ async function uploadToStorage(client,path,file,button){
   .topbar .brand{flex:none;gap:0}
   .topbar .brand img{width:34px;height:34px}
   .topbar .brand span,.topbar .topbar-actions>.search,.topbar .topbar-actions>.login{display:none!important}
-  .topbar .top-categories{width:max-content}
+  .topbar .top-categories{top:28px!important;width:max-content}
   .topbar .category-tab{font-size:clamp(13px,4vw,16px)}
   .topbar-actions{gap:0}
   .topbar .feed-search{width:30px}
