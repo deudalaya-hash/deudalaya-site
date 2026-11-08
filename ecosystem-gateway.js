@@ -41,6 +41,10 @@
     return { intro, steps, showInstallButton: !!showInstallButton };
   }
 
+  function isStandaloneMode() {
+    return !!(window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+  }
+
   function getGuide(hasPrompt) {
     const { browser, device, safariVersion } = environment;
 
@@ -85,16 +89,20 @@
           'माथिको File मेनु खोल्नुहोस्।',
           '“Add to Dock” उपलब्ध भए मात्र छान्नुहोस्।',
           'पुष्टि गरेर देउडालय खोल्नुहोस्।'
-        ], false);
+        ], true);
       }
       return stepGuide('यो Safari संस्करणमा Add to Dock उपलब्ध नहुन सक्छ। macOS Sonoma 14 वा पछिल्लो संस्करणको Safari प्रयोग गर्नुहोस्।', [], false);
     }
 
     if (device === 'windows' && ['Chrome', 'Edge'].includes(browser)) {
-      return stepGuide('डेस्कटपमा स्थापना गर्न ब्राउजरको आफ्नै Install विकल्प प्रयोग गर्नुहोस्।', [], false);
+      return stepGuide(`डेस्कटप · ${browser} मा स्थापना गर्ने चरणहरू:`, [
+        'Address bar नजिक रहेको Install आइकन थिच्नुहोस्।',
+        'आइकन नदेखिएमा ⋮ मेनुमा “Install Deudalaya” वा “Install page as app” छान्नुहोस्।',
+        '“Install” पुष्टि गर्नुहोस् र Desktop वा Start menu बाट देउडालय खोल्नुहोस्।'
+      ], true);
     }
 
-    if (promptBrowsers.includes(browser) && hasPrompt && device !== 'iphone' && device !== 'ipad') {
+    if (promptBrowsers.includes(browser) && device !== 'iphone' && device !== 'ipad') {
       return stepGuide(`${browser} मा देउडालय स्थापना गर्ने चरणहरू:`, [
         'तलको “देउडालय स्थापना गर्नुहोस्” बटन थिच्नुहोस्।',
         'ब्राउजरको पुष्टिमा “Install” छान्नुहोस्।',
@@ -112,10 +120,18 @@
     if (installed) {
       installButton.disabled = true;
       installButton.hidden = true;
-      if (installIntro) installIntro.textContent = 'देउडालय यस उपकरणमा पहिल्यै स्थापित छ।';
+      const inStandalone = isStandaloneMode();
+      if (installIntro) installIntro.textContent = inStandalone
+        ? 'देउडालय यस उपकरणमा पहिल्यै स्थापित छ।'
+        : 'देउडालय स्थापित भयो। Deudalaya खोल्न Home Screen वा Desktop बाट एप खोल्नुहोस्।';
       if (installSteps) installSteps.innerHTML = '';
-      installHint.textContent = 'देउडालय यस उपकरणमा पहिल्यै स्थापित छ।';
-      document.documentElement.classList.remove('ecosystem-gateway');
+      installHint.textContent = inStandalone
+        ? 'देउडालय यस उपकरणमा पहिल्यै स्थापित छ।'
+        : 'Deudalaya एप Home Screen वा Desktop बाट खोल्नुहोस्।';
+      if (inStandalone) {
+        document.documentElement.classList.remove('ecosystem-gateway');
+        document.documentElement.classList.add('deudalaya-standalone');
+      }
       return;
     }
 
@@ -125,15 +141,23 @@
     installButton.textContent = 'Install App';
     if (installIntro) installIntro.textContent = guide.intro;
     if (installSteps) installSteps.innerHTML = guide.steps.map(step => `<li>${step}</li>`).join('');
-    installHint.textContent = guide.showInstallButton
-      ? deferredPrompt
-        ? 'देउडालय स्थापना गर्न तयार छ।'
-        : environment.device === 'android' && ['Chrome', 'Edge', 'Brave'].includes(environment.browser)
-          ? 'स्थापना गर्न माथिको ⋮ मेनुबाट “Install app” छान्नुहोस्।'
-          : environment.device === 'android'
-            ? 'यो पृष्ठ Chrome मा खोलेर ⋮ मेनुबाट “Install app” छान्नुहोस्।'
-          : 'देउडालय स्थापना गर्न तयार छ।'
-      : guide.steps.length ? 'तलका चरणहरू पालना गर्नुहोस्।' : 'यस ब्राउजरमा अहिले स्थापना विकल्प उपलब्ध छैन।';
+    if (!guide.showInstallButton) {
+      installHint.textContent = guide.steps.length
+        ? 'तलका चरणहरू पालना गर्नुहोस्।'
+        : 'यस ब्राउजरमा अहिले स्थापना विकल्प उपलब्ध छैन।';
+    } else if (deferredPrompt) {
+      installHint.textContent = 'देउडालय स्थापना गर्न तयार छ।';
+    } else if (environment.device === 'android' && ['Chrome', 'Edge', 'Brave'].includes(environment.browser)) {
+      installHint.textContent = 'स्थापना गर्न माथिको ⋮ मेनुबाट “Install app” छान्नुहोस्।';
+    } else if (environment.device === 'android') {
+      installHint.textContent = 'यो पृष्ठ Chrome मा खोलेर ⋮ मेनुबाट “Install app” छान्नुहोस्।';
+    } else if (environment.device === 'windows' && ['Chrome', 'Edge'].includes(environment.browser)) {
+      installHint.textContent = 'Address bar को Install आइकन वा ⋮ मेनुबाट “Install Deudalaya” छान्नुहोस्।';
+    } else if (environment.device === 'mac' && environment.browser === 'Safari') {
+      installHint.textContent = 'Safari को File मेनुबाट “Add to Dock” छान्नुहोस्।';
+    } else {
+      installHint.textContent = 'तलका चरणहरू पालना गर्नुहोस्।';
+    }
   }
 
   window.addEventListener('deudalaya-installpromptavailable', function () {
@@ -172,6 +196,18 @@
       }
       if (environment.device === 'iphone' || environment.device === 'ipad') {
         installHint.textContent = 'Safari मा Share बटन थिचेर “Add to Home Screen”, त्यसपछि “Add” छान्नुहोस्।';
+        return;
+      }
+      if (environment.device === 'windows' && ['Chrome', 'Edge'].includes(environment.browser)) {
+        installHint.textContent = 'Address bar को Install आइकन वा ⋮ मेनुबाट “Install Deudalaya” वा “Install page as app” छान्नुहोस्।';
+        return;
+      }
+      if (environment.device === 'mac' && environment.browser === 'Safari' && environment.safariVersion >= 17) {
+        installHint.textContent = 'Safari को File मेनुबाट “Add to Dock” छानेर पुष्टि गर्नुहोस्।';
+        return;
+      }
+      if (promptBrowsers.includes(environment.browser)) {
+        installHint.textContent = 'ब्राउजरको Install आइकन वा मेनुबाट “Install Deudalaya” छान्नुहोस्।';
         return;
       }
       updateButton();

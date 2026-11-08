@@ -12,7 +12,7 @@ Deudalaya is the video-sharing application served from the site root and is one 
 - Display mode: `standalone`
 - Root service worker: `/sw.js`
 
-The root page shows Deudalaya's installation gate on supported mobile browsers when the app is not installed. Android's Install App button invokes the browser prompt only after `beforeinstallprompt` and a user tap; if that event is unavailable, the page gives browser-menu instructions. iPhone and iPad show the Safari Share → Add to Home Screen steps. Desktop users are not gated and can use the browser's own install interface. The installed standalone app opens the video platform directly.
+The root page gates the video feed in every browser session unless standalone mode is detected with `display-mode: standalone` or iOS `navigator.standalone`. Android's Install App button invokes the browser prompt only after `beforeinstallprompt` and a user tap; if that event is unavailable, the page gives browser-menu instructions. iPhone and iPad show the Share → Add to Home Screen steps. Desktop browsers show supported installation guidance. An installation event in a regular browser tab keeps the gate in place; launching the installed app in standalone mode opens the video platform directly.
 
 ## Boundaries
 

@@ -64,7 +64,7 @@ test('each app page has its own install action and confirmation-gated open actio
 test('Deudalaya and class-selection interface languages are English-first', () => {
   const deudalaya = read('index.html');
   const classroom = read('kakchhayalaya/index.html');
-  assert.match(deudalaya, /<html lang="en">/);
+  assert.match(deudalaya, /<html lang="en"(?:\s|>)/);
   assert.match(deudalaya, />Sign in</);
   assert.match(deudalaya, /id="playPauseButton"/);
   assert.match(classroom, /Select Your Class/);

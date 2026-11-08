@@ -20,6 +20,7 @@ test('profile post videos defer media requests until they approach the visible g
 test('profile summary can render from the local profile cache without waiting for feed requests', () => {
   assert.match(html, /function readLocalProfile\(\)\{try\{return JSON\.parse\(localStorage\.getItem\('deudalaya-profile'/);
   const openProfileAt = html.indexOf('function openProfile()');
-  const loadPostsAt = html.indexOf('loadSupabaseClient().then(client=>client&&loadRemotePosts())');
-  assert.ok(openProfileAt >= 0 && loadPostsAt > openProfileAt, 'profile entry is defined before asynchronous feed loading begins');
+  const loadPostsAt = social.indexOf('loadSupabaseClient().then(async client =>');
+  assert.ok(openProfileAt >= 0 && loadPostsAt >= 0, 'profile entry and asynchronous feed loader are present');
+  assert.match(social, /if\s*\(window\.deudalayaIsStandalone\(\)\)\s*\{[\s\S]*?loadSupabaseClient\(\)/);
 });

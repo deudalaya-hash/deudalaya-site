@@ -71,7 +71,7 @@ test('iPhone Safari and touch iPadOS Safari show a clear manual-install action a
   assert.equal(ipad.button.hidden, false);
 });
 
-test('Mac Safari shows supported guidance and desktop Chrome is not forced into the install gate', () => {
+test('Mac Safari and desktop Chrome show supported installation guidance', async () => {
   const safari = createGateway({
     ua: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 Version/18.0 Safari/605.1.15',
     platform: 'MacIntel'
@@ -79,18 +79,21 @@ test('Mac Safari shows supported guidance and desktop Chrome is not forced into 
   assert.equal(stepCount(safari), 3);
   assert.match(safari.steps.innerHTML, /File मेनु/);
   assert.match(safari.steps.innerHTML, /“Add to Dock” उपलब्ध भए/);
-  assert.equal(safari.button.hidden, true);
+  assert.equal(safari.button.hidden, false);
+  await safari.buttonListeners.click({ preventDefault() {} });
+  assert.match(safari.hint.textContent, /Add to Dock/);
 
   const chrome = createGateway({
     ua: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/130.0.0.0 Safari/537.36',
     platform: 'Win32',
     prompt: true
   });
-  assert.equal(chrome.button.hidden, true);
-  assert.match(chrome.intro.textContent, /ब्राउजरको आफ्नै Install/);
+  assert.equal(chrome.button.hidden, false);
+  assert.match(chrome.steps.innerHTML, /Address bar नजिक/);
+  assert.match(chrome.steps.innerHTML, /Install/);
 });
 
-test('desktop users are not pushed into an install flow while unsupported mobile browsers get guidance', () => {
+test('unsupported browsers remain gated and iOS browsers get Safari instructions', () => {
   const firefox = createGateway({
     ua: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0',
     platform: 'Win32',
@@ -99,12 +102,6 @@ test('desktop users are not pushed into an install flow while unsupported mobile
   assert.equal(firefox.button.hidden, true);
   assert.match(firefox.intro.textContent, /Chrome वा Edge/);
   assert.doesNotMatch(firefox.steps.innerHTML, /Add to Home Screen|Add to Dock|Install app/);
-
-  const desktopChrome = createGateway({
-    ua: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130.0.0.0 Safari/537.36',
-    platform: 'Win32'
-  });
-  assert.equal(desktopChrome.button.hidden, true);
 
   const iosChrome = createGateway({
     ua: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 CriOS/130.0.0.0 Mobile/15E148 Safari/604.1',
@@ -149,10 +146,11 @@ function createGateway({ ua, platform = '', platformData = '', maxTouchPoints = 
     deudalayaInstallState: installed ? 'installed' : (prompt ? 'available' : 'unavailable'),
     deudalayaInstallationStatus: installed ? 'installed' : (prompt ? 'prompt-available' : 'not-installed'),
     deudalayaInstallSource: installed ? 'standalone' : null,
+    matchMedia() { return { matches: installed }; },
     addEventListener(name, fn) { windowListeners[name] = fn; }
   };
   if (prompt) window.onbeforeinstallprompt = null;
-  const navigator = { userAgent: ua, platform, maxTouchPoints, userAgentData: platformData ? { platform: platformData } : undefined };
+  const navigator = { userAgent: ua, platform, maxTouchPoints, standalone: installed, userAgentData: platformData ? { platform: platformData } : undefined };
   if (brave) navigator.brave = {};
   vm.runInNewContext(script, { document, navigator, window, Promise, setTimeout, clearTimeout });
   return { button, buttonListeners, classes, hint, intro, steps, window, windowListeners };

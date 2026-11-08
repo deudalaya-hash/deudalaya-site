@@ -45,6 +45,17 @@ test('the supplied 2026-11-08 clip is bundled once and assigned only to सु�
   assert.equal(fs.readFileSync(path.resolve(__dirname, '..', source)).toString('ascii', 4, 8), 'ftyp');
 });
 
+test('the supplied cricket-ground video is assigned to शहर but remains unavailable while that category is coming soon', () => {
+  const source = 'assets/deudalaya-shahar-tu-cricket-ground-night.mp4';
+  const entry = html.match(new RegExp(`\\{[^{}]*videoSrc:'${source.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&')}'[^{}]*\\}`));
+  assert.ok(entry, 'the supplied video has a feed entry');
+  assert.match(entry[0], /feedCategory:'शहर'/);
+  assert.deepEqual(categories.filterPosts([{ feedCategory: 'शहर' }], 'शहर'), []);
+  assert.equal((html.match(new RegExp(source.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&'), 'g')) || []).length, 1);
+  assert.equal(fs.readFileSync(path.resolve(__dirname, '..', source)).toString('ascii', 4, 8), 'ftyp');
+  assert.match(html, /showFeedCategoryComingSoon\('शहर'\)/);
+});
+
 test('category tabs order active feeds before the coming-soon category', () => {
   const nav = html.match(/<nav class="feed-category-tabs"[^>]*>[\s\S]*?<\/nav>/)?.[0];
   assert.ok(nav);

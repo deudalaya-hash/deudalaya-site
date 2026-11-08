@@ -17,15 +17,18 @@ test('the Deudalaya starter feed includes all supplied videos and profiles them 
   assert.notEqual(start, -1, 'feed data is present');
   assert.notEqual(end, -1, 'feed data has an end boundary');
   const seed = html.slice(start, end);
-  assert.equal((seed.match(/videoSrc:/g) || []).length, 26, 'all twenty-six starter posts are videos');
+  assert.equal((seed.match(/videoSrc:/g) || []).length, 27, 'all twenty-seven starter posts are videos');
   assert.match(seed, /videoSrc:'assets\/deudalaya-video-2026-11-03-feed-01\.mp4'/);
   assert.match(seed, /videoSrc:'assets\/deudalaya-video-2026-11-03-110721\.mp4'/);
   assert.match(seed, /videoSrc:'assets\/deudalaya-featured-video\.mp4'/);
   assert.match(seed, /videoSrc:'assets\/deudalaya-video-2026-11-03-103359\.mp4'/);
   assert.match(seed, /videoSrc:'assets\/deudalaya-video-2026-11-03-103349\.mp4'/);
+  assert.match(seed, /videoSrc:'assets\/deudalaya-shahar-tu-cricket-ground-night\.mp4',feedCategory:'शहर'/);
   for (const file of ['VID_20261108_023137.mp4','VID_20261108_024830.mp4','VID_20261108_024457.mp4','VID_20261108_024346.mp4','VID_20261108_024624.mp4','VID_20261108_023805.mp4']) {
     assert.ok(seed.includes(`videoSrc:'assets/${file}'`), `${file} is registered in the starter feed`);
   }
+  assert.equal((seed.match(/videoSrc:'assets\/deudalaya-shahar-tu-cricket-ground-night\.mp4'/g) || []).length, 1, 'the supplied city video is stored once');
+  assert.equal(fs.readFileSync(path.join(root, 'assets', 'deudalaya-shahar-tu-cricket-ground-night.mp4')).toString('ascii', 4, 8), 'ftyp');
   assert.doesNotMatch(seed, /\bimage:/, 'starter post is not an image post');
 
   const video = fs.readFileSync(mediaPath);

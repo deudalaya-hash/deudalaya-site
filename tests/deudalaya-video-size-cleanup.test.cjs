@@ -39,7 +39,7 @@ test('oversized local videos are absent and no feed references are broken', () =
     assert.ok(fs.existsSync(path.join(root, source)), `${source} resolves to a local asset`);
   }
   const remainingVideos = fs.readdirSync(assets).filter(name => /\.(mp4|webm|mov)$/i.test(name));
-  assert.equal(remainingVideos.length, 26, 'all 26 videos at or below 25 MB remain');
+  assert.equal(remainingVideos.length, 27, 'all 27 videos at or below 25 MB remain');
   for (const name of remainingVideos) {
     assert.ok(fs.statSync(path.join(assets, name)).size <= 25_000_000, `${name} is within the cap`);
   }
