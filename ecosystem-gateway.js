@@ -72,7 +72,12 @@
           'Home Screen बाट देउडालय खोल्नुहोस्।'
         ], true);
       }
-      return stepGuide('Android मा देउडालय स्थापना गर्न Chrome, Edge वा Brave मा खोल्नुहोस्।', [], false);
+      return stepGuide('Android मा देउडालय स्थापना गर्न Chrome मा खोल्नुहोस्:', [
+        'यो पृष्ठ Chrome मा खोल्नुहोस्।',
+        'माथि दायाँपट्टि रहेको तीनवटा थोप्ला (⋮) थिच्नुहोस्।',
+        '“Install app” वा “Add to Home screen” छान्नुहोस्।',
+        '“Install” वा “Add” थिच्नुहोस्।'
+      ], true);
     }
 
     if (device === 'mac' && browser === 'Safari') {
@@ -127,7 +132,7 @@
     installButton.disabled = promptPending || installed || !guide.showInstallButton;
     installButton.textContent = deferredPrompt && promptBrowsers.includes(environment.browser)
       ? 'Install App'
-      : environment.device === 'android' && ['Chrome', 'Edge', 'Brave'].includes(environment.browser)
+      : environment.device === 'android'
         ? 'Install via ⋮ menu'
         : 'Install App';
     if (installIntro) installIntro.textContent = guide.intro;
@@ -135,8 +140,10 @@
     installHint.textContent = guide.showInstallButton
       ? deferredPrompt
         ? 'देउडालय स्थापना गर्न तयार छ।'
-        : environment.device === 'android'
+        : environment.device === 'android' && ['Chrome', 'Edge', 'Brave'].includes(environment.browser)
           ? 'स्थापना गर्न माथिको ⋮ मेनुबाट “Install app” छान्नुहोस्।'
+          : environment.device === 'android'
+            ? 'यो पृष्ठ Chrome मा खोलेर ⋮ मेनुबाट “Install app” छान्नुहोस्।'
           : 'देउडालय स्थापना गर्न तयार छ।'
       : guide.steps.length ? 'तलका चरणहरू पालना गर्नुहोस्।' : 'यस ब्राउजरमा अहिले स्थापना विकल्प उपलब्ध छैन।';
   }
@@ -168,6 +175,10 @@
     if (!deferredPrompt || !promptBrowsers.includes(environment.browser)) {
       if (environment.device === 'android' && ['Chrome', 'Edge', 'Brave'].includes(environment.browser)) {
         installHint.textContent = 'माथिको ⋮ मेनु थिचेर “Install app” वा “Add to Home screen” छान्नुहोस्।';
+        return;
+      }
+      if (environment.device === 'android') {
+        installHint.textContent = 'यो पृष्ठ Chrome मा खोलेर माथिको ⋮ मेनुबाट “Install app” वा “Add to Home screen” छान्नुहोस्।';
         return;
       }
       updateButton();
