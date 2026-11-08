@@ -11,12 +11,14 @@ test('feed category filtering keeps each video in exactly its stored category', 
   const posts = [
     { id: 'default' },
     { id: 'village', feedCategory: 'गाउँघर' },
+    { id: 'city', feed_category: 'शहर' },
     { id: 'sudur', feed_category: 'सुदूर कर्णाली' },
     { id: 'unknown', feedCategory: 'गीत' }
   ];
 
   assert.deepEqual(categories.filterPosts(posts, 'देउडा').map(post => post.id), ['default']);
   assert.deepEqual(categories.filterPosts(posts, 'गाउँघर').map(post => post.id), ['village']);
+  assert.deepEqual(categories.filterPosts(posts, 'शहर').map(post => post.id), ['city']);
   assert.deepEqual(categories.filterPosts(posts, 'सुदूर कर्णाली').map(post => post.id), ['sudur']);
   assert.deepEqual(categories.filterPosts(posts, 'गीत'), []);
 });
@@ -33,26 +35,32 @@ test('category tabs order active feeds before the coming-soon category', () => {
   const nav = html.match(/<nav class="feed-category-tabs"[^>]*>[\s\S]*?<\/nav>/)?.[0];
   assert.ok(nav);
   const buttons = [...nav.matchAll(/<button class="feed-category(?: selected)?"[^>]*>([^<]+)<\/button>/g)];
-  assert.deepEqual(buttons.map(([, label]) => label), ['देउडा', 'गाउँघर', 'गीत', 'सुदूर कर्णाली']);
+  assert.deepEqual(buttons.map(([, label]) => label), ['देउडा', 'गाउँघर', 'शहर', 'सुदूर कर्णाली', 'गीत']);
   assert.match(buttons[0][0], /selected/);
   assert.match(nav, /setFeedCategory\('गाउँघर'\)/);
+  assert.match(nav, /setFeedCategory\('शहर'\)/);
   assert.match(nav, /setFeedCategory\('सुदूर कर्णाली'\)/);
   assert.match(nav, /showFeedCategoryComingSoon\('गीत'\)/);
 });
 
 test('uploads and admin management store a dedicated feed category separately from topic metadata', () => {
   assert.match(html, /id="uploadCategory"[\s\S]*?<option>गाउँघर<\/option>/);
+  assert.match(html, /id="uploadCategory"[\s\S]*?<option>शहर<\/option>/);
   assert.match(html, /id="feedCategoryManager"/);
   assert.match(html, /id="feedCategoryManageButton"/);
   assert.match(social, /select\('id,user_id,media_path,media_type,caption,category,feed_category,created_at'\)/);
   assert.match(social, /update\(\{feed_category:category\}\)/);
   assert.match(social, /isDeudalayaAdmin\(\)/);
+  assert.deepEqual(categories.ACTIVE_CATEGORIES, ['देउडा', 'गाउँघर', 'शहर', 'सुदूर कर्णाली']);
 });
 
-test('feed category metadata migration is additive and admin-gated', () => {
+test('feed category metadata migration is additive, admin-gated, and keeps existing placements', () => {
   const migration = fs.readFileSync(path.resolve(__dirname, '..', 'supabase/migrations/202611080001_feed_categories.sql'), 'utf8');
+  const cityMigration = fs.readFileSync(path.resolve(__dirname, '..', 'supabase/migrations/202611080002_add_city_feed_category.sql'), 'utf8');
   assert.match(migration, /add column if not exists feed_category/);
   assert.match(migration, /is_deudalaya_admin/);
   assert.match(migration, /feed_category in \('देउडा', 'गाउँघर', 'सुदूर कर्णाली'\)/);
   assert.doesNotMatch(migration, /update public\.feed_posts set feed_category = 'सुदूर कर्णाली'/);
+  assert.match(cityMigration, /feed_category is null or feed_category in \('देउडा', 'गाउँघर', 'शहर', 'सुदूर कर्णाली'\)/);
+  assert.doesNotMatch(cityMigration, /update public\.feed_posts/);
 });
