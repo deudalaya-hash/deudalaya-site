@@ -25,7 +25,7 @@ test('feed navigation preserves the active video sound preference and existing s
 test('mobile feed fills the dynamic viewport while keeping complete media frames visible', () => {
   assert.match(html, /name="viewport" content="[^"]*viewport-fit=cover/);
   assert.match(html, /\.video\{inset:0!important/);
-  assert.match(html, /\.video video,\.video img\{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center center!important/);
+  assert.match(html, /\.video video,\.video img\{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center top!important/);
   assert.match(html, /padding-bottom:0!important/);
   assert.match(html, /\.main\{[^}]*flex:1 1 auto!important[^}]*height:auto!important/);
   assert.match(html, /\.feed-wrap\{[^}]*height:100%!important/);

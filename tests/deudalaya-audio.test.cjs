@@ -66,7 +66,7 @@ function runAudioScript({ allowPlay = false, preference = null } = {}) {
 
 test('feed defaults to the saved sound preference or sound enabled', () => {
   assert.match(html, /muted=\(\(\)=>\{try\{return localStorage\.getItem\('deudalaya-sound-preference'\)==='muted'\}catch\(e\)\{return false\}\}\)\(\)/);
-  assert.match(html, /<video id="postVideo" playsinline preload="none"/);
+  assert.match(html, /<video id="postVideo" playsinline loop preload="none"/);
   assert.match(html, /deudalaya-audio\.js/);
   assert.match(html, /deudalaya-audio\.css/);
 });

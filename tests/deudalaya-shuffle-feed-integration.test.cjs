@@ -23,13 +23,12 @@ test('feed navigation uses the no-repeat shuffle cycle instead of recommendation
   assert.match(html, /if\(pv\.currentTime<threshold\)return;[\s\S]*?fypMarkVideoStarted\(index\)/);
 });
 
-test('video end automatically advances and current video playback starts without loading the full feed', () => {
+test('the current video loops without advancing and playback avoids preloading the next video', () => {
   assert.match(html, /<video id="postVideo"[^>]*preload="none"/);
+  assert.match(html, /<video id="postVideo"[^>]*\bloop\b/);
   assert.match(html, /if\(!paused\)postVideo\.play\(\)/);
-  assert.match(html, /metadataPreloader\.preload='metadata'/);
-  assert.ok(html.includes("connection&&(connection.saveData||/^(slow-)?2g$/i.test"));
-  assert.match(html, /metadataPreloader\.addEventListener\('error'/);
-  assert.match(html, /pv\.addEventListener\('ended',[\s\S]*?nextVideo\(\)/);
+  assert.doesNotMatch(html, /pv\.addEventListener\('ended',[\s\S]*?nextVideo\(\)/);
+  assert.doesNotMatch(html, /preloadNextMetadata|metadataPreloader/);
   assert.match(html, /function nextVideo\(\)[\s\S]*?render\(\)/);
 });
 

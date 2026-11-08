@@ -34,6 +34,6 @@ test('feed playback and profile no longer render image-post fallbacks', () => {
   assert.doesNotMatch(html, /post-image|scene-image|profile-post img/, 'feed and profile grids have no image media fallback styles');
   assert.doesNotMatch(html, /postImage\.src\s*=/);
   assert.doesNotMatch(html, /postImage\.hidden\s*=\s*false/);
-  assert.doesNotMatch(html.match(/<video id="postVideo"[^>]*>/)[0], /\bloop\b/);
+  assert.match(html.match(/<video id="postVideo"[^>]*>/)[0], /\bloop\b/);
   assert.match(html, /postVideo\.muted\s*=\s*muted/);
 });

@@ -14,13 +14,27 @@ test('the feed has no top header or header search UI', () => {
   assert.match(html, /id="uploadCategory"[\s\S]*?<option>कला तथा संस्कृति<\/option>/);
 });
 
+test('the video feed shows one active Nepali category and two coming-soon tabs', () => {
+  const tabs = html.match(/<nav class="feed-category-tabs"[^>]*>[\s\S]*?<\/nav>/);
+  assert.ok(tabs, 'category tabs float inside the feed');
+  const buttons = [...tabs[0].matchAll(/<button class="feed-category(?: selected)?"[^>]*>([^<]+)<\/button>/g)];
+  assert.deepEqual(buttons.map(([, label]) => label), ['देउडा', 'गीत', 'सुदूर कर्णाली']);
+  assert.match(buttons[0][0], /selected/);
+  assert.match(buttons[0][0], /aria-pressed="true"/);
+  assert.equal((tabs[0].match(/selected/g) || []).length, 1, 'only देउडा is active');
+  assert.equal((tabs[0].match(/showFeedCategoryComingSoon\(\)/g) || []).length, 2);
+  assert.match(html, /function showFeedCategoryComingSoon\(\)\{toast\('Coming Soon'\)\}/);
+  assert.match(html, /\.feed-category-tabs\{[^}]*position:absolute[^}]*left:50%[^}]*transform:translateX\(-50%\)/);
+  assert.match(html, /\.feed-category\.selected::after\{[^}]*background:#fff/);
+});
+
 test('the feed uses the first viewport row without a reserved header gap', () => {
   assert.match(html, /\.app\{[^}]*grid-template-rows:1fr/);
   assert.match(html, /\.nav\{grid-row:1/);
   assert.match(html, /\.main\{grid-row:1/);
   assert.match(html, /\.right\{grid-row:1/);
   assert.match(html, /@media\(max-width:700px\)\{body\{overflow:hidden\}\.app\{display:flex;flex-direction:column;height:100dvh/);
-  assert.match(html, /\.video video,\.video img\{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center center!important/);
+  assert.match(html, /\.video video,\.video img\{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center top!important/);
   assert.match(html, /class="mobile-nav"/);
 });
 
