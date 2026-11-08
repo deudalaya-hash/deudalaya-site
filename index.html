@@ -16,14 +16,18 @@
   window.__deudalayaPwaCaptureBound=true;
   function isStandalone(){return(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true}
   var standaloneAtLaunch=isStandalone();
+  function isMobileInstallDevice(){var ua=String(navigator.userAgent||'');var platform=String(navigator.userAgentData&&navigator.userAgentData.platform||navigator.platform||'');return/Android|iPhone|iPad|iPod/i.test(ua)||/^(Android|iPhone|iPad|iPod)/i.test(platform)||(/Mac/i.test(platform)&&Number(navigator.maxTouchPoints)>1)}
+  var mobileInstallDevice=isMobileInstallDevice();
   window.deferredPrompt=null;
   window.deudalayaInstallState=standaloneAtLaunch?'installed':'unavailable';
+  window.deudalayaInstallationStatus=standaloneAtLaunch?'installed':'not-installed';
   window.deudalayaInstallSource=standaloneAtLaunch?'standalone':null;
-  if(!standaloneAtLaunch)document.documentElement.classList.add('ecosystem-gateway');
+  if(!standaloneAtLaunch&&mobileInstallDevice)document.documentElement.classList.add('ecosystem-gateway');
   function markInstalled(source){
     if(window.deudalayaInstallState==='installed'&&window.deudalayaInstallSource===source)return;
     window.deferredPrompt=null;
     window.deudalayaInstallState='installed';
+    window.deudalayaInstallationStatus='installed';
     window.deudalayaInstallSource=source;
     window.dispatchEvent(new Event('deudalaya-installstatechange'));
   }
@@ -36,10 +40,12 @@
   }
   window.addEventListener('beforeinstallprompt',function(event){
     if(window.deudalayaInstallState==='installed')return;
+    if(!mobileInstallDevice)return;
     event.preventDefault();
     if(window.deferredPrompt)return;
     window.deferredPrompt=event;
     window.deudalayaInstallState='available';
+    window.deudalayaInstallationStatus='prompt-available';
     window.dispatchEvent(new Event('deudalaya-installpromptavailable'));
   });
   checkInstallation();

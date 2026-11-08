@@ -46,8 +46,32 @@ test('the early listener stores Chrome’s genuine prompt and updates the instal
   assert.equal(prevented, true);
   assert.equal(capture.window.deferredPrompt, promptEvent);
   assert.equal(capture.window.deudalayaInstallState, 'available');
+  assert.equal(capture.window.deudalayaInstallationStatus, 'prompt-available');
   assert.ok(capture.dispatched.includes('deudalaya-installpromptavailable'));
   await capture.settle();
+});
+
+test('desktop visitors are not forced into the install gate', () => {
+  const capture = createPwaCaptureHarness([], {
+    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130.0.0.0 Safari/537.36',
+    platform: 'Win32'
+  });
+  assert.equal(capture.classes.has('ecosystem-gateway'), false);
+  let prevented = false;
+  capture.windowListeners.beforeinstallprompt({ preventDefault() { prevented = true; } });
+  assert.equal(prevented, false, 'desktop Chrome keeps its browser-native install behavior');
+  assert.equal(capture.window.deferredPrompt, null, 'desktop prompt events are left to the browser');
+});
+
+test('installation status tracks pending, cancellation, and success explicitly', async () => {
+  const ui = createGatewayHarness({ outcome: 'dismissed' });
+  assert.equal(ui.window.deudalayaInstallationStatus, 'prompt-available');
+  const click = ui.buttonListeners.click({ preventDefault() {} });
+  assert.equal(ui.window.deudalayaInstallationStatus, 'installation-pending');
+  await click;
+  assert.equal(ui.window.deudalayaInstallationStatus, 'not-installed');
+  ui.windowListeners.appinstalled();
+  assert.equal(ui.window.deudalayaInstallationStatus, 'installed');
 });
 
 test('installed state is rechecked when Chrome restores or foregrounds the page', async () => {
@@ -172,6 +196,7 @@ function createGatewayHarness({ outcome, supportsPrompt = true, eventAvailable =
   const window = {
     deferredPrompt: eventAvailable ? promptEvent : null,
     deudalayaInstallState: eventAvailable ? 'available' : 'unavailable',
+    deudalayaInstallationStatus: eventAvailable ? 'prompt-available' : 'not-installed',
     addEventListener(name, handler) { windowListeners[name] = handler; }
   };
   if (supportsPrompt) window.onbeforeinstallprompt = null;
@@ -184,7 +209,10 @@ function createGatewayHarness({ outcome, supportsPrompt = true, eventAvailable =
     get promptCalls() { return promptCalls; } };
 }
 
-function createPwaCaptureHarness(installedApps) {
+function createPwaCaptureHarness(installedApps, browser = {
+  userAgent: 'Mozilla/5.0 (Linux; Android 15) Chrome/130.0.0.0 Mobile Safari/537.36',
+  platform: 'Linux armv8l'
+}) {
   const head = html.slice(0, html.indexOf('</head>'));
   const capture = head.match(/<script id="deudalayaPwaCapture">([\s\S]*?)<\/script>/);
   assert.ok(capture, 'capture script is available for the browser-state test');
@@ -214,6 +242,8 @@ function createPwaCaptureHarness(installedApps) {
   let queryCount = 0;
   const navigator = {
     standalone: false,
+    userAgent: browser.userAgent,
+    platform: browser.platform,
     getInstalledRelatedApps() { queryCount += 1; return Promise.resolve(relatedApps); }
   };
   vm.runInNewContext(capture[1], {

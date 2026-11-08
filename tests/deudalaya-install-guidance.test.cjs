@@ -33,7 +33,7 @@ test('Android Chrome, Edge, and Brave show their four Nepali Home Screen steps a
     assert.match(ui.steps.innerHTML, /“Install app” वा “Add to Home screen”/);
     assert.match(ui.steps.innerHTML, /Home Screen/);
     assert.equal(ui.button.hidden, false, 'the install action stays visible when Chrome has no prompt event');
-    assert.equal(ui.button.textContent, 'Install via ⋮ menu');
+    assert.equal(ui.button.textContent, 'Install App');
   }
 });
 
@@ -48,26 +48,30 @@ test('Android Chrome fallback action explains the browser menu when no prompt ev
   assert.match(ui.hint.textContent, /Install app/);
 });
 
-test('iPhone Safari and touch iPadOS Safari show the Nepali Share flow', () => {
+test('iPhone Safari and touch iPadOS Safari show a clear manual-install action and Share flow', async () => {
   const iphone = createGateway({
     ua: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile/15E148 Safari/604.1',
     platform: 'iPhone'
   });
-  assert.equal(stepCount(iphone), 4);
+  assert.equal(stepCount(iphone), 3);
   assert.match(iphone.steps.innerHTML, /Share बटन/);
   assert.match(iphone.steps.innerHTML, /“Add to Home Screen”/);
-  assert.equal(iphone.button.hidden, true);
+  assert.equal(iphone.button.hidden, false);
+  assert.equal(iphone.button.textContent, 'Install App');
+  await iphone.buttonListeners.click({ preventDefault() {} });
+  assert.match(iphone.hint.textContent, /Share बटन/);
 
   const ipad = createGateway({
     ua: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Safari/604.1',
     platform: 'MacIntel',
     maxTouchPoints: 5
   });
-  assert.equal(stepCount(ipad), 4);
+  assert.equal(stepCount(ipad), 3);
   assert.match(ipad.steps.innerHTML, /“Add to Home Screen”/);
+  assert.equal(ipad.button.hidden, false);
 });
 
-test('Mac Safari and installable Windows Chrome receive only supported guidance', () => {
+test('Mac Safari shows supported guidance and desktop Chrome is not forced into the install gate', () => {
   const safari = createGateway({
     ua: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 Version/18.0 Safari/605.1.15',
     platform: 'MacIntel'
@@ -82,13 +86,11 @@ test('Mac Safari and installable Windows Chrome receive only supported guidance'
     platform: 'Win32',
     prompt: true
   });
-  assert.equal(chrome.button.hidden, false);
-  assert.equal(chrome.button.textContent, 'Install App');
-  assert.match(chrome.steps.innerHTML, /Address bar नजिक/);
-  assert.match(chrome.steps.innerHTML, /“Install” छान्नुहोस्/);
+  assert.equal(chrome.button.hidden, true);
+  assert.match(chrome.intro.textContent, /ब्राउजरको आफ्नै Install/);
 });
 
-test('Firefox and unsupported browsers are directed to a supported browser', () => {
+test('desktop users are not pushed into an install flow while unsupported mobile browsers get guidance', () => {
   const firefox = createGateway({
     ua: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0',
     platform: 'Win32',
@@ -98,12 +100,18 @@ test('Firefox and unsupported browsers are directed to a supported browser', () 
   assert.match(firefox.intro.textContent, /Chrome वा Edge/);
   assert.doesNotMatch(firefox.steps.innerHTML, /Add to Home Screen|Add to Dock|Install app/);
 
+  const desktopChrome = createGateway({
+    ua: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130.0.0.0 Safari/537.36',
+    platform: 'Win32'
+  });
+  assert.equal(desktopChrome.button.hidden, true);
+
   const iosChrome = createGateway({
     ua: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 CriOS/130.0.0.0 Mobile/15E148 Safari/604.1',
     platform: 'iPhone',
     prompt: true
   });
-  assert.equal(iosChrome.button.hidden, true);
+  assert.equal(iosChrome.button.hidden, false);
   assert.match(iosChrome.intro.textContent, /Safari/);
   assert.doesNotMatch(iosChrome.steps.innerHTML, /Add to Home Screen/);
 });
@@ -139,6 +147,7 @@ function createGateway({ ua, platform = '', platformData = '', maxTouchPoints = 
     __deudalayaInstallUiBound: false,
     deferredPrompt: promptEvent,
     deudalayaInstallState: installed ? 'installed' : (prompt ? 'available' : 'unavailable'),
+    deudalayaInstallationStatus: installed ? 'installed' : (prompt ? 'prompt-available' : 'not-installed'),
     deudalayaInstallSource: installed ? 'standalone' : null,
     addEventListener(name, fn) { windowListeners[name] = fn; }
   };

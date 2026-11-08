@@ -9,7 +9,7 @@
   if (!installButton || !installHint) return;
 
   let deferredPrompt = window.deferredPrompt || null;
-  let promptPending = false;
+  let promptPending = window.deudalayaInstallationStatus === 'installation-pending';
   let installed = window.deudalayaInstallState === 'installed' || window.deudalayaInstallState === 'standalone';
   const environment = detectEnvironment();
   const promptBrowsers = ['Chrome', 'Edge', 'Brave', 'Opera'];
@@ -49,11 +49,10 @@
         return stepGuide('Safari बाट देउडालयलाई Home Screen मा राख्नुहोस्:', [
           'तल रहेको Share बटन थिच्नुहोस्।',
           '“Add to Home Screen” छान्नुहोस्।',
-          '“Add” थिच्नुहोस्।',
-          'Home Screen बाट देउडालय खोल्नुहोस्।'
-        ], false);
+          '“Add” थिच्नुहोस्।'
+        ], true);
       }
-      return stepGuide('iPhone वा iPad मा स्थापना गर्न Safari मा देउडालय खोल्नुहोस्।', [], false);
+      return stepGuide('iPhone वा iPad मा स्थापना गर्न Safari मा देउडालय खोल्नुहोस् र Share मेनु प्रयोग गर्नुहोस्।', [], true);
     }
 
     if (device === 'android') {
@@ -92,14 +91,7 @@
     }
 
     if (device === 'windows' && ['Chrome', 'Edge'].includes(browser)) {
-      if (hasPrompt) {
-        return stepGuide(`Windows · ${browser} मा स्थापना गर्ने चरणहरू:`, [
-          'Address bar नजिक रहेको Install आइकन उपलब्ध भए थिच्नुहोस्।',
-          'आइकन नदेखिएमा तलको “देउडालय स्थापना गर्नुहोस्” बटन थिच्नुहोस्।',
-          '“Install” छान्नुहोस्। देउडालय एप कम्प्युटरमा खुल्नेछ।'
-        ], true);
-      }
-      return stepGuide('यस पृष्ठका लागि अहिले स्थापना विकल्प उपलब्ध छैन। ब्राउजर अपडेट गरेर फेरि प्रयास गर्नुहोस्।', [], false);
+      return stepGuide('डेस्कटपमा स्थापना गर्न ब्राउजरको आफ्नै Install विकल्प प्रयोग गर्नुहोस्।', [], false);
     }
 
     if (promptBrowsers.includes(browser) && hasPrompt && device !== 'iphone' && device !== 'ipad') {
@@ -130,11 +122,7 @@
     const guide = getGuide(!!deferredPrompt && promptBrowsers.includes(environment.browser));
     installButton.hidden = !guide.showInstallButton;
     installButton.disabled = promptPending || installed || !guide.showInstallButton;
-    installButton.textContent = deferredPrompt && promptBrowsers.includes(environment.browser)
-      ? 'Install App'
-      : environment.device === 'android'
-        ? 'Install via ⋮ menu'
-        : 'Install App';
+    installButton.textContent = 'Install App';
     if (installIntro) installIntro.textContent = guide.intro;
     if (installSteps) installSteps.innerHTML = guide.steps.map(step => `<li>${step}</li>`).join('');
     installHint.textContent = guide.showInstallButton
@@ -159,6 +147,7 @@
     deferredPrompt = null;
     window.deferredPrompt = null;
     window.deudalayaInstallState = 'installed';
+    window.deudalayaInstallationStatus = 'installed';
     updateButton();
   });
 
@@ -181,12 +170,17 @@
         installHint.textContent = 'यो पृष्ठ Chrome मा खोलेर माथिको ⋮ मेनुबाट “Install app” वा “Add to Home screen” छान्नुहोस्।';
         return;
       }
+      if (environment.device === 'iphone' || environment.device === 'ipad') {
+        installHint.textContent = 'Safari मा Share बटन थिचेर “Add to Home Screen”, त्यसपछि “Add” छान्नुहोस्।';
+        return;
+      }
       updateButton();
       return;
     }
 
     const promptEvent = deferredPrompt;
     promptPending = true;
+    window.deudalayaInstallationStatus = 'installation-pending';
     installButton.disabled = true;
     installHint.textContent = 'ब्राउजरको स्थापना पुष्टि खुल्दैछ…';
 
@@ -196,12 +190,16 @@
       window.deferredPrompt = null;
       await Promise.resolve(promptResult);
       const choice = await promptEvent.userChoice;
+      if (!installed) window.deudalayaInstallationStatus = choice && choice.outcome === 'accepted'
+        ? 'installation-pending'
+        : 'not-installed';
       installHint.textContent = choice && choice.outcome === 'accepted'
         ? 'स्थापना स्वीकार गरियो।'
         : 'स्थापना रद्द गरियो।';
     } catch (error) {
       deferredPrompt = null;
       window.deferredPrompt = null;
+      window.deudalayaInstallationStatus = 'not-installed';
       installHint.textContent = 'स्थापना पूरा भएन। फेरि प्रयास गर्नुहोस्।';
     } finally {
       promptPending = false;
