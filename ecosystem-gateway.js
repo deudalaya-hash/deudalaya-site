@@ -48,6 +48,13 @@
   function getGuide(hasPrompt) {
     const { browser, device, safariVersion } = environment;
 
+    if (device !== 'iphone' && device !== 'ipad' && hasPrompt && promptBrowsers.includes(browser)) {
+      return stepGuide(`${browser} मा तलको INSTALL APP बटन थिचेर ब्राउजरको स्थापना पुष्टि खोल्नुहोस्:`, [
+        'INSTALL APP थिच्नुहोस्।',
+        'ब्राउजरको पुष्टिमा “Install” छान्नुहोस्।'
+      ], true);
+    }
+
     if (device === 'iphone' || device === 'ipad') {
       if (browser === 'Safari') {
         return stepGuide('Safari बाट देउडालयलाई Home Screen मा राख्नुहोस्:', [

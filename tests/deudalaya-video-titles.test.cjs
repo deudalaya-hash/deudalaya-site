@@ -38,6 +38,9 @@ const expectedTitles = new Map([
   ['assets/VID_20261108_023805.mp4', 'देउडा प्रस्तुति • ०२:३८:०५'],
   ['assets/VID_20261108_122315.mp4', 'VID_20261108_122315'],
   ['assets/deudalaya-shahar-tu-cricket-ground-night.mp4', 'TU International Cricket Ground'],
+  ['assets/deudalaya-shahar-city-of-temples.mp4', 'City of Temples'],
+  ['assets/deudalaya-shahar-2026-11-08-134127.mp4', 'VID_20261108_134127'],
+  ['assets/deudalaya-shahar-2026-11-08-133736.mp4', 'VID_20261108_133736'],
 ]);
 
 test('each bundled video has its own distinct title', () => {

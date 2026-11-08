@@ -37,6 +37,20 @@ test('Android Chrome, Edge, and Brave show their four Nepali Home Screen steps a
   }
 });
 
+test('Android Chrome with a captured install event presents the button as a direct native install action', async () => {
+  const ui = createGateway({
+    ua: 'Mozilla/5.0 (Linux; Android 15) AppleWebKit/537.36 Chrome/130.0.0.0 Mobile Safari/537.36',
+    platform: 'Linux armv8l',
+    platformData: 'Android',
+    prompt: true
+  });
+
+  assert.match(ui.intro.textContent, /INSTALL APP बटन थिचेर/);
+  assert.doesNotMatch(ui.steps.innerHTML, /तीनवटा थोप्ला|मेनु/);
+  await ui.buttonListeners.click({ preventDefault() {} });
+  assert.equal(ui.promptCalls, 1);
+});
+
 test('Android Chrome fallback action explains the browser menu when no prompt event is available', async () => {
   const ui = createGateway({
     ua: 'Mozilla/5.0 (Linux; Android 15) AppleWebKit/537.36 Chrome/130.0.0.0 Mobile Safari/537.36',
@@ -89,8 +103,9 @@ test('Mac Safari and desktop Chrome show supported installation guidance', async
     prompt: true
   });
   assert.equal(chrome.button.hidden, false);
-  assert.match(chrome.steps.innerHTML, /Address bar नजिक/);
-  assert.match(chrome.steps.innerHTML, /Install/);
+  assert.match(chrome.intro.textContent, /INSTALL APP बटन/);
+  assert.doesNotMatch(chrome.steps.innerHTML, /Address bar|⋮ मेनु/);
+  assert.equal(chrome.button.textContent, 'Install App');
 });
 
 test('unsupported browsers remain gated and iOS browsers get Safari instructions', () => {
@@ -129,6 +144,7 @@ function createGateway({ ua, platform = '', platformData = '', maxTouchPoints = 
   const buttonListeners = {};
   const windowListeners = {};
   const classes = new Set(['ecosystem-gateway']);
+  let promptCalls = 0;
   const button = { hidden: false, disabled: false, textContent: '', addEventListener(name, fn) { buttonListeners[name] = fn; } };
   const hint = { textContent: '' };
   const intro = { textContent: '' };
@@ -139,7 +155,7 @@ function createGateway({ ua, platform = '', platformData = '', maxTouchPoints = 
       return ({ deudalayaInstallAction: button, deudalayaInstallHint: hint, deudalayaInstallIntro: intro, deudalayaInstallSteps: steps })[id] || null;
     }
   };
-  const promptEvent = prompt ? { prompt() { return Promise.resolve(); }, userChoice: Promise.resolve({ outcome: 'accepted' }) } : null;
+  const promptEvent = prompt ? { prompt() { promptCalls += 1; return Promise.resolve(); }, userChoice: Promise.resolve({ outcome: 'accepted' }) } : null;
   const window = {
     __deudalayaInstallUiBound: false,
     deferredPrompt: promptEvent,
@@ -153,7 +169,7 @@ function createGateway({ ua, platform = '', platformData = '', maxTouchPoints = 
   const navigator = { userAgent: ua, platform, maxTouchPoints, standalone: installed, userAgentData: platformData ? { platform: platformData } : undefined };
   if (brave) navigator.brave = {};
   vm.runInNewContext(script, { document, navigator, window, Promise, setTimeout, clearTimeout });
-  return { button, buttonListeners, classes, hint, intro, steps, window, windowListeners };
+  return { button, buttonListeners, classes, hint, intro, steps, window, windowListeners, get promptCalls() { return promptCalls; } };
 }
 
 function stepCount(ui) {

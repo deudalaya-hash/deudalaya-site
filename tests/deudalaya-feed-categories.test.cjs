@@ -56,6 +56,25 @@ test('the supplied cricket-ground video is assigned to शहर but remains una
   assert.match(html, /showFeedCategoryComingSoon\('शहर'\)/);
 });
 
+test('the three additional city videos are each bundled once and assigned only to शहर', () => {
+  const sources = [
+    'assets/deudalaya-shahar-city-of-temples.mp4',
+    'assets/deudalaya-shahar-2026-11-08-134127.mp4',
+    'assets/deudalaya-shahar-2026-11-08-133736.mp4'
+  ];
+  const seed = html.slice(html.indexOf('const videos=['), html.indexOf('let index='));
+
+  for (const source of sources) {
+    const entry = seed.match(new RegExp(`\\{[^{}]*videoSrc:'${source.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&')}'[^{}]*\\}`));
+    const assetPath = path.resolve(__dirname, '..', source);
+    assert.ok(fs.existsSync(assetPath), `${source} is bundled`);
+    assert.ok(entry, `${source} has a feed entry`);
+    assert.match(entry[0], /feedCategory:'शहर'/);
+    assert.equal((seed.match(new RegExp(source.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&'), 'g')) || []).length, 1);
+    assert.equal(fs.readFileSync(assetPath).toString('ascii', 4, 8), 'ftyp');
+  }
+});
+
 test('category tabs order active feeds before the coming-soon category', () => {
   const nav = html.match(/<nav class="feed-category-tabs"[^>]*>[\s\S]*?<\/nav>/)?.[0];
   assert.ok(nav);
