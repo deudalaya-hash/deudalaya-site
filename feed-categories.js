@@ -13,6 +13,7 @@
         }
         const selected = category === api.DEFAULT_CATEGORY;
         button.setAttribute('data-feed-category', category);
+        button.style.fontSize = 'clamp(16px, calc(4vw + 2px), 19px)';
         button.classList.toggle('selected', selected);
         button.setAttribute('aria-pressed', String(selected));
         if (selected) button.setAttribute('aria-current', 'page');

@@ -38,6 +38,7 @@ test('category navigation exposes exactly three feeds, defaults to देउड�
       textContent: label,
       dataset: {},
       attributes: {},
+      style: {},
       removed: false,
       classList: {
         toggle(name, enabled) { enabled ? classNames.add(name) : classNames.delete(name); },
@@ -74,6 +75,11 @@ test('category navigation exposes exactly three feeds, defaults to देउड�
   const visibleButtons = buttons.filter(button => !button.removed);
   assert.deepEqual(visibleButtons.map(button => button.textContent), ['देउडा', 'गाउँघर', 'शहर']);
   assert.deepEqual(visibleButtons.map(button => button.dataset.feedCategory), ['देउडा', 'गाउँघर', 'शहर']);
+  assert.deepEqual(visibleButtons.map(button => button.style.fontSize), [
+    'clamp(16px, calc(4vw + 2px), 19px)',
+    'clamp(16px, calc(4vw + 2px), 19px)',
+    'clamp(16px, calc(4vw + 2px), 19px)'
+  ]);
   assert.equal(readyListeners.length, 1, 'the default feed is selected after social.js loads');
   readyListeners[0]();
   assert.deepEqual(selectedCategories, ['देउडा']);

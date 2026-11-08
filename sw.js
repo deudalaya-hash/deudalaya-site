@@ -1,5 +1,5 @@
 /* Deudalaya's root-scoped worker caches only its static app shell. */
-const CACHE_NAME = 'deudalaya-shell-v12';
+const CACHE_NAME = 'deudalaya-shell-v13';
 const SHELL_ASSETS = [
   '/',
   '/manifest.webmanifest',
@@ -31,13 +31,24 @@ self.addEventListener('install', event => {
         // Keep the worker installable if a shell asset is temporarily offline.
       }
     }));
-    await self.skipWaiting();
   })());
+});
+
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  } else if (event.data && event.data.type === 'GET_BUILD_ID' && event.ports && event.ports[0]) {
+    event.ports[0].postMessage(CACHE_NAME);
+  }
 });
 
 self.addEventListener('activate', event => {
   // Claim the current page after activation so it is controlled on first visit.
-  event.waitUntil(self.clients.claim());
+  event.waitUntil((async () => {
+    const names = await caches.keys();
+    await Promise.all(names.filter(name => name.startsWith('deudalaya-shell-') && name !== CACHE_NAME).map(name => caches.delete(name)));
+    await self.clients.claim();
+  })());
 });
 
 self.addEventListener('fetch', event => {

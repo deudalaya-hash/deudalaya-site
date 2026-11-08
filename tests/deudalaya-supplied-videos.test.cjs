@@ -6,6 +6,7 @@ const test = require('node:test');
 const root = path.resolve(__dirname, '..');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const social = fs.readFileSync(path.join(root, 'social.js'), 'utf8');
+const releaseVersion = JSON.parse(fs.readFileSync(path.join(root, 'version.json'), 'utf8')).version;
 
 test('the first two supplied videos are separate playable feed and profile posts', () => {
   const start = html.indexOf('const videos=[');
@@ -28,7 +29,6 @@ test('the first two supplied videos are separate playable feed and profile posts
   assert.match(social, /\(data \|\| \[\]\)\.filter\(row => isSupportedFeedVideo\(row\) && row\.media_path\)/, 'unsupported remote media is filtered before it enters the feed');
   assert.ok(html.includes("readLocalVideos()).filter(item=>{const file=item&&item.file;return !!file&&file.size>0&&isSupportedFeedVideo({file:file,media_type:file.type})"), 'only supported local videos are restored into the feed');
 
-  const releaseVersion = '2026.11.08.7';
   assert.match(html, new RegExp(`name="deudalaya-version" content="${releaseVersion}"`));
   assert.match(html, new RegExp(`const siteBuildVersion='${releaseVersion}'`));
   assert.equal(JSON.parse(fs.readFileSync(path.join(root, 'version.json'), 'utf8')).version, releaseVersion);

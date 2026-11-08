@@ -5,6 +5,7 @@ const test = require('node:test');
 
 const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
 const serviceWorker = fs.readFileSync(path.join(__dirname, '..', 'sw.js'), 'utf8');
+const releaseVersion = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'version.json'), 'utf8')).version;
 
 function extractFunction(name) {
   const start = html.indexOf(`function ${name}(`);
@@ -90,7 +91,7 @@ test('togglePlay calls the active video play and pause methods', () => {
 });
 
 test('the app shell cache version advances so installed PWAs receive the updated feed', () => {
-  assert.match(serviceWorker, /deudalaya-shell-v12/);
-  assert.match(html, /name="deudalaya-version" content="2026\.11\.08\.7"/);
-  assert.match(html, /const siteBuildVersion='2026\.11\.08\.7'/);
+  assert.match(serviceWorker, /deudalaya-shell-v13/);
+  assert.match(html, new RegExp(`name="deudalaya-version" content="${releaseVersion}"`));
+  assert.match(html, new RegExp(`const siteBuildVersion='${releaseVersion}'`));
 });
