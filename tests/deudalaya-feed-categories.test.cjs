@@ -2,9 +2,11 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const test = require('node:test');
+const vm = require('node:vm');
 
 const categories = require('../feed-categories.js');
 const html = fs.readFileSync(path.resolve(__dirname, '..', 'index.html'), 'utf8');
+const categoryScript = fs.readFileSync(path.resolve(__dirname, '..', 'feed-categories.js'), 'utf8');
 const social = fs.readFileSync(path.resolve(__dirname, '..', 'social.js'), 'utf8');
 
 test('feed category filtering keeps each video in exactly its stored category', () => {
@@ -12,15 +14,73 @@ test('feed category filtering keeps each video in exactly its stored category', 
     { id: 'default' },
     { id: 'village', feedCategory: 'गाउँघर' },
     { id: 'city', feed_category: 'शहर' },
+    { id: 'city-database-category', category: 'शहर' },
     { id: 'sudur', feed_category: 'सुदूर कर्णाली' },
     { id: 'unknown', feedCategory: 'गीत' }
   ];
 
   assert.deepEqual(categories.filterPosts(posts, 'देउडा').map(post => post.id), ['default']);
   assert.deepEqual(categories.filterPosts(posts, 'गाउँघर').map(post => post.id), ['village']);
-  assert.deepEqual(categories.filterPosts(posts, 'शहर'), []);
-  assert.deepEqual(categories.filterPosts(posts, 'सुदूर कर्णाली').map(post => post.id), ['sudur']);
+  assert.deepEqual(categories.filterPosts(posts, 'शहर').map(post => post.id), ['city', 'city-database-category']);
+  assert.deepEqual(categories.filterPosts(posts, 'सुदूर कर्णाली'), []);
   assert.deepEqual(categories.filterPosts(posts, 'गीत'), []);
+  assert.deepEqual(categories.ACTIVE_CATEGORIES, ['देउडा', 'गाउँघर', 'शहर']);
+});
+
+test('category navigation exposes exactly three feeds, defaults to देउडा, and routes each click to its own feed', () => {
+  const selectedCategories = [];
+  const comingSoonCategories = [];
+  const readyListeners = [];
+  const labels = ['देउडा', 'गाउँघर', 'शहर', 'सुदूर कर्णाली', 'गीत'];
+  const buttons = labels.map(label => {
+    const classNames = new Set(label === 'देउडा' ? ['selected'] : []);
+    return {
+      textContent: label,
+      dataset: {},
+      attributes: {},
+      removed: false,
+      classList: {
+        toggle(name, enabled) { enabled ? classNames.add(name) : classNames.delete(name); },
+        contains(name) { return classNames.has(name); }
+      },
+      setAttribute(name, value) {
+        this.attributes[name] = value;
+        if (name === 'data-feed-category') this.dataset.feedCategory = value;
+      },
+      removeAttribute(name) { delete this.attributes[name]; },
+      remove() { this.removed = true; },
+      onclick() {
+        if (label === 'शहर') comingSoonCategories.push(label);
+        else selectedCategories.push(label);
+      }
+    };
+  });
+  const document = {
+    readyState: 'loading',
+    querySelectorAll(selector) {
+      return selector === '.feed-category-tabs .feed-category' ? buttons.filter(button => !button.removed) : [];
+    },
+    addEventListener(type, listener) {
+      if (type === 'DOMContentLoaded') readyListeners.push(listener);
+    }
+  };
+  const window = {
+    document,
+    setFeedCategory(category) { selectedCategories.push(category); },
+    showFeedCategoryComingSoon(category) { comingSoonCategories.push(category); }
+  };
+
+  vm.runInNewContext(categoryScript, { window, document, module: undefined });
+  const visibleButtons = buttons.filter(button => !button.removed);
+  assert.deepEqual(visibleButtons.map(button => button.textContent), ['देउडा', 'गाउँघर', 'शहर']);
+  assert.deepEqual(visibleButtons.map(button => button.dataset.feedCategory), ['देउडा', 'गाउँघर', 'शहर']);
+  assert.equal(readyListeners.length, 1, 'the default feed is selected after social.js loads');
+  readyListeners[0]();
+  assert.deepEqual(selectedCategories, ['देउडा']);
+  selectedCategories.length = 0;
+  visibleButtons.forEach(button => button.onclick());
+  assert.deepEqual(selectedCategories, ['देउडा', 'गाउँघर', 'शहर']);
+  assert.deepEqual(comingSoonCategories, []);
 });
 
 test('the default category is filtered before remote data is requested', () => {
@@ -45,15 +105,17 @@ test('the supplied 2026-11-08 clip is bundled once and assigned only to सु�
   assert.equal(fs.readFileSync(path.resolve(__dirname, '..', source)).toString('ascii', 4, 8), 'ftyp');
 });
 
-test('the supplied cricket-ground video is assigned to शहर but remains unavailable while that category is coming soon', () => {
+test('the supplied cricket-ground video stays assigned to शहर and appears only in the शहर feed', () => {
   const source = 'assets/deudalaya-shahar-tu-cricket-ground-night.mp4';
   const entry = html.match(new RegExp(`\\{[^{}]*videoSrc:'${source.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&')}'[^{}]*\\}`));
   assert.ok(entry, 'the supplied video has a feed entry');
   assert.match(entry[0], /feedCategory:'शहर'/);
-  assert.deepEqual(categories.filterPosts([{ feedCategory: 'शहर' }], 'शहर'), []);
+  assert.deepEqual(categories.filterPosts([
+    { id: 'city', feedCategory: 'शहर' },
+    { id: 'village', feedCategory: 'गाउँघर' }
+  ], 'शहर').map(post => post.id), ['city']);
   assert.equal((html.match(new RegExp(source.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&'), 'g')) || []).length, 1);
   assert.equal(fs.readFileSync(path.resolve(__dirname, '..', source)).toString('ascii', 4, 8), 'ftyp');
-  assert.match(html, /showFeedCategoryComingSoon\('शहर'\)/);
 });
 
 test('the three additional city videos are each bundled once and assigned only to शहर', () => {
@@ -75,27 +137,16 @@ test('the three additional city videos are each bundled once and assigned only t
   }
 });
 
-test('category tabs order active feeds before the coming-soon category', () => {
-  const nav = html.match(/<nav class="feed-category-tabs"[^>]*>[\s\S]*?<\/nav>/)?.[0];
-  assert.ok(nav);
-  const buttons = [...nav.matchAll(/<button class="feed-category(?: selected)?"[^>]*>([^<]+)<\/button>/g)];
-  assert.deepEqual(buttons.map(([, label]) => label), ['देउडा', 'गाउँघर', 'शहर', 'सुदूर कर्णाली', 'गीत']);
-  assert.match(buttons[0][0], /selected/);
-  assert.match(nav, /setFeedCategory\('गाउँघर'\)/);
-  assert.match(nav, /showFeedCategoryComingSoon\('शहर'\)/);
-  assert.match(nav, /setFeedCategory\('सुदूर कर्णाली'\)/);
-  assert.match(nav, /showFeedCategoryComingSoon\('गीत'\)/);
-});
-
 test('uploads and admin management store a dedicated feed category separately from topic metadata', () => {
   assert.match(html, /id="uploadCategory"[\s\S]*?<option>गाउँघर<\/option>/);
   assert.match(html, /id="uploadCategory"[\s\S]*?<option>शहर<\/option>/);
   assert.match(html, /id="feedCategoryManager"/);
   assert.match(html, /id="feedCategoryManageButton"/);
   assert.match(social, /select\('id,user_id,media_path,media_type,caption,category,feed_category,created_at'\)/);
+  assert.match(social, /feedCategory:\s*row\.feed_category\s*\|\|\s*row\.category\s*\|\|\s*'देउडा'/);
   assert.match(social, /update\(\{feed_category:category\}\)/);
   assert.match(social, /isDeudalayaAdmin\(\)/);
-  assert.deepEqual(categories.ACTIVE_CATEGORIES, ['देउडा', 'गाउँघर', 'सुदूर कर्णाली']);
+  assert.deepEqual(categories.ACTIVE_CATEGORIES, ['देउडा', 'गाउँघर', 'शहर']);
 });
 
 test('feed category metadata migration is additive, admin-gated, and keeps existing placements', () => {

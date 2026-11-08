@@ -173,7 +173,7 @@
           avatar: profile.avatar_path ? cloudClient.storage.from('videos').getPublicUrl(profile.avatar_path).data.publicUrl : 'deudalaya-avatar',
           disc: profile.avatar_path ? cloudClient.storage.from('videos').getPublicUrl(profile.avatar_path).data.publicUrl : 'deudalaya-avatar',
           videoSrc: url, mediaType: row.media_type, fit: 'contain',
-          feedCategory: row.feed_category || (window.DeudalayaFeedCategories.ACTIVE_CATEGORIES.includes(row.category) ? row.category : 'देउडा'),
+          feedCategory: row.feed_category || row.category || 'देउडा',
           caption: row.caption || 'देउडालयमा नयाँ पोस्ट', tags: '#देउडालय #कर्णाली',
           music: 'Original sound · ' + (row.category || 'देउडा'),
           likes: likes.length, comments: commentRows.filter(comment => comment.post_id === row.id).length,

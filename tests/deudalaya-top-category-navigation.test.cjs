@@ -2,6 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const test = require('node:test');
+const categories = require('../feed-categories.js');
 
 const html = fs.readFileSync(path.resolve(__dirname, '..', 'index.html'), 'utf8');
 
@@ -14,19 +15,11 @@ test('the feed has no top header or header search UI', () => {
   assert.match(html, /id="uploadCategory"[\s\S]*?<option>कला तथा संस्कृति<\/option>/);
 });
 
-test('the video feed shows देउडा and सुदूर कर्णाली active with गीत coming soon', () => {
+test('the video feed loads exactly the three core categories in their required order', () => {
   const tabs = html.match(/<nav class="feed-category-tabs"[^>]*>[\s\S]*?<\/nav>/);
   assert.ok(tabs, 'category tabs float inside the feed');
-  const buttons = [...tabs[0].matchAll(/<button class="feed-category(?: selected)?"[^>]*>([^<]+)<\/button>/g)];
-  assert.deepEqual(buttons.map(([, label]) => label), ['देउडा', 'गाउँघर', 'शहर', 'सुदूर कर्णाली', 'गीत']);
-  assert.match(buttons[0][0], /selected/);
-  assert.match(buttons[0][0], /aria-pressed="true"/);
-  assert.equal((tabs[0].match(/data-feed-category=/g) || []).length, 3, 'three categories are active');
-  assert.match(buttons[1][0], /data-feed-category="गाउँघर"/);
-  assert.match(buttons[2][0], /showFeedCategoryComingSoon\('शहर'\)/);
-  assert.match(buttons[3][0], /data-feed-category="सुदूर कर्णाली"/);
-  assert.equal((tabs[0].match(/showFeedCategoryComingSoon\('गीत'\)/g) || []).length, 1);
-  assert.match(html, /function showFeedCategoryComingSoon\(category\)\{toast\(\(category\|\|'गीत'\)\+' · Coming Soon'\)\}/);
+  assert.deepEqual(categories.ACTIVE_CATEGORIES, ['देउडा', 'गाउँघर', 'शहर']);
+  assert.match(html, /<script src="feed-categories\.js\?/);
   assert.match(html, /\.feed-category-tabs\{[^}]*position:absolute[^}]*left:50%[^}]*transform:translateX\(-50%\)/);
   assert.match(html, /\.feed-category\.selected::after\{[^}]*background:#fff/);
 });
