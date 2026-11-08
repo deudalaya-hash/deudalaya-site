@@ -21,6 +21,14 @@ test('feed category filtering keeps each video in exactly its stored category', 
   assert.deepEqual(categories.filterPosts(posts, 'गीत'), []);
 });
 
+test('the supplied Bajhang Day 4 video uses its existing asset and is assigned to गाउँघर once', () => {
+  const source = 'assets/deudalaya-video-2026-11-04-clip-06.mp4';
+  const entry = html.match(new RegExp(`\\{[^{}]*videoSrc:'${source.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\$&')}'[^{}]*\\}`));
+  assert.ok(entry, 'the exact existing feed entry is present');
+  assert.match(entry[0], /feedCategory:'गाउँघर'/);
+  assert.equal((html.match(new RegExp(source.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\$&'), 'g')) || []).length, 1, 'no second post or file reference is added');
+});
+
 test('category tabs order active feeds before the coming-soon category', () => {
   const nav = html.match(/<nav class="feed-category-tabs"[^>]*>[\s\S]*?<\/nav>/)?.[0];
   assert.ok(nav);
