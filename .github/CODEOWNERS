@@ -1,0 +1,27 @@
+# Enable required CODEOWNER review in GitHub branch protection for main.
+/AGENTS.md @deudalaya-hash
+/.agents/skills/pwa-protection/SKILL.md @deudalaya-hash
+/scripts/check-pwa-protection.js @deudalaya-hash
+/.github/CODEOWNERS @deudalaya-hash
+/.github/workflows/pwa-protection.yml @deudalaya-hash
+/index.html @deudalaya-hash
+/ecosystem-gateway.js @deudalaya-hash
+/ecosystem-gateway.css @deudalaya-hash
+/install-gate.css @deudalaya-hash
+/manifest.webmanifest @deudalaya-hash
+/sw.js @deudalaya-hash
+/assets/deudalaya-icon-180.png @deudalaya-hash
+/assets/deudalaya-icon-192.png @deudalaya-hash
+/assets/deudalaya-icon-512.png @deudalaya-hash
+/assets/deudalaya-maskable-512.png @deudalaya-hash
+/assets/deudalaya-launch-192.png @deudalaya-hash
+/assets/deudalaya-launch-512.png @deudalaya-hash
+/assets/deudalaya-install-art.jpeg @deudalaya-hash
+/tests/deudalaya-install-button.test.cjs @deudalaya-hash
+/tests/deudalaya-install-guidance.test.cjs @deudalaya-hash
+/tests/deudalaya-pwa-manifest.test.cjs @deudalaya-hash
+/tests/deudalaya-entry-install.test.cjs @deudalaya-hash
+/tests/deudalaya-direct-install.test.cjs @deudalaya-hash
+/tests/deudalaya-install-flow.test.cjs @deudalaya-hash
+/tests/deudalaya-independence.test.cjs @deudalaya-hash
+/tests/ecosystem-installation.test.cjs @deudalaya-hash
