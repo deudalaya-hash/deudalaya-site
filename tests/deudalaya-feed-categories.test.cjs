@@ -18,9 +18,13 @@ test('feed category filtering keeps each video in exactly its stored category', 
 
   assert.deepEqual(categories.filterPosts(posts, 'देउडा').map(post => post.id), ['default']);
   assert.deepEqual(categories.filterPosts(posts, 'गाउँघर').map(post => post.id), ['village']);
-  assert.deepEqual(categories.filterPosts(posts, 'शहर').map(post => post.id), ['city']);
+  assert.deepEqual(categories.filterPosts(posts, 'शहर'), []);
   assert.deepEqual(categories.filterPosts(posts, 'सुदूर कर्णाली').map(post => post.id), ['sudur']);
   assert.deepEqual(categories.filterPosts(posts, 'गीत'), []);
+});
+
+test('the default category is filtered before remote data is requested', () => {
+  assert.match(social, /applyFeedMode\(true\);\s*setInterval\(/);
 });
 
 test('the supplied Bajhang Day 4 video uses its existing asset and is assigned to गाउँघर once', () => {
@@ -31,6 +35,16 @@ test('the supplied Bajhang Day 4 video uses its existing asset and is assigned t
   assert.equal((html.match(new RegExp(source.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\$&'), 'g')) || []).length, 1, 'no second post or file reference is added');
 });
 
+test('the supplied 2026-11-08 clip is bundled once and assigned only to सुदूर कर्णाली', () => {
+  const source = 'assets/VID_20261108_122315.mp4';
+  const entry = html.match(new RegExp(`\\{[^{}]*videoSrc:'${source.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\$&')}'[^{}]*\\}`));
+  assert.ok(fs.existsSync(path.resolve(__dirname, '..', source)), 'the supplied MP4 is bundled');
+  assert.ok(entry, 'the feed references the supplied clip');
+  assert.match(entry[0], /feedCategory:'सुदूर कर्णाली'/);
+  assert.equal((html.match(new RegExp(source.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\$&'), 'g')) || []).length, 1);
+  assert.equal(fs.readFileSync(path.resolve(__dirname, '..', source)).toString('ascii', 4, 8), 'ftyp');
+});
+
 test('category tabs order active feeds before the coming-soon category', () => {
   const nav = html.match(/<nav class="feed-category-tabs"[^>]*>[\s\S]*?<\/nav>/)?.[0];
   assert.ok(nav);
@@ -38,7 +52,7 @@ test('category tabs order active feeds before the coming-soon category', () => {
   assert.deepEqual(buttons.map(([, label]) => label), ['देउडा', 'गाउँघर', 'शहर', 'सुदूर कर्णाली', 'गीत']);
   assert.match(buttons[0][0], /selected/);
   assert.match(nav, /setFeedCategory\('गाउँघर'\)/);
-  assert.match(nav, /setFeedCategory\('शहर'\)/);
+  assert.match(nav, /showFeedCategoryComingSoon\('शहर'\)/);
   assert.match(nav, /setFeedCategory\('सुदूर कर्णाली'\)/);
   assert.match(nav, /showFeedCategoryComingSoon\('गीत'\)/);
 });
@@ -51,7 +65,7 @@ test('uploads and admin management store a dedicated feed category separately fr
   assert.match(social, /select\('id,user_id,media_path,media_type,caption,category,feed_category,created_at'\)/);
   assert.match(social, /update\(\{feed_category:category\}\)/);
   assert.match(social, /isDeudalayaAdmin\(\)/);
-  assert.deepEqual(categories.ACTIVE_CATEGORIES, ['देउडा', 'गाउँघर', 'शहर', 'सुदूर कर्णाली']);
+  assert.deepEqual(categories.ACTIVE_CATEGORIES, ['देउडा', 'गाउँघर', 'सुदूर कर्णाली']);
 });
 
 test('feed category metadata migration is additive, admin-gated, and keeps existing placements', () => {

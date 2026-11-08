@@ -3,7 +3,7 @@
   if (typeof module === 'object' && module.exports) module.exports = api;
   if (root) root.DeudalayaFeedCategories = api;
 })(typeof window !== 'undefined' ? window : globalThis, function() {
-  const ACTIVE_CATEGORIES = Object.freeze(['देउडा', 'गाउँघर', 'शहर', 'सुदूर कर्णाली']);
+  const ACTIVE_CATEGORIES = Object.freeze(['देउडा', 'गाउँघर', 'सुदूर कर्णाली']);
   const DEFAULT_CATEGORY = 'देउडा';
 
   function categoryOf(post) {

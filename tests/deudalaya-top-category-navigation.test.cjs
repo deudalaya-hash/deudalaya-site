@@ -11,7 +11,7 @@ test('the feed has no top header or header search UI', () => {
   assert.doesNotMatch(html, /function openFeedSearch\(|function submitFeedSearch\(|getElementById\('search'\)\.addEventListener/);
   assert.match(html, /id="postVideo"/);
   assert.match(html, /id="playPauseButton"/);
-  assert.match(html, /id="uploadCategory"[\s\S]*?<option>गाउँघर<\/option>[\s\S]*?<option>शहर<\/option>[\s\S]*?<option>कला तथा संस्कृति<\/option>/);
+  assert.match(html, /id="uploadCategory"[\s\S]*?<option>कला तथा संस्कृति<\/option>/);
 });
 
 test('the video feed shows देउडा and सुदूर कर्णाली active with गीत coming soon', () => {
@@ -21,9 +21,9 @@ test('the video feed shows देउडा and सुदूर कर्णा�
   assert.deepEqual(buttons.map(([, label]) => label), ['देउडा', 'गाउँघर', 'शहर', 'सुदूर कर्णाली', 'गीत']);
   assert.match(buttons[0][0], /selected/);
   assert.match(buttons[0][0], /aria-pressed="true"/);
-  assert.equal((tabs[0].match(/data-feed-category=/g) || []).length, 4, 'four categories are active');
+  assert.equal((tabs[0].match(/data-feed-category=/g) || []).length, 3, 'three categories are active');
   assert.match(buttons[1][0], /data-feed-category="गाउँघर"/);
-  assert.match(buttons[2][0], /data-feed-category="शहर"/);
+  assert.match(buttons[2][0], /showFeedCategoryComingSoon\('शहर'\)/);
   assert.match(buttons[3][0], /data-feed-category="सुदूर कर्णाली"/);
   assert.equal((tabs[0].match(/showFeedCategoryComingSoon\('गीत'\)/g) || []).length, 1);
   assert.match(html, /function showFeedCategoryComingSoon\(category\)\{toast\(\(category\|\|'गीत'\)\+' · Coming Soon'\)\}/);

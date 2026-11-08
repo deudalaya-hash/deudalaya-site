@@ -17,7 +17,7 @@ test('the Deudalaya starter feed includes all supplied videos and profiles them 
   assert.notEqual(start, -1, 'feed data is present');
   assert.notEqual(end, -1, 'feed data has an end boundary');
   const seed = html.slice(start, end);
-  assert.equal((seed.match(/videoSrc:/g) || []).length, 25, 'all twenty-five starter posts are videos');
+  assert.equal((seed.match(/videoSrc:/g) || []).length, 26, 'all twenty-six starter posts are videos');
   assert.match(seed, /videoSrc:'assets\/deudalaya-video-2026-11-03-feed-01\.mp4'/);
   assert.match(seed, /videoSrc:'assets\/deudalaya-video-2026-11-03-110721\.mp4'/);
   assert.match(seed, /videoSrc:'assets\/deudalaya-featured-video\.mp4'/);

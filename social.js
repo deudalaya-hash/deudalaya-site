@@ -612,6 +612,7 @@
   document.getElementById('commentInput').addEventListener('focus', () => {
     if (!cloudUser) { document.activeElement.blur(); openAuth(); }
   });
+  applyFeedMode(true);
   setInterval(() => {
     const post = currentPost();
     if (document.hidden || !post?.cloudPost) return;
