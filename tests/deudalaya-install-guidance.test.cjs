@@ -20,7 +20,7 @@ test('installation guide is localized and renders a responsive step list', () =>
   assert.match(css, /padding: clamp\(88px, 16\.5vh, 138px\) 0 32px/);
 });
 
-test('Android Chrome, Edge, and Brave show their four Nepali Home Screen steps', () => {
+test('Android Chrome, Edge, and Brave show their four Nepali Home Screen steps and a useful fallback action', () => {
   const cases = [
     { ua: 'Mozilla/5.0 (Linux; Android 15) AppleWebKit/537.36 Chrome/130.0.0.0 Mobile Safari/537.36' },
     { ua: 'Mozilla/5.0 (Linux; Android 15) AppleWebKit/537.36 Chrome/130.0.0.0 Mobile Safari/537.36 EdgA/130.0.0.0' },
@@ -32,8 +32,20 @@ test('Android Chrome, Edge, and Brave show their four Nepali Home Screen steps',
     assert.match(ui.steps.innerHTML, /तीनवटा थोप्ला/);
     assert.match(ui.steps.innerHTML, /“Install app” वा “Add to Home screen”/);
     assert.match(ui.steps.innerHTML, /Home Screen/);
-    assert.equal(ui.button.hidden, true, 'no native CTA appears without a genuine prompt');
+    assert.equal(ui.button.hidden, false, 'the install action stays visible when Chrome has no prompt event');
+    assert.equal(ui.button.textContent, 'Install via ⋮ menu');
   }
+});
+
+test('Android Chrome fallback action explains the browser menu when no prompt event is available', async () => {
+  const ui = createGateway({
+    ua: 'Mozilla/5.0 (Linux; Android 15) AppleWebKit/537.36 Chrome/130.0.0.0 Mobile Safari/537.36',
+    platform: 'Linux armv8l',
+    platformData: 'Android'
+  });
+  await ui.buttonListeners.click({ preventDefault() {} });
+  assert.match(ui.hint.textContent, /⋮ मेनु/);
+  assert.match(ui.hint.textContent, /Install app/);
 });
 
 test('iPhone Safari and touch iPadOS Safari show the Nepali Share flow', () => {

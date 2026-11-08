@@ -63,7 +63,7 @@
           '“Install app” वा “Add to Home screen” छान्नुहोस्।',
           '“Install” वा “Add” थिच्नुहोस्।',
           'अब मोबाइलको Home Screen बाट देउडालय खोल्नुहोस्।'
-        ], hasPrompt);
+        ], true);
       }
       if (browser === 'Opera' && hasPrompt) {
         return stepGuide('देउडालय स्थापना गर्न तलको बटन थिच्नुहोस् र ब्राउजरको निर्देशन पालना गर्नुहोस्।', [
@@ -124,11 +124,20 @@
 
     const guide = getGuide(!!deferredPrompt && promptBrowsers.includes(environment.browser));
     installButton.hidden = !guide.showInstallButton;
-    installButton.disabled = promptPending || !guide.showInstallButton;
+    installButton.disabled = promptPending || installed || !guide.showInstallButton;
+    installButton.textContent = deferredPrompt && promptBrowsers.includes(environment.browser)
+      ? 'Install App'
+      : environment.device === 'android' && ['Chrome', 'Edge', 'Brave'].includes(environment.browser)
+        ? 'Install via ⋮ menu'
+        : 'Install App';
     if (installIntro) installIntro.textContent = guide.intro;
     if (installSteps) installSteps.innerHTML = guide.steps.map(step => `<li>${step}</li>`).join('');
     installHint.textContent = guide.showInstallButton
-      ? 'देउडालय स्थापना गर्न तयार छ।'
+      ? deferredPrompt
+        ? 'देउडालय स्थापना गर्न तयार छ।'
+        : environment.device === 'android'
+          ? 'स्थापना गर्न माथिको ⋮ मेनुबाट “Install app” छान्नुहोस्।'
+          : 'देउडालय स्थापना गर्न तयार छ।'
       : guide.steps.length ? 'तलका चरणहरू पालना गर्नुहोस्।' : 'यस ब्राउजरमा अहिले स्थापना विकल्प उपलब्ध छैन।';
   }
 
@@ -157,6 +166,10 @@
     event.preventDefault();
     if (promptPending || installed) return;
     if (!deferredPrompt || !promptBrowsers.includes(environment.browser)) {
+      if (environment.device === 'android' && ['Chrome', 'Edge', 'Brave'].includes(environment.browser)) {
+        installHint.textContent = 'माथिको ⋮ मेनु थिचेर “Install app” वा “Add to Home screen” छान्नुहोस्।';
+        return;
+      }
       updateButton();
       return;
     }
