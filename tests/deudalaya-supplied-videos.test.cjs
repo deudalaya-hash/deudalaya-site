@@ -28,7 +28,7 @@ test('the first two supplied videos are separate playable feed and profile posts
   assert.match(social, /\(data \|\| \[\]\)\.filter\(row => isSupportedFeedVideo\(row\) && row\.media_path\)/, 'unsupported remote media is filtered before it enters the feed');
   assert.ok(html.includes("readLocalVideos()).filter(item=>{const file=item&&item.file;return !!file&&file.size>0&&isSupportedFeedVideo({file:file,media_type:file.type})"), 'only supported local videos are restored into the feed');
 
-  const releaseVersion = '2026.11.08.2';
+  const releaseVersion = '2026.11.08.3';
   assert.match(html, new RegExp(`name="deudalaya-version" content="${releaseVersion}"`));
   assert.match(html, new RegExp(`const siteBuildVersion='${releaseVersion}'`));
   assert.equal(JSON.parse(fs.readFileSync(path.join(root, 'version.json'), 'utf8')).version, releaseVersion);

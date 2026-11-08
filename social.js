@@ -4,7 +4,10 @@
   let profileTargetId = null;
   let sharedPosts = [];
   let activeFeedMode = 'for-you';
+  let activeFeedCategory = 'देउडा';
   let remoteFeedRequestId = 0;
+  let feedCategoriesEnabled = false;
+  const localPosts = videos.filter(post => !post.cloudPost && isSupportedFeedVideo(post));
   const ownId = () => cloudUser?.id || null;
   const currentPost = () => videos[index];
   const formatCount = value => Number(value || 0).toLocaleString();
@@ -130,9 +133,17 @@
     if (!cloudClient) return;
     const requestId = ++remoteFeedRequestId;
     try {
-      const { data, error } = await cloudClient.from('feed_posts')
-        .select('id,user_id,media_path,media_type,caption,category,created_at')
+      let { data, error } = await cloudClient.from('feed_posts')
+        .select('id,user_id,media_path,media_type,caption,category,feed_category,created_at')
         .order('created_at', { ascending: false }).limit(100);
+      feedCategoriesEnabled = !error;
+      if (error && /feed_category|column .* does not exist/i.test(error.message || '')) {
+        feedCategoriesEnabled = false;
+        console.warn('Feed categories are not enabled in the database yet; apply the feed_categories migration.');
+        ({ data, error } = await cloudClient.from('feed_posts')
+          .select('id,user_id,media_path,media_type,caption,category,created_at')
+          .order('created_at', { ascending: false }).limit(100));
+      }
       if (error) throw error;
       const videoRows = (data || []).filter(row => isSupportedFeedVideo(row) && row.media_path);
       const ids = [...new Set(videoRows.map(row => row.user_id).filter(Boolean))];
@@ -150,7 +161,7 @@
       const likeRows = likesResult.data || [], commentRows = commentsResult.data || [];
       const followed = new Set((followsResult.data || []).map(row => row.followed_id));
       const saved = new Set((bookmarksResult.data || []).map(row => row.post_id));
-      const localPosts = videos.filter(post => !post.cloudPost && isSupportedFeedVideo(post));
+      localPosts.splice(0, localPosts.length, ...mergeLocalPosts(localPosts, videos));
       const newSharedPosts = [];
       for (const row of [...videoRows].reverse()) {
         const profile = profiles.get(row.user_id) || {};
@@ -162,6 +173,7 @@
           avatar: profile.avatar_path ? cloudClient.storage.from('videos').getPublicUrl(profile.avatar_path).data.publicUrl : 'deudalaya-avatar',
           disc: profile.avatar_path ? cloudClient.storage.from('videos').getPublicUrl(profile.avatar_path).data.publicUrl : 'deudalaya-avatar',
           videoSrc: url, mediaType: row.media_type, fit: 'contain',
+          feedCategory: row.feed_category || (window.DeudalayaFeedCategories.ACTIVE_CATEGORIES.includes(row.category) ? row.category : 'देउडा'),
           caption: row.caption || 'देउडालयमा नयाँ पोस्ट', tags: '#देउडालय #कर्णाली',
           music: 'Original sound · ' + (row.category || 'देउडा'),
           likes: likes.length, comments: commentRows.filter(comment => comment.post_id === row.id).length,
@@ -183,12 +195,96 @@
   function applyFeedMode(reset = false) {
     const selected = (activeFeedMode === 'following' ? sharedPosts.filter(post => post.followedByMe) : sharedPosts)
       .filter(isSupportedFeedVideo);
-    const localPosts = videos.filter(post => !post.cloudPost && isSupportedFeedVideo(post));
-    videos.splice(0, videos.length, ...selected, ...localPosts);
+    localPosts.splice(0, localPosts.length, ...mergeLocalPosts(localPosts, videos));
+    const categorized = window.DeudalayaFeedCategories.filterPosts([...selected, ...localPosts], activeFeedCategory);
+    videos.splice(0, videos.length, ...categorized);
     if (reset || index >= videos.length) index = 0;
     render();
+    updateFeedCategoryTabs();
+    renderFeedCategoryManager();
     if (activeFeedMode === 'following' && !selected.length) toast('No posts from followed creators yet. Follow someone to fill this feed.');
   }
+
+  function mergeLocalPosts(previous, current) {
+    const unique = new Map();
+    for (const post of [...previous, ...current.filter(item => !item.cloudPost && isSupportedFeedVideo(item))]) {
+      unique.set(post.localId || post.videoSrc, post);
+    }
+    return [...unique.values()];
+  }
+
+  function updateFeedCategoryTabs() {
+    document.querySelectorAll('[data-feed-category]').forEach(button => {
+      const selected = button.dataset.feedCategory === activeFeedCategory;
+      button.classList.toggle('selected', selected);
+      button.setAttribute('aria-pressed', String(selected));
+      if (selected) button.setAttribute('aria-current', 'page');
+      else button.removeAttribute('aria-current');
+    });
+  }
+
+  function renderFeedCategoryManager() {
+    const manager = document.getElementById('feedCategoryManager');
+    const trigger = document.getElementById('feedCategoryManageButton');
+    const list = document.getElementById('feedCategoryAssignments');
+    const notice = document.getElementById('feedCategorySchemaNotice');
+    if (!manager || !list) return;
+    if (trigger) trigger.hidden = !isDeudalayaAdmin();
+    if (!isDeudalayaAdmin() || manager.hidden) return;
+    if (notice) notice.hidden = feedCategoriesEnabled;
+    list.replaceChildren();
+    for (const post of sharedPosts) {
+      const row = document.createElement('label');
+      row.className = 'feed-category-assignment';
+      const caption = document.createElement('span');
+      caption.textContent = post.caption || post.fileName || post.cloudId;
+      const select = document.createElement('select');
+      select.setAttribute('aria-label', `Feed category for ${caption.textContent}`);
+      for (const category of window.DeudalayaFeedCategories.ACTIVE_CATEGORIES) {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        option.selected = category === window.DeudalayaFeedCategories.categoryOf(post);
+        select.appendChild(option);
+      }
+      select.disabled = !post.cloudId || !feedCategoriesEnabled;
+      select.addEventListener('change', () => assignFeedCategory(post, select.value, select));
+      row.append(caption, select);
+      list.appendChild(row);
+    }
+  }
+
+  async function assignFeedCategory(post, category, select) {
+    if (!isDeudalayaAdmin() || !post.cloudId) return toast('Only admins can change categories for uploaded feed videos.');
+    if (!window.DeudalayaFeedCategories.ACTIVE_CATEGORIES.includes(category)) return;
+    select.disabled = true;
+    try {
+      const { error } = await cloudClient.from('feed_posts').update({feed_category:category}).eq('id', post.cloudId);
+      if (error) throw error;
+      post.feedCategory = category;
+      toast('Video category updated');
+      applyFeedMode(true);
+    } catch (error) {
+      console.error('Could not update feed category', error);
+      select.value = window.DeudalayaFeedCategories.categoryOf(post);
+      toast('Could not update category. Apply the feed categories migration and check admin permissions.');
+    } finally { select.disabled = false; }
+  }
+
+  window.setFeedCategory = function(category) {
+    if (!window.DeudalayaFeedCategories.ACTIVE_CATEGORIES.includes(category)) return;
+    activeFeedCategory = category;
+    applyFeedMode(true);
+    if (!videos.length) toast('No videos assigned to ' + category + ' yet.');
+  };
+
+  window.openFeedCategoryManager = function() {
+    if (!isDeudalayaAdmin()) return toast('Only admins can manage video categories.');
+    const manager = document.getElementById('feedCategoryManager');
+    if (manager) manager.hidden = false;
+    window.loadRemotePosts().then(renderFeedCategoryManager);
+  };
+  window.refreshFeedCategory = () => applyFeedMode(true);
   window.setFeedMode = async function(mode) {
     if (mode === 'following' && !cloudUser) {
       window.pendingSocialAction = () => setFeedMode('following');

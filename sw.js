@@ -1,11 +1,12 @@
 /* Deudalaya's root-scoped worker caches only its static app shell. */
-const CACHE_NAME = 'deudalaya-shell-v7';
+const CACHE_NAME = 'deudalaya-shell-v8';
 const SHELL_ASSETS = [
   '/',
   '/manifest.webmanifest',
   '/ecosystem-gateway.css',
   '/ecosystem-gateway.js',
   '/video-shuffle.js',
+  '/feed-categories.js',
   '/install-gate.css',
   '/assets/deudalaya-launch-192.png',
   '/assets/deudalaya-install-art.jpeg',
