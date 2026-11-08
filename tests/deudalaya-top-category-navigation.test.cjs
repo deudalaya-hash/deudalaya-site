@@ -24,12 +24,12 @@ test('the feed uses the first viewport row without a reserved header gap', () =>
   assert.match(html, /class="mobile-nav"/);
 });
 
-test('mobile video viewport reserves space for the safe-area-aware bottom navigation', () => {
-  assert.match(html, /\.app\{[^}]*padding-bottom:calc\(56px \+ env\(safe-area-inset-bottom,0px\)\)!important/);
+test('mobile feed fills the dynamic viewport while controls clear the overlaid safe-area-aware navigation', () => {
+  assert.match(html, /\.app\{[^}]*width:100vw!important[^}]*height:100dvh!important[^}]*padding-bottom:0!important/);
   assert.match(html, /\.main\{[^}]*flex:1[^}]*height:auto!important/);
-  assert.match(html, /\.feed-wrap\{[^}]*height:100%!important/);
-  assert.match(html, /\.video-copy\{[^}]*bottom:24px!important/);
-  assert.match(html, /\.actions\{[^}]*bottom:18px!important/);
-  assert.match(html, /\.progress\{[^}]*bottom:0!important/);
+  assert.match(html, /\.feed-wrap\{[^}]*width:100%!important[^}]*height:100%!important/);
+  assert.match(html, /\.video-copy\{[^}]*bottom:calc\(56px \+ env\(safe-area-inset-bottom,0px\) \+ 24px\)!important/);
+  assert.match(html, /\.actions\{[^}]*bottom:calc\(56px \+ env\(safe-area-inset-bottom,0px\) \+ 18px\)!important/);
+  assert.match(html, /\.progress\{[^}]*bottom:calc\(56px \+ env\(safe-area-inset-bottom,0px\)\)!important/);
   assert.match(html, /\.mobile-nav\{[^}]*position:fixed[^}]*bottom:0[^}]*height:calc\(56px \+ env\(safe-area-inset-bottom,0px\)\)/);
 });

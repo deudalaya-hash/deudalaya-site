@@ -30,9 +30,15 @@ const expectedTitles = new Map([
   ['assets/deudalaya-video-2026-11-04-clip-04.mp4', 'चैनपुरको देउडा भाकामा आमाप्रतिको माया'],
   ['assets/deudalaya-video-2026-11-04-clip-05.mp4', 'टुँडिखेलमा देउडा गीतको रौनक'],
   ['assets/deudalaya-video-2026-11-04-clip-06.mp4', 'बझाङको गाउँघरमा देउडा'],
+  ['assets/VID_20261108_023137.mp4', 'देउडा प्रस्तुति • ०२:३१:३७'],
+  ['assets/VID_20261108_024830.mp4', 'देउडा प्रस्तुति • ०२:४८:३०'],
+  ['assets/VID_20261108_024457.mp4', 'देउडा प्रस्तुति • ०२:४४:५७'],
+  ['assets/VID_20261108_024346.mp4', 'देउडा प्रस्तुति • ०२:४३:४६'],
+  ['assets/VID_20261108_024624.mp4', 'देउडा प्रस्तुति • ०२:४६:२४'],
+  ['assets/VID_20261108_023805.mp4', 'देउडा प्रस्तुति • ०२:३८:०५'],
 ]);
 
-test('each bundled video has its own content-based title', () => {
+test('each bundled video has its own distinct title', () => {
   assert.equal(entries.length, expectedTitles.size, 'the complete local feed has a title for every video asset');
   assert.equal(new Set(entries.map(entry => entry.source)).size, entries.length, 'feed video sources remain unique');
   assert.equal(new Set(entries.map(entry => entry.title)).size, entries.length, 'video titles remain unique');

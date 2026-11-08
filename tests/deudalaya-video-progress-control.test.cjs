@@ -13,7 +13,7 @@ test('video progress is visible at the mobile video edge and tracks actual playb
   assert.match(html, /#feed \.progress i\{[^}]*height:2px[^}]*background:#fff/);
   assert.match(html, /\.progress\.seeking i\{transition:none/);
   assert.doesNotMatch(html, /\.progress i\{width:16%!important/);
-  assert.match(html, /\.progress\{[^}]*bottom:78px!important/);
+  assert.match(html, /\.progress\{[^}]*bottom:calc\(56px \+ env\(safe-area-inset-bottom,0px\)\)!important/);
 });
 
 test('progress seeking supports pointer drag, keyboard, and does not trigger feed swipes', () => {

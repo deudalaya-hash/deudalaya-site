@@ -90,5 +90,7 @@ test('togglePlay calls the active video play and pause methods', () => {
 });
 
 test('the app shell cache version advances so installed PWAs receive the updated feed', () => {
-  assert.match(serviceWorker, /deudalaya-shell-v5/);
+  assert.match(serviceWorker, /deudalaya-shell-v6/);
+  assert.match(html, /name="deudalaya-version" content="2026\.11\.08\.1"/);
+  assert.match(html, /const siteBuildVersion='2026\.11\.08\.1'/);
 });
