@@ -8,10 +8,12 @@
   const installSteps = document.getElementById('deudalayaInstallSteps');
   if (!installButton || !installHint) return;
 
+  const environment = detectEnvironment();
   let deferredPrompt = window.deferredPrompt || null;
   let promptPending = window.deudalayaInstallationStatus === 'installation-pending';
+  let relatedAppDetected = environment.device === 'android' && window.deudalayaInstallSource === 'related-app';
   let installed = window.deudalayaInstallState === 'installed' || window.deudalayaInstallState === 'standalone';
-  const environment = detectEnvironment();
+  if (relatedAppDetected && !isStandaloneMode()) installed = false;
   const promptBrowsers = ['Chrome', 'Edge', 'Brave', 'Opera'];
   installButton.textContent = 'Install App';
 
@@ -142,6 +144,16 @@
       return;
     }
 
+    if (relatedAppDetected && !deferredPrompt && !isStandaloneMode()) {
+      installButton.hidden = false;
+      installButton.disabled = promptPending;
+      installButton.textContent = 'Install App';
+      if (installIntro) installIntro.textContent = 'देउडालय यस उपकरणमा पहिल्यै स्थापित छ।';
+      if (installSteps) installSteps.innerHTML = '<li>Home Screen वा App list बाट देउडालय खोल्नुहोस्।</li>';
+      installHint.textContent = 'पहिल्यै स्थापित Deudalaya खोल्न Home Screen वा App list प्रयोग गर्नुहोस्।';
+      return;
+    }
+
     const guide = getGuide(!!deferredPrompt && promptBrowsers.includes(environment.browser));
     installButton.hidden = !guide.showInstallButton;
     installButton.disabled = promptPending || installed || !guide.showInstallButton;
@@ -167,14 +179,28 @@
     }
   }
 
+  window.addEventListener('beforeinstallprompt', function (event) {
+    if (installed || isStandaloneMode()) return;
+    event.preventDefault();
+    deferredPrompt = event;
+    relatedAppDetected = false;
+    window.deferredPrompt = event;
+    window.deudalayaInstallState = 'available';
+    window.deudalayaInstallationStatus = 'prompt-available';
+    window.deudalayaInstallSource = null;
+    updateButton();
+  });
+
   window.addEventListener('deudalaya-installpromptavailable', function () {
     if (installed || !window.deferredPrompt) return;
     deferredPrompt = window.deferredPrompt;
+    relatedAppDetected = false;
     updateButton();
   });
 
   window.addEventListener('appinstalled', function () {
     installed = true;
+    relatedAppDetected = false;
     deferredPrompt = null;
     window.deferredPrompt = null;
     window.deudalayaInstallState = 'installed';
@@ -183,8 +209,15 @@
   });
 
   window.addEventListener('deudalaya-installstatechange', function () {
+    if (window.deudalayaInstallState === 'installed' && window.deudalayaInstallSource === 'related-app' && environment.device === 'android') {
+      installed = isStandaloneMode();
+      relatedAppDetected = !installed && !deferredPrompt;
+      updateButton();
+      return;
+    }
     if (window.deudalayaInstallState !== 'installed' && window.deudalayaInstallState !== 'standalone') return;
     installed = true;
+    relatedAppDetected = false;
     deferredPrompt = null;
     updateButton();
   });
@@ -193,6 +226,10 @@
     event.preventDefault();
     if (promptPending || installed) return;
     if (!deferredPrompt || !promptBrowsers.includes(environment.browser)) {
+      if (relatedAppDetected && !deferredPrompt) {
+        installHint.textContent = 'Deudalaya पहिल्यै स्थापित छ। Home Screen वा App list बाट खोल्नुहोस्।';
+        return;
+      }
       if (environment.device === 'android' && ['Chrome', 'Edge', 'Brave'].includes(environment.browser)) {
         installHint.textContent = 'माथिको ⋮ मेनु थिचेर “Install app” वा “Add to Home screen” छान्नुहोस्।';
         return;
