@@ -1,6 +1,6 @@
 const assert = require('node:assert/strict');
 const test = require('node:test');
-const { createShuffleCycle, isDuplicatePost, videoKey } = require('../video-shuffle.js');
+const { createShuffleCycle, isDuplicatePost, videoKey, selectRandomStartupVideo } = require('../video-shuffle.js');
 
 function ids(count) {
   return Array.from({ length: count }, (_, index) => `video-${index + 1}`);
@@ -111,36 +111,58 @@ test('remote posts matching an existing local clip caption or file name are reco
   assert.equal(isDuplicatePost({ media_path: 'uploads/new.mp4', caption: 'अर्को भिडियो' }, [local]), false);
 });
 
-test('cycle and playback history survive recreation during the same browser session', () => {
-  const memory = new Map();
-  const storage = {
-    getItem(key) { return memory.get(key) ?? null; },
-    setItem(key, value) { memory.set(key, value); }
-  };
-  const videos = ids(4);
-  const firstSession = createShuffleCycle({ storage, random: () => 0.4 });
-  const first = firstSession.start(videos);
-  firstSession.markStarted(first);
-  const second = firstSession.next(videos, first);
-
-  const resumed = createShuffleCycle({ storage, random: () => 0.1 });
-  assert.equal(resumed.start(videos), second);
-  assert.equal(resumed.getState().played.includes(first), true);
+test('startup chooses uniformly from the combined category pool and avoids the last opening', () => {
+  const videos = [
+    { videoSrc: '/deuda.mp4', feedCategory: 'देउडा' },
+    { videoSrc: '/village.mp4', feedCategory: 'गाउँघर' },
+    { videoSrc: '/city.mp4', feedCategory: 'शहर' }
+  ];
+  assert.equal(selectRandomStartupVideo(videos, '', () => 0), videoKey(videos[0]));
+  assert.equal(selectRandomStartupVideo(videos, videoKey(videos[0]), () => 0), videoKey(videos[1]));
+  assert.equal(selectRandomStartupVideo(videos, videoKey(videos[1]), () => 0.99), videoKey(videos[2]));
 });
 
-test('a page refresh resumes at an unplayed video instead of replaying the last completed one', () => {
+test('startup selection skips unpublished, deleted, corrupted and duplicate entries', () => {
+  const videos = [
+    { videoSrc: '/draft.mp4', published: false },
+    { videoSrc: '/deleted.mp4', deleted_at: '2026-01-01' },
+    { videoSrc: '/broken.mp4', corrupted: true },
+    { videoSrc: '/valid.mp4', published: true },
+    { videoSrc: '/valid.mp4?cache=1', published: true }
+  ];
+  assert.equal(selectRandomStartupVideo(videos, '', () => 0), videoKey(videos[3]));
+});
+
+test('startup choice is remembered between app openings when storage is available', () => {
   const memory = new Map();
   const storage = {
     getItem(key) { return memory.get(key) ?? null; },
     setItem(key, value) { memory.set(key, value); }
   };
-  const videos = ids(5);
-  const beforeRefresh = createShuffleCycle({ storage, random: () => 0.3 });
-  const lastVideo = beforeRefresh.start(videos);
-  beforeRefresh.markStarted(lastVideo);
-  const afterRefresh = createShuffleCycle({ storage, random: () => 0.8 });
+  const videos = ids(3);
+  const first = require('../video-shuffle.js').selectAndRememberStartupVideo(videos, storage, () => 0);
+  const second = require('../video-shuffle.js').selectAndRememberStartupVideo(videos, storage, () => 0);
+  assert.notEqual(second, first);
+});
 
-  assert.notEqual(afterRefresh.start(videos), lastVideo);
+test('reopening starts a fresh random cycle and persists its prior startup across reloads', () => {
+  const memory = new Map();
+  const sessionMemory = new Map();
+  const makeStorage = store => ({
+    getItem(key) { return store.get(key) ?? null; },
+    setItem(key, value) { store.set(key, value); },
+    removeItem(key) { store.delete(key); }
+  });
+  const videos = ids(4);
+  const firstSession = createShuffleCycle({ storage: makeStorage(sessionMemory), startupStorage: makeStorage(memory), random: () => 0.4 });
+  const first = firstSession.start(videos);
+  firstSession.markStarted(first);
+
+  const reopened = createShuffleCycle({ storage: makeStorage(new Map()), startupStorage: makeStorage(memory), random: () => 0.1 });
+  const nextOpening = reopened.start(videos);
+  assert.notEqual(nextOpening, first);
+  assert.deepEqual(reopened.getState().played, []);
+  assert.deepEqual(reopened.getState().history, [nextOpening]);
 });
 
 test('session navigation history keeps the same video when it begins a later completed cycle', () => {

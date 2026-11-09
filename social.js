@@ -6,6 +6,7 @@
   let activeFeedMode = 'for-you';
   let activeFeedCategory = 'देउडा';
   let remoteFeedRequestId = 0;
+  let startupSelectionDone = false;
   let feedCategoriesEnabled = false;
   const localPosts = videos.filter(post => !post.cloudPost && isSupportedFeedVideo(post));
   const ownId = () => cloudUser?.id || null;
@@ -185,20 +186,36 @@
         newSharedPosts.push(post);
       }
       if (requestId !== remoteFeedRequestId) return;
+      let startupVideoKey = null;
+      if (!startupSelectionDone && window.DeudalayaVideoShuffle && typeof window.DeudalayaVideoShuffle.selectAndRememberStartupVideo === 'function') {
+        const localCandidates = mergeLocalPosts(localPosts, videos).filter(isSupportedFeedVideo);
+        const startupCandidates = [...newSharedPosts, ...localCandidates]
+          .filter(isSupportedFeedVideo)
+          .filter(post => window.DeudalayaFeedCategories.ACTIVE_CATEGORIES.includes(window.DeudalayaFeedCategories.categoryOf(post)));
+        let startupStorage = null;
+        try { startupStorage = window.localStorage; } catch (_) {}
+        startupVideoKey = window.DeudalayaVideoShuffle.selectAndRememberStartupVideo(startupCandidates, startupStorage, Math.random, 'deudalaya-last-published-startup-video-v1');
+        const startupVideo = startupCandidates.find(post => window.DeudalayaVideoShuffle.videoKey(post) === startupVideoKey);
+        const startupCategory = startupVideo && window.DeudalayaFeedCategories.categoryOf(startupVideo);
+        if (startupCategory && window.DeudalayaFeedCategories.ACTIVE_CATEGORIES.includes(startupCategory)) activeFeedCategory = startupCategory;
+        startupSelectionDone = true;
+      }
       sharedPosts = newSharedPosts;
-      applyFeedMode(true);
+      applyFeedMode(true, startupVideoKey);
     } catch (error) {
       if (requestId === remoteFeedRequestId) console.warn('Could not load shared posts', error);
     }
   };
 
-  function applyFeedMode(reset = false) {
+  function applyFeedMode(reset = false, startupVideoKey = null) {
     const selected = (activeFeedMode === 'following' ? sharedPosts.filter(post => post.followedByMe) : sharedPosts)
       .filter(isSupportedFeedVideo);
     localPosts.splice(0, localPosts.length, ...mergeLocalPosts(localPosts, videos));
     const categorized = window.DeudalayaFeedCategories.filterPosts([...selected, ...localPosts], activeFeedCategory);
     videos.splice(0, videos.length, ...categorized);
-    if (reset || index >= videos.length) index = 0;
+    const startupIndex = startupVideoKey ? videos.findIndex(post => window.DeudalayaVideoShuffle.videoKey(post) === startupVideoKey) : -1;
+    if (startupIndex >= 0) index = startupIndex;
+    else if (reset || index >= videos.length) index = 0;
     render();
     updateFeedCategoryTabs();
     renderFeedCategoryManager();

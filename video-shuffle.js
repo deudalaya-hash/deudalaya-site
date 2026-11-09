@@ -6,6 +6,7 @@
   'use strict';
 
   var STORAGE_KEY = 'deudalaya-video-shuffle-v1';
+  var STARTUP_STORAGE_KEY = 'deudalaya-last-startup-video-v1';
 
   function videoKey(video) {
     if (typeof video === 'string') return video;
@@ -29,11 +30,51 @@
     });
   }
 
+  function selectRandomStartupVideo(values, previousId, random) {
+    random = typeof random === 'function' ? random : Math.random;
+    var seen = new Set();
+    var ids = (Array.isArray(values) ? values : []).filter(function (value) {
+      if (!value || typeof value !== 'object') return true;
+      var status = String(value.status || '').toLowerCase();
+      return value.published !== false && value.isPublished !== false && !value.deleted && !value.deleted_at && !value.deletedAt && !value.corrupted && !value.isCorrupted && status !== 'draft' && status !== 'unpublished' && status !== 'deleted' && status !== 'corrupt';
+    }).map(function (value) {
+      return typeof value === 'string' ? value : videoKey(value);
+    }).filter(function (id) {
+      if (!id || seen.has(id)) return false;
+      seen.add(id);
+      return true;
+    });
+    if (!ids.length) return null;
+    var candidates = ids.length > 1 ? ids.filter(function (id) { return id !== previousId; }) : ids;
+    var value = Number(random());
+    if (!Number.isFinite(value)) value = 0;
+    var index = Math.min(candidates.length - 1, Math.max(0, Math.floor(value * candidates.length)));
+    return candidates[index] || null;
+  }
+
+  function selectAndRememberStartupVideo(values, storage, random, storageKey) {
+    storageKey = storageKey || STARTUP_STORAGE_KEY;
+    var previousId = null;
+    if (storage) {
+      try { previousId = storage.getItem(storageKey); } catch (_) {}
+    }
+    var selectedId = selectRandomStartupVideo(values, previousId, random);
+    if (selectedId && storage) {
+      try { storage.setItem(storageKey, selectedId); } catch (_) {}
+    }
+    return selectedId;
+  }
+
   function createShuffleCycle(options) {
     options = options || {};
     var random = typeof options.random === 'function' ? options.random : Math.random;
     var storage = options.storage || null;
     var storageKey = options.storageKey || STORAGE_KEY;
+    var startupStorage = options.startupStorage;
+    if (!startupStorage) {
+      try { startupStorage = typeof window !== 'undefined' ? window.localStorage : null; } catch (_) { startupStorage = null; }
+    }
+    var startupStorageKey = options.startupStorageKey || STARTUP_STORAGE_KEY;
     var ids = [];
     var order = [];
     var played = new Set();
@@ -154,30 +195,25 @@
       sync(values);
       if (!ids.length) return null;
       if (preferredId && ids.indexOf(preferredId) >= 0) {
-        var preferredAt = history.lastIndexOf(preferredId);
-        if (preferredAt >= 0) {
-          cursor = preferredAt;
-          returningForward = false;
-          save();
-          return preferredId;
-        }
-        return remember(preferredId);
+        // A deliberate shared-video URL remains a direct navigation target.
+        return beginStartup(preferredId);
       }
-      if (cursor >= 0 && history[cursor]) {
-        var resumedKey = history[cursor];
-        returningForward = false;
-        if (!played.has(resumedKey)) return resumedKey;
-        var nextUnplayed = order.find(function (id) { return !played.has(id); });
-        if (!nextUnplayed && ids.every(function (id) { return played.has(id); })) {
-          beginCycle();
-          nextUnplayed = order[0] || null;
-        }
-        return nextUnplayed ? remember(nextUnplayed) : resumedKey;
-      }
-      if (played.size === ids.length) beginCycle();
-      if (!order.length) beginCycle();
-      var first = order.find(function (id) { return !played.has(id); });
-      return first ? remember(first) : null;
+      var startupId = selectAndRememberStartupVideo(ids, startupStorage, random, startupStorageKey);
+      if (!startupId) return null;
+      return beginStartup(startupId);
+    }
+
+    function beginStartup(id) {
+      previousOrder = order.slice();
+      order = shuffle(ids);
+      played = new Set();
+      history = [];
+      cursor = -1;
+      returningForward = false;
+      cycleNumber += 1;
+      remember(id);
+      save();
+      return id;
     }
 
     function markStarted(id) {
@@ -280,5 +316,5 @@
     return { start: start, next: next, previous: previous, select: select, peekNext: peekNext, current: current, sync: sync, markStarted: markStarted, getState: getState, reset: reset };
   }
 
-  return { createShuffleCycle: createShuffleCycle, videoKey: videoKey, isDuplicatePost: isDuplicatePost };
+  return { createShuffleCycle: createShuffleCycle, videoKey: videoKey, isDuplicatePost: isDuplicatePost, selectRandomStartupVideo: selectRandomStartupVideo, selectAndRememberStartupVideo: selectAndRememberStartupVideo };
 });
