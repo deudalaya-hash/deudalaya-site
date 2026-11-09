@@ -8,9 +8,126 @@
   let remoteFeedRequestId = 0;
   let startupSelectionDone = false;
   let feedCategoriesEnabled = false;
+  let videoValidator = null;
+  let feedVideoRecovery = null;
+  let feedVideoHooksInstalled = false;
+  let feedMediaLoadTimer = null;
   const localPosts = videos.filter(post => !post.cloudPost && isSupportedFeedVideo(post));
+  const feedPlayer = document.getElementById('postVideo');
+  const feedVideoArea = document.getElementById('video');
   const ownId = () => cloudUser?.id || null;
   const currentPost = () => videos[index];
+  const feedVideoSource = post => post && (post.videoSrc || post.media_path) || '';
+  function ensureVideoValidation() {
+    const api = window.DeudalayaVideoShuffle;
+    if (!api || !feedPlayer) return false;
+    if (!videoValidator) videoValidator = api.createVideoValidator();
+    if (feedVideoHooksInstalled) return true;
+    api.applyCenteredVideoLayout(feedVideoArea, feedPlayer);
+    feedVideoHooksInstalled = true;
+    if (typeof window.ResizeObserver === 'function') {
+      const resizeObserver = new window.ResizeObserver(() => api.fitCenteredVideo(feedVideoArea, feedPlayer));
+      resizeObserver.observe(feedVideoArea);
+    } else window.addEventListener('resize', () => api.fitCenteredVideo(feedVideoArea, feedPlayer));
+    feedVideoRecovery = api.createFeedVideoRecovery({
+      validator: videoValidator,
+      getVideos: () => videos,
+      getCurrentIndex: () => index,
+      getNextIndex: from => typeof window.fypPickNext === 'function' ? window.fypPickNext(from) : (videos.length ? (from + 1) % videos.length : -1),
+      onSelect: next => {
+        index = next;
+        liked = false;
+        bookmarked = false;
+        following = false;
+        render();
+      },
+      onExhausted: () => {
+        feedPlayer.hidden = true;
+        feedMediaMessage.textContent = 'No playable videos are available right now.';
+        feedMediaStatus.querySelector('div').hidden = true;
+        feedMediaStatus.hidden = false;
+      }
+    });
+
+    const activeSource = () => feedPlayer.dataset.feedSource || feedPlayer.currentSrc || feedPlayer.src || '';
+    const actualSource = () => feedPlayer.currentSrc || feedPlayer.src || '';
+    const failedSourceIsCurrent = source => {
+      const expected = activeSource();
+      if (!source || !expected) return true;
+      try { return new URL(source, location.href).href === new URL(expected, location.href).href; } catch (_) { return source === expected; }
+    };
+    const clearFeedMediaLoadTimer = () => {
+      if (feedMediaLoadTimer) clearTimeout(feedMediaLoadTimer);
+      feedMediaLoadTimer = null;
+    };
+    const startFeedMediaLoadTimer = source => {
+      clearFeedMediaLoadTimer();
+      feedMediaLoadTimer = setTimeout(() => skipFailedVideo(source), 8000);
+    };
+    const skipFailedVideo = source => {
+      if (!failedSourceIsCurrent(source)) return;
+      clearFeedMediaLoadTimer();
+      feedPlayer.pause();
+      feedPlayer.hidden = true;
+      feedMediaMessage.textContent = 'Video unavailable. Finding another video…';
+      feedMediaStatus.querySelector('div').hidden = true;
+      feedMediaStatus.hidden = false;
+      feedVideoRecovery.recover(source).catch(error => console.warn('Could not recover the feed after a media error', error));
+    };
+
+    feedPlayer.addEventListener('loadstart', () => {
+      const source = activeSource();
+      if (!failedSourceIsCurrent(actualSource())) return;
+      if (videoValidator.isKnownBroken(source)) return skipFailedVideo(source);
+      if (videoValidator.isValid(source)) return clearFeedMediaLoadTimer();
+      feedPlayer.hidden = true;
+      startFeedMediaLoadTimer(source);
+    });
+    feedPlayer.addEventListener('play', () => {
+      if (!failedSourceIsCurrent(actualSource())) return;
+      const source = activeSource();
+      if (videoValidator.isKnownBroken(source)) return skipFailedVideo(source);
+      if (!videoValidator.isValid(source)) {
+        feedPlayer.hidden = true;
+        startFeedMediaLoadTimer(source);
+      }
+    });
+    feedPlayer.addEventListener('loadedmetadata', () => {
+      if (!failedSourceIsCurrent(actualSource())) return;
+      clearFeedMediaLoadTimer();
+      const source = activeSource();
+      if (!videoValidator.rememberValid(source, feedPlayer)) return skipFailedVideo(source);
+      api.fitCenteredVideo(feedVideoArea, feedPlayer);
+      feedPlayer.hidden = false;
+    });
+    feedPlayer.addEventListener('playing', () => {
+      const source = activeSource();
+      if (!videoValidator.isValid(source)) skipFailedVideo(source);
+    });
+    feedPlayer.addEventListener('error', () => { if (failedSourceIsCurrent(actualSource())) skipFailedVideo(activeSource()); });
+    if (feedPlayer.readyState >= 1) {
+      if (feedPlayer.error) skipFailedVideo(activeSource());
+      else if (videoValidator.rememberValid(activeSource(), feedPlayer)) {
+        api.fitCenteredVideo(feedVideoArea, feedPlayer);
+        feedPlayer.hidden = false;
+      }
+      else feedPlayer.hidden = true;
+    } else if (feedPlayer.error) skipFailedVideo(activeSource());
+    else {
+      feedPlayer.hidden = true;
+      startFeedMediaLoadTimer(activeSource());
+    }
+    return true;
+  }
+
+  async function selectPlayableStartupVideo(candidates, storage) {
+    if (!ensureVideoValidation()) return null;
+    return window.DeudalayaVideoShuffle.selectValidatedStartupVideo(
+      candidates, videoValidator, storage, Math.random, 'deudalaya-last-published-startup-video-v1'
+    );
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ensureVideoValidation, { once: true });
+  else ensureVideoValidation();
   const formatCount = value => Number(value || 0).toLocaleString();
   const publicAvatar = row => row?.avatar_path
     ? cloudClient.storage.from('videos').getPublicUrl(row.avatar_path).data.publicUrl
@@ -187,14 +304,16 @@
       }
       if (requestId !== remoteFeedRequestId) return;
       let startupVideoKey = null;
-      if (!startupSelectionDone && window.DeudalayaVideoShuffle && typeof window.DeudalayaVideoShuffle.selectAndRememberStartupVideo === 'function') {
+      if (!startupSelectionDone && window.DeudalayaVideoShuffle && typeof window.DeudalayaVideoShuffle.selectValidatedStartupVideo === 'function') {
         const localCandidates = mergeLocalPosts(localPosts, videos).filter(isSupportedFeedVideo);
         const startupCandidates = [...newSharedPosts, ...localCandidates]
           .filter(isSupportedFeedVideo)
+          .filter(post => !videoValidator || !videoValidator.isKnownBroken(feedVideoSource(post)))
           .filter(post => window.DeudalayaFeedCategories.ACTIVE_CATEGORIES.includes(window.DeudalayaFeedCategories.categoryOf(post)));
         let startupStorage = null;
         try { startupStorage = window.localStorage; } catch (_) {}
-        startupVideoKey = window.DeudalayaVideoShuffle.selectAndRememberStartupVideo(startupCandidates, startupStorage, Math.random, 'deudalaya-last-published-startup-video-v1');
+        startupVideoKey = await selectPlayableStartupVideo(startupCandidates, startupStorage);
+        if (requestId !== remoteFeedRequestId) return;
         const startupVideo = startupCandidates.find(post => window.DeudalayaVideoShuffle.videoKey(post) === startupVideoKey);
         const startupCategory = startupVideo && window.DeudalayaFeedCategories.categoryOf(startupVideo);
         if (startupCategory && window.DeudalayaFeedCategories.ACTIVE_CATEGORIES.includes(startupCategory)) activeFeedCategory = startupCategory;
@@ -211,7 +330,8 @@
     const selected = (activeFeedMode === 'following' ? sharedPosts.filter(post => post.followedByMe) : sharedPosts)
       .filter(isSupportedFeedVideo);
     localPosts.splice(0, localPosts.length, ...mergeLocalPosts(localPosts, videos));
-    const categorized = window.DeudalayaFeedCategories.filterPosts([...selected, ...localPosts], activeFeedCategory);
+    const categorized = window.DeudalayaFeedCategories.filterPosts([...selected, ...localPosts], activeFeedCategory)
+      .filter(post => !videoValidator || !videoValidator.isKnownBroken(feedVideoSource(post)));
     videos.splice(0, videos.length, ...categorized);
     const startupIndex = startupVideoKey ? videos.findIndex(post => window.DeudalayaVideoShuffle.videoKey(post) === startupVideoKey) : -1;
     if (startupIndex >= 0) index = startupIndex;

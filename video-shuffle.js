@@ -65,6 +65,206 @@
     return selectedId;
   }
 
+  async function selectValidatedStartupVideo(values, validator, storage, random, storageKey) {
+    storageKey = storageKey || STARTUP_STORAGE_KEY;
+    var previousId = null;
+    if (storage) {
+      try { previousId = storage.getItem(storageKey); } catch (_) {}
+    }
+    var remaining = Array.isArray(values) ? values.slice() : [];
+    while (remaining.length) {
+      var selectedId = selectRandomStartupVideo(remaining, previousId, random);
+      if (!selectedId) return null;
+      var candidate = remaining.find(function (value) {
+        return (typeof value === 'string' ? value : videoKey(value)) === selectedId;
+      });
+      var source = candidate && typeof candidate === 'object' ? candidate.videoSrc || candidate.media_path : candidate;
+      if (source && validator && await validator.validate(source)) {
+        if (storage) {
+          try { storage.setItem(storageKey, selectedId); } catch (_) {}
+        }
+        return selectedId;
+      }
+      remaining = remaining.filter(function (value) {
+        return (typeof value === 'string' ? value : videoKey(value)) !== selectedId;
+      });
+    }
+    return null;
+  }
+
+  function normalizeVideoUrl(source) {
+    if (typeof source !== 'string' || !source.trim()) return '';
+    try {
+      if (typeof document !== 'undefined' && document.baseURI) return new URL(source, document.baseURI).href;
+      return source.trim().split('#', 1)[0];
+    } catch (_) { return ''; }
+  }
+
+  function hasVideoMetadata(video) {
+    return !!video && Number(video.readyState) >= 1 && Number(video.videoWidth) > 0 && Number(video.videoHeight) > 0 && Number.isFinite(Number(video.duration)) && Number(video.duration) > 0;
+  }
+
+  function createVideoValidator(options) {
+    options = options || {};
+    var createVideo = options.createVideo || function () {
+      return typeof document !== 'undefined' ? document.createElement('video') : null;
+    };
+    var timeoutMs = Math.max(1, Number(options.timeoutMs) || 8000);
+    var cache = new Map();
+    var pending = new Map();
+
+    function validate(source) {
+      var key = normalizeVideoUrl(source);
+      if (!key) return Promise.resolve(false);
+      if (cache.has(key)) return Promise.resolve(cache.get(key));
+      if (pending.has(key)) return pending.get(key);
+
+      var resolveValidation;
+      var task = new Promise(function (resolve) { resolveValidation = resolve; });
+      pending.set(key, task);
+      var video;
+      var timer;
+      var finished = false;
+
+      function finish(isValid) {
+        if (finished) return;
+        finished = true;
+        if (timer) clearTimeout(timer);
+        if (video) {
+          video.removeEventListener('loadedmetadata', onMetadata);
+          video.removeEventListener('error', onError);
+          try { video.pause(); } catch (_) {}
+          try { video.removeAttribute('src'); video.load(); } catch (_) {}
+        }
+        if (pending.get(key) === task) {
+          cache.set(key, !!isValid);
+          pending.delete(key);
+        }
+        resolveValidation(!!isValid);
+      }
+
+      function onMetadata() { finish(hasVideoMetadata(video)); }
+      function onError() { finish(false); }
+
+      try {
+        video = createVideo();
+        if (!video) return finish(false);
+        video.preload = 'metadata';
+        video.muted = true;
+        video.playsInline = true;
+        video.addEventListener('loadedmetadata', onMetadata);
+        video.addEventListener('error', onError);
+        timer = setTimeout(function () { finish(false); }, timeoutMs);
+        video.src = key;
+        video.load();
+      } catch (_) { finish(false); }
+      return task;
+    }
+
+    function isValid(source) {
+      var key = normalizeVideoUrl(source);
+      return !!key && cache.get(key) === true;
+    }
+
+    function isKnownBroken(source) {
+      var key = normalizeVideoUrl(source);
+      return !!key && cache.get(key) === false;
+    }
+
+    function markBroken(source) {
+      var key = normalizeVideoUrl(source);
+      if (!key) return false;
+      cache.set(key, false);
+      pending.delete(key);
+      return true;
+    }
+
+    function rememberValid(source, video) {
+      var key = normalizeVideoUrl(source);
+      if (!key) return false;
+      var valid = hasVideoMetadata(video);
+      cache.set(key, valid);
+      pending.delete(key);
+      return valid;
+    }
+
+    return { validate: validate, isValid: isValid, isKnownBroken: isKnownBroken, markBroken: markBroken, rememberValid: rememberValid };
+  }
+
+  function applyCenteredVideoLayout(container, video) {
+    if (!container || !container.style || !video || !video.style || typeof container.style.setProperty !== 'function' || typeof video.style.setProperty !== 'function') return false;
+    container.style.setProperty('display', 'flex', 'important');
+    container.style.setProperty('align-items', 'center', 'important');
+    container.style.setProperty('justify-content', 'center', 'important');
+    video.style.setProperty('position', 'relative', 'important');
+    video.style.setProperty('inset', 'auto', 'important');
+    video.style.setProperty('width', '100%', 'important');
+    video.style.setProperty('height', 'auto', 'important');
+    video.style.setProperty('max-width', '100%', 'important');
+    video.style.setProperty('max-height', '100%', 'important');
+    video.style.setProperty('object-fit', 'contain', 'important');
+    video.style.setProperty('object-position', 'center center', 'important');
+    return true;
+  }
+
+  function calculateContainedVideoSize(videoWidth, videoHeight, containerWidth, containerHeight) {
+    videoWidth = Number(videoWidth);
+    videoHeight = Number(videoHeight);
+    containerWidth = Number(containerWidth);
+    containerHeight = Number(containerHeight);
+    if (![videoWidth, videoHeight, containerWidth, containerHeight].every(Number.isFinite) || videoWidth <= 0 || videoHeight <= 0 || containerWidth <= 0 || containerHeight <= 0) return null;
+    var scale = Math.min(containerWidth / videoWidth, containerHeight / videoHeight);
+    return { width: videoWidth * scale, height: videoHeight * scale, scale: scale };
+  }
+
+  function fitCenteredVideo(container, video) {
+    if (!container || !video || typeof container.getBoundingClientRect !== 'function' || !video.style || typeof video.style.setProperty !== 'function') return null;
+    var bounds = container.getBoundingClientRect();
+    var size = calculateContainedVideoSize(video.videoWidth, video.videoHeight, bounds.width, bounds.height);
+    if (!size) return null;
+    video.style.setProperty('width', size.width + 'px', 'important');
+    video.style.setProperty('height', size.height + 'px', 'important');
+    return size;
+  }
+
+  function createFeedVideoRecovery(options) {
+    options = options || {};
+    var recovering = false;
+    async function recover(failedSource) {
+      if (options.validator) options.validator.markBroken(failedSource);
+      if (recovering) return null;
+      recovering = true;
+      try {
+        var list = typeof options.getVideos === 'function' ? options.getVideos() : [];
+        var count = Array.isArray(list) ? list.length : 0;
+        var initialIndex = typeof options.getCurrentIndex === 'function' ? options.getCurrentIndex() : -1;
+        var cursor = initialIndex;
+        var visited = new Set(cursor >= 0 ? [cursor] : []);
+        for (var attempt = 0; attempt < count; attempt += 1) {
+          var next = typeof options.getNextIndex === 'function' ? options.getNextIndex(cursor) : -1;
+          if (!Number.isInteger(next) || next < 0 || next >= count || visited.has(next)) break;
+          visited.add(next);
+          cursor = next;
+          var candidate = list[next];
+          var source = candidate && (candidate.videoSrc || candidate.media_path);
+          if (!source || !options.validator || options.validator.isKnownBroken(source)) continue;
+          var isValid = typeof options.validate === 'function' ? await options.validate(source) : await options.validator.validate(source);
+          if (!isValid) {
+            options.validator.markBroken(source);
+            continue;
+          }
+          if (typeof options.getCurrentIndex === 'function' && options.getCurrentIndex() !== initialIndex) return null;
+          if (typeof options.onSelect === 'function') options.onSelect(next, candidate);
+          return next;
+        }
+        if (typeof options.getCurrentIndex === 'function' && options.getCurrentIndex() !== initialIndex) return null;
+        if (typeof options.onExhausted === 'function') options.onExhausted();
+        return null;
+      } finally { recovering = false; }
+    }
+    return { recover: recover, isRecovering: function () { return recovering; } };
+  }
+
   function createShuffleCycle(options) {
     options = options || {};
     var random = typeof options.random === 'function' ? options.random : Math.random;
@@ -316,5 +516,5 @@
     return { start: start, next: next, previous: previous, select: select, peekNext: peekNext, current: current, sync: sync, markStarted: markStarted, getState: getState, reset: reset };
   }
 
-  return { createShuffleCycle: createShuffleCycle, videoKey: videoKey, isDuplicatePost: isDuplicatePost, selectRandomStartupVideo: selectRandomStartupVideo, selectAndRememberStartupVideo: selectAndRememberStartupVideo };
+  return { createShuffleCycle: createShuffleCycle, videoKey: videoKey, isDuplicatePost: isDuplicatePost, selectRandomStartupVideo: selectRandomStartupVideo, selectAndRememberStartupVideo: selectAndRememberStartupVideo, selectValidatedStartupVideo: selectValidatedStartupVideo, createVideoValidator: createVideoValidator, createFeedVideoRecovery: createFeedVideoRecovery, applyCenteredVideoLayout: applyCenteredVideoLayout, calculateContainedVideoSize: calculateContainedVideoSize, fitCenteredVideo: fitCenteredVideo, hasVideoMetadata: hasVideoMetadata };
 });

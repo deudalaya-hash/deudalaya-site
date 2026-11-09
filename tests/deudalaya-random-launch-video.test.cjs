@@ -11,7 +11,8 @@ test('the startup selection uses the shuffle helper and the ordinary feed cycle'
   assert.match(html, /playbackShuffle\.start\(feedKeys\(\)/);
   assert.match(html, /function fypSelectCurrent\(i\)[\s\S]*?playbackShuffle\.current\(keys\)/);
   assert.match(html, /sessionStorage/);
-  assert.match(social, /selectAndRememberStartupVideo\(startupCandidates, startupStorage, Math\.random, 'deudalaya-last-published-startup-video-v1'\)/);
+  assert.match(social, /selectPlayableStartupVideo\(startupCandidates, startupStorage\)/);
+  assert.match(social, /selectValidatedStartupVideo\([\s\S]*?deudalaya-last-published-startup-video-v1/);
   assert.match(social, /const startupCandidates = \[\.\.\.newSharedPosts, \.\.\.localCandidates\]/);
   assert.match(social, /activeFeedCategory = startupCategory/);
   assert.match(social, /applyFeedMode\(true, startupVideoKey\)/);
