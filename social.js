@@ -12,11 +12,13 @@
   let feedVideoRecovery = null;
   let feedVideoHooksInstalled = false;
   let feedMediaLoadTimer = null;
+  const categoryPositions = new Map();
   const localPosts = videos.filter(post => !post.cloudPost && isSupportedFeedVideo(post));
   const feedPlayer = document.getElementById('postVideo');
   const feedVideoArea = document.getElementById('video');
   const ownId = () => cloudUser?.id || null;
   const currentPost = () => videos[index];
+  const categoryPositionKey = post => window.DeudalayaVideoShuffle?.videoKey?.(post) || post?.videoSrc || post?.media_path || null;
   const feedVideoSource = post => post && (post.videoSrc || post.media_path) || '';
   function ensureVideoValidation() {
     const api = window.DeudalayaVideoShuffle;
@@ -326,7 +328,7 @@
     }
   };
 
-  function applyFeedMode(reset = false, startupVideoKey = null) {
+  function applyFeedMode(reset = false, startupVideoKey = null, restorePosition = null) {
     const selected = (activeFeedMode === 'following' ? sharedPosts.filter(post => post.followedByMe) : sharedPosts)
       .filter(isSupportedFeedVideo);
     localPosts.splice(0, localPosts.length, ...mergeLocalPosts(localPosts, videos));
@@ -335,6 +337,12 @@
     videos.splice(0, videos.length, ...categorized);
     const startupIndex = startupVideoKey ? videos.findIndex(post => window.DeudalayaVideoShuffle.videoKey(post) === startupVideoKey) : -1;
     if (startupIndex >= 0) index = startupIndex;
+    else if (restorePosition) {
+      const savedIndex = restorePosition.key
+        ? videos.findIndex(post => categoryPositionKey(post) === restorePosition.key)
+        : -1;
+      index = savedIndex >= 0 ? savedIndex : Math.min(restorePosition.index || 0, Math.max(0, videos.length - 1));
+    }
     else if (reset || index >= videos.length) index = 0;
     render();
     updateFeedCategoryTabs();
@@ -410,10 +418,53 @@
 
   window.setFeedCategory = function(category) {
     if (!window.DeudalayaFeedCategories.ACTIVE_CATEGORIES.includes(category)) return;
+    if (category === activeFeedCategory) return;
+    const current = currentPost();
+    if (current) {
+      categoryPositions.set(activeFeedCategory, {
+        key: categoryPositionKey(current),
+        index
+      });
+    }
     activeFeedCategory = category;
-    applyFeedMode(true);
+    updateFeedCategoryTabs();
+    applyFeedMode(false, null, categoryPositions.get(category) || { key: null, index: 0 });
+    const prefersReducedMotion = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!prefersReducedMotion && feedVideoArea && typeof feedVideoArea.animate === 'function') {
+      try { feedVideoArea.animate([{ opacity: 0.88 }, { opacity: 1 }], { duration: 150, easing: 'ease-out' }); } catch (_) {}
+    }
     if (!videos.length) toast('No videos assigned to ' + category + ' yet.');
   };
+
+  const feedElement = document.getElementById('feed');
+  let categorySwipeStart = null;
+  if (feedElement) {
+    feedElement.addEventListener('touchstart', event => {
+      if (event.touches.length !== 1) { categorySwipeStart = null; return; }
+      const target = event.target;
+      if (target && typeof target.closest === 'function' && target.closest('.feed-category-tabs, button, a, input, textarea, select, [role="slider"], .comments')) {
+        categorySwipeStart = null;
+        return;
+      }
+      const touch = event.touches[0];
+      categorySwipeStart = { x: touch.clientX, y: touch.clientY, time: Date.now() };
+    }, { passive: true });
+    feedElement.addEventListener('touchend', event => {
+      if (!categorySwipeStart || event.changedTouches.length !== 1 || Date.now() - categorySwipeStart.time > 900) {
+        categorySwipeStart = null;
+        return;
+      }
+      const touch = event.changedTouches[0];
+      const direction = window.DeudalayaFeedCategories.swipeDirection(
+        categorySwipeStart.x, categorySwipeStart.y, touch.clientX, touch.clientY
+      );
+      categorySwipeStart = null;
+      if (!direction || document.getElementById('comments')?.classList.contains('open')) return;
+      const category = window.DeudalayaFeedCategories.categoryAfterSwipe(activeFeedCategory, direction);
+      if (category) window.setFeedCategory(category);
+    }, { passive: true });
+    feedElement.addEventListener('touchcancel', () => { categorySwipeStart = null; }, { passive: true });
+  }
 
   window.openFeedCategoryManager = function() {
     if (!isDeudalayaAdmin()) return toast('Only admins can manage video categories.');

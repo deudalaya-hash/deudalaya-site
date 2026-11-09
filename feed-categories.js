@@ -46,5 +46,19 @@
     return (posts || []).filter(post => categoryOf(post) === category);
   }
 
-  return Object.freeze({ ACTIVE_CATEGORIES, DEFAULT_CATEGORY, categoryOf, filterPosts });
+  function swipeDirection(startX, startY, endX, endY, threshold = 55) {
+    const dx = endX - startX;
+    const dy = endY - startY;
+    if (Math.abs(dx) < threshold || Math.abs(dx) <= Math.abs(dy) * 1.25) return null;
+    return dx < 0 ? 'left' : 'right';
+  }
+
+  function categoryAfterSwipe(category, direction) {
+    const currentIndex = ACTIVE_CATEGORIES.indexOf(category);
+    if (currentIndex < 0 || (direction !== 'left' && direction !== 'right')) return null;
+    const nextIndex = currentIndex + (direction === 'left' ? 1 : -1);
+    return nextIndex >= 0 && nextIndex < ACTIVE_CATEGORIES.length ? ACTIVE_CATEGORIES[nextIndex] : null;
+  }
+
+  return Object.freeze({ ACTIVE_CATEGORIES, DEFAULT_CATEGORY, categoryOf, filterPosts, swipeDirection, categoryAfterSwipe });
 });

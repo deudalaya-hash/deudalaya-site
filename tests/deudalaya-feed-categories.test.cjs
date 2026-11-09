@@ -27,6 +27,27 @@ test('feed category filtering keeps each video in exactly its stored category', 
   assert.deepEqual(categories.ACTIVE_CATEGORIES, ['देउडा', 'गाउँघर', 'शहर']);
 });
 
+test('horizontal feed swipes navigate adjacent categories without wrapping or stealing vertical swipes', () => {
+  assert.equal(categories.swipeDirection(0, 0, -90, 8), 'left');
+  assert.equal(categories.swipeDirection(0, 0, 90, -8), 'right');
+  assert.equal(categories.swipeDirection(0, 0, -90, 100), null, 'vertical movement wins');
+  assert.equal(categories.swipeDirection(0, 0, -40, 2), null, 'short movements are taps');
+  assert.equal(categories.categoryAfterSwipe('देउडा', 'left'), 'गाउँघर');
+  assert.equal(categories.categoryAfterSwipe('गाउँघर', 'left'), 'शहर');
+  assert.equal(categories.categoryAfterSwipe('शहर', 'left'), null, 'last category does not wrap');
+  assert.equal(categories.categoryAfterSwipe('शहर', 'right'), 'गाउँघर');
+  assert.equal(categories.categoryAfterSwipe('गाउँघर', 'right'), 'देउडा');
+  assert.equal(categories.categoryAfterSwipe('देउडा', 'right'), null, 'first category does not wrap');
+});
+
+test('category swipe listener delegates to category switching and remembers feed positions', () => {
+  assert.match(social, /\.addEventListener\('touchstart'/);
+  assert.match(social, /\.addEventListener\('touchend'/);
+  assert.match(social, /categoryAfterSwipe\(activeFeedCategory/);
+  assert.match(social, /categoryPositions/);
+  assert.match(social, /\.animate\(/);
+});
+
 test('category navigation exposes exactly three feeds, defaults to देउडा, and routes each click to its own feed', () => {
   const selectedCategories = [];
   const comingSoonCategories = [];
