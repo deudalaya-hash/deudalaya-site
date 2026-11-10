@@ -250,6 +250,7 @@
     var size = calculateContainedVideoSize(video.videoWidth, video.videoHeight, bounds.width, bounds.height);
     if (!size) return null;
     var portrait = Number(video.videoHeight) > Number(video.videoWidth);
+    container.style.setProperty('align-items', portrait ? 'flex-start' : 'center', 'important');
     video.style.setProperty('width', size.width + 'px', 'important');
     video.style.setProperty('height', size.height + 'px', 'important');
     video.style.setProperty('align-self', portrait ? 'flex-start' : 'center', 'important');

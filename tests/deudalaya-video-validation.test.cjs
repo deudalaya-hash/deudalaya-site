@@ -183,7 +183,7 @@ test('portrait, landscape and square frames fit without cropping or distortion',
   ];
   for (const item of cases) {
     const style = { values: {}, setProperty(name, value) { this.values[name] = value; } };
-    const container = { getBoundingClientRect: () => area };
+    const container = { style: { setProperty() {} }, getBoundingClientRect: () => area };
     const video = { videoWidth: item.width, videoHeight: item.height, style };
     const actual = fitCenteredVideo(container, video);
     assert.ok(Math.abs(actual.width - item.expected.width) < 0.01, item.name + ' width');
@@ -206,10 +206,12 @@ test('portrait media aligns to the top while landscape and square media stay cen
   ];
   for (const viewport of viewports) for (const media of mediaCases) {
     const style = { values: {}, setProperty(name, value) { this.values[name] = value; } };
-    const container = { style: { setProperty() {} }, getBoundingClientRect: () => ({ width: viewport.width, height: viewport.height }) };
+    const containerStyle = { values: {}, setProperty(name, value) { this.values[name] = value; } };
+    const container = { style: containerStyle, getBoundingClientRect: () => ({ width: viewport.width, height: viewport.height }) };
     const video = { videoWidth: media.width, videoHeight: media.height, style };
     applyCenteredVideoLayout(container, video);
     fitCenteredVideo(container, video);
+    assert.equal(containerStyle.values['align-items'], media.name === 'portrait' ? 'flex-start' : 'center', `${viewport.name} ${media.name} container alignment`);
     assert.equal(style.values['align-self'], media.align, `${viewport.name} ${media.name} vertical alignment`);
     assert.equal(style.values['object-position'], media.position, `${viewport.name} ${media.name} object position`);
     assert.equal(style.values['object-fit'], 'contain', `${viewport.name} ${media.name} fit mode`);
