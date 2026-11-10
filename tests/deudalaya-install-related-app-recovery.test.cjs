@@ -32,11 +32,12 @@ function createRelatedAppAndroidUi() {
   return { button, buttonListeners, hint, intro, steps, window, windowListeners, classes, get promptCalls() { return promptCalls; }, setPromptCalls(value) { promptCalls = value; } };
 }
 
-test('Android browser mode keeps app access and install guidance after related-app detection', async () => {
+test('related-app detection reports installed state without manual launch instructions', async () => {
   const ui = createRelatedAppAndroidUi();
-  assert.equal(ui.button.hidden, false);
-  assert.equal(ui.button.disabled, false);
-  assert.match(ui.hint.textContent, /Home Screen/);
+  assert.equal(ui.button.hidden, true);
+  assert.equal(ui.button.disabled, true);
+  assert.equal(ui.hint.textContent, 'Deudalaya is already installed.');
+  assert.equal(ui.steps.innerHTML, '');
   assert.equal(ui.classes.has('ecosystem-gateway'), false);
 });
 
@@ -52,6 +53,7 @@ test('a late Android beforeinstallprompt event is retained and invoked by the bu
   ui.windowListeners.beforeinstallprompt(event);
   assert.equal(prevented, true);
   assert.equal(ui.window.deferredPrompt, event);
+  assert.equal(ui.button.hidden, false, 'a real prompt event takes priority over related-app detection');
   await ui.buttonListeners.click({ preventDefault() {} });
   assert.equal(ui.promptCalls, 1);
 });

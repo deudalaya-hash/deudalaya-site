@@ -125,10 +125,10 @@ test('Install App only reports ready after a real prompt event is captured', () 
   assert.match(html, /id="deudalayaInstallAction"[^>]*>Install App<\/button>/);
   assert.doesNotMatch(button[0], /disabled/);
   assert.match(gatewayScript, /deudalaya-installpromptavailable/);
-  assert.match(gatewayScript, /देउडालय स्थापना गर्न तयार छ।/);
+  assert.match(gatewayScript, /Deudalaya is ready to install\./);
 });
 
-test('no native prompt keeps an install action and shows the Android browser-menu fallback', async () => {
+test('no native prompt keeps the install action and shows only the supported-browser message', async () => {
   const ui = createGatewayHarness({
     outcome: 'dismissed',
     eventAvailable: false,
@@ -138,9 +138,12 @@ test('no native prompt keeps an install action and shows the Android browser-men
 
   assert.equal(ui.button.hidden, false);
   assert.equal(ui.guide.hidden, false);
+  assert.equal(ui.intro.textContent, 'Direct installation is not currently available in this browser. Please try a supported browser.');
+  assert.equal(ui.steps.innerHTML, '');
   await ui.buttonListeners.click({ preventDefault() {} });
   assert.equal(ui.promptCalls, 0);
-  assert.match(ui.hint.textContent, /Install app/);
+  assert.equal(ui.intro.textContent, 'Direct installation is not currently available in this browser. Please try a supported browser.');
+  assert.doesNotMatch(ui.intro.textContent + ui.steps.innerHTML + ui.hint.textContent, /menu|Menu|⋮|Install app|Add to Home screen/);
 });
 
 test('button calls prompt synchronously, awaits userChoice, and clears the consumed event', async () => {
@@ -165,7 +168,9 @@ test('dismissed prompt does not reuse the consumed event; appinstalled updates s
   await ui.buttonListeners.click({ preventDefault() {} });
   assert.equal(ui.window.deferredPrompt, null);
   assert.equal(ui.button.disabled, false);
-  assert.equal(ui.guide.hidden, false, 'fallback instructions return after the native prompt is dismissed');
+  assert.equal(ui.guide.hidden, false, 'the concise fallback remains available after the prompt is dismissed');
+  assert.equal(ui.intro.textContent, 'Direct installation is not currently available in this browser. Please try a supported browser.');
+  assert.doesNotMatch(ui.intro.textContent + ui.steps.innerHTML + ui.hint.textContent, /menu|Menu|⋮|Add to Home screen/);
   assert.match(ui.hint.textContent, /रद्द गरियो/);
   assert.equal(ui.document.documentElement.classList.contains('ecosystem-gateway'), false);
 
@@ -173,10 +178,10 @@ test('dismissed prompt does not reuse the consumed event; appinstalled updates s
   assert.equal(ui.window.deudalayaInstallState, 'installed');
   assert.equal(ui.document.documentElement.classList.contains('ecosystem-gateway'), false);
   assert.equal(ui.button.hidden, true);
-  assert.match(ui.hint.textContent, /Home Screen/);
+  assert.equal(ui.hint.textContent, 'Deudalaya is already installed.');
 });
 
-test('an existing installation hides the install button and explains its state', () => {
+test('an existing installation hides the install button without manual launch instructions', () => {
   const ui = createGatewayHarness({ outcome: 'dismissed' });
   ui.window.deudalayaInstallState = 'installed';
   ui.window.deudalayaInstallSource = 'related-app';
@@ -186,15 +191,16 @@ test('an existing installation hides the install button and explains its state',
   stateChange();
   assert.equal(ui.button.hidden, true);
   assert.equal(ui.guide.hidden, true);
-  assert.match(ui.hint.textContent, /Home Screen/);
+  assert.equal(ui.hint.textContent, 'Deudalaya is already installed.');
 });
 
-test('desktop browsers without a native prompt show supported browser-menu instructions', () => {
+test('desktop browsers without a native prompt show only the concise supported-browser message', () => {
   const ui = createGatewayHarness({ outcome: 'dismissed', supportsPrompt: false });
 
   assert.equal(ui.button.hidden, false);
-  assert.match(ui.hint.textContent, /native prompt उपलब्ध छैन/);
-  assert.match(ui.hint.textContent, /Address bar/);
+  assert.equal(ui.intro.textContent, 'Direct installation is not currently available in this browser. Please try a supported browser.');
+  assert.equal(ui.steps.innerHTML, '');
+  assert.doesNotMatch(ui.intro.textContent + ui.steps.innerHTML + ui.hint.textContent, /menu|Menu|⋮|Address bar|Install app/);
 });
 
 test('the visible install control and help panel live with the browser feed', () => {
@@ -212,6 +218,8 @@ function createGatewayHarness({ outcome, supportsPrompt = true, eventAvailable =
     addEventListener(name, handler) { buttonListeners[name] = handler; }
   };
   const hint = { textContent: '' };
+  const intro = { textContent: '' };
+  const steps = { innerHTML: '' };
   const guide = { hidden: false };
   const document = {
     documentElement: {
@@ -224,6 +232,8 @@ function createGatewayHarness({ outcome, supportsPrompt = true, eventAvailable =
     getElementById(id) {
       return id === 'deudalayaInstallAction' ? button
         : id === 'deudalayaInstallHint' ? hint
+          : id === 'deudalayaInstallIntro' ? intro
+            : id === 'deudalayaInstallSteps' ? steps
           : id === 'deudalayaInstallHelp' ? guide : null;
     }
   };
@@ -244,7 +254,7 @@ function createGatewayHarness({ outcome, supportsPrompt = true, eventAvailable =
     platform: platform || 'Win32'
   };
   vm.runInNewContext(gatewayScript, { document, window, navigator, location: {}, Promise });
-  return { button, buttonListeners, document, guide, hint, promptCalls, window, windowListeners,
+  return { button, buttonListeners, document, guide, hint, intro, steps, promptCalls, window, windowListeners,
     get promptCalls() { return promptCalls; } };
 }
 
