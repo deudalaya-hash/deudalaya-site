@@ -11,9 +11,8 @@ const script = fs.readFileSync(path.join(root, 'ecosystem-gateway.js'), 'utf8');
 test('installation guide is localized and renders a responsive step list', () => {
   assert.match(html, /id="deudalayaInstallIntro"/);
   assert.match(html, /id="deudalayaInstallSteps"/);
-  assert.match(html, /lang="ne"/);
-  assert.match(html, /class="gateway-card-art"><img src="assets\/deudalaya-install-art\.jpeg" alt="देउडालय लोगो"/);
-  assert.ok(fs.existsSync(path.join(root, 'assets', 'deudalaya-install-art.jpeg')));
+  assert.match(html, /id="deudalayaInstallHelp"/);
+  assert.match(html, /class="gateway-install app-install-action"/);
   const css = fs.readFileSync(path.join(root, 'ecosystem-gateway.css'), 'utf8');
   assert.match(css, /\.gateway-install-steps/);
   assert.match(css, /@media \(max-width: 700px\)/);
@@ -32,6 +31,7 @@ test('Android Chrome, Edge, and Brave show their four Nepali Home Screen steps a
     assert.match(ui.steps.innerHTML, /तीनवटा थोप्ला/);
     assert.match(ui.steps.innerHTML, /“Install app” वा “Add to Home screen”/);
     assert.match(ui.steps.innerHTML, /Home Screen/);
+    assert.match(ui.intro.textContent, /native स्थापना prompt दिएको छैन/);
     assert.equal(ui.button.hidden, false, 'the install action stays visible when Chrome has no prompt event');
     assert.equal(ui.button.textContent, 'Install App');
   }
@@ -108,13 +108,13 @@ test('Mac Safari and desktop Chrome show supported installation guidance', async
   assert.equal(chrome.button.textContent, 'Install App');
 });
 
-test('unsupported browsers remain gated and iOS browsers get Safari instructions', () => {
+test('unsupported browsers remain usable and iOS browsers get Safari instructions', () => {
   const firefox = createGateway({
     ua: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0',
     platform: 'Win32',
     prompt: true
   });
-  assert.equal(firefox.button.hidden, true);
+  assert.equal(firefox.button.hidden, false);
   assert.match(firefox.intro.textContent, /Chrome वा Edge/);
   assert.doesNotMatch(firefox.steps.innerHTML, /Add to Home Screen|Add to Dock|Install app/);
 
@@ -143,16 +143,17 @@ test('standalone or already-installed mode hides the guide and its button', () =
 function createGateway({ ua, platform = '', platformData = '', maxTouchPoints = 0, brave = false, prompt = false, installed = false }) {
   const buttonListeners = {};
   const windowListeners = {};
-  const classes = new Set(['ecosystem-gateway']);
+  const classes = new Set();
   let promptCalls = 0;
   const button = { hidden: false, disabled: false, textContent: '', addEventListener(name, fn) { buttonListeners[name] = fn; } };
   const hint = { textContent: '' };
   const intro = { textContent: '' };
   const steps = { innerHTML: '' };
+  const guide = { hidden: false };
   const document = {
     documentElement: { classList: { add(name) { classes.add(name); }, remove(name) { classes.delete(name); } } },
     getElementById(id) {
-      return ({ deudalayaInstallAction: button, deudalayaInstallHint: hint, deudalayaInstallIntro: intro, deudalayaInstallSteps: steps })[id] || null;
+      return ({ deudalayaInstallAction: button, deudalayaInstallHint: hint, deudalayaInstallIntro: intro, deudalayaInstallSteps: steps, deudalayaInstallHelp: guide })[id] || null;
     }
   };
   const promptEvent = prompt ? { prompt() { promptCalls += 1; return Promise.resolve(); }, userChoice: Promise.resolve({ outcome: 'accepted' }) } : null;
@@ -169,7 +170,7 @@ function createGateway({ ua, platform = '', platformData = '', maxTouchPoints = 
   const navigator = { userAgent: ua, platform, maxTouchPoints, standalone: installed, userAgentData: platformData ? { platform: platformData } : undefined };
   if (brave) navigator.brave = {};
   vm.runInNewContext(script, { document, navigator, window, Promise, setTimeout, clearTimeout });
-  return { button, buttonListeners, classes, hint, intro, steps, window, windowListeners, get promptCalls() { return promptCalls; } };
+  return { button, buttonListeners, classes, guide, hint, intro, steps, window, windowListeners, get promptCalls() { return promptCalls; } };
 }
 
 function stepCount(ui) {

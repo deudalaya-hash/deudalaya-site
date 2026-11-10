@@ -6,10 +6,11 @@ const test = require('node:test');
 const root = path.resolve(__dirname, '..');
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 
-test('root entry shows the Deudalaya install gate and preserves separate app routes', () => {
+test('root entry allows browser use, keeps an optional install action, and preserves separate app routes', () => {
   const html = read('index.html');
   assert.match(html, /<div class="app">[\s\S]*?id="feed"/);
-  assert.match(html, /id="ecosystemGateway"[\s\S]*?id="deudalayaInstallAction"/);
+  assert.match(html, /class="app-install-control"[\s\S]*?id="deudalayaInstallAction"/);
+  assert.doesNotMatch(html, /id="ecosystemGateway"|deudalayaStandaloneFeedGate/);
   assert.match(html, /beforeinstallprompt|appinstalled|ecosystem-gateway\.(?:js|css)/);
   for (const page of ['index2.html', 'sabdalaya/index.html', 'chalchitralaya/index.html', 'phonelaya/index.html', 'kakchhayalaya/index.html']) {
     assert.ok(fs.existsSync(path.join(root, page)), `${page} remains an independent app page`);
@@ -17,7 +18,7 @@ test('root entry shows the Deudalaya install gate and preserves separate app rou
   assert.match(html, /<meta name="application-name" content="देउडालय">/);
 });
 
-test('Deudalaya PWA remains installable with its browser installation gate', () => {
+test('Deudalaya PWA remains installable without requiring its browser installation', () => {
   const html = read('index.html');
   const manifest = JSON.parse(read('manifest.webmanifest'));
   assert.match(html, /<link rel="manifest" href="manifest\.webmanifest">/);
@@ -29,11 +30,11 @@ test('Deudalaya PWA remains installable with its browser installation gate', () 
   ]);
 });
 
-test('standalone mode opens the feed without the browser installation gate', () => {
+test('browser and standalone modes both retain direct feed access', () => {
   const html = read('index.html');
   assert.match(html, /display-mode: standalone/);
-  assert.match(html, /ecosystem-gateway/);
   assert.match(html, /id="feed"/);
+  assert.doesNotMatch(html, /html:not\(\.deudalaya-standalone\) body>\.app/);
 });
 
 test('each app page has its own install action and confirmation-gated open action', () => {

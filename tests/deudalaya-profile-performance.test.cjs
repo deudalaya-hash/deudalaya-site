@@ -22,5 +22,6 @@ test('profile summary can render from the local profile cache without waiting fo
   const openProfileAt = html.indexOf('function openProfile()');
   const loadPostsAt = social.indexOf('loadSupabaseClient().then(async client =>');
   assert.ok(openProfileAt >= 0 && loadPostsAt >= 0, 'profile entry and asynchronous feed loader are present');
-  assert.match(social, /if\s*\(window\.deudalayaIsStandalone\(\)\)\s*\{[\s\S]*?loadSupabaseClient\(\)/);
+  assert.match(social, /applyFeedMode\(true\);\s*setInterval\([\s\S]*?loadSupabaseClient\(\)/);
+  assert.doesNotMatch(social, /if\s*\(window\.deudalayaIsStandalone\(\)\)\s*\{[\s\S]*?loadSupabaseClient\(\)/);
 });

@@ -13,7 +13,7 @@ function createRelatedAppAndroidUi() {
   const hint = { textContent: '' };
   const intro = { textContent: '' };
   const steps = { innerHTML: '' };
-  const classes = new Set(['ecosystem-gateway']);
+  const classes = new Set();
   const document = {
     documentElement: { classList: { add: value => classes.add(value), remove: value => classes.delete(value) } },
     getElementById(id) { return ({ deudalayaInstallAction: button, deudalayaInstallHint: hint, deudalayaInstallIntro: intro, deudalayaInstallSteps: steps })[id] || null; }
@@ -32,12 +32,12 @@ function createRelatedAppAndroidUi() {
   return { button, buttonListeners, hint, intro, steps, window, windowListeners, classes, get promptCalls() { return promptCalls; }, setPromptCalls(value) { promptCalls = value; } };
 }
 
-test('Android browser mode keeps the install gate action visible after related-app detection', async () => {
+test('Android browser mode keeps app access and install guidance after related-app detection', async () => {
   const ui = createRelatedAppAndroidUi();
   assert.equal(ui.button.hidden, false);
   assert.equal(ui.button.disabled, false);
   assert.match(ui.hint.textContent, /Home Screen/);
-  assert.equal(ui.classes.has('ecosystem-gateway'), true);
+  assert.equal(ui.classes.has('ecosystem-gateway'), false);
 });
 
 test('a late Android beforeinstallprompt event is retained and invoked by the button gesture', async () => {

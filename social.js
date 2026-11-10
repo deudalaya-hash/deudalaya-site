@@ -800,24 +800,22 @@
   document.getElementById('commentInput').addEventListener('focus', () => {
     if (!cloudUser) { document.activeElement.blur(); openAuth(); }
   });
-  if (window.deudalayaIsStandalone()) {
-    applyFeedMode(true);
-    setInterval(() => {
-      const post = currentPost();
-      if (document.hidden || !post?.cloudPost) return;
-      loadCurrentEngagement(post);
-      if (document.getElementById('comments').classList.contains('open')) loadComments(post);
-    }, 15000);
-    const searchHash = new URLSearchParams(location.hash.slice(1));
-    const profileUsername = searchHash.get('profile');
-    loadSupabaseClient().then(async client => {
-      if (!client) return;
-      if (cloudUser) await refreshOwnProfile();
-      await loadRemotePosts();
-      if (profileUsername) {
-        const { data } = await client.from(profileTable).select('id').eq('username', profileUsername).maybeSingle();
-        if (data) await openProfile(data.id);
-      }
-    });
-  }
+  applyFeedMode(true);
+  setInterval(() => {
+    const post = currentPost();
+    if (document.hidden || !post?.cloudPost) return;
+    loadCurrentEngagement(post);
+    if (document.getElementById('comments').classList.contains('open')) loadComments(post);
+  }, 15000);
+  const searchHash = new URLSearchParams(location.hash.slice(1));
+  const profileUsername = searchHash.get('profile');
+  loadSupabaseClient().then(async client => {
+    if (!client) return;
+    if (cloudUser) await refreshOwnProfile();
+    await loadRemotePosts();
+    if (profileUsername) {
+      const { data } = await client.from(profileTable).select('id').eq('username', profileUsername).maybeSingle();
+      if (data) await openProfile(data.id);
+    }
+  });
 })();

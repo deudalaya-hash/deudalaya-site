@@ -3,6 +3,7 @@
   window.__deudalayaInstallUiBound = true;
 
   const installButton = document.getElementById('deudalayaInstallAction');
+  const installHelp = document.getElementById('deudalayaInstallHelp');
   const installHint = document.getElementById('deudalayaInstallHint');
   const installIntro = document.getElementById('deudalayaInstallIntro');
   const installSteps = document.getElementById('deudalayaInstallSteps');
@@ -70,6 +71,12 @@
 
     if (device === 'android') {
       if (['Chrome', 'Edge', 'Brave'].includes(browser)) {
+        if (!hasPrompt) return stepGuide(`${browser} ले यो पृष्ठका लागि अहिले native स्थापना prompt दिएको छैन। ब्राउजरको मेनुबाट स्थापना गर्नुहोस्:`, [
+          'माथि दायाँपट्टि रहेको तीनवटा थोप्ला (⋮) थिच्नुहोस्।',
+          '“Install app” वा “Add to Home screen” छान्नुहोस्।',
+          '“Install” वा “Add” थिच्नुहोस्।',
+          'अब मोबाइलको Home Screen बाट देउडालय खोल्नुहोस्।'
+        ], true);
         return stepGuide(`${browser} मा स्थापना गर्ने चरणहरू:`, [
           'माथि दायाँपट्टि रहेको तीनवटा थोप्ला (⋮) थिच्नुहोस्।',
           '“Install app” वा “Add to Home screen” छान्नुहोस्।',
@@ -100,7 +107,7 @@
           'पुष्टि गरेर देउडालय खोल्नुहोस्।'
         ], true);
       }
-      return stepGuide('यो Safari संस्करणमा Add to Dock उपलब्ध नहुन सक्छ। macOS Sonoma 14 वा पछिल्लो संस्करणको Safari प्रयोग गर्नुहोस्।', [], false);
+      return stepGuide('यो Safari संस्करणमा Add to Dock उपलब्ध नहुन सक्छ। macOS Sonoma 14 वा पछिल्लो संस्करणको Safari प्रयोग गर्नुहोस्।', [], true);
     }
 
     if (device === 'windows' && ['Chrome', 'Edge'].includes(browser)) {
@@ -120,13 +127,14 @@
     }
 
     if (browser === 'Firefox') {
-      return stepGuide('Firefox मा देउडालय स्थापना उपलब्ध छैन। Windows वा Mac मा Chrome वा Edge प्रयोग गर्नुहोस्।', [], false);
+      return stepGuide('Firefox ले वेब एप स्थापना उपलब्ध गराउँदैन। स्थापना गर्न Windows वा Mac मा Chrome वा Edge प्रयोग गर्नुहोस्।', [], true);
     }
-    return stepGuide('यो ब्राउजरमा स्थापना उपलब्ध छैन। देउडालय स्थापना गर्न Chrome, Edge वा समर्थित ब्राउजर प्रयोग गर्नुहोस्।', [], false);
+    return stepGuide('यो ब्राउजरले देउडालय स्थापना उपलब्ध गराउँदैन। स्थापना गर्न Chrome, Edge वा समर्थित ब्राउजर प्रयोग गर्नुहोस्।', [], true);
   }
 
   function updateButton() {
     if (installed) {
+      if (installHelp) installHelp.hidden = true;
       installButton.disabled = true;
       installButton.hidden = true;
       const inStandalone = isStandaloneMode();
@@ -145,6 +153,7 @@
     }
 
     if (relatedAppDetected && !deferredPrompt && !isStandaloneMode()) {
+      if (installHelp) installHelp.hidden = false;
       installButton.hidden = false;
       installButton.disabled = promptPending;
       installButton.textContent = 'Install App';
@@ -154,7 +163,9 @@
       return;
     }
 
-    const guide = getGuide(!!deferredPrompt && promptBrowsers.includes(environment.browser));
+    const hasNativePrompt = !!deferredPrompt && promptBrowsers.includes(environment.browser) && environment.device !== 'iphone' && environment.device !== 'ipad';
+    if (installHelp) installHelp.hidden = hasNativePrompt || window.deudalayaInstallationStatus === 'installation-pending';
+    const guide = getGuide(hasNativePrompt);
     installButton.hidden = !guide.showInstallButton;
     installButton.disabled = promptPending || installed || !guide.showInstallButton;
     installButton.textContent = 'Install App';
@@ -164,14 +175,14 @@
       installHint.textContent = guide.steps.length
         ? 'तलका चरणहरू पालना गर्नुहोस्।'
         : 'यस ब्राउजरमा अहिले स्थापना विकल्प उपलब्ध छैन।';
-    } else if (deferredPrompt) {
+    } else if (hasNativePrompt) {
       installHint.textContent = 'देउडालय स्थापना गर्न तयार छ।';
     } else if (environment.device === 'android' && ['Chrome', 'Edge', 'Brave'].includes(environment.browser)) {
-      installHint.textContent = 'स्थापना गर्न माथिको ⋮ मेनुबाट “Install app” छान्नुहोस्।';
+      installHint.textContent = 'यो पृष्ठका लागि native prompt उपलब्ध छैन। स्थापना गर्न माथिको ⋮ मेनुबाट “Install app” छान्नुहोस्।';
     } else if (environment.device === 'android') {
       installHint.textContent = 'यो पृष्ठ Chrome मा खोलेर ⋮ मेनुबाट “Install app” छान्नुहोस्।';
     } else if (environment.device === 'windows' && ['Chrome', 'Edge'].includes(environment.browser)) {
-      installHint.textContent = 'Address bar को Install आइकन वा ⋮ मेनुबाट “Install Deudalaya” छान्नुहोस्।';
+      installHint.textContent = 'यो पृष्ठका लागि native prompt उपलब्ध छैन। Address bar को Install आइकन वा ⋮ मेनु प्रयोग गर्नुहोस्।';
     } else if (environment.device === 'mac' && environment.browser === 'Safari') {
       installHint.textContent = 'Safari को File मेनुबाट “Add to Dock” छान्नुहोस्।';
     } else {
@@ -264,6 +275,7 @@
     installButton.disabled = true;
     installHint.textContent = 'ब्राउजरको स्थापना पुष्टि खुल्दैछ…';
 
+    let outcomeMessage = '';
     try {
       const promptResult = deferredPrompt.prompt();
       deferredPrompt = null;
@@ -273,17 +285,18 @@
       if (!installed) window.deudalayaInstallationStatus = choice && choice.outcome === 'accepted'
         ? 'installation-pending'
         : 'not-installed';
-      installHint.textContent = choice && choice.outcome === 'accepted'
+      outcomeMessage = choice && choice.outcome === 'accepted'
         ? 'स्थापना स्वीकार गरियो।'
         : 'स्थापना रद्द गरियो।';
     } catch (error) {
       deferredPrompt = null;
       window.deferredPrompt = null;
       window.deudalayaInstallationStatus = 'not-installed';
-      installHint.textContent = 'स्थापना पूरा भएन। फेरि प्रयास गर्नुहोस्।';
+      outcomeMessage = 'स्थापना पूरा भएन। फेरि प्रयास गर्नुहोस्।';
     } finally {
       promptPending = false;
-      installButton.disabled = promptPending || installed;
+      updateButton();
+      if (outcomeMessage) installHint.textContent = outcomeMessage;
     }
   });
 

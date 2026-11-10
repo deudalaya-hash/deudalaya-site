@@ -6,15 +6,16 @@ const test = require('node:test');
 const root = path.resolve(__dirname, '..');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 
-test('root shows the install gate in browsers and retains the Deudalaya feed for standalone mode', () => {
+test('root lets browser visitors use the Deudalaya feed and keeps an optional install action', () => {
   assert.match(html, /<div class="app">[\s\S]*?id="feed"/);
   assert.match(html, /id="postVideo"/);
-  assert.match(html, /id="ecosystemGateway"[\s\S]*?id="deudalayaInstallAction"/);
+  assert.match(html, /class="app-install-control"[\s\S]*?id="deudalayaInstallAction"/);
+  assert.doesNotMatch(html, /id="ecosystemGateway"|deudalayaStandaloneFeedGate/);
+  assert.doesNotMatch(html, /<html[^>]*class="ecosystem-gateway"/);
   assert.match(html, /beforeinstallprompt|appinstalled|ecosystem-gateway\.(?:js|css)/);
-  assert.doesNotMatch(html, /Show browser install steps|Add to Home Screen|Continue to Website/);
 });
 
-test('PWA identity and service worker remain configured with the gate', () => {
+test('PWA identity and service worker remain configured without requiring installation', () => {
   const manifest = JSON.parse(fs.readFileSync(path.join(root, 'manifest.webmanifest'), 'utf8'));
   assert.equal(manifest.name, 'देउडालय');
   assert.equal(manifest.start_url, '/?app=deudalaya');
