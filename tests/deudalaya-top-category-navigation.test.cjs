@@ -30,7 +30,9 @@ test('the feed uses the first viewport row without a reserved header gap', () =>
   assert.match(html, /\.main\{grid-row:1/);
   assert.match(html, /\.right\{grid-row:1/);
   assert.match(html, /@media\(max-width:700px\)\{body\{overflow:hidden\}\.app\{display:flex;flex-direction:column;height:100dvh/);
-  assert.match(html, /\.video video,\.video img\{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center top!important/);
+  assert.match(html, /\.video video,\.video img\{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center center!important/);
+  assert.match(html, /\.video video\.portrait-video\{object-position:center top!important\}/);
+  assert.match(html, /loadedmetadata[\s\S]{0,220}videoHeight\s*>\s*[^;]*videoWidth/);
   assert.match(html, /class="mobile-nav"/);
 });
 

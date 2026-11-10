@@ -21,9 +21,11 @@ test('the install gate captures the genuine browser event in the document head',
   assert.match(capture[1], /__deudalayaPwaCaptureBound/);
 });
 
-test('normal browser mode can render and use the feed without standalone installation', () => {
+test('normal browser mode is gated by the poster until an installation is detected', () => {
   assert.match(html, /^<!doctype html>\s*<html lang="en">/);
-  assert.doesNotMatch(html, /deudalayaStandaloneFeedGate|html:not\(\.deudalaya-standalone\) body>\.app/);
+  assert.match(html, /deudalaya-install-required/);
+  assert.match(html, /\.deudalaya-install-required \.app\s*\{[^}]*display:\s*none/);
+  assert.match(html, /id="deudalayaInstallLanding"[\s\S]*?assets\/deudalaya-install-poster\.jpeg/);
   assert.match(html, /function render\(\)\{\s*const v=videos\[index\]/);
   assert.match(html, /restoreLocalVideos\(\)/);
   assert.match(socialScript, /applyFeedMode\(true\);\s*setInterval\(/);
@@ -64,12 +66,12 @@ test('the early listener stores Chrome’s genuine prompt and updates the instal
   await capture.settle();
 });
 
-test('desktop visitors can use the feed while Chrome prompt uses the install button', () => {
+test('desktop browser stays gated while Chrome prompt uses the install button', () => {
   const capture = createPwaCaptureHarness([], {
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130.0.0.0 Safari/537.36',
     platform: 'Win32'
   });
-  assert.equal(capture.classes.has('ecosystem-gateway'), false);
+  assert.equal(capture.classes.has('deudalaya-install-required'), true);
   let prevented = false;
   const promptEvent = { preventDefault() { prevented = true; } };
   capture.windowListeners.beforeinstallprompt(promptEvent);
@@ -105,27 +107,27 @@ test('installed state is rechecked when Chrome restores or foregrounds the page'
   capture.documentListeners.visibilitychange();
   await capture.settle();
   assert.equal(capture.window.deudalayaInstallState, 'installed');
-  assert.equal(capture.classes.has('ecosystem-gateway'), false, 'related app detection does not hide browser access');
+  assert.equal(capture.classes.has('deudalaya-install-required'), false, 'an already installed app releases the feed');
   assert.ok(capture.queryCount > afterPageShow);
 });
 
-test('standalone detection remains available without controlling browser feed access', () => {
+test('standalone detection releases the required install landing', () => {
   const installed = createPwaCaptureHarness([], { userAgent: 'Android', platform: 'Android' }, true);
-  assert.equal(installed.classes.has('ecosystem-gateway'), false);
+  assert.equal(installed.classes.has('deudalaya-install-required'), false);
   assert.equal(installed.window.deudalayaInstallationStatus, 'installed');
 
   const iosHomeScreen = createPwaCaptureHarness([], { userAgent: 'iPhone', platform: 'iPhone' }, false, true);
-  assert.equal(iosHomeScreen.classes.has('ecosystem-gateway'), false);
+  assert.equal(iosHomeScreen.classes.has('deudalaya-install-required'), false);
   assert.equal(iosHomeScreen.window.deudalayaInstallSource, 'standalone');
 });
 
-test('Install App only reports ready after a real prompt event is captured', () => {
+test('Install App starts a native prompt only after a real browser event is captured', () => {
   const button = html.match(/<button[^>]*id="deudalayaInstallAction"[^>]*>/);
   assert.ok(button);
-  assert.match(html, /id="deudalayaInstallAction"[^>]*>Install App<\/button>/);
+  assert.match(html, /id="deudalayaInstallAction"[^>]*aria-label="Install App"/);
   assert.doesNotMatch(button[0], /disabled/);
   assert.match(gatewayScript, /deudalaya-installpromptavailable/);
-  assert.match(gatewayScript, /Deudalaya is ready to install\./);
+  assert.match(gatewayScript, /promptEvent\.prompt\(\)/);
 });
 
 test('no native prompt keeps the install action and shows only the supported-browser message', async () => {
@@ -137,13 +139,12 @@ test('no native prompt keeps the install action and shows only the supported-bro
   });
 
   assert.equal(ui.button.hidden, false);
-  assert.equal(ui.guide.hidden, false);
-  assert.equal(ui.intro.textContent, 'Direct installation is not currently available in this browser. Please try a supported browser.');
-  assert.equal(ui.steps.innerHTML, '');
+  assert.equal(ui.hint.textContent, 'Direct installation is not currently available in this browser. Please try a supported browser.');
+  assert.equal(ui.hint.hidden, false);
   await ui.buttonListeners.click({ preventDefault() {} });
   assert.equal(ui.promptCalls, 0);
-  assert.equal(ui.intro.textContent, 'Direct installation is not currently available in this browser. Please try a supported browser.');
-  assert.doesNotMatch(ui.intro.textContent + ui.steps.innerHTML + ui.hint.textContent, /menu|Menu|⋮|Install app|Add to Home screen/);
+  assert.equal(ui.hint.textContent, 'Direct installation is not currently available in this browser. Please try a supported browser.');
+  assert.doesNotMatch(ui.hint.textContent, /menu|Menu|⋮|Install app|Add to Home screen/);
 });
 
 test('button calls prompt synchronously, awaits userChoice, and clears the consumed event', async () => {
@@ -156,27 +157,24 @@ test('button calls prompt synchronously, awaits userChoice, and clears the consu
   assert.equal(prevented, true);
   assert.equal(ui.promptCalls, 1, 'prompt() runs during the click gesture');
   assert.equal(ui.window.deferredPrompt, null, 'the consumed prompt is cleared immediately');
-  assert.equal(ui.guide.hidden, true, 'manual instructions stay hidden when the native prompt is ready');
+  assert.notEqual(ui.hint.textContent, 'Direct installation is not currently available in this browser. Please try a supported browser.');
   await click;
-  assert.match(ui.hint.textContent, /स्वीकार गरियो/);
+  assert.match(ui.hint.textContent, /Installation accepted/);
   assert.match(gatewayScript, /await\s+promptEvent\.userChoice/);
 });
 
-test('dismissed prompt does not reuse the consumed event; appinstalled updates state', async () => {
+test('dismissed prompt keeps the gate; confirmed installation releases it', async () => {
   const ui = createGatewayHarness({ outcome: 'dismissed' });
   ui.windowListeners['deudalaya-installpromptavailable']();
   await ui.buttonListeners.click({ preventDefault() {} });
   assert.equal(ui.window.deferredPrompt, null);
   assert.equal(ui.button.disabled, false);
-  assert.equal(ui.guide.hidden, false, 'the concise fallback remains available after the prompt is dismissed');
-  assert.equal(ui.intro.textContent, 'Direct installation is not currently available in this browser. Please try a supported browser.');
-  assert.doesNotMatch(ui.intro.textContent + ui.steps.innerHTML + ui.hint.textContent, /menu|Menu|⋮|Add to Home screen/);
-  assert.match(ui.hint.textContent, /रद्द गरियो/);
-  assert.equal(ui.document.documentElement.classList.contains('ecosystem-gateway'), false);
+  assert.equal(ui.hint.textContent, 'Direct installation is not currently available in this browser. Please try a supported browser.');
+  assert.equal(ui.document.documentElement.classList.contains('deudalaya-install-required'), true);
 
   ui.windowListeners.appinstalled();
   assert.equal(ui.window.deudalayaInstallState, 'installed');
-  assert.equal(ui.document.documentElement.classList.contains('ecosystem-gateway'), false);
+  assert.equal(ui.document.documentElement.classList.contains('deudalaya-install-required'), false);
   assert.equal(ui.button.hidden, true);
   assert.equal(ui.hint.textContent, 'Deudalaya is already installed.');
 });
@@ -190,7 +188,6 @@ test('an existing installation hides the install button without manual launch in
   assert.equal(typeof stateChange, 'function');
   stateChange();
   assert.equal(ui.button.hidden, true);
-  assert.equal(ui.guide.hidden, true);
   assert.equal(ui.hint.textContent, 'Deudalaya is already installed.');
 });
 
@@ -198,14 +195,13 @@ test('desktop browsers without a native prompt show only the concise supported-b
   const ui = createGatewayHarness({ outcome: 'dismissed', supportsPrompt: false });
 
   assert.equal(ui.button.hidden, false);
-  assert.equal(ui.intro.textContent, 'Direct installation is not currently available in this browser. Please try a supported browser.');
-  assert.equal(ui.steps.innerHTML, '');
-  assert.doesNotMatch(ui.intro.textContent + ui.steps.innerHTML + ui.hint.textContent, /menu|Menu|⋮|Address bar|Install app/);
+  assert.equal(ui.hint.textContent, 'Direct installation is not currently available in this browser. Please try a supported browser.');
+  assert.doesNotMatch(ui.hint.textContent, /menu|Menu|⋮|Address bar|Install app/);
 });
 
-test('the visible install control and help panel live with the browser feed', () => {
-  assert.match(html, /class="app-install-control"[\s\S]*?id="deudalayaInstallAction"[\s\S]*?id="deudalayaInstallHelp"/);
-  assert.match(html, /id="deudalayaInstallHelp"[^>]*hidden/);
+test('the poster landing contains the real install action and fallback status', () => {
+  assert.match(html, /id="deudalayaInstallLanding"[\s\S]*?id="deudalayaInstallAction"[\s\S]*?id="deudalayaInstallHint"/);
+  assert.match(html, /id="deudalayaInstallHint"[^>]*hidden/);
   assert.doesNotMatch(html, /id="ecosystemGateway"/);
 });
 
@@ -213,6 +209,7 @@ function createGatewayHarness({ outcome, supportsPrompt = true, eventAvailable =
   const buttonListeners = {};
   const windowListeners = {};
   const classes = new Set();
+  classes.add('deudalaya-install-required');
   const button = {
     disabled: true,
     addEventListener(name, handler) { buttonListeners[name] = handler; }
@@ -225,6 +222,7 @@ function createGatewayHarness({ outcome, supportsPrompt = true, eventAvailable =
     documentElement: {
       classList: {
         contains(name) { return classes.has(name); },
+        add(name) { classes.add(name); },
         remove(name) { classes.delete(name); }
       },
       dataset: {}

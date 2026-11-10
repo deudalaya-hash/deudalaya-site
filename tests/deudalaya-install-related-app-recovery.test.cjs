@@ -6,14 +6,14 @@ const vm = require('node:vm');
 
 const gatewayScript = fs.readFileSync(path.join(__dirname, '..', 'ecosystem-gateway.js'), 'utf8');
 
-function createRelatedAppAndroidUi() {
+function createRelatedAppAndroidUi(installed = true) {
   const windowListeners = {};
   const buttonListeners = {};
   const button = { hidden: true, disabled: true, textContent: '', addEventListener(type, handler) { buttonListeners[type] = handler; } };
   const hint = { textContent: '' };
   const intro = { textContent: '' };
   const steps = { innerHTML: '' };
-  const classes = new Set();
+  const classes = new Set(installed ? [] : ['deudalaya-install-required']);
   const document = {
     documentElement: { classList: { add: value => classes.add(value), remove: value => classes.delete(value) } },
     getElementById(id) { return ({ deudalayaInstallAction: button, deudalayaInstallHint: hint, deudalayaInstallIntro: intro, deudalayaInstallSteps: steps })[id] || null; }
@@ -21,9 +21,9 @@ function createRelatedAppAndroidUi() {
   let promptCalls = 0;
   const window = {
     deferredPrompt: null,
-    deudalayaInstallState: 'installed',
-    deudalayaInstallSource: 'related-app',
-    deudalayaInstallationStatus: 'installed',
+    deudalayaInstallState: installed ? 'installed' : 'unavailable',
+    deudalayaInstallSource: installed ? 'related-app' : null,
+    deudalayaInstallationStatus: installed ? 'installed' : 'not-installed',
     addEventListener(type, handler) { windowListeners[type] = handler; },
     matchMedia: () => ({ matches: false })
   };
@@ -32,17 +32,17 @@ function createRelatedAppAndroidUi() {
   return { button, buttonListeners, hint, intro, steps, window, windowListeners, classes, get promptCalls() { return promptCalls; }, setPromptCalls(value) { promptCalls = value; } };
 }
 
-test('related-app detection reports installed state without manual launch instructions', async () => {
+test('related-app detection releases the install gate for an already installed app', async () => {
   const ui = createRelatedAppAndroidUi();
   assert.equal(ui.button.hidden, true);
   assert.equal(ui.button.disabled, true);
   assert.equal(ui.hint.textContent, 'Deudalaya is already installed.');
   assert.equal(ui.steps.innerHTML, '');
-  assert.equal(ui.classes.has('ecosystem-gateway'), false);
+  assert.equal(ui.classes.has('deudalaya-install-required'), false);
 });
 
 test('a late Android beforeinstallprompt event is retained and invoked by the button gesture', async () => {
-  const ui = createRelatedAppAndroidUi();
+  const ui = createRelatedAppAndroidUi(false);
   let prevented = false;
   const event = {
     prompt() { ui.setPromptCalls(ui.promptCalls + 1); return Promise.resolve(); },
@@ -53,6 +53,7 @@ test('a late Android beforeinstallprompt event is retained and invoked by the bu
   ui.windowListeners.beforeinstallprompt(event);
   assert.equal(prevented, true);
   assert.equal(ui.window.deferredPrompt, event);
+  assert.equal(ui.classes.has('deudalaya-install-required'), true);
   assert.equal(ui.button.hidden, false, 'a real prompt event takes priority over related-app detection');
   await ui.buttonListeners.click({ preventDefault() {} });
   assert.equal(ui.promptCalls, 1);

@@ -42,14 +42,15 @@ test('all ten class cards open their own class view with a return path', () => {
   assert.match(script, /beforeinstallprompt/);
 });
 
-test('कक्षालय is linked from the gateway without changing other app routes', () => {
-  const gateway = read('../index.html');
-  const gatewayJs = fs.readFileSync(path.resolve(appRoot, '..', 'ecosystem-gateway.js'), 'utf8');
+test('कक्षालय keeps its own route while Deudalaya remains the poster-gated root app', () => {
+  const rootHtml = read('../index.html');
   const rootManifest = JSON.parse(fs.readFileSync(path.resolve(appRoot, '..', 'manifest.webmanifest'), 'utf8'));
-  assert.match(gateway, /data-app="kakchhayalaya"/);
-  assert.match(gateway, /href="\/kakchhayalaya\/"/);
-  assert.match(gateway, /कक्षालय/);
-  assert.match(gatewayJs, /kakchhayalaya/);
-  assert.ok(rootManifest.related_applications.some(app => app.id === 'https://deudalaya.com/kakchhayalaya/'));
-  for (const route of ['/sabdalaya/', '/chalchitralaya/', '/phonelaya/']) assert.ok(gateway.includes(route));
+  const classManifest = JSON.parse(read('manifest.webmanifest'));
+  assert.match(rootHtml, /id="deudalayaInstallLanding"[\s\S]*?id="deudalayaInstallAction"/);
+  assert.match(rootHtml, /id="feed"/);
+  assert.equal(rootManifest.start_url, '/?app=deudalaya');
+  assert.equal(classManifest.start_url, '/kakchhayalaya/');
+  assert.equal(classManifest.scope, '/kakchhayalaya/');
+  assert.ok(fs.existsSync(path.join(appRoot, 'index.html')));
+  assert.doesNotMatch(rootHtml, /href="\/kakchhayalaya\//, 'the Deudalaya root does not masquerade as an app directory gateway');
 });

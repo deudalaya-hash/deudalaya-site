@@ -75,23 +75,26 @@ test('install identity icons are valid PNGs of their declared dimensions', () =>
   }
 });
 
-test('the root is a thin gateway and installed Deudalaya opens its direct app route', () => {
+test('the root is the poster-gated Deudalaya feed and sibling apps keep independent routes', () => {
   const rootHtml = fs.readFileSync(path.resolve(root, '..', 'index.html'), 'utf8');
-  const gatewayCss = fs.readFileSync(path.resolve(root, '..', 'ecosystem-gateway.css'), 'utf8');
-  const gatewayJs = fs.readFileSync(path.resolve(root, '..', 'ecosystem-gateway.js'), 'utf8');
   const rootManifest = JSON.parse(fs.readFileSync(path.resolve(root, '..', 'manifest.webmanifest'), 'utf8'));
-  assert.match(rootHtml, /id="ecosystemGateway"/);
-  for (const app of ['deudalaya', 'sabdalaya', 'chalchitralaya']) {
-    assert.ok(rootHtml.includes(`data-app="${app}"`));
-    assert.ok(rootHtml.includes(`data-status="${app}"`));
-    assert.ok(rootHtml.includes(`data-open-app="${app}"`));
-    assert.ok(gatewayJs.includes(app));
-  }
-  assert.match(gatewayCss, /html\.ecosystem-gateway/);
-  assert.match(rootHtml, /ecosystem-gateway\.css/);
-  assert.match(rootHtml, /ecosystem-gateway\.js/);
+  assert.match(rootHtml, /id="deudalayaInstallLanding"[\s\S]*?deudalaya-install-poster\.jpeg/);
+  assert.match(rootHtml, /\.deudalaya-install-required \.app\s*\{[^}]*display:\s*none/);
+  assert.match(rootHtml, /id="feed"/);
+  assert.doesNotMatch(rootHtml, /id="ecosystemGateway"/);
   assert.equal(rootManifest.start_url, '/?app=deudalaya');
   assert.equal(rootManifest.scope, './');
+  for (const [app, route] of [
+    ['sabdalaya', '/sabdalaya/'],
+    ['chalchitralaya', '/chalchitralaya/'],
+    ['phonelaya', '/phonelaya/'],
+    ['kakchhayalaya', '/kakchhayalaya/']
+  ]) {
+    const manifest = JSON.parse(fs.readFileSync(path.resolve(root, '..', app, 'manifest.webmanifest'), 'utf8'));
+    assert.equal(manifest.start_url, route);
+    assert.equal(manifest.scope, route);
+    assert.ok(fs.existsSync(path.resolve(root, '..', app, 'index.html')));
+  }
 });
 
 test('all three apps keep their own manifest identity and service-worker scope', () => {
@@ -104,9 +107,12 @@ test('all three apps keep their own manifest identity and service-worker scope',
   assert.match(read('app.js'), /register\(['"]\/chalchitralaya\/sw\.js['"],\s*\{\s*scope:\s*['"]\/chalchitralaya\//);
   const audioScript = fs.readFileSync(path.resolve(root, '..', 'sabdalaya/sabdalaya.js'), 'utf8');
   assert.match(audioScript, /register\(['"]\/sabdalaya\/sw\.js['"],\s*\{\s*scope:\s*['"]\/sabdalaya\//);
+  const rootWorker = fs.readFileSync(path.resolve(root, '..', 'sw.js'), 'utf8');
   for (const worker of [
-    fs.readFileSync(path.resolve(root, '..', 'sw.js'), 'utf8'),
+    rootWorker,
     fs.readFileSync(path.resolve(root, '..', 'sabdalaya/sw.js'), 'utf8'),
     read('sw.js')
-  ]) assert.doesNotMatch(worker, /getRegistrations\(|unregister\s*\(|caches\.delete\s*\(/);
+  ]) assert.doesNotMatch(worker, /getRegistrations\(|unregister\s*\(/);
+  assert.match(rootWorker, /names\.filter\(name => name\.startsWith\('deudalaya-shell-'\) && name !== CACHE_NAME\)/);
+  assert.match(rootWorker, /caches\.delete\(name\)/, 'cleanup is limited to old Deudalaya shell caches');
 });

@@ -3,127 +3,91 @@
   window.__deudalayaInstallUiBound = true;
 
   const installButton = document.getElementById('deudalayaInstallAction');
-  const installHelp = document.getElementById('deudalayaInstallHelp');
   const installHint = document.getElementById('deudalayaInstallHint');
-  const installIntro = document.getElementById('deudalayaInstallIntro');
-  const installSteps = document.getElementById('deudalayaInstallSteps');
-  if (!installButton || !installHint) return;
+  if (!installButton) return;
 
-  const environment = detectEnvironment();
+  const INSTALL_UNAVAILABLE_MESSAGE = 'Direct installation is not currently available in this browser. Please try a supported browser.';
   let deferredPrompt = window.deferredPrompt || null;
   let promptPending = window.deudalayaInstallationStatus === 'installation-pending';
-  let relatedAppDetected = environment.device === 'android' && window.deudalayaInstallSource === 'related-app';
+  let installationAccepted = promptPending;
   let installed = window.deudalayaInstallState === 'installed' || window.deudalayaInstallState === 'standalone';
-  if (relatedAppDetected && !isStandaloneMode()) installed = false;
-  const INSTALL_UNAVAILABLE_MESSAGE = 'Direct installation is not currently available in this browser. Please try a supported browser.';
-  installButton.textContent = 'Install App';
-
-  function detectEnvironment() {
-    const ua = String(navigator.userAgent || '');
-    const platform = String(navigator.userAgentData && navigator.userAgentData.platform || navigator.platform || '');
-    const isIPad = /iPad/i.test(ua) || (/Mac/i.test(platform) && Number(navigator.maxTouchPoints) > 1);
-    const isIPhone = /iPhone|iPod/i.test(ua) || /^(iPhone|iPod)/i.test(platform);
-    const isAndroid = /Android/i.test(ua) || /^Android/i.test(platform);
-    return { device: isIPad ? 'ipad' : isIPhone ? 'iphone' : isAndroid ? 'android' : 'other' };
-  }
 
   function isStandaloneMode() {
     return !!(window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
   }
 
+  function setHint(message) {
+    if (!installHint) return;
+    installHint.textContent = message;
+    installHint.hidden = !message;
+  }
+
+  function releaseInstallGate() {
+    document.documentElement.classList.remove('deudalaya-install-required');
+    if (isStandaloneMode()) document.documentElement.classList.add('deudalaya-standalone');
+  }
+
   function updateButton() {
-    if (installed) {
-      if (installHelp) installHelp.hidden = true;
+    if (installed || isStandaloneMode()) {
+      installed = true;
       installButton.disabled = true;
       installButton.hidden = true;
-      const alreadyInstalledMessage = 'Deudalaya is already installed.';
-      if (installIntro) installIntro.textContent = alreadyInstalledMessage;
-      if (installSteps) installSteps.innerHTML = '';
-      installHint.textContent = alreadyInstalledMessage;
-      if (isStandaloneMode()) {
-        document.documentElement.classList.remove('ecosystem-gateway');
-        document.documentElement.classList.add('deudalaya-standalone');
-      }
+      releaseInstallGate();
+      setHint('Deudalaya is already installed.');
       return;
     }
 
-    if (relatedAppDetected && !deferredPrompt && !isStandaloneMode()) {
-      if (installHelp) installHelp.hidden = true;
-      installButton.hidden = true;
-      installButton.disabled = true;
-      if (installIntro) installIntro.textContent = 'Deudalaya is already installed.';
-      if (installSteps) installSteps.innerHTML = '';
-      installHint.textContent = 'Deudalaya is already installed.';
-      return;
-    }
-
-    const hasNativePrompt = !!deferredPrompt;
-    if (installHelp) installHelp.hidden = hasNativePrompt || promptPending || window.deudalayaInstallationStatus === 'installation-pending';
     installButton.hidden = false;
-    installButton.disabled = promptPending || installed;
+    installButton.disabled = promptPending || installationAccepted;
     installButton.textContent = 'Install App';
-    if (installIntro) installIntro.textContent = hasNativePrompt
-      ? 'Deudalaya is ready to install. Tap INSTALL APP to continue.'
-      : INSTALL_UNAVAILABLE_MESSAGE;
-    if (installSteps) installSteps.innerHTML = '';
-    installHint.textContent = hasNativePrompt ? 'Deudalaya is ready to install.' : '';
+    if (deferredPrompt) setHint('');
+    else if (installationAccepted) setHint('Installation accepted. Open Deudalaya from the installed app to continue.');
+    else setHint(INSTALL_UNAVAILABLE_MESSAGE);
   }
 
   window.addEventListener('beforeinstallprompt', function (event) {
     if (installed || isStandaloneMode()) return;
     event.preventDefault();
     deferredPrompt = event;
-    relatedAppDetected = false;
     window.deferredPrompt = event;
     window.deudalayaInstallState = 'available';
     window.deudalayaInstallationStatus = 'prompt-available';
     window.deudalayaInstallSource = null;
+    installationAccepted = false;
     updateButton();
   });
 
   window.addEventListener('deudalaya-installpromptavailable', function () {
     if (installed || !window.deferredPrompt) return;
     deferredPrompt = window.deferredPrompt;
-    relatedAppDetected = false;
+    installationAccepted = false;
     updateButton();
   });
 
   window.addEventListener('appinstalled', function () {
     installed = true;
-    relatedAppDetected = false;
     deferredPrompt = null;
     window.deferredPrompt = null;
     window.deudalayaInstallState = 'installed';
     window.deudalayaInstallationStatus = 'installed';
+    releaseInstallGate();
     updateButton();
   });
 
   window.addEventListener('deudalaya-installstatechange', function () {
-    if (window.deudalayaInstallState === 'installed' && window.deudalayaInstallSource === 'related-app' && environment.device === 'android') {
-      installed = isStandaloneMode();
-      relatedAppDetected = !installed && !deferredPrompt;
-      updateButton();
-      return;
-    }
     if (window.deudalayaInstallState !== 'installed' && window.deudalayaInstallState !== 'standalone') return;
     installed = true;
-    relatedAppDetected = false;
     deferredPrompt = null;
+    window.deferredPrompt = null;
+    releaseInstallGate();
     updateButton();
   });
 
   installButton.addEventListener('click', async function (event) {
     event.preventDefault();
-    if (promptPending || installed) return;
+    if (promptPending || installationAccepted || installed) return;
     if (!deferredPrompt) {
-      if (relatedAppDetected && !deferredPrompt) {
-        installHint.textContent = 'Deudalaya is already installed.';
-        return;
-      }
-      if (installHelp) installHelp.hidden = false;
-      if (installIntro) installIntro.textContent = INSTALL_UNAVAILABLE_MESSAGE;
-      if (installSteps) installSteps.innerHTML = '';
-      installHint.textContent = '';
+      setHint(INSTALL_UNAVAILABLE_MESSAGE);
       return;
     }
 
@@ -131,30 +95,25 @@
     promptPending = true;
     window.deudalayaInstallationStatus = 'installation-pending';
     installButton.disabled = true;
-    installHint.textContent = 'ब्राउजरको स्थापना पुष्टि खुल्दैछ…';
+    setHint('Opening the installation prompt…');
 
-    let outcomeMessage = '';
     try {
-      const promptResult = deferredPrompt.prompt();
+      const promptResult = promptEvent.prompt();
       deferredPrompt = null;
       window.deferredPrompt = null;
       await Promise.resolve(promptResult);
       const choice = await promptEvent.userChoice;
-      if (!installed) window.deudalayaInstallationStatus = choice && choice.outcome === 'accepted'
-        ? 'installation-pending'
-        : 'not-installed';
-      outcomeMessage = choice && choice.outcome === 'accepted'
-        ? 'स्थापना स्वीकार गरियो।'
-        : 'स्थापना रद्द गरियो।';
+      installationAccepted = !!(choice && choice.outcome === 'accepted');
+      window.deudalayaInstallationStatus = installationAccepted ? 'installation-pending' : 'not-installed';
     } catch (error) {
       deferredPrompt = null;
       window.deferredPrompt = null;
+      installationAccepted = false;
       window.deudalayaInstallationStatus = 'not-installed';
-      outcomeMessage = 'स्थापना पूरा भएन। फेरि प्रयास गर्नुहोस्।';
+      setHint(INSTALL_UNAVAILABLE_MESSAGE);
     } finally {
       promptPending = false;
       updateButton();
-      if (outcomeMessage) installHint.textContent = outcomeMessage;
     }
   });
 

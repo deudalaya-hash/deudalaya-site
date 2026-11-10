@@ -67,13 +67,19 @@ test('शब्दलय describes demo playback and does not claim uploads are 
   assert.doesNotMatch(script, /fetch\s*\(|\.from\s*\(/);
 });
 
-test('the gateway links to शब्दलय and Deudalaya update code leaves child apps alone', () => {
-  const html = read('index.html');
-  assert.match(html, /href=["']\/?sabdalaya\//);
-  const updateBlock = read('index.html').match(/async function applySiteUpdate\(\)\s*\{([\s\S]*?)\n\}/)?.[1] || '';
-  assert.match(updateBlock, /new URL\('\/',location\.origin\)/);
-  assert.match(updateBlock, /getRegistration\(rootScope\)/);
-  assert.doesNotMatch(updateBlock, /getRegistrations\(|caches\.keys\(|caches\.delete\(/);
+test('शब्दलय keeps its own route and Deudalaya update checks only the root worker', () => {
+  const rootHtml = read('index.html');
+  const rootManifest = JSON.parse(read('manifest.webmanifest'));
+  const audioManifest = JSON.parse(read('sabdalaya/manifest.webmanifest'));
+  const updater = read('site-update.js');
+  assert.match(rootHtml, /id="deudalayaInstallLanding"[\s\S]*?assets\/deudalaya-install-poster\.jpeg/);
+  assert.match(rootHtml, /site-update\.js/);
+  assert.equal(rootManifest.start_url, '/?app=deudalaya');
+  assert.equal(audioManifest.start_url, '/sabdalaya/');
+  assert.equal(audioManifest.scope, '/sabdalaya/');
+  assert.match(updater, /new URL\('\/',\s*root\.location\.origin\)/);
+  assert.match(updater, /serviceWorker\.getRegistration\(scope\)/);
+  assert.doesNotMatch(updater, /getRegistrations\(|caches\.keys\(|caches\.delete\(|unregister\s*\(/);
 });
 
 test('शब्दलय ships distinct install icons', () => {

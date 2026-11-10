@@ -12,7 +12,8 @@ test('Deudalaya root keeps its own feed and installation identity without app cr
   assert.match(html, /<div class="app">[\s\S]*?id="feed"/);
   assert.match(html, /<link rel="manifest" href="manifest\.webmanifest">/);
   assert.match(html, /navigator\.serviceWorker\.register\('sw\.js'/);
-  assert.match(html, /class="app-install-control"[\s\S]*?id="deudalayaInstallAction"/);
+  assert.match(html, /id="deudalayaInstallLanding"[\s\S]*?id="deudalayaInstallAction"/);
+  assert.match(html, /assets\/deudalaya-install-poster\.jpeg/);
   assert.doesNotMatch(html, /id="ecosystemGateway"|deudalayaStandaloneFeedGate/);
   assert.match(html, /beforeinstallprompt|appinstalled|ecosystem-gateway\.js|ecosystem-gateway\.css/);
   assert.doesNotMatch(html, /Show browser install steps|Add to Home Screen|Continue to Website/);

@@ -86,15 +86,17 @@ test('phoneलय presents clearly labelled local-only demo flows without networ
   assert.doesNotMatch(script, /\bfetch\s*\(|XMLHttpRequest|localStorage|indexedDB|sessionStorage|supabase/i);
 });
 
-test('the root gateway keeps phoneलय available in source while presenting Deudalaya alone', () => {
-  const gateway = read('../index.html');
-  const gatewayJs = read('../ecosystem-gateway.js');
-  const gatewayCss = read('../ecosystem-gateway.css');
-  assert.match(gateway, /data-app="phonelaya"/);
-  assert.match(gateway, /href="\/phonelaya\/"/);
-  assert.match(gateway, /phoneलय/);
-  assert.match(gateway, /CONTACT BACKUP · RECOVERY/);
-  assert.match(gatewayCss, /gateway-card:not\(\[data-app="deudalaya"\]\)\{display:none\}/);
-  assert.match(gatewayJs, /phonelaya/);
-  assert.match(gatewayCss, /gateway-phone/);
+test('phoneलय stays independently available under its route while the root opens Deudalaya', () => {
+  const rootHtml = read('../index.html');
+  const rootManifest = JSON.parse(read('../manifest.webmanifest'));
+  const phoneManifest = JSON.parse(read('manifest.webmanifest'));
+  const phoneHtml = read('index.html');
+  assert.match(rootHtml, /id="deudalayaInstallLanding"[\s\S]*?assets\/deudalaya-install-poster\.jpeg/);
+  assert.match(rootHtml, /id="feed"/);
+  assert.equal(rootManifest.start_url, '/?app=deudalaya');
+  assert.equal(phoneManifest.start_url, '/phonelaya/');
+  assert.equal(phoneManifest.scope, '/phonelaya/');
+  assert.match(phoneHtml, /id="phoneInstallAction"/);
+  assert.match(phoneHtml, /id="contactSearch"/);
+  assert.doesNotMatch(rootHtml, /phoneलय|\/phonelaya\//, 'phoneलय remains inside its own app route');
 });
