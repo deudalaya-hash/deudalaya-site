@@ -193,3 +193,25 @@ test('portrait, landscape and square frames fit without cropping or distortion',
     assert.equal(calculateContainedVideoSize(item.width, item.height, area.width, area.height).width, actual.width);
   }
 });
+
+test('portrait media aligns to the top while landscape and square media stay centered on mobile and desktop', () => {
+  const viewports = [
+    { name: 'mobile', width: 390, height: 844 },
+    { name: 'desktop', width: 900, height: 700 }
+  ];
+  const mediaCases = [
+    { name: 'portrait', width: 1080, height: 1920, align: 'flex-start', position: 'center top' },
+    { name: 'landscape', width: 1920, height: 1080, align: 'center', position: 'center center' },
+    { name: 'square', width: 1080, height: 1080, align: 'center', position: 'center center' }
+  ];
+  for (const viewport of viewports) for (const media of mediaCases) {
+    const style = { values: {}, setProperty(name, value) { this.values[name] = value; } };
+    const container = { style: { setProperty() {} }, getBoundingClientRect: () => ({ width: viewport.width, height: viewport.height }) };
+    const video = { videoWidth: media.width, videoHeight: media.height, style };
+    applyCenteredVideoLayout(container, video);
+    fitCenteredVideo(container, video);
+    assert.equal(style.values['align-self'], media.align, `${viewport.name} ${media.name} vertical alignment`);
+    assert.equal(style.values['object-position'], media.position, `${viewport.name} ${media.name} object position`);
+    assert.equal(style.values['object-fit'], 'contain', `${viewport.name} ${media.name} fit mode`);
+  }
+});
