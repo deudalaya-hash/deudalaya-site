@@ -6,7 +6,7 @@ After completing each user-requested website task:
 
 Whenever Codex completes a Deudalaya code change:
 
-1. Run relevant tests and checks, then review the complete diff for errors and unrelated changes.
+1. Run relevant tests, JavaScript syntax checks where applicable, the PWA protection check, and `git diff --check`; then review the complete diff for errors and unrelated changes.
 2. Do not commit or push broken or untested changes. Report test failures and blockers instead of shipping them.
 3. Commit the completed task-specific changes with a meaningful commit message and push to the configured repository's `main` branch without asking for separate permission for ordinary commits and pushes.
 4. Never force-push, overwrite remote history, bypass GitHub permissions, security checks, or approval requirements, or expose credentials/secrets. If GitHub rejects a push, report the exact reason and do not bypass it.
