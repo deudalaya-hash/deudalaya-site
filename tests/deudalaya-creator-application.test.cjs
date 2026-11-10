@@ -32,6 +32,9 @@ function creatorDocument() {
     creatorApplicationClose: fakeElement(),
     creatorContentPermission: fakeElement({ checked: false }),
     creatorApplyWhatsApp: fakeElement({ href: '' }),
+    creatorInterestDeuda: fakeElement({ value: '' }),
+    creatorInterestVillage: fakeElement({ value: '' }),
+    creatorInterestCity: fakeElement({ value: '' }),
     creatorFacebook: fakeElement({ value: '' }),
     creatorTiktok: fakeElement({ value: '' }),
     creatorYoutube: fakeElement({ value: '' }),
@@ -89,19 +92,51 @@ test('WhatsApp message includes the user-provided social profile links', () => {
   assert.match(message, /Other: Not provided/);
 });
 
-test('creator application UI presents all requested categories and keeps consent optional and separate from certification', () => {
-  assert.match(html, /WORK WITH DEUDALAYA/);
-  assert.match(html, /Become a Deudalaya Certified Content Creator/);
-  assert.match(html, /Do you create videos celebrating our culture, traditions, lifestyle and communities\?/);
-  assert.match(html, /Become part of the Deudalaya creator community\. Share your creativity and help bring Karnali and SudurPaschim's identity to the world\./i);
-  assert.match(html, /<h3>देउडा<\/h3><p>Deuda, songs, dance and cultural traditions/);
-  assert.match(html, /<h3>गाउँघर<\/h3><p>Village life, traditions, people, stories and local activities/);
-  assert.match(html, /<h3>शहर<\/h3><p>Urban lifestyle, creativity, events and communities/);
-  assert.match(html, /तपाईंका सामाजिक सञ्जालका लिंकहरू उपलब्ध गराउनुहोस्/);
-  assert.match(html, /म देउडालयलाई मेरा सार्वजनिक सामाजिक सञ्जाल सामग्रीमध्ये देउडालयको उद्देश्यसँग सम्बन्धित सामग्री छनोट गरी आफ्ना आधिकारिक सामाजिक सञ्जाल, वेबसाइट तथा डिजिटल प्लेटफर्महरूमा साझा, पुनःप्रकाशन र प्रचार–प्रसार गर्न अनुमति दिन्छु। आवश्यक परेमा सामग्री प्रयोग गर्नुअघि देउडालयले मसँग सम्पर्क गर्न सक्नेछ।/);
-  assert.match(html, /मेरा सामग्रीको स्वामित्व र प्रतिलिपि अधिकार मसँगै रहनेछ।/);
-  assert.match(html, /यो अनुमति स्वैच्छिक हो। अनुमति नदिँदा पनि तपाईंले सिर्जनाकर्ताका लागि आवेदन दिन सक्नुहुनेछ।/);
-  assert.match(html, /प्रमाणपत्र स्वीकृत गर्ने अन्तिम निर्णय देउडालयले गर्नेछ/);
+test('WhatsApp application includes each category interest answer', () => {
+  const { elements, document } = creatorDocument();
+  creatorApplication.initialize(document);
+  elements.creatorInterestDeuda.value = 'Yes';
+  elements.creatorInterestVillage.value = 'No';
+  elements.creatorInterestCity.value = 'Yes';
+  elements.creatorInterestDeuda.dispatch('change');
+  const message = decodeURIComponent(elements.creatorApplyWhatsApp.href);
+  assert.match(message, /देउडा \/ Deuda: Yes/);
+  assert.match(message, /गाउँघर \/ Village: No/);
+  assert.match(message, /शहर \/ City: Yes/);
+});
+
+test('category answers start unselected and are not assumed', () => {
+  const { elements, document } = creatorDocument();
+  creatorApplication.initialize(document);
+  const message = decodeURIComponent(elements.creatorApplyWhatsApp.href);
+  assert.match(message, /देउडा \/ Deuda: Not answered/);
+  assert.match(message, /गाउँघर \/ Village: Not answered/);
+  assert.match(message, /शहर \/ City: Not answered/);
+});
+
+test('short bilingual creator questions collect yes/no interest for all three categories', () => {
+  assert.match(html, /देउडालयसँग काम गरौँ \/ Work with Deudalaya/);
+  assert.match(html, /creatorInterestDeuda/);
+  assert.match(html, /creatorInterestVillage/);
+  assert.match(html, /creatorInterestCity/);
+  assert.equal((html.match(/>हो \/ Yes</g) || []).length, 3);
+  assert.equal((html.match(/>होइन \/ No</g) || []).length, 3);
+  assert.match(html, /तपाईं कुन प्रकारका भिडियो बनाउनुहुन्छ\? \/ What videos do you make\?/);
+});
+
+test('compact social links and consent retain optional use permission and ownership protections', () => {
+  assert.match(html, /सामाजिक सञ्जाल लिंक \/ Social links/);
+  assert.match(html, /Facebook/);
+  assert.match(html, /TikTok/);
+  assert.match(html, /YouTube/);
+  assert.match(html, /Instagram/);
+  assert.match(html, /अन्य \/ Other/);
+  assert.match(html, /creatorContentPermission/);
+  assert.match(html, /मेरा सम्बन्धित सार्वजनिक सामग्री Deudalaya का social media, website र digital platforms मा share\/promote गर्न अनुमति दिन्छु/);
+  assert.match(html, /I allow Deudalaya to share related public content on its platforms/);
+  assert.match(html, /स्वामित्व र copyright मेरै रहनेछ/);
+  assert.match(html, /ऐच्छिक छ; आवेदन दिन Yes चाहिँदैन/);
+  assert.match(html, /प्रमाणपत्रका लागि देउडालयको review आवश्यक छ/);
   assert.match(html, /id="creatorContentPermission" type="checkbox"(?![^>]*\b(?:required|checked)\b)/);
   assert.match(html, /id="creatorFacebook"/);
   assert.match(html, /id="creatorTiktok"/);
@@ -112,6 +147,9 @@ test('creator application UI presents all requested categories and keeps consent
   assert.match(html, /class="mobile-add"[^>]*id="creatorApplyButton"/);
   assert.match(html, /<script src="creator-application\.js\?v=/);
   assert.match(css, /@media \(max-width: 560px\)/);
+  assert.match(css, /creator-interest-grid/);
+  assert.match(css, /creator-social-grid/);
+  assert.match(html, /creator-application\.js\?v=2026\.11\.10\.2/);
   assert.match(css, /max-height: min\(92dvh, 860px\)/);
   assert.match(css, /prefers-reduced-motion: reduce/);
 });

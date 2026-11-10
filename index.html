@@ -235,32 +235,32 @@ html:not(.deudalaya-install-required) #deudalayaInstallLanding{display:none!impo
 </div><dialog class="creator-application" id="creatorApplicationDialog" aria-modal="true" aria-labelledby="creatorApplicationTitle" aria-describedby="creatorApplicationDescription">
   <div class="creator-application-scroll">
     <header class="creator-application-header">
-      <div><span class="creator-application-eyebrow">WORK WITH DEUDALAYA</span><h2 id="creatorApplicationTitle">Become a Deudalaya Certified Content Creator</h2></div>
+      <div><span class="creator-application-eyebrow">देउडालयसँग काम गरौँ / Work with Deudalaya</span><h2 id="creatorApplicationTitle">Creator बन्न Apply गर्नुहोस्</h2></div>
       <button type="button" class="creator-application-close" id="creatorApplicationClose" aria-label="Close creator application">×</button>
     </header>
-    <p id="creatorApplicationDescription" class="creator-application-description">Do you create videos celebrating our culture, traditions, lifestyle and communities?</p>
-    <p class="creator-application-intro">Join Deudalaya as a Certified Content Creator and help preserve and promote our identity through videos.</p>
-    <div class="creator-category-grid" aria-label="Content categories">
-      <article class="creator-category-card"><span aria-hidden="true">♫</span><div><h3>देउडा</h3><p>Deuda, songs, dance and cultural traditions.</p></div></article>
-      <article class="creator-category-card"><span aria-hidden="true">⌂</span><div><h3>गाउँघर</h3><p>Village life, traditions, people, stories and local activities.</p></div></article>
-      <article class="creator-category-card"><span aria-hidden="true">✦</span><div><h3>शहर</h3><p>Urban lifestyle, creativity, events and communities.</p></div></article>
+    <p id="creatorApplicationDescription" class="creator-application-description">तपाईं कुन प्रकारका भिडियो बनाउनुहुन्छ? / What videos do you make?</p>
+    <div class="creator-interest-grid" aria-label="Video categories">
+      <label>देउडा / Deuda<select id="creatorInterestDeuda"><option value="">छान्नुहोस् / Select</option><option value="No">होइन / No</option><option value="Yes">हो / Yes</option></select></label>
+      <label>गाउँघर / Village<select id="creatorInterestVillage"><option value="">छान्नुहोस् / Select</option><option value="No">होइन / No</option><option value="Yes">हो / Yes</option></select></label>
+      <label>शहर / City<select id="creatorInterestCity"><option value="">छान्नुहोस् / Select</option><option value="No">होइन / No</option><option value="Yes">हो / Yes</option></select></label>
     </div>
-    <p class="creator-application-invitation">Become part of the Deudalaya creator community. Share your creativity and help bring Karnali and Sudurpaschim's identity to the world.</p>
     <section class="creator-social-section" aria-labelledby="creatorSocialTitle">
-      <h3 id="creatorSocialTitle">तपाईंका सामाजिक सञ्जालहरू</h3>
-      <p>तपाईंका सामाजिक सञ्जालका लिंकहरू उपलब्ध गराउनुहोस्, ताकि देउडालयले तपाईंका सिर्जनाहरू हेर्न, पहिचान गर्न र आधिकारिक प्लेटफर्महरूमा प्रचार–प्रसारका लागि अनुमति लिन सकोस्।</p>
-      <label>Facebook Profile / Page<input id="creatorFacebook" type="url" inputmode="url" placeholder="https://facebook.com/…" autocomplete="url"></label>
-      <label>TikTok Profile<input id="creatorTiktok" type="url" inputmode="url" placeholder="https://www.tiktok.com/@…" autocomplete="url"></label>
-      <label>YouTube Channel<input id="creatorYoutube" type="url" inputmode="url" placeholder="https://youtube.com/@…" autocomplete="url"></label>
-      <label>Instagram Profile<input id="creatorInstagram" type="url" inputmode="url" placeholder="https://instagram.com/…" autocomplete="url"></label>
-      <label>Other<input id="creatorOther" type="url" inputmode="url" placeholder="https://…" autocomplete="url"></label>
+      <h3 id="creatorSocialTitle">सामाजिक सञ्जाल लिंक / Social links</h3>
+      <p>लिंक दिनुहोस् / Add your links (optional).</p>
+      <div class="creator-social-grid">
+        <label>Facebook<input id="creatorFacebook" type="url" inputmode="url" placeholder="https://facebook.com/…" autocomplete="url"></label>
+        <label>TikTok<input id="creatorTiktok" type="url" inputmode="url" placeholder="https://tiktok.com/@…" autocomplete="url"></label>
+        <label>YouTube<input id="creatorYoutube" type="url" inputmode="url" placeholder="https://youtube.com/@…" autocomplete="url"></label>
+        <label>Instagram<input id="creatorInstagram" type="url" inputmode="url" placeholder="https://instagram.com/…" autocomplete="url"></label>
+        <label class="creator-other-link">अन्य / Other<input id="creatorOther" type="url" inputmode="url" placeholder="https://…" autocomplete="url"></label>
+      </div>
     </section>
     <section class="creator-permission-section" aria-labelledby="creatorPermissionTitle">
-      <h3 id="creatorPermissionTitle">सामग्री प्रयोग गर्ने अनुमति</h3>
-      <label class="creator-permission-label" for="creatorContentPermission"><input id="creatorContentPermission" type="checkbox"><span>म देउडालयलाई मेरा सार्वजनिक सामाजिक सञ्जाल सामग्रीमध्ये देउडालयको उद्देश्यसँग सम्बन्धित सामग्री छनोट गरी आफ्ना आधिकारिक सामाजिक सञ्जाल, वेबसाइट तथा डिजिटल प्लेटफर्महरूमा साझा, पुनःप्रकाशन र प्रचार–प्रसार गर्न अनुमति दिन्छु। आवश्यक परेमा सामग्री प्रयोग गर्नुअघि देउडालयले मसँग सम्पर्क गर्न सक्नेछ।</span></label>
-      <p class="creator-permission-voluntary">यो अनुमति स्वैच्छिक हो। अनुमति नदिँदा पनि तपाईंले सिर्जनाकर्ताका लागि आवेदन दिन सक्नुहुनेछ।</p>
-      <p class="creator-permission-rights">मेरा सामग्रीको स्वामित्व र प्रतिलिपि अधिकार मसँगै रहनेछ।</p>
-      <p class="creator-permission-certification">सामग्री प्रयोग गर्ने अनुमति र सिर्जनाकर्ता प्रमाणपत्रको स्वीकृति अलग कुरा हुन्। आवेदन समीक्षा गरी प्रमाणपत्र स्वीकृत गर्ने अन्तिम निर्णय देउडालयले गर्नेछ।</p>
+      <h3 id="creatorPermissionTitle">सामग्री share गर्ने अनुमति? / Allow content sharing?</h3>
+      <label class="creator-permission-label" for="creatorContentPermission"><input id="creatorContentPermission" type="checkbox"><span>मेरा सम्बन्धित सार्वजनिक सामग्री Deudalaya का social media, website र digital platforms मा share/promote गर्न अनुमति दिन्छु। आवश्यक परे पहिले सम्पर्क गर्न सक्नुहुन्छ। / I allow Deudalaya to share related public content on its platforms.</span></label>
+      <p class="creator-permission-voluntary">ऐच्छिक छ; आवेदन दिन Yes चाहिँदैन। / Optional; No consent is needed to apply.</p>
+      <p class="creator-permission-rights">स्वामित्व र copyright मेरै रहनेछ। / I keep ownership and copyright.</p>
+      <p class="creator-permission-certification">प्रमाणपत्रका लागि देउडालयको review आवश्यक छ। / Certification requires Deudalaya's review.</p>
     </section>
     <a class="creator-application-whatsapp" id="creatorApplyWhatsApp" href="https://wa.me/9779747704316" target="_blank" rel="noopener noreferrer">APPLY VIA WHATSAPP</a>
   </div>
@@ -439,7 +439,7 @@ document.addEventListener('keydown',e=>{if(e.key==='ArrowDown'){e.preventDefault
 
 function retryCurrentVideo(){const v=videos[index];if(!isSupportedFeedVideo(v)||!v.videoSrc){nextVideo();return}const source=new URL(v.videoSrc,location.href).href;feedVideo.classList.remove('portrait-video');feedVideo.dataset.feedSource=source;feedMediaMessage.textContent='Loading video…';feedMediaStatus.querySelector('div').hidden=true;feedMediaStatus.hidden=false;feedVideo.hidden=false;feedVideo.src=v.videoSrc;feedVideo.load();if(!paused)feedVideo.play().catch(()=>updateFeedPlaybackUI(false))}const launchSplash=document.getElementById('launchSplash');if(launchSplash){let doorOpening=false;const openDoor=()=>{if(doorOpening)return;doorOpening=true;launchSplash.classList.add('door-opening');const delay=window.matchMedia('(prefers-reduced-motion: reduce)').matches?0:1450;setTimeout(()=>launchSplash.classList.add('fade-out'),delay)};launchSplash.addEventListener('click',openDoor,{once:true});if(document.readyState==='complete')setTimeout(openDoor,250);else window.addEventListener('load',()=>setTimeout(openDoor,250),{once:true});setTimeout(openDoor,3000)}const siteBuildVersion='2026.11.08.8';
 window.deudalayaBuildVersion=siteBuildVersion;
-</script><script src="site-update.js?v=2026.11.08.8"></script><script src="feed-categories.js?v=2026.11.08.8"></script><script src="social.js?v=2026.11.08.8"></script><script src="creator-application.js?v=2026.11.10.1"></script>
+</script><script src="site-update.js?v=2026.11.08.8"></script><script src="feed-categories.js?v=2026.11.08.8"></script><script src="social.js?v=2026.11.08.8"></script><script src="creator-application.js?v=2026.11.10.2"></script>
 <!-- ADDED: TikTok-style grid of all posts (new, standalone; no existing code changed) -->
 <style>
 .gridview{position:fixed;inset:0;z-index:9000;background:#101014;color:#fff;display:none;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}

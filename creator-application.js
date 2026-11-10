@@ -6,12 +6,13 @@
   if (!root || !root.document) return;
   const document = root.document;
   const currentScriptUrl = document.currentScript && document.currentScript.src || root.location.href;
-  const stylesheetUrl = new URL('creator-application.css', currentScriptUrl).href;
+  const stylesheetUrl = new URL('creator-application.css', currentScriptUrl);
+  stylesheetUrl.search = new URL(currentScriptUrl).search;
   const start = () => {
     if (!document.querySelector('link[data-deudalaya-creator-application]')) {
       const stylesheet = document.createElement('link');
       stylesheet.rel = 'stylesheet';
-      stylesheet.href = stylesheetUrl;
+      stylesheet.href = stylesheetUrl.href;
       stylesheet.setAttribute('data-deudalaya-creator-application', '');
       document.head.appendChild(stylesheet);
     }
@@ -27,17 +28,23 @@
     ['creatorInstagram', 'Instagram Profile'],
     ['creatorOther', 'Other']
   ];
+  const INTEREST_FIELDS = [
+    ['creatorInterestDeuda', 'देउडा / Deuda'],
+    ['creatorInterestVillage', 'गाउँघर / Village'],
+    ['creatorInterestCity', 'शहर / City']
+  ];
 
-  function createApplicationMessage(consentGranted, socialLinks = {}) {
+  function createApplicationMessage(consentGranted, socialLinks = {}, interests = {}) {
     const permissionLine = consentGranted
       ? 'I agree to allow Deudalaya to share, republish and promote my content on its official social media platforms. I authorize Deudalaya to select public social media content related to its mission and share it on its official social media, website, and digital platforms. My content ownership and copyright remain mine.'
       : 'I have not granted permission for Deudalaya to reuse my content on its social media platforms. Please contact me for permission before using my content. My content ownership and copyright remain mine.';
     const links = SOCIAL_FIELDS.map(([id, label]) => `${label}: ${String(socialLinks[id] || '').trim() || 'Not provided'}`).join('\n');
-    return `Namaste Deudalaya! I am interested in becoming a Deudalaya Certified Content Creator. ${permissionLine}\n\nMy social media links:\n${links}\n\nPlease share the application and certification details.`;
+    const categories = INTEREST_FIELDS.map(([id, label]) => `${label}: ${interests[id] === 'Yes' ? 'Yes' : interests[id] === 'No' ? 'No' : 'Not answered'}`).join('\n');
+    return `Namaste Deudalaya! I am interested in applying to become a Certified Content Creator.\n\nVideo categories:\n${categories}\n\n${permissionLine}\n\nMy social media links:\n${links}\n\nPlease share the application and certification details.`;
   }
 
-  function createWhatsAppUrl(consentGranted, socialLinks) {
-    return WHATSAPP_BASE + encodeURIComponent(createApplicationMessage(consentGranted, socialLinks));
+  function createWhatsAppUrl(consentGranted, socialLinks, interests) {
+    return WHATSAPP_BASE + encodeURIComponent(createApplicationMessage(consentGranted, socialLinks, interests));
   }
 
   function initialize(document) {
@@ -51,8 +58,10 @@
 
     permission.checked = false;
     const socialInputs = SOCIAL_FIELDS.map(([id]) => document.getElementById(id));
+    const interestInputs = INTEREST_FIELDS.map(([id]) => document.getElementById(id));
     const readSocialLinks = () => Object.fromEntries(SOCIAL_FIELDS.map(([id], index) => [id, socialInputs[index]?.value || '']));
-    const updateWhatsAppLink = () => { whatsappLink.href = createWhatsAppUrl(permission.checked, readSocialLinks()); };
+    const readInterests = () => Object.fromEntries(INTEREST_FIELDS.map(([id], index) => [id, interestInputs[index]?.value || '']));
+    const updateWhatsAppLink = () => { whatsappLink.href = createWhatsAppUrl(permission.checked, readSocialLinks(), readInterests()); };
     const closeDialog = () => {
       if (typeof dialog.close === 'function' && dialog.open) dialog.close();
       else if (typeof dialog.removeAttribute === 'function') dialog.removeAttribute('open');
@@ -75,6 +84,7 @@
     dialog.addEventListener('close', () => button.focus());
     permission.addEventListener('change', updateWhatsAppLink);
     socialInputs.forEach(input => input && input.addEventListener('input', updateWhatsAppLink));
+    interestInputs.forEach(input => input && input.addEventListener('change', updateWhatsAppLink));
     updateWhatsAppLink();
     return { close: closeDialog, updateWhatsAppLink };
   }
