@@ -1,0 +1,53 @@
+/* CSS-only attention animation for the existing transparent install-button hit target. */
+#deudalayaInstallAction:not([hidden]):not(:disabled) {
+  animation: deudalaya-install-pulse 4.8s ease-in-out infinite;
+}
+
+#deudalayaInstallAction:not([hidden]):not(:disabled)::after {
+  position: absolute;
+  left: 17.3%;
+  top: 50%;
+  width: 23%;
+  height: 84%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, #fff3cf99 0%, #f4c35b52 38%, #f4c35b00 76%);
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: deudalaya-install-icon-glow 4.8s ease-in-out infinite;
+}
+
+@keyframes deudalaya-install-pulse {
+  0%, 72%, 100% {
+    box-shadow: 0 0 0 0 #f2bd5b00;
+    translate: 0 0;
+  }
+  80% {
+    box-shadow: 0 0 17px 5px #f2bd5b88;
+    translate: 0 -2px;
+  }
+  84% { translate: 0 0; }
+  88% { translate: 0 -1px; }
+  92% { translate: 0 0; }
+}
+
+@keyframes deudalaya-install-icon-glow {
+  0%, 72%, 100% { opacity: 0; transform: translate(-50%, -50%); }
+  80% { opacity: .9; transform: translate(-50%, -58%); }
+  88% { opacity: .25; transform: translate(-50%, -50%); }
+  92% { opacity: 0; transform: translate(-50%, -50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #deudalayaInstallAction:not([hidden]):not(:disabled) {
+    animation: none !important;
+    box-shadow: none !important;
+    translate: none !important;
+  }
+
+  #deudalayaInstallAction:not([hidden]):not(:disabled)::after {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+}
