@@ -92,6 +92,33 @@
     return null;
   }
 
+  function createStartupSelection() {
+    var pending = null;
+    var completed = false;
+    var selectedId = null;
+    function select(values, validator, storage, random, storageKey) {
+      if (completed) return Promise.resolve(selectedId);
+      if (pending) return pending;
+      pending = selectValidatedStartupVideo(values, validator, storage, random, storageKey)
+        .then(function (id) {
+          selectedId = id;
+          completed = true;
+          return id;
+        }, function (error) {
+          completed = true;
+          throw error;
+        })
+        .finally(function () { pending = null; });
+      return pending;
+    }
+    return {
+      select: select,
+      remember: function (id) { if (pending) return false; selectedId = id || null; completed = true; return true; },
+      isComplete: function () { return completed; },
+      selected: function () { return selectedId; }
+    };
+  }
+
   function normalizeVideoUrl(source) {
     if (typeof source !== 'string' || !source.trim()) return '';
     try {
@@ -516,5 +543,5 @@
     return { start: start, next: next, previous: previous, select: select, peekNext: peekNext, current: current, sync: sync, markStarted: markStarted, getState: getState, reset: reset };
   }
 
-  return { createShuffleCycle: createShuffleCycle, videoKey: videoKey, isDuplicatePost: isDuplicatePost, selectRandomStartupVideo: selectRandomStartupVideo, selectAndRememberStartupVideo: selectAndRememberStartupVideo, selectValidatedStartupVideo: selectValidatedStartupVideo, createVideoValidator: createVideoValidator, createFeedVideoRecovery: createFeedVideoRecovery, applyCenteredVideoLayout: applyCenteredVideoLayout, calculateContainedVideoSize: calculateContainedVideoSize, fitCenteredVideo: fitCenteredVideo, hasVideoMetadata: hasVideoMetadata };
+  return { createShuffleCycle: createShuffleCycle, videoKey: videoKey, isDuplicatePost: isDuplicatePost, selectRandomStartupVideo: selectRandomStartupVideo, selectAndRememberStartupVideo: selectAndRememberStartupVideo, selectValidatedStartupVideo: selectValidatedStartupVideo, createStartupSelection: createStartupSelection, createVideoValidator: createVideoValidator, createFeedVideoRecovery: createFeedVideoRecovery, applyCenteredVideoLayout: applyCenteredVideoLayout, calculateContainedVideoSize: calculateContainedVideoSize, fitCenteredVideo: fitCenteredVideo, hasVideoMetadata: hasVideoMetadata };
 });

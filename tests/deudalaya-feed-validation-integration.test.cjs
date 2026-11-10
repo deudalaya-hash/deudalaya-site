@@ -9,8 +9,10 @@ const categories = fs.readFileSync(path.join(__dirname, '..', 'feed-categories.j
 test('startup validates the combined published category pool and remembers only a playable result', () => {
   assert.match(social, /const startupCandidates = \[\.\.\.newSharedPosts, \.\.\.localCandidates\]/);
   assert.match(social, /ACTIVE_CATEGORIES\.includes\(window\.DeudalayaFeedCategories\.categoryOf\(post\)\)/);
-  assert.match(social, /selectValidatedStartupVideo\(\s*candidates, videoValidator, storage/);
-  assert.match(social, /startupVideoKey = await selectPlayableStartupVideo\(startupCandidates, startupStorage\)/);
+  assert.match(social, /startupSelection\.select\(\s*candidates, videoValidator, startupStorage\(\), Math\.random, 'deudalaya-last-startup-video-v1'/);
+  assert.match(social, /startupVideoKey = await chooseStartupVideo\(startupCandidates\)/);
+  assert.match(social, /async function selectLocalStartupVideo\(\)/);
+  assert.match(social, /if \(!client\) \{ await selectLocalStartupVideo\(\); return; \}/);
   assert.match(categories, /\['देउडा', 'गाउँघर', 'शहर'\]/);
 });
 

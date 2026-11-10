@@ -7,6 +7,7 @@
   let activeFeedCategory = 'देउडा';
   let remoteFeedRequestId = 0;
   let startupSelectionDone = false;
+  const startupSelection = window.DeudalayaVideoShuffle?.createStartupSelection?.();
   let feedCategoriesEnabled = false;
   let videoValidator = null;
   let feedVideoRecovery = null;
@@ -122,11 +123,57 @@
     return true;
   }
 
-  async function selectPlayableStartupVideo(candidates, storage) {
-    if (!ensureVideoValidation()) return null;
-    return window.DeudalayaVideoShuffle.selectValidatedStartupVideo(
-      candidates, videoValidator, storage, Math.random, 'deudalaya-last-published-startup-video-v1'
+  function startupStorage() {
+    try { return window.localStorage; } catch (_) { return null; }
+  }
+  function waitForInstallationAccess() {
+    const root = document.documentElement;
+    const gateClass = 'deudalaya-install-required';
+    if (!root.classList.contains(gateClass)) return Promise.resolve();
+    return new Promise(resolve => {
+      const checkGate = () => {
+        if (root.classList.contains(gateClass)) return;
+        window.removeEventListener('deudalaya-installstatechange', checkGate);
+        resolve();
+      };
+      window.addEventListener('deudalaya-installstatechange', checkGate);
+      checkGate();
+    });
+  }
+  async function chooseStartupVideo(candidates) {
+    if (startupSelectionDone) return startupSelection?.selected() || null;
+    await waitForInstallationAccess();
+    if (!startupSelection || !ensureVideoValidation()) return null;
+    const sharedKey = window.deudalayaSharedStartupKey;
+    const sharedVideo = sharedKey && candidates.find(post => window.DeudalayaVideoShuffle.videoKey(post) === sharedKey);
+    if (sharedVideo && await videoValidator.validate(feedVideoSource(sharedVideo))) {
+      try { startupStorage()?.setItem('deudalaya-last-startup-video-v1', sharedKey); } catch (_) {}
+      startupSelection.remember(sharedKey);
+      startupSelectionDone = true;
+      return sharedKey;
+    }
+    const key = await startupSelection.select(
+      candidates, videoValidator, startupStorage(), Math.random, 'deudalaya-last-startup-video-v1'
     );
+    startupSelectionDone = true;
+    return key;
+  }
+  async function selectLocalStartupVideo() {
+    if (startupSelectionDone) return startupSelection?.selected() || null;
+    const candidates = mergeLocalPosts(localPosts, videos)
+      .filter(isSupportedFeedVideo)
+      .filter(post => window.DeudalayaFeedCategories.ACTIVE_CATEGORIES.includes(window.DeudalayaFeedCategories.categoryOf(post)));
+    try {
+      const key = await chooseStartupVideo(candidates);
+      const selected = candidates.find(post => window.DeudalayaVideoShuffle.videoKey(post) === key);
+      const category = selected && window.DeudalayaFeedCategories.categoryOf(selected);
+      if (category) activeFeedCategory = category;
+      applyFeedMode(true, key);
+      return key;
+    } catch (error) {
+      console.warn('Could not validate a local startup video', error);
+      return null;
+    }
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ensureVideoValidation, { once: true });
   else ensureVideoValidation();
@@ -250,7 +297,7 @@
   };
 
   window.loadRemotePosts = async function() {
-    if (!cloudClient) return;
+    if (!cloudClient) { await selectLocalStartupVideo(); return; }
     const requestId = ++remoteFeedRequestId;
     try {
       let { data, error } = await cloudClient.from('feed_posts')
@@ -312,19 +359,19 @@
           .filter(isSupportedFeedVideo)
           .filter(post => !videoValidator || !videoValidator.isKnownBroken(feedVideoSource(post)))
           .filter(post => window.DeudalayaFeedCategories.ACTIVE_CATEGORIES.includes(window.DeudalayaFeedCategories.categoryOf(post)));
-        let startupStorage = null;
-        try { startupStorage = window.localStorage; } catch (_) {}
-        startupVideoKey = await selectPlayableStartupVideo(startupCandidates, startupStorage);
+        startupVideoKey = await chooseStartupVideo(startupCandidates);
         if (requestId !== remoteFeedRequestId) return;
         const startupVideo = startupCandidates.find(post => window.DeudalayaVideoShuffle.videoKey(post) === startupVideoKey);
         const startupCategory = startupVideo && window.DeudalayaFeedCategories.categoryOf(startupVideo);
         if (startupCategory && window.DeudalayaFeedCategories.ACTIVE_CATEGORIES.includes(startupCategory)) activeFeedCategory = startupCategory;
-        startupSelectionDone = true;
       }
       sharedPosts = newSharedPosts;
       applyFeedMode(true, startupVideoKey);
     } catch (error) {
-      if (requestId === remoteFeedRequestId) console.warn('Could not load shared posts', error);
+      if (requestId === remoteFeedRequestId) {
+        console.warn('Could not load shared posts', error);
+        await selectLocalStartupVideo();
+      }
     }
   };
 
@@ -344,6 +391,7 @@
       index = savedIndex >= 0 ? savedIndex : Math.min(restorePosition.index || 0, Math.max(0, videos.length - 1));
     }
     else if (reset || index >= videos.length) index = 0;
+    if (startupVideoKey && typeof window.fypStartAt === 'function') window.fypStartAt(startupVideoKey);
     render();
     updateFeedCategoryTabs();
     renderFeedCategoryManager();
@@ -810,7 +858,7 @@
   const searchHash = new URLSearchParams(location.hash.slice(1));
   const profileUsername = searchHash.get('profile');
   loadSupabaseClient().then(async client => {
-    if (!client) return;
+    if (!client) { await selectLocalStartupVideo(); return; }
     if (cloudUser) await refreshOwnProfile();
     await loadRemotePosts();
     if (profileUsername) {

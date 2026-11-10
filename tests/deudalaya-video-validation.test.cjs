@@ -1,6 +1,6 @@
 const assert = require('node:assert/strict');
 const test = require('node:test');
-const { createVideoValidator, createFeedVideoRecovery, applyCenteredVideoLayout, calculateContainedVideoSize, fitCenteredVideo, selectValidatedStartupVideo, videoKey } = require('../video-shuffle.js');
+const { createVideoValidator, createFeedVideoRecovery, applyCenteredVideoLayout, calculateContainedVideoSize, fitCenteredVideo, selectValidatedStartupVideo, createStartupSelection, videoKey } = require('../video-shuffle.js');
 
 function fakeMedia(outcome) {
   const listeners = new Map();
@@ -97,6 +97,27 @@ test('startup selection rejects failed candidates and remembers the first valid 
   assert.equal(selected, videoKey(videos[1]));
   assert.equal(memory.get('last'), selected);
   assert.equal(validator.isKnownBroken('/broken.mp4'), true);
+});
+
+test('one startup selector validates and remembers only one choice during a page launch', async () => {
+  const memory = new Map();
+  const storage = { getItem: key => memory.get(key) ?? null, setItem: (key, value) => memory.set(key, value) };
+  const videos = [{ videoSrc: '/previous.mp4' }, { videoSrc: '/selected.mp4' }, { videoSrc: '/later.mp4' }];
+  memory.set('last-opening', videoKey(videos[0]));
+  const validated = [];
+  const validator = { validate: async source => { validated.push(source); return true; } };
+  const startup = createStartupSelection();
+
+  const [first, concurrent] = await Promise.all([
+    startup.select(videos, validator, storage, () => 0, 'last-opening'),
+    startup.select([videos[2]], validator, storage, () => 0, 'last-opening')
+  ]);
+
+  assert.equal(first, videoKey(videos[1]));
+  assert.equal(concurrent, first);
+  assert.equal(await startup.select([videos[2]], validator, storage, () => 0.9, 'last-opening'), first);
+  assert.deepEqual(validated, ['/selected.mp4']);
+  assert.equal(memory.get('last-opening'), first);
 });
 
 test('playback recovery skips broken items once and stops after a bounded feed scan', async () => {
