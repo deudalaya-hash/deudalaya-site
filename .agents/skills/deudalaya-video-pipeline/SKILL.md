@@ -1,128 +1,65 @@
 ---
 name: deudalaya-video-pipeline
-description: Prepare, compress, validate, and publish Deudalaya feed videos with FFmpeg and the existing Supabase integration. Use whenever the user provides a video for Deudalaya, asks to add/publish a video, or types ADD with a video.
+description: Batch-process Deudalaya videos into validated 10-second MP4s, then optionally upload them to the existing Supabase feed with category metadata and a per-video report. Use for Deudalaya video batches or ADD video requests.
 metadata:
-  short-description: Compress and publish Deudalaya videos
+  short-description: Process and publish Deudalaya video batches
 ---
 
 # Deudalaya Video Pipeline
 
-## Purpose
+Use this skill for the Deudalaya batch workflow. Read the current Deudalaya, Supabase, and video-management instructions, then inspect the current feed code and live backend before publishing. The website uses legacy Supabase code, while project notes identify Firebase as the intended future backend; use Supabase only when the user explicitly requests the existing Supabase feed.
 
-Prepare video files for Deudalaya, preserve an untouched original, enforce the project media limits, validate playback, and publish to the existing feed using its configured Supabase integration.
+## Fixed media requirements
 
-This skill complements `video-management`, `deudalaya-core`, and `supabase`. Read the relevant skills and inspect current project code and backend configuration for each task. Do not infer live schema, bucket settings, roles, or permissions from old notes or migrations.
+- Process video files placed directly in `~/DeudalayaVideoPipeline/inbox` (or the user-designated input directory). Supported source extensions: MP4, WebM, MOV, M4V, MKV, and AVI. Use `ffprobe` for actual stream inspection; never trust the extension alone.
+- Each output must be an MP4 with H.264 video, AAC audio when the source has audio, and a duration of exactly 10 seconds (allow at most 0.05 seconds of container rounding in validation). Preserve aspect ratio and never crop. Cut longer sources to their first 10 seconds. Reject shorter sources rather than inventing or freezing frames. Record source and output durations in the report.
+- Final output must be strictly below 4,000,000 bytes. Re-encode with the highest quality settings that pass the byte and decode checks. Never upload a failed or unvalidated output.
+- Copy each unchanged source into the batch backup directory before encoding. Never overwrite or remove an input or prior batch artifact.
+- Require a per-video JSON sidecar named `<video filename>.json` (for example, `clip.mp4.json`) with `category` set to exactly `देउडा`, `गाउँघर`, or `शहर`. A `caption` is optional; if omitted, use the input basename and record that fallback.
 
-## Permanent media rules
+Example sidecar for `clip.mp4`:
 
-- Maximum duration: 10 seconds. Reject longer clips unless the user explicitly authorizes trimming; never trim silently.
-- Final file size must be **strictly less than 4,000,000 bytes**. Exactly 4,000,000 bytes is too large.
-- Final container: MP4, with H.264 video and AAC audio when audio is present.
-- Preserve the source aspect ratio. Do not crop to fit a target screen.
-- Optimize for mobile playback and slow connections while retaining the best reasonable quality within the size limit.
-- Never publish corrupt, unplayable, unsupported, oversized, miscategorized, or unvalidated media.
-- Preserve titles, descriptions, and category metadata supplied by the user. The only categories are `देउडा`, `गाउँघर`, and `शहर`. Do not guess a category; ask only when it is unclear.
-- Keep an unchanged backup of every original in a task-scoped location outside the public feed assets. Never overwrite or delete the original automatically.
+```json
+{"category":"शहर","caption":"Optional feed caption"}
+```
 
-## ADD command
+## Run modes and authorization
 
-When the user provides a video and types `ADD`, start this pipeline automatically. Treat `ADD` as approval to upload and publish that specific video once it passes validation and the category and required metadata are clear. Do not ask for a redundant publishing confirmation.
-
-Ask only for essential missing information, such as an unclear category or a required title. If authorization, write access, or backend policy prevents upload or publication, stop at that boundary and explain the specific blocker. Never bypass authentication, RLS, Storage policies, bucket limits, or other security controls.
-
-## Workflow
-
-Use this sequence:
-
-**SELECT VIDEO → COMPRESS → VALIDATE → UPLOAD → PUBLISH → VERIFY**
-
-### 1. Inspect and preserve
-
-1. Identify the source file and inspect its actual format, codecs, duration, dimensions, audio presence, and byte size. Do not rely only on filename extensions or browser-provided MIME types.
-2. Use `ffprobe` when available. Check `ffmpeg` and `ffprobe` availability with `Get-Command`/`where.exe` on Windows or `command -v` on Unix. If unavailable, do not silently fetch binaries; use an approved installed/bundled copy or explain the prerequisite.
-3. Copy the source to a task-scoped backup before encoding. Write outputs to a separate path; never encode over the original.
-4. Reject clips over 10 seconds unless the user authorizes trimming. If trimming is approved, preserve the intended content and report the exact trim.
-
-Example inspection:
+The bundled `scripts/pipeline.py` processes a complete batch and writes a JSON report. It never uploads by default. For a project-local demo batch, pass `--input demo/input`; every video needs a `<video filename>.json` sidecar before it can validate:
 
 ```powershell
-ffprobe -v error -show_entries format=duration,size,format_name:stream=codec_type,codec_name,width,height,sample_rate,channels -of json input.mp4
+python .agents/skills/deudalaya-video-pipeline/scripts/pipeline.py --help
+python .agents/skills/deudalaya-video-pipeline/scripts/pipeline.py --input "$HOME/DeudalayaVideoPipeline/inbox"
+python .agents/skills/deudalaya-video-pipeline/scripts/pipeline.py --input demo/input
 ```
 
-### 2. Compress to the byte limit
-
-If the source is already a valid MP4/H.264 file, within 10 seconds, and strictly below 4,000,000 bytes, it may be used as-is after full validation. Otherwise transcode it with FFmpeg.
-
-Calculate a total bitrate from the clip duration rather than using one fixed bitrate for every video. Target a safety margin below the hard cap (for example, 3.6–3.8 MB) to account for audio, MP4 muxing overhead, and encoder variation:
-
-```text
-target_total_bps = target_bytes * 8 / duration_seconds
-video_bps = target_total_bps - audio_bps - muxing_margin_bps
-```
-
-Choose the audio budget only when the source has audio. Use a reasonable AAC bitrate (often 64–96 kbit/s for short mobile clips), and reserve additional bitrate for container overhead. If the output is still too large, lower the video bitrate and, when needed, reduce resolution while preserving aspect ratio. Keep the shorter image dimension even and do not upscale. Never use a crop filter.
-
-Illustrative two-pass MP4 encode (replace `VIDEO_BPS` with the duration-derived bitrate and adjust the scale bound only when needed):
+Uploading changes production Storage and database state. Do not run publishing mode unless the user explicitly authorized publication for this batch and confirmed they have the rights or permission to upload every item. Do not infer rights from a filename, a local copy, public availability, or admin status. It additionally requires `--publish --confirm-publish DEUDALAYA --confirm-rights` and the environment variables `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, and `SUPABASE_ADMIN_JWT` (a signed-in admin user's access JWT). Never ask the user to paste a token into chat, save credentials in the repository, or print credentials. Do not use a service-role key or a Supabase personal access token as the user JWT.
 
 ```powershell
-$pass = 'work\video-pass'
-$filter = "scale=w='if(gte(iw,ih),min(1280,iw),-2)':h='if(gte(iw,ih),-2,min(1280,ih))'"
-
-ffmpeg -y -i input.mp4 -map 0:v:0 -vf $filter -c:v libx264 -preset medium `
-  -b:v VIDEO_BPS -pass 1 -passlogfile $pass -an -f null NUL
-
-ffmpeg -y -i input.mp4 -map 0:v:0 -map '0:a:0?' -vf $filter `
-  -c:v libx264 -preset medium -b:v VIDEO_BPS -pass 2 -passlogfile $pass `
-  -c:a aac -b:a 96k -movflags +faststart output.mp4
+python .agents/skills/deudalaya-video-pipeline/scripts/pipeline.py --check-config
+python .agents/skills/deudalaya-video-pipeline/scripts/pipeline.py --input "$HOME/DeudalayaVideoPipeline/inbox" --publish --confirm-publish DEUDALAYA --confirm-rights
 ```
 
-For a source without audio, omit the audio map and AAC options. Confirm that the local FFmpeg build has `libx264` and AAC encoders before relying on this example. If the output is at or above 4,000,000 bytes, repeat with adjusted bitrate/resolution and validate again. If acceptable quality cannot meet the limit, preserve the original, do not upload, explain the limitation, and offer alternate settings.
+The uploader reads these variables from the process environment first, then fills in any missing ones from the repository-root `.env.local`. It only reads the three supported names and never prints their values. `.env.local` is git-ignored. Use `.env.example` as a names-only template; copy it to `.env.local` and fill in the values locally. Keep the local file on your account and do not stage or commit it.
 
-### 3. Validate before any upload
+To configure the values:
 
-Inspect the final file again with `ffprobe` and verify:
+1. In the Supabase Dashboard for project `bxzkclqanpuvxyhsrpog`, open **Project Settings → API** and copy the **Project URL** to `SUPABASE_URL`.
+2. On that page, open **API Keys** and use an enabled **Publishable key** for `SUPABASE_PUBLISHABLE_KEY`. Never use a `service_role` or secret key.
+3. Set `SUPABASE_ADMIN_JWT` to the current access token from a signed-in Supabase Auth session belonging to a Deudalaya admin. Obtain it through the app’s authenticated session tooling and put it directly into the local file or secret manager without printing it. Do not use the dashboard personal access token or an anon/publishable key in this variable. Access tokens expire; refresh the session and replace the local value when needed.
+4. Run `--check-config`. It prints only which variable names are configured, missing, or point at the wrong project. A successful check confirms presence and the expected URL; the publishing preflight still validates the token’s user/admin claim, bucket, schema, and effective write access before any upload.
 
-- size is below 4,000,000 bytes;
-- duration is no more than 10 seconds;
-- format is MP4;
-- video codec is H.264;
-- audio codec is AAC when an audio stream exists;
-- dimensions are nonzero, aspect ratio matches the source within normal encoder rounding, and no crop was applied;
-- a full decode completes without errors.
+Publishing must fail closed unless the URL resolves to project `bxzkclqanpuvxyhsrpog`, the access token resolves to a Supabase user with trusted `app_metadata.role = "admin"`, the existing `videos` bucket is available and allows the file, and the live `feed_posts` schema supports the required fields. Never change project settings, bucket limits, schema, RLS, or Storage policies as a workaround. The script uses the existing public `videos` bucket and `feed_posts` flow; it does not use the separate proposed `community-videos` bucket or `public.videos` table.
 
-Full decode check:
+The current root page has upload guards and a resumable-transfer helper, but its base `publishUpload` implementation is absent. The batch helper therefore uses the authenticated Supabase REST APIs directly. It writes `media_path` as an object key relative to the `videos` bucket, derives the user ID from the authenticated token, and sets `media_type`, caption, and category. It detects whether `feed_category` exists and uses it when available; otherwise it uses the existing `category` field, matching the feed's fallback. It leaves `created_at` to the database default.
 
-```powershell
-ffmpeg -v error -i output.mp4 -f null NUL
-```
+## Batch behavior
 
-If any validation fails, do not upload or publish. Keep the original and any diagnostic output separate from public assets.
+1. Read only supported video files directly inside the input directory and their JSON sidecars. Continue across per-file failures.
+2. Create a unique batch directory under `~/DeudalayaVideoPipeline/runs/` with `backup/`, `processed/`, and `report.json`. Never write processed media into public site assets.
+3. Probe each source, preserve a byte-identical backup, create a 10-second output, probe it again, verify duration/container/codecs/size/aspect ratio, and run a full decode. A failed check makes that file ineligible for upload.
+4. In authorized publishing mode, authenticate and inspect the target/bucket/schema before the first write. Use a deterministic user-scoped object key based on the output SHA-256. Check for an existing feed row before upload. If the object already exists, verify its bytes before reusing it. Never overwrite an object or silently change existing metadata.
+5. Upload validated objects with overwrite disabled, then insert only the fields confirmed in the live schema. If Storage succeeds and the row insert fails, report the orphaned object and stop retrying that item automatically; do not delete it. A rerun may reconcile the same hash path after checking both resources.
+6. Verify each created feed row and report each input as processed, uploaded, duplicate, or failed, including error text and output details. Never claim feed availability solely because an upload returned success.
 
-### 4. Check duplicates and metadata
-
-Before transfer, inspect the existing feed through authorized, read-only means. Compare a content hash when available and check existing media paths/records to avoid duplicate uploads. Do not create or assume database fields. Preserve the user's title, description, and selected category; ask only for essential missing information. Use exactly one of `देउडा`, `गाउँघर`, or `शहर`.
-
-### 5. Upload and publish safely
-
-- Use the existing Deudalaya Supabase project integration and existing `videos` bucket. Verify the connected project, bucket, actual schema, and caller permissions before any write.
-- The `ADD` command authorizes upload and publication for that supplied clip after all validation and required metadata are complete; no extra confirmation is needed in that case.
-- If the current connection is read-only, unavailable, points to another project, or lacks the required admin permission, stop and explain what access is needed. Never request secrets in chat or expose service-role keys in frontend code, logs, or output.
-- Respect existing schema, RLS, Storage policies, and bucket MIME/size limits. Do not change policies, schema, backend architecture, or project configuration as a workaround.
-- A frontend check is not a security boundary. Confirm the actual bucket limit is compatible with the strict 4,000,000-byte rule. If the bucket allows larger objects, report that server-side enforcement is missing and request authorized configuration rather than claiming universal enforcement or bypassing policies.
-- Upload only the validated compressed MP4. Store the correct Storage path/URL and metadata using the actual existing publishing flow. Avoid duplicate objects and records; handle partial failures without blindly retrying or deleting uncertain production data.
-- Do not deploy or push code changes without explicit user permission. Upload/publish permission from `ADD` applies only to the supplied video and does not authorize code deployment.
-
-### 6. Verify publication
-
-After an authorized upload and publish operation, use read-only checks to confirm the expected record appears in the selected category, points to the uploaded object, and the public feed can load and play it. Verify the final stored size and category. If the feed or object is unavailable, report the exact failure and do not claim publication succeeded.
-
-## Protected project functionality
-
-- Never modify the Install App gate, installation screen, Install App button, manifest, service worker, installation logic, or any PWA installation behavior.
-- Preserve the existing installation protection rules and checks. Do not disable, bypass, weaken, or remove them.
-- Keep changes limited to video preparation, upload, metadata, and feed publishing needed for the authorized video task. Do not alter unrelated feed functionality.
-- Do not push or deploy without explicit permission.
-
-## Report
-
-Report source and final byte sizes, duration, resolution, codecs, whether transcoding occurred, backup location, validation results, duplicate check, category/metadata used, upload/publish outcome, and live playback verification. Separate local validation from Supabase, feed, and live-site checks; never claim a check ran if it did not.
+The report contains source/backup/output paths, source and output hashes and byte sizes, source/output durations, codecs, dimensions, selected category/caption, encode settings, validation results, Storage path, database result, and per-step errors. The script does not deploy the website, modify code, alter policies, or run unless invoked.

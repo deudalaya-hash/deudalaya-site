@@ -3,6 +3,10 @@
 *.crdownload
 *.msi
 *.zip
+.env.local
+demo/input/*.mp4
+demo/runs/
+demo/video-project-4-input/*.mp4
 
 # app-internal
 .freebuff/
