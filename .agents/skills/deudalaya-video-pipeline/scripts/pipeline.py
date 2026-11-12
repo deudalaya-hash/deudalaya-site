@@ -29,7 +29,8 @@ CATEGORIES = ("देउडा", "गाउँघर", "शहर")
 VIDEO_EXTENSIONS = {".mp4", ".webm", ".mov", ".m4v", ".mkv", ".avi"}
 RESOLUTIONS = (1280, 960, 720, 540)
 CRFS = tuple(range(18, 35, 2))
-SUPABASE_ENV_NAMES = ("SUPABASE_URL", "SUPABASE_PUBLISHABLE_KEY", "SUPABASE_ADMIN_JWT")
+SUPABASE_ENV_NAMES = ("SUPABASE_URL", "SUPABASE_PUBLISHABLE_KEY", "DEUDALAYA_VIDEO_PIPELINE_TOKEN")
+SUPABASE_CREDENTIAL_ENV_NAMES = set(SUPABASE_ENV_NAMES) | {"SUPABASE_ADMIN_JWT", "SUPABASE_SERVICE_ROLE_KEY"}
 
 
 class PipelineError(RuntimeError):
@@ -100,7 +101,7 @@ def sha256_file(path: Path) -> str:
 
 
 def run(command: list[str]) -> subprocess.CompletedProcess[str]:
-    child_env = {key: value for key, value in os.environ.items() if key not in SUPABASE_ENV_NAMES}
+    child_env = {key: value for key, value in os.environ.items() if key not in SUPABASE_CREDENTIAL_ENV_NAMES}
     try:
         result = subprocess.run(command, text=True, capture_output=True, check=False, env=child_env)
     except FileNotFoundError as exc:
@@ -328,133 +329,49 @@ class SupabasePublisher:
     def __init__(self) -> None:
         self.url = os.environ.get("SUPABASE_URL", "").rstrip("/")
         self.key = os.environ.get("SUPABASE_PUBLISHABLE_KEY", "")
-        self.token = os.environ.get("SUPABASE_ADMIN_JWT", "")
+        self.token = os.environ.get("DEUDALAYA_VIDEO_PIPELINE_TOKEN", "")
         if self.url != EXPECTED_URL:
             raise PipelineError(f"SUPABASE_URL must target the inspected project {EXPECTED_PROJECT_REF}")
         if not self.key or not self.token:
-            raise PipelineError("Set SUPABASE_PUBLISHABLE_KEY and SUPABASE_ADMIN_JWT locally; never paste tokens into chat")
-        status, _, user = json_request("GET", f"{self.url}/auth/v1/user", self.key, self.token)
-        ensure_success(status, user, "Could not validate Supabase session")
-        if not isinstance(user, dict) or user.get("app_metadata", {}).get("role") != "admin":
-            raise PipelineError("The authenticated account lacks trusted app_metadata.role=admin")
-        self.user_id = str(user.get("id", ""))
-        if not re.fullmatch(r"[0-9a-fA-F-]{36}", self.user_id):
-            raise PipelineError("Supabase returned an invalid user ID")
-        self.fields = self.inspect_schema()
-        self.bucket_limit = self.inspect_bucket()
+            raise PipelineError("Set SUPABASE_PUBLISHABLE_KEY and DEUDALAYA_VIDEO_PIPELINE_TOKEN locally; never paste tokens into chat")
+        status, _, preflight = json_request("GET", self.endpoint, self.key, self.token)
+        ensure_success(status, preflight, "Could not validate the private video publisher")
+        required_fields = {"id", "user_id", "media_path", "media_type", "caption", "category"}
+        if not isinstance(preflight, dict) or preflight.get("ready") is not True:
+            raise PipelineError("The private video publisher did not confirm readiness")
+        if preflight.get("project_ref") != EXPECTED_PROJECT_REF or preflight.get("bucket") != BUCKET:
+            raise PipelineError("The private video publisher targets an unexpected project or bucket")
+        if not required_fields.issubset(set(preflight.get("feed_fields", []))):
+            raise PipelineError("The private video publisher reported an incompatible feed schema")
+        self.max_bytes = int(preflight.get("max_bytes_exclusive", 0))
+        if self.max_bytes != MAX_BYTES:
+            raise PipelineError("The private video publisher reported an unexpected file-size limit")
 
-    def rest(self, method: str, route: str, payload: Any = None) -> tuple[int, Any]:
-        body = json.dumps(payload, ensure_ascii=False).encode("utf-8") if payload is not None else None
-        headers = {"Content-Type": "application/json", "Prefer": "return=representation"} if body else {}
-        status, _, value = json_request(method, f"{self.url}/rest/v1/{route}", self.key, self.token, body, headers)
-        return status, value
-
-    def inspect_schema(self) -> set[str]:
-        found: set[str] = set()
-        required = {"user_id", "media_path", "media_type", "caption"}
-        optional = {"id", "category", "feed_category"}
-        for field in required | optional:
-            query = urllib.parse.urlencode({"select": field, "limit": "0"})
-            status, body = self.rest("GET", f"feed_posts?{query}")
-            if 200 <= status < 300:
-                found.add(field)
-                continue
-            detail = json.dumps(body, ensure_ascii=False).lower()
-            missing = status == 400 and any(term in detail for term in ("does not exist", "schema cache", "could not find"))
-            if field in optional and missing:
-                continue
-            ensure_success(status, body, f"Could not inspect public.feed_posts.{field}")
-        if not (found & {"category", "feed_category"}):
-            raise PipelineError("public.feed_posts has neither category nor feed_category")
-        return found
-
-    def inspect_bucket(self) -> int | None:
-        status, _, bucket = json_request("GET", f"{self.url}/storage/v1/bucket/{BUCKET}", self.key, self.token)
-        ensure_success(status, bucket, f"Could not inspect {BUCKET} bucket")
-        if not isinstance(bucket, dict) or bucket.get("public") is not True:
-            raise PipelineError("The existing videos bucket is not confirmed public")
-        allowed = bucket.get("allowed_mime_types")
-        if allowed and "video/mp4" not in allowed and "video/*" not in allowed:
-            raise PipelineError("The videos bucket does not allow video/mp4")
-        limit = bucket.get("file_size_limit")
-        try:
-            return int(limit) if limit not in (None, 0, "0") else None
-        except (ValueError, TypeError) as exc:
-            raise PipelineError("The videos bucket returned an invalid size limit") from exc
-
-    def object_url(self, object_path: str) -> str:
-        return f"{self.url}/storage/v1/object/public/{BUCKET}/{urllib.parse.quote(object_path, safe='/')}"
-
-    def verify_object(self, object_path: str, expected_hash: str) -> bool:
-        status, _, raw = request("GET", self.object_url(object_path), self.key, self.token, public=True)
-        if status == 404:
-            return False
-        if not 200 <= status < 300:
-            raise ApiError(status, "Could not verify existing Storage object")
-        if hashlib.sha256(raw).hexdigest() != expected_hash:
-            raise PipelineError("Object at deterministic path has different bytes; no overwrite attempted")
-        return True
-
-    def rows(self, object_path: str) -> list[dict[str, Any]]:
-        fields = [name for name in ("id", "user_id", "media_path", "media_type", "caption", "category", "feed_category") if name in self.fields]
-        query = urllib.parse.urlencode({"select": ",".join(fields), "media_path": f"eq.{object_path}", "limit": "2"})
-        status, body = self.rest("GET", f"feed_posts?{query}")
-        value = ensure_success(status, body, "Could not check duplicate feed rows")
-        return value if isinstance(value, list) else []
-
-    def upload_object(self, output: Path, object_path: str, digest: str) -> tuple[bool, bool]:
-        if self.bucket_limit is not None and output.stat().st_size > self.bucket_limit:
-            raise PipelineError(f"Output exceeds the live bucket limit ({self.bucket_limit:,} bytes)")
-        url = f"{self.url}/storage/v1/object/{BUCKET}/{urllib.parse.quote(object_path, safe='/')}"
-        status, _, raw = request(
-            "POST", url, self.key, self.token, output.read_bytes(),
-            {"Content-Type": "video/mp4", "Cache-Control": "max-age=3600", "x-upsert": "false"},
-        )
-        if 200 <= status < 300:
-            return True, False
-        message = raw.decode("utf-8", errors="replace")
-        if status in (400, 409) and ("exist" in message.lower() or "duplicate" in message.lower()):
-            if self.verify_object(object_path, digest):
-                return False, True
-        raise ApiError(status, f"Storage upload failed: {message}")
+    @property
+    def endpoint(self) -> str:
+        return f"{self.url}/functions/v1/deudalaya-video-upload"
 
     def publish(self, output: Path, metadata: dict[str, str], digest: str) -> dict[str, Any]:
-        object_path = f"{self.user_id}/{digest}.mp4"
-        existing = self.rows(object_path)
-        if existing:
-            row = existing[0]
-            row_category = row.get("feed_category") or row.get("category")
-            if row.get("user_id") != self.user_id or row_category != metadata["category"] or row.get("caption") != metadata["caption"]:
-                raise PipelineError("A feed row already uses this path with different metadata; no changes made")
-            if not self.verify_object(object_path, digest):
-                raise PipelineError("Matching feed row exists but its Storage object is missing")
-            return {"status": "duplicate", "object_path": object_path, "row_id": row.get("id"), "storage_uploaded": False}
-
-        uploaded, reused = self.upload_object(output, object_path, digest)
-        record = {"user_id": self.user_id, "media_path": object_path, "media_type": "video/mp4", "caption": metadata["caption"]}
-        if "category" in self.fields:
-            record["category"] = metadata["category"]
-        if "feed_category" in self.fields:
-            record["feed_category"] = metadata["category"]
-        status, response = self.rest("POST", "feed_posts", record)
-        ensure_success(status, response, "Storage object exists but feed_posts insert failed")
-        inserted = response[0] if isinstance(response, list) and response else {}
-        rows = self.rows(object_path)
-        if not rows:
-            raise PipelineError("Insert succeeded but read-back verification found no feed row")
-        verified = next((row for row in rows if row.get("user_id") == self.user_id), None)
-        if not verified:
-            raise PipelineError("Insert read-back does not belong to the authenticated admin")
-        for field in ("media_path", "media_type", "caption"):
-            expected = {"media_path": object_path, "media_type": "video/mp4", "caption": metadata["caption"]}[field]
-            if verified.get(field) != expected:
-                raise PipelineError(f"Insert read-back has unexpected {field}")
-        row_category = verified.get("feed_category") or verified.get("category")
-        if row_category != metadata["category"]:
-            raise PipelineError("Insert read-back has unexpected category")
+        byte_size = output.stat().st_size
+        if byte_size <= 0 or byte_size >= MAX_BYTES or byte_size >= self.max_bytes:
+            raise PipelineError("Output no longer passes the strict 4,000,000-byte upload limit")
+        headers = {
+            "Content-Type": "video/mp4",
+            "x-deudalaya-category": urllib.parse.quote(metadata["category"], safe=""),
+            "x-deudalaya-caption": urllib.parse.quote(metadata["caption"], safe=""),
+            "x-deudalaya-sha256": digest,
+        }
+        status, _, response = json_request(
+            "POST", self.endpoint, self.key, self.token, output.read_bytes(), headers,
+        )
+        result = ensure_success(status, response, "Private video publisher rejected the upload")
+        if not isinstance(result, dict) or result.get("status") not in {"uploaded", "duplicate"}:
+            raise PipelineError("Private video publisher returned an invalid result")
         return {
-            "status": "uploaded", "object_path": object_path, "row_id": inserted.get("id") or verified.get("id"),
-            "storage_uploaded": uploaded, "storage_reused_after_hash_check": reused,
+            "status": result["status"],
+            "object_path": result.get("object_path"),
+            "row_id": result.get("row_id"),
+            "storage_uploaded": result["status"] == "uploaded",
         }
 
 

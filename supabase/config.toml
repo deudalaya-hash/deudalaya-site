@@ -1,0 +1,2 @@
+[functions.deudalaya-video-upload]
+verify_jwt = false
