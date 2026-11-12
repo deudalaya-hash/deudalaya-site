@@ -76,7 +76,7 @@ def load_local_env(env_file: Path | None = None) -> set[str]:
             value = value.split(" #", 1)[0].rstrip()
         if "\n" in value or "\r" in value:
             raise PipelineError(f"Invalid value format in .env.local on line {line_number}")
-        if name not in os.environ and value:
+        if not os.environ.get(name) and value:
             os.environ[name] = value
             loaded.add(name)
     return loaded
