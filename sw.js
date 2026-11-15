@@ -1,5 +1,5 @@
 /* Deudalaya's root-scoped worker caches only its static app shell. */
-const CACHE_NAME = 'deudalaya-shell-v13';
+const CACHE_NAME = 'deudalaya-shell-v14';
 const SHELL_ASSETS = [
   '/',
   '/manifest.webmanifest',
