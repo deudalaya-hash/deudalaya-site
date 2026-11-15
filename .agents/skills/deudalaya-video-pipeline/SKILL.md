@@ -33,12 +33,20 @@ python .agents/skills/deudalaya-video-pipeline/scripts/pipeline.py --input "$HOM
 python .agents/skills/deudalaya-video-pipeline/scripts/pipeline.py --input demo/input
 ```
 
+For already-processed MP4 files, use `--upload-only --category <category>`. This mode probes and fully decodes each MP4 in place, requires a matching category in its JSON sidecar, enforces the strict byte limit, and writes a per-file report without re-encoding or copying media. Without `--publish`, it performs local validation only:
+
+```powershell
+python .agents/skills/deudalaya-video-pipeline/scripts/pipeline.py --upload-only --category देउडा --input "C:\deudalaya\video-library\processed\देउडा" --runs "C:\deudalaya\video-library\runs"
+```
+
 Uploading changes production Storage and database state. Do not run publishing mode unless the user explicitly authorized publication for this batch and confirmed they have the rights or permission to upload every item. Do not infer rights from a filename, a local copy, public availability, or admin status. Publishing requires `--publish --confirm-publish DEUDALAYA --confirm-rights` plus `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, and `DEUDALAYA_VIDEO_PIPELINE_TOKEN` in local configuration. The pipeline token authorizes only this private Edge Function; it is not a Supabase user JWT or project key. Never ask the user to paste a token into chat, save credentials in the repository, or print credentials. The service-role key is only configured in Supabase Edge Function secrets and must never be placed in `.env.local`, the skill, or source code.
 
 ```powershell
 python .agents/skills/deudalaya-video-pipeline/scripts/pipeline.py --check-config
 python .agents/skills/deudalaya-video-pipeline/scripts/pipeline.py --input "$HOME/DeudalayaVideoPipeline/inbox" --publish --confirm-publish DEUDALAYA --confirm-rights
 ```
+
+After explicit authorization for an already-processed batch and a passing authenticated preflight, add `--publish --confirm-publish DEUDALAYA --confirm-rights` to its `--upload-only` command. Never use the raw-processing command on preprocessed clips when preserving their bytes is required.
 
 The uploader reads these variables from the process environment first, then fills in any missing ones from the repository-root `.env.local`. It only reads the three supported names and never prints their values. `.env.local` is git-ignored. Use `.env.example` as a names-only template; copy it to `.env.local` and fill in the values locally. Keep the local file on your account and do not stage or commit it.
 

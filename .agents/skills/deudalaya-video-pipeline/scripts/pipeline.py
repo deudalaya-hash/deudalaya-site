@@ -43,6 +43,16 @@ class ApiError(PipelineError):
         self.status = status
 
 
+def safe_error(exc: Exception) -> str:
+    """Format an error for reports without leaking configured credential values."""
+    message = str(exc)
+    for name in SUPABASE_CREDENTIAL_ENV_NAMES:
+        secret = os.environ.get(name)
+        if secret:
+            message = message.replace(secret, "[REDACTED]")
+    return message[:1200]
+
+
 def timestamp() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
@@ -255,6 +265,43 @@ def validate(source_info: dict[str, Any], output: Path, ffmpeg: str, ffprobe: st
     }
 
 
+def validate_upload_only(source: Path, ffmpeg: str, ffprobe: str) -> dict[str, Any]:
+    """Validate a prepared MP4 in place without changing its bytes."""
+    byte_size = source.stat().st_size if source.is_file() else 0
+    if byte_size <= 0 or byte_size >= MAX_BYTES:
+        raise PipelineError(f"File is {byte_size:,} bytes; it must be strictly below {MAX_BYTES:,}")
+    digest_before = sha256_file(source)
+    info = probe(source, ffprobe)
+    formats = str(info.get("format", {}).get("format_name", "")).split(",")
+    if "mp4" not in formats:
+        raise PipelineError(f"Input container is not MP4: {formats}")
+    stream = video_stream(info)
+    if stream.get("codec_name") != "h264":
+        raise PipelineError("Video codec is not H.264")
+    audio = [item for item in info.get("streams", []) if item.get("codec_type") == "audio"]
+    if not audio or audio[0].get("codec_name") != "aac":
+        raise PipelineError("AAC audio is missing or incompatible")
+    seconds = duration(info)
+    if seconds > TARGET_SECONDS:
+        raise PipelineError(f"Video duration {seconds:.3f}s exceeds 10 seconds")
+    run([ffmpeg, "-hide_banner", "-v", "error", "-i", str(source), "-f", "null", os.devnull])
+    digest_after = sha256_file(source)
+    if digest_after != digest_before or source.stat().st_size != byte_size:
+        raise PipelineError("Input changed during validation; it was not modified by the pipeline")
+    return {
+        "valid": True,
+        "bytes": byte_size,
+        "duration_seconds": seconds,
+        "container": formats,
+        "video_codec": stream.get("codec_name"),
+        "audio_codec": audio[0].get("codec_name"),
+        "width": stream.get("width"),
+        "height": stream.get("height"),
+        "full_decode": "passed",
+        "sha256": digest_after,
+    }
+
+
 def encode(source: Path, output: Path, ffmpeg: str, ffprobe: str) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
     source_info = probe(source, ffprobe)
     source_video = video_stream(source_info)
@@ -377,9 +424,11 @@ class SupabasePublisher:
 
 def parse_args() -> argparse.Namespace:
     root = Path.home() / "DeudalayaVideoPipeline"
-    parser = argparse.ArgumentParser(description="Cut input videos to 10 seconds, validate under 4 MB, and optionally publish.")
+    parser = argparse.ArgumentParser(description="Process raw videos or validate and publish existing MP4s without re-encoding.")
     parser.add_argument("--input", type=Path, default=root / "inbox", help="Input folder with raw videos and <filename>.json sidecars")
     parser.add_argument("--runs", type=Path, default=root / "runs", help="Batch output/report/backup parent folder")
+    parser.add_argument("--upload-only", action="store_true", help="Validate existing MP4s in place without re-encoding them")
+    parser.add_argument("--category", choices=CATEGORIES, help="Required category for --upload-only; must match every sidecar")
     parser.add_argument("--publish", action="store_true", help="Opt in to upload validated files and insert feed rows")
     parser.add_argument("--check-config", action="store_true", help="Report whether publishing variables are present without displaying values")
     parser.add_argument("--confirm-publish", help="Must equal DEUDALAYA when --publish is set")
@@ -394,7 +443,7 @@ def process_one(source: Path, batch: Path, ffmpeg: str, ffprobe: str) -> dict[st
         metadata = metadata_for(source)
         item["metadata"] = metadata
     except Exception as exc:
-        item["errors"].append(str(exc))
+        item["errors"].append(safe_error(exc))
         item["metadata"] = None
     try:
         source_hash = sha256_file(source)
@@ -409,8 +458,31 @@ def process_one(source: Path, batch: Path, ffmpeg: str, ffprobe: str) -> dict[st
         item["encoding"] = encoding
         item["status"] = "validated" if metadata else "failed"
     except Exception as exc:
-        item["errors"].append(str(exc))
+        item["errors"].append(safe_error(exc))
         item["status"] = "failed"
+    item["finished_at"] = timestamp()
+    return item
+
+
+def process_upload_only_one(source: Path, category: str, ffmpeg: str, ffprobe: str) -> dict[str, Any]:
+    """Validate and describe one existing clip without copying or rewriting it."""
+    item: dict[str, Any] = {
+        "input": str(source), "status": "failed", "started_at": timestamp(),
+        "validation": {"valid": False}, "upload": {"status": "not_attempted"}, "errors": [],
+    }
+    try:
+        metadata = metadata_for(source)
+        if metadata["category"] != category:
+            raise PipelineError(f"Sidecar category does not match requested category {category}")
+        item["metadata"] = metadata
+        checked = validate_upload_only(source, ffmpeg, ffprobe)
+        item["output"] = str(source)
+        item["output_sha256"] = checked["sha256"]
+        item["validation"] = checked
+        item["status"] = "validated"
+    except Exception as exc:
+        item["metadata"] = item.get("metadata")
+        item["errors"].append(safe_error(exc))
     item["finished_at"] = timestamp()
     return item
 
@@ -426,6 +498,12 @@ def main() -> int:
         configured, missing, invalid = config_status()
         print(json.dumps({"configured": configured, "missing": missing, "invalid": invalid}, ensure_ascii=False))
         return 0 if not missing and not invalid else 1
+    if args.upload_only and not args.category:
+        print("--upload-only requires --category", file=sys.stderr)
+        return 2
+    if args.category and not args.upload_only:
+        print("--category requires --upload-only", file=sys.stderr)
+        return 2
     if args.publish and args.confirm_publish != "DEUDALAYA":
         print("Publishing requires --publish --confirm-publish DEUDALAYA", file=sys.stderr)
         return 2
@@ -453,16 +531,28 @@ def main() -> int:
     batch.mkdir(exist_ok=False)
     report_path = batch / "report.json"
     sources = sorted((p for p in input_dir.iterdir() if p.is_file() and not p.is_symlink() and p.suffix.lower() in VIDEO_EXTENSIONS), key=lambda p: p.name.casefold())
+    if args.upload_only:
+        sources = [source for source in sources if source.suffix.lower() == ".mp4"]
     report: dict[str, Any] = {
         "batch_id": batch_id, "started_at": timestamp(), "input_directory": str(input_dir),
         "batch_directory": str(batch), "publish_requested": args.publish,
+        "mode": "upload_only" if args.upload_only else "process_and_publish",
+        "category": args.category if args.upload_only else None,
         "project_ref": EXPECTED_PROJECT_REF if args.publish else None,
         "counts": {"total": len(sources), "media_validated": 0, "validated": 0, "uploaded": 0, "duplicates": 0, "failed": 0},
-        "videos": [], "notes": ["Only direct children of the input folder are scanned.", "Report is updated after each file."],
+        "videos": [], "notes": ["Only direct child video files are scanned.", "Report is updated after each file."],
     }
+    if args.upload_only:
+        report["notes"].extend([
+            "Upload-only mode never re-encodes, copies, renames, or writes to source media files.",
+            "Each MP4 is decoded for validation before any optional publishing request.",
+        ])
     try:
         for source in sources:
-            record = process_one(source, batch, ffmpeg, ffprobe)
+            if args.upload_only:
+                record = process_upload_only_one(source, args.category, ffmpeg, ffprobe)
+            else:
+                record = process_one(source, batch, ffmpeg, ffprobe)
             report["videos"].append(record)
             write_report(report_path, report)
         report["counts"]["media_validated"] = sum(r.get("validation", {}).get("valid") is True for r in report["videos"])
@@ -472,31 +562,43 @@ def main() -> int:
             try:
                 publisher = SupabasePublisher()
             except Exception as exc:
-                report["publisher_preflight_error"] = str(exc)
+                report["publisher_preflight_error"] = safe_error(exc)
                 for record in eligible:
                     record["status"] = "failed"
                     record["upload"] = {"status": "failed_preflight"}
-                    record["errors"].append(f"Upload preflight failed: {exc}")
+                    record["errors"].append(f"Upload preflight failed: {safe_error(exc)}")
             else:
+                published_hashes: dict[str, str] = {}
                 for record in eligible:
+                    digest = record["output_sha256"]
+                    if digest in published_hashes:
+                        record["upload"] = {
+                            "status": "duplicate", "duplicate_of": published_hashes[digest],
+                            "storage_uploaded": False,
+                        }
+                        record["status"] = "duplicate"
+                        report["counts"]["duplicates"] += 1
+                        write_report(report_path, report)
+                        continue
                     try:
-                        outcome = publisher.publish(Path(record["output"]), record["metadata"], record["output_sha256"])
+                        outcome = publisher.publish(Path(record["output"]), record["metadata"], digest)
                         record["upload"] = outcome
                         record["status"] = outcome["status"]
                         report["counts"]["uploaded" if outcome["status"] == "uploaded" else "duplicates"] += 1
+                        published_hashes[digest] = record["input"]
                     except Exception as exc:
                         record["upload"] = {"status": "failed"}
-                        record["errors"].append(str(exc))
+                        record["errors"].append(safe_error(exc))
                         record["status"] = "failed"
                     write_report(report_path, report)
         report["counts"]["failed"] = sum(r.get("status") == "failed" for r in report["videos"])
         report["finished_at"] = timestamp()
         write_report(report_path, report)
     except Exception as exc:
-        report["fatal_error"] = str(exc)
+        report["fatal_error"] = safe_error(exc)
         report["finished_at"] = timestamp()
         write_report(report_path, report)
-        print(f"Batch stopped: {exc}\nReport: {report_path}", file=sys.stderr)
+        print(f"Batch stopped ({type(exc).__name__}). Report: {report_path}", file=sys.stderr)
         return 1
     print(json.dumps({"report": str(report_path), "counts": report["counts"]}, ensure_ascii=False, indent=2))
     return 1 if report["counts"]["failed"] else 0
