@@ -19,6 +19,23 @@ test('a stale remote feed response cannot replace a newer request', () => {
   assert.match(social, /requestId\s*!==\s*remoteFeedRequestId/);
 });
 
+test('missing optional profile controls do not abort Supabase initialization', () => {
+  const match = social.match(/function syncProfileButtons\(\)\s*\{[\s\S]*?\n  \}/);
+  assert.ok(match, 'profile button synchronization should exist');
+  const elements = new Map([
+    ['profileAuthButton', { hidden: false, textContent: '' }],
+    ['profileFollowButton', { hidden: false }]
+  ]);
+  const document = { getElementById: id => elements.get(id) || null };
+  const syncProfileButtons = new Function(
+    'document', 'cloudUser', 'profileTargetId', 'ownId',
+    `${match[0]}; return syncProfileButtons;`
+  )(document, null, null, () => null);
+
+  assert.doesNotThrow(() => syncProfileButtons());
+  assert.equal(elements.get('profileAuthButton').textContent, 'Sign in');
+});
+
 test('a remote refresh does not mistake already visible remote posts for duplicates', () => {
   assert.match(social, /const localPosts\s*=\s*videos\.filter\(post => !post\.cloudPost && isSupportedFeedVideo\(post\)\)/);
   assert.match(social, /isDuplicatePost\(post,\s*\[\.\.\.localPosts,\s*\.\.\.newSharedPosts\]\)/);

@@ -222,11 +222,17 @@
   function syncProfileButtons() {
     const signedIn = !!cloudUser;
     const ownProfile = signedIn && profileTargetId === ownId();
-    document.getElementById('profileAuthButton').hidden = signedIn;
-    document.getElementById('editProfileButton').hidden = !ownProfile;
-    document.getElementById('profileFollowButton').hidden = !signedIn || ownProfile || !profileTargetId;
-    document.getElementById('shareProfileButton').hidden = !profileTargetId;
-    document.getElementById('profileAuthButton').textContent = 'Sign in';
+    const authButton = document.getElementById('profileAuthButton');
+    const editButton = document.getElementById('editProfileButton');
+    const followButton = document.getElementById('profileFollowButton');
+    const shareButton = document.getElementById('shareProfileButton');
+    if (authButton) {
+      authButton.hidden = signedIn;
+      authButton.textContent = 'Sign in';
+    }
+    if (editButton) editButton.hidden = !ownProfile;
+    if (followButton) followButton.hidden = !signedIn || ownProfile || !profileTargetId;
+    if (shareButton) shareButton.hidden = !profileTargetId;
   }
 
   const oldSetAuthMode = window.setAuthMode;
