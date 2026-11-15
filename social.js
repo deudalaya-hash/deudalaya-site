@@ -1,5 +1,15 @@
 /* Shared TikTok-style profiles and post engagement for the public feed. */
 (() => {
+  function hideTopPostDeleteControl() {
+    const styleId = 'deudalaya-hide-top-delete-control';
+    if (document.getElementById(styleId)) return;
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.textContent = '#ttDeletePostBtn { display: none !important; }';
+    (document.head || document.documentElement).appendChild(style);
+  }
+  hideTopPostDeleteControl();
+
   const profileTable = 'profiles';
   let profileTargetId = null;
   let sharedPosts = [];
@@ -7,7 +17,8 @@
   let activeFeedCategory = 'देउडा';
   let remoteFeedRequestId = 0;
   let startupSelectionDone = false;
-  const startupSelection = window.DeudalayaVideoShuffle?.createStartupSelection?.();
+  let startupSelectionPool = null;
+  let startupSelection = window.DeudalayaVideoShuffle?.createStartupSelection?.();
   let feedCategoriesEnabled = false;
   let videoValidator = null;
   let feedVideoRecovery = null;
@@ -21,6 +32,7 @@
   const currentPost = () => videos[index];
   const categoryPositionKey = post => window.DeudalayaVideoShuffle?.videoKey?.(post) || post?.videoSrc || post?.media_path || null;
   const feedVideoSource = post => post && (post.videoSrc || post.media_path) || '';
+  const captureFeedPosition = () => ({ key: categoryPositionKey(currentPost()), index });
   function ensureVideoValidation() {
     const api = window.DeudalayaVideoShuffle;
     if (!api || !feedPlayer) return false;
@@ -140,31 +152,37 @@
       checkGate();
     });
   }
-  async function chooseStartupVideo(candidates) {
-    if (startupSelectionDone) return startupSelection?.selected() || null;
+  async function chooseStartupVideo(candidates, pool = 'remote') {
+    if (startupSelectionDone && startupSelectionPool === pool) return startupSelection?.selected() || null;
     await waitForInstallationAccess();
     if (!startupSelection || !ensureVideoValidation()) return null;
-    const sharedKey = window.deudalayaSharedStartupKey;
+    if (startupSelectionDone && startupSelectionPool !== pool) {
+      startupSelection = window.DeudalayaVideoShuffle.createStartupSelection();
+      startupSelectionDone = false;
+    }
+    const sharedKey = pool === 'remote' ? window.deudalayaSharedStartupKey : null;
     const sharedVideo = sharedKey && candidates.find(post => window.DeudalayaVideoShuffle.videoKey(post) === sharedKey);
     if (sharedVideo && await videoValidator.validate(feedVideoSource(sharedVideo))) {
       try { startupStorage()?.setItem('deudalaya-last-startup-video-v1', sharedKey); } catch (_) {}
       startupSelection.remember(sharedKey);
       startupSelectionDone = true;
+      startupSelectionPool = pool;
       return sharedKey;
     }
     const key = await startupSelection.select(
       candidates, videoValidator, startupStorage(), Math.random, 'deudalaya-last-startup-video-v1'
     );
     startupSelectionDone = true;
+    startupSelectionPool = pool;
     return key;
   }
   async function selectLocalStartupVideo() {
-    if (startupSelectionDone) return startupSelection?.selected() || null;
+    if (startupSelectionDone && startupSelectionPool === 'local') return startupSelection?.selected() || null;
     const candidates = mergeLocalPosts(localPosts, videos)
       .filter(isSupportedFeedVideo)
       .filter(post => window.DeudalayaFeedCategories.ACTIVE_CATEGORIES.includes(window.DeudalayaFeedCategories.categoryOf(post)));
     try {
-      const key = await chooseStartupVideo(candidates);
+      const key = await chooseStartupVideo(candidates, 'local');
       const selected = candidates.find(post => window.DeudalayaVideoShuffle.videoKey(post) === key);
       const category = selected && window.DeudalayaFeedCategories.categoryOf(selected);
       if (category) activeFeedCategory = category;
@@ -308,14 +326,14 @@
     try {
       let { data, error } = await cloudClient.from('feed_posts')
         .select('id,user_id,media_path,media_type,caption,category,feed_category,created_at')
-        .order('created_at', { ascending: false }).limit(100);
+        .order('created_at', { ascending: false }).limit(200);
       feedCategoriesEnabled = !error;
       if (error && /feed_category|column .* does not exist/i.test(error.message || '')) {
         feedCategoriesEnabled = false;
         console.warn('Feed categories are not enabled in the database yet; apply the feed_categories migration.');
         ({ data, error } = await cloudClient.from('feed_posts')
           .select('id,user_id,media_path,media_type,caption,category,created_at')
-          .order('created_at', { ascending: false }).limit(100));
+          .order('created_at', { ascending: false }).limit(200));
       }
       if (error) throw error;
       const videoRows = (data || []).filter(row => isSupportedFeedVideo(row) && row.media_path);
@@ -359,20 +377,20 @@
       }
       if (requestId !== remoteFeedRequestId) return;
       let startupVideoKey = null;
-      if (!startupSelectionDone && window.DeudalayaVideoShuffle && typeof window.DeudalayaVideoShuffle.selectValidatedStartupVideo === 'function') {
+      if ((!startupSelectionDone || startupSelectionPool !== 'remote') && window.DeudalayaVideoShuffle && typeof window.DeudalayaVideoShuffle.selectValidatedStartupVideo === 'function') {
         const localCandidates = mergeLocalPosts(localPosts, videos).filter(isSupportedFeedVideo);
         const startupCandidates = [...newSharedPosts, ...localCandidates]
           .filter(isSupportedFeedVideo)
           .filter(post => !videoValidator || !videoValidator.isKnownBroken(feedVideoSource(post)))
           .filter(post => window.DeudalayaFeedCategories.ACTIVE_CATEGORIES.includes(window.DeudalayaFeedCategories.categoryOf(post)));
-        startupVideoKey = await chooseStartupVideo(startupCandidates);
+        startupVideoKey = await chooseStartupVideo(startupCandidates, 'remote');
         if (requestId !== remoteFeedRequestId) return;
         const startupVideo = startupCandidates.find(post => window.DeudalayaVideoShuffle.videoKey(post) === startupVideoKey);
         const startupCategory = startupVideo && window.DeudalayaFeedCategories.categoryOf(startupVideo);
         if (startupCategory && window.DeudalayaFeedCategories.ACTIVE_CATEGORIES.includes(startupCategory)) activeFeedCategory = startupCategory;
       }
       sharedPosts = newSharedPosts;
-      applyFeedMode(true, startupVideoKey);
+      applyFeedMode(startupVideoKey !== null, startupVideoKey, captureFeedPosition());
     } catch (error) {
       if (requestId === remoteFeedRequestId) {
         console.warn('Could not load shared posts', error);
@@ -526,7 +544,7 @@
     if (manager) manager.hidden = false;
     window.loadRemotePosts().then(renderFeedCategoryManager);
   };
-  window.refreshFeedCategory = () => applyFeedMode(true);
+  window.refreshFeedCategory = () => applyFeedMode(false, null, captureFeedPosition());
   window.setFeedMode = async function(mode) {
     if (mode === 'following' && !cloudUser) {
       window.pendingSocialAction = () => setFeedMode('following');

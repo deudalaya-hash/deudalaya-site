@@ -7,6 +7,9 @@
 demo/input/*.mp4
 demo/runs/
 demo/video-project-4-input/*.mp4
+/video-library/originals/
+/video-library/processed/देउडा/
+/video-library/runs/
 
 # app-internal
 .freebuff/

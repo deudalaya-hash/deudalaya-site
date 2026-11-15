@@ -102,10 +102,10 @@
       pending = selectValidatedStartupVideo(values, validator, storage, random, storageKey)
         .then(function (id) {
           selectedId = id;
-          completed = true;
+          completed = !!id;
           return id;
         }, function (error) {
-          completed = true;
+          completed = false;
           throw error;
         })
         .finally(function () { pending = null; });
@@ -113,7 +113,7 @@
     }
     return {
       select: select,
-      remember: function (id) { if (pending) return false; selectedId = id || null; completed = true; return true; },
+      remember: function (id) { if (pending) return false; selectedId = id || null; completed = !!id; return true; },
       isComplete: function () { return completed; },
       selected: function () { return selectedId; }
     };

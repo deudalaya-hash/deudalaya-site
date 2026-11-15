@@ -6,6 +6,12 @@
   var feed = document.getElementById('feed');
   if (!video || !feed) return;
 
+  var savedPreference = null;
+  try { savedPreference = localStorage.getItem(preferenceKey); } catch (_) {}
+  muted = savedPreference !== 'enabled';
+  window.muted = muted;
+  video.muted = muted;
+
   var enableButton = document.createElement('button');
   enableButton.type = 'button';
   enableButton.className = 'deudalaya-sound-enable';
@@ -16,6 +22,7 @@
 
   var playAttempt = 0;
   var userInteracted = false;
+  var gateGestureInProgress = false;
 
   function savePreference(enabled) {
     try {
@@ -24,7 +31,26 @@
   }
 
   function feedIsAvailable() {
-    return !video.hidden && !document.body.classList.contains('install-required');
+    var root = document.documentElement;
+    var body = document.body;
+    var gateClosed = !!(root && root.classList.contains('deudalaya-install-required')) ||
+      !!(body && body.classList.contains('install-required'));
+    return !video.hidden && !gateClosed;
+  }
+
+  function isGateInteraction(event) {
+    var target = event && event.target;
+    if (!target) return false;
+    return !!(target.closest && target.closest('#deudalayaInstallLanding, #launchSplash'));
+  }
+
+  function silenceOtherVideos() {
+    if (typeof document.querySelectorAll !== 'function') return;
+    Array.prototype.forEach.call(document.querySelectorAll('video'), function (other) {
+      if (other === video) return;
+      other.muted = true;
+      if (!other.paused && typeof other.pause === 'function') other.pause();
+    });
   }
 
   function hideEnableButton() {
@@ -32,12 +58,13 @@
   }
 
   function showEnableButton() {
-    if (feedIsAvailable() && !muted && !paused) enableButton.hidden = false;
+    if (feedIsAvailable() && !paused) enableButton.hidden = false;
   }
 
   function playWithSoundPreference() {
     var attempt = ++playAttempt;
     if (!feedIsAvailable()) {
+      video.muted = true;
       video.pause();
       hideEnableButton();
       return;
@@ -50,11 +77,12 @@
     video.muted = !!muted;
     window.muted = !!muted;
     if (muted) {
-      hideEnableButton();
+      showEnableButton();
       return;
     }
 
     try {
+      silenceOtherVideos();
       var result = video.play();
       if (result && typeof result.then === 'function') {
         result.then(function () {
@@ -76,12 +104,22 @@
     if (enabled) playWithSoundPreference();
     else {
       playAttempt += 1;
-      hideEnableButton();
+      showEnableButton();
     }
   }
 
   window.deudalayaSaveSoundPreference = savePreference;
-  window.deudalayaEnableSound = function () { setSoundEnabled(true); };
+  window.deudalayaEnableSound = function () {
+    if (gateGestureInProgress || !feedIsAvailable()) return false;
+    setSoundEnabled(true);
+    return true;
+  };
+
+  function rememberGatePointerDown(event) {
+    if (isGateInteraction(event)) gateGestureInProgress = true;
+  }
+  document.addEventListener('pointerdown', rememberGatePointerDown, true);
+  document.addEventListener('touchstart', rememberGatePointerDown, true);
 
   enableButton.addEventListener('click', function (event) {
     event.preventDefault();
@@ -89,8 +127,13 @@
     setSoundEnabled(true);
   });
 
-  function unlockOnFirstInteraction() {
-    if (userInteracted || document.body.classList.contains('install-required')) return;
+  function unlockOnFirstInteraction(event) {
+    if (isGateInteraction(event)) {
+      gateGestureInProgress = true;
+      setTimeout(function () { gateGestureInProgress = false; }, 0);
+      return;
+    }
+    if (userInteracted) return;
     if (!feedIsAvailable()) return;
     userInteracted = true;
     ['pointerup', 'touchend', 'click', 'keydown'].forEach(function (eventName) {
@@ -106,7 +149,10 @@
     document.addEventListener(eventName, unlockOnFirstInteraction, true);
   });
 
-  video.addEventListener('playing', hideEnableButton);
+  video.addEventListener('playing', function () {
+    if (muted) showEnableButton();
+    else hideEnableButton();
+  });
 
   if (typeof window.render === 'function') {
     var originalRender = window.render;

@@ -1,6 +1,6 @@
 const assert = require('node:assert/strict');
 const test = require('node:test');
-const { createShuffleCycle, isDuplicatePost, videoKey, selectRandomStartupVideo } = require('../video-shuffle.js');
+const { createShuffleCycle, createStartupSelection, isDuplicatePost, videoKey, selectRandomStartupVideo } = require('../video-shuffle.js');
 
 function ids(count) {
   return Array.from({ length: count }, (_, index) => `video-${index + 1}`);
@@ -163,6 +163,39 @@ test('reopening starts a fresh random cycle and persists its prior startup acros
   assert.notEqual(nextOpening, first);
   assert.deepEqual(reopened.getState().played, []);
   assert.deepEqual(reopened.getState().history, [nextOpening]);
+});
+
+test('fresh app sessions choose from loaded local and Supabase videos, avoid the previous start, and remain stable within a session', async () => {
+  const memory = new Map();
+  const storage = {
+    getItem(key) { return memory.get(key) ?? null; },
+    setItem(key, value) { memory.set(key, value); }
+  };
+  const pool = [
+    { localId: 'local-1', videoSrc: 'blob:local-1' },
+    { cloudId: 'supabase-1', videoSrc: 'https://cdn.example/one.mp4' },
+    { cloudId: 'supabase-2', videoSrc: 'https://cdn.example/two.mp4' }
+  ];
+  const validator = { async validate() { return true; } };
+  const firstSession = createStartupSelection();
+  const first = await firstSession.select(pool, validator, storage, () => 0);
+  const sameSessionRefresh = await firstSession.select(pool, validator, storage, () => 0.99);
+  const secondSession = createStartupSelection();
+  const second = await secondSession.select(pool, validator, storage, () => 0);
+
+  assert.equal(first, videoKey(pool[0]));
+  assert.equal(sameSessionRefresh, first, 'ordinary refreshes keep the selected start stable');
+  assert.equal(second, videoKey(pool[1]), 'a fresh session avoids the previous start when alternatives exist');
+  assert.ok(pool.some(video => videoKey(video) === second), 'selection uses the complete loaded pool');
+});
+
+test('a startup selection with no loaded candidates can retry after feed data arrives', async () => {
+  const session = createStartupSelection();
+  const validator = { async validate() { return true; } };
+  const storage = { getItem() { return null; }, setItem() {} };
+  assert.equal(await session.select([], validator, storage, () => 0), null);
+  const loaded = [{ cloudId: 'arrived-later', videoSrc: 'https://cdn.example/later.mp4' }];
+  assert.equal(await session.select(loaded, validator, storage, () => 0), videoKey(loaded[0]));
 });
 
 test('session navigation history keeps the same video when it begins a later completed cycle', () => {
