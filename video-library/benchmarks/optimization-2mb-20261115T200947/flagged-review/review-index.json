@@ -1,0 +1,2415 @@
+[
+  {
+    "review_index": 1,
+    "output": "assets\\deudalaya-video-2026-11-03-103359_clip-002.mp4",
+    "source": "assets\\deudalaya-video-2026-11-03-103359.mp4",
+    "source_sha256": "4269e1661ccaaed1116ab1f0cb7168338429e4443d2e5d8418efda03f8069d6f",
+    "source_start_seconds": 10.0,
+    "duration": 5.61,
+    "bytes": 1117788,
+    "vmaf": 78.461057,
+    "audio_codec": "aac",
+    "audio_bitrate": "95903",
+    "av_sync_delta_seconds": 0.06833299999999998,
+    "frames": [
+      "frames\\0001.jpg",
+      "frames\\0002.jpg",
+      "frames\\0003.jpg",
+      "frames\\0004.jpg"
+    ]
+  },
+  {
+    "review_index": 2,
+    "output": "assets\\deudalaya-video-2026-11-03-110712_clip-002.mp4",
+    "source": "assets\\deudalaya-video-2026-11-03-110712.mp4",
+    "source_sha256": "648543694cc7442ec328256afdb02c7fbb7fecbfa5bff596253c2f83d6ab387a",
+    "source_start_seconds": 10.0,
+    "duration": 5.168639,
+    "bytes": 1041376,
+    "vmaf": 79.139917,
+    "audio_codec": "aac",
+    "audio_bitrate": "94341",
+    "av_sync_delta_seconds": 0.0853060000000001,
+    "frames": [
+      "frames\\0005.jpg",
+      "frames\\0006.jpg",
+      "frames\\0007.jpg",
+      "frames\\0008.jpg"
+    ]
+  },
+  {
+    "review_index": 3,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-002.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 10.0,
+    "duration": 10.0,
+    "bytes": 1956712,
+    "vmaf": 68.065409,
+    "audio_codec": "aac",
+    "audio_bitrate": "96151",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0009.jpg",
+      "frames\\0010.jpg",
+      "frames\\0011.jpg",
+      "frames\\0012.jpg"
+    ]
+  },
+  {
+    "review_index": 4,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-003.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 20.0,
+    "duration": 10.0,
+    "bytes": 1952694,
+    "vmaf": 56.053493,
+    "audio_codec": "aac",
+    "audio_bitrate": "96051",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0013.jpg",
+      "frames\\0014.jpg",
+      "frames\\0015.jpg",
+      "frames\\0016.jpg"
+    ]
+  },
+  {
+    "review_index": 5,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-004.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 30.0,
+    "duration": 10.0,
+    "bytes": 1973685,
+    "vmaf": 73.649218,
+    "audio_codec": "aac",
+    "audio_bitrate": "96046",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0017.jpg",
+      "frames\\0018.jpg",
+      "frames\\0019.jpg",
+      "frames\\0020.jpg"
+    ]
+  },
+  {
+    "review_index": 6,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-005.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 40.0,
+    "duration": 10.0,
+    "bytes": 1964341,
+    "vmaf": 69.131197,
+    "audio_codec": "aac",
+    "audio_bitrate": "95961",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0021.jpg",
+      "frames\\0022.jpg",
+      "frames\\0023.jpg",
+      "frames\\0024.jpg"
+    ]
+  },
+  {
+    "review_index": 7,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-006.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 50.0,
+    "duration": 10.0,
+    "bytes": 1944182,
+    "vmaf": 69.118519,
+    "audio_codec": "aac",
+    "audio_bitrate": "95995",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0025.jpg",
+      "frames\\0026.jpg",
+      "frames\\0027.jpg",
+      "frames\\0028.jpg"
+    ]
+  },
+  {
+    "review_index": 8,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-007.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 60.0,
+    "duration": 10.0,
+    "bytes": 1952146,
+    "vmaf": 36.956318,
+    "audio_codec": "aac",
+    "audio_bitrate": "96153",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0029.jpg",
+      "frames\\0030.jpg",
+      "frames\\0031.jpg",
+      "frames\\0032.jpg"
+    ]
+  },
+  {
+    "review_index": 9,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-008.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 70.0,
+    "duration": 10.0,
+    "bytes": 1958770,
+    "vmaf": 74.641721,
+    "audio_codec": "aac",
+    "audio_bitrate": "96042",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0033.jpg",
+      "frames\\0034.jpg",
+      "frames\\0035.jpg",
+      "frames\\0036.jpg"
+    ]
+  },
+  {
+    "review_index": 10,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-009.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 80.0,
+    "duration": 10.0,
+    "bytes": 1959545,
+    "vmaf": 58.395221,
+    "audio_codec": "aac",
+    "audio_bitrate": "96199",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0037.jpg",
+      "frames\\0038.jpg",
+      "frames\\0039.jpg",
+      "frames\\0040.jpg"
+    ]
+  },
+  {
+    "review_index": 11,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-011.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 100.0,
+    "duration": 10.0,
+    "bytes": 1970735,
+    "vmaf": 75.691161,
+    "audio_codec": "aac",
+    "audio_bitrate": "96126",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0041.jpg",
+      "frames\\0042.jpg",
+      "frames\\0043.jpg",
+      "frames\\0044.jpg"
+    ]
+  },
+  {
+    "review_index": 12,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-013.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 120.0,
+    "duration": 10.0,
+    "bytes": 1995833,
+    "vmaf": 50.875845,
+    "audio_codec": "aac",
+    "audio_bitrate": "96058",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0045.jpg",
+      "frames\\0046.jpg",
+      "frames\\0047.jpg",
+      "frames\\0048.jpg"
+    ]
+  },
+  {
+    "review_index": 13,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-015.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 140.0,
+    "duration": 10.0,
+    "bytes": 1973955,
+    "vmaf": 57.411872,
+    "audio_codec": "aac",
+    "audio_bitrate": "95934",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0049.jpg",
+      "frames\\0050.jpg",
+      "frames\\0051.jpg",
+      "frames\\0052.jpg"
+    ]
+  },
+  {
+    "review_index": 14,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-017.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 160.0,
+    "duration": 10.0,
+    "bytes": 1990568,
+    "vmaf": 60.147802,
+    "audio_codec": "aac",
+    "audio_bitrate": "96052",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0053.jpg",
+      "frames\\0054.jpg",
+      "frames\\0055.jpg",
+      "frames\\0056.jpg"
+    ]
+  },
+  {
+    "review_index": 15,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-019.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 180.0,
+    "duration": 10.0,
+    "bytes": 1986574,
+    "vmaf": 47.621156,
+    "audio_codec": "aac",
+    "audio_bitrate": "96001",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0057.jpg",
+      "frames\\0058.jpg",
+      "frames\\0059.jpg",
+      "frames\\0060.jpg"
+    ]
+  },
+  {
+    "review_index": 16,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-021.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 200.0,
+    "duration": 10.0,
+    "bytes": 1951386,
+    "vmaf": 71.425048,
+    "audio_codec": "aac",
+    "audio_bitrate": "96050",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0061.jpg",
+      "frames\\0062.jpg",
+      "frames\\0063.jpg",
+      "frames\\0064.jpg"
+    ]
+  },
+  {
+    "review_index": 17,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-025.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 240.0,
+    "duration": 10.0,
+    "bytes": 1950242,
+    "vmaf": 70.141649,
+    "audio_codec": "aac",
+    "audio_bitrate": "95971",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0065.jpg",
+      "frames\\0066.jpg",
+      "frames\\0067.jpg",
+      "frames\\0068.jpg"
+    ]
+  },
+  {
+    "review_index": 18,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-027.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 260.0,
+    "duration": 10.0,
+    "bytes": 1973793,
+    "vmaf": 73.236976,
+    "audio_codec": "aac",
+    "audio_bitrate": "96044",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0069.jpg",
+      "frames\\0070.jpg",
+      "frames\\0071.jpg",
+      "frames\\0072.jpg"
+    ]
+  },
+  {
+    "review_index": 19,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-028.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 270.0,
+    "duration": 10.0,
+    "bytes": 1948773,
+    "vmaf": 54.769441,
+    "audio_codec": "aac",
+    "audio_bitrate": "96037",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0073.jpg",
+      "frames\\0074.jpg",
+      "frames\\0075.jpg",
+      "frames\\0076.jpg"
+    ]
+  },
+  {
+    "review_index": 20,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-029.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 280.0,
+    "duration": 10.0,
+    "bytes": 1984890,
+    "vmaf": 67.321443,
+    "audio_codec": "aac",
+    "audio_bitrate": "96142",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0077.jpg",
+      "frames\\0078.jpg",
+      "frames\\0079.jpg",
+      "frames\\0080.jpg"
+    ]
+  },
+  {
+    "review_index": 21,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-030.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 290.0,
+    "duration": 10.0,
+    "bytes": 1993019,
+    "vmaf": 37.548264,
+    "audio_codec": "aac",
+    "audio_bitrate": "96152",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0081.jpg",
+      "frames\\0082.jpg",
+      "frames\\0083.jpg",
+      "frames\\0084.jpg"
+    ]
+  },
+  {
+    "review_index": 22,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-031.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 300.0,
+    "duration": 10.0,
+    "bytes": 1997446,
+    "vmaf": 69.525281,
+    "audio_codec": "aac",
+    "audio_bitrate": "96120",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0085.jpg",
+      "frames\\0086.jpg",
+      "frames\\0087.jpg",
+      "frames\\0088.jpg"
+    ]
+  },
+  {
+    "review_index": 23,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-032.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 310.0,
+    "duration": 10.0,
+    "bytes": 1740339,
+    "vmaf": 35.208585,
+    "audio_codec": "aac",
+    "audio_bitrate": "96116",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0089.jpg",
+      "frames\\0090.jpg",
+      "frames\\0091.jpg",
+      "frames\\0092.jpg"
+    ]
+  },
+  {
+    "review_index": 24,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-033.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 320.0,
+    "duration": 10.0,
+    "bytes": 1997558,
+    "vmaf": 73.072403,
+    "audio_codec": "aac",
+    "audio_bitrate": "96035",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0093.jpg",
+      "frames\\0094.jpg",
+      "frames\\0095.jpg",
+      "frames\\0096.jpg"
+    ]
+  },
+  {
+    "review_index": 25,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-034.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 330.0,
+    "duration": 10.0,
+    "bytes": 1995336,
+    "vmaf": 38.56365,
+    "audio_codec": "aac",
+    "audio_bitrate": "96012",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0097.jpg",
+      "frames\\0098.jpg",
+      "frames\\0099.jpg",
+      "frames\\0100.jpg"
+    ]
+  },
+  {
+    "review_index": 26,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-035.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 340.0,
+    "duration": 10.0,
+    "bytes": 1998302,
+    "vmaf": 75.049505,
+    "audio_codec": "aac",
+    "audio_bitrate": "96036",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0101.jpg",
+      "frames\\0102.jpg",
+      "frames\\0103.jpg",
+      "frames\\0104.jpg"
+    ]
+  },
+  {
+    "review_index": 27,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-036.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 350.0,
+    "duration": 10.0,
+    "bytes": 1744221,
+    "vmaf": 42.161337,
+    "audio_codec": "aac",
+    "audio_bitrate": "95934",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0105.jpg",
+      "frames\\0106.jpg",
+      "frames\\0107.jpg",
+      "frames\\0108.jpg"
+    ]
+  },
+  {
+    "review_index": 28,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-037.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 360.0,
+    "duration": 10.0,
+    "bytes": 1999235,
+    "vmaf": 78.451041,
+    "audio_codec": "aac",
+    "audio_bitrate": "96102",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0109.jpg",
+      "frames\\0110.jpg",
+      "frames\\0111.jpg",
+      "frames\\0112.jpg"
+    ]
+  },
+  {
+    "review_index": 29,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-038.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 370.0,
+    "duration": 10.0,
+    "bytes": 1996867,
+    "vmaf": 49.295035,
+    "audio_codec": "aac",
+    "audio_bitrate": "96018",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0113.jpg",
+      "frames\\0114.jpg",
+      "frames\\0115.jpg",
+      "frames\\0116.jpg"
+    ]
+  },
+  {
+    "review_index": 30,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-040.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 390.0,
+    "duration": 10.0,
+    "bytes": 1979008,
+    "vmaf": 48.970147,
+    "audio_codec": "aac",
+    "audio_bitrate": "96057",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0117.jpg",
+      "frames\\0118.jpg",
+      "frames\\0119.jpg",
+      "frames\\0120.jpg"
+    ]
+  },
+  {
+    "review_index": 31,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-041.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 400.0,
+    "duration": 10.0,
+    "bytes": 1750982,
+    "vmaf": 78.921126,
+    "audio_codec": "aac",
+    "audio_bitrate": "96073",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0121.jpg",
+      "frames\\0122.jpg",
+      "frames\\0123.jpg",
+      "frames\\0124.jpg"
+    ]
+  },
+  {
+    "review_index": 32,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-042.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 410.0,
+    "duration": 10.0,
+    "bytes": 1999150,
+    "vmaf": 49.581883,
+    "audio_codec": "aac",
+    "audio_bitrate": "96018",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0125.jpg",
+      "frames\\0126.jpg",
+      "frames\\0127.jpg",
+      "frames\\0128.jpg"
+    ]
+  },
+  {
+    "review_index": 33,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-044.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 430.0,
+    "duration": 10.0,
+    "bytes": 1955087,
+    "vmaf": 67.273971,
+    "audio_codec": "aac",
+    "audio_bitrate": "95918",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0129.jpg",
+      "frames\\0130.jpg",
+      "frames\\0131.jpg",
+      "frames\\0132.jpg"
+    ]
+  },
+  {
+    "review_index": 34,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-046.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 450.0,
+    "duration": 10.0,
+    "bytes": 1740984,
+    "vmaf": 55.793354,
+    "audio_codec": "aac",
+    "audio_bitrate": "96166",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0133.jpg",
+      "frames\\0134.jpg",
+      "frames\\0135.jpg",
+      "frames\\0136.jpg"
+    ]
+  },
+  {
+    "review_index": 35,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-048.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 470.0,
+    "duration": 10.0,
+    "bytes": 1989983,
+    "vmaf": 59.568147,
+    "audio_codec": "aac",
+    "audio_bitrate": "96024",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0137.jpg",
+      "frames\\0138.jpg",
+      "frames\\0139.jpg",
+      "frames\\0140.jpg"
+    ]
+  },
+  {
+    "review_index": 36,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-050.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 490.0,
+    "duration": 10.0,
+    "bytes": 1965350,
+    "vmaf": 60.796411,
+    "audio_codec": "aac",
+    "audio_bitrate": "96131",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0141.jpg",
+      "frames\\0142.jpg",
+      "frames\\0143.jpg",
+      "frames\\0144.jpg"
+    ]
+  },
+  {
+    "review_index": 37,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-052.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 510.0,
+    "duration": 10.0,
+    "bytes": 1980389,
+    "vmaf": 71.951361,
+    "audio_codec": "aac",
+    "audio_bitrate": "96069",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0145.jpg",
+      "frames\\0146.jpg",
+      "frames\\0147.jpg",
+      "frames\\0148.jpg"
+    ]
+  },
+  {
+    "review_index": 38,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-053.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 520.0,
+    "duration": 10.0,
+    "bytes": 1998579,
+    "vmaf": 37.334471,
+    "audio_codec": "aac",
+    "audio_bitrate": "96112",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0149.jpg",
+      "frames\\0150.jpg",
+      "frames\\0151.jpg",
+      "frames\\0152.jpg"
+    ]
+  },
+  {
+    "review_index": 39,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-054.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 530.0,
+    "duration": 10.0,
+    "bytes": 1976596,
+    "vmaf": 68.210075,
+    "audio_codec": "aac",
+    "audio_bitrate": "96059",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0153.jpg",
+      "frames\\0154.jpg",
+      "frames\\0155.jpg",
+      "frames\\0156.jpg"
+    ]
+  },
+  {
+    "review_index": 40,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-055.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 540.0,
+    "duration": 10.0,
+    "bytes": 1999904,
+    "vmaf": 33.620836,
+    "audio_codec": "aac",
+    "audio_bitrate": "96133",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0157.jpg",
+      "frames\\0158.jpg",
+      "frames\\0159.jpg",
+      "frames\\0160.jpg"
+    ]
+  },
+  {
+    "review_index": 41,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-056.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 550.0,
+    "duration": 10.0,
+    "bytes": 1976105,
+    "vmaf": 72.807522,
+    "audio_codec": "aac",
+    "audio_bitrate": "95972",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0161.jpg",
+      "frames\\0162.jpg",
+      "frames\\0163.jpg",
+      "frames\\0164.jpg"
+    ]
+  },
+  {
+    "review_index": 42,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-057.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 560.0,
+    "duration": 10.0,
+    "bytes": 1976890,
+    "vmaf": 38.32589,
+    "audio_codec": "aac",
+    "audio_bitrate": "96039",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0165.jpg",
+      "frames\\0166.jpg",
+      "frames\\0167.jpg",
+      "frames\\0168.jpg"
+    ]
+  },
+  {
+    "review_index": 43,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-058.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 570.0,
+    "duration": 10.0,
+    "bytes": 1739302,
+    "vmaf": 73.484851,
+    "audio_codec": "aac",
+    "audio_bitrate": "96109",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0169.jpg",
+      "frames\\0170.jpg",
+      "frames\\0171.jpg",
+      "frames\\0172.jpg"
+    ]
+  },
+  {
+    "review_index": 44,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-059.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 580.0,
+    "duration": 10.0,
+    "bytes": 1979753,
+    "vmaf": 50.903849,
+    "audio_codec": "aac",
+    "audio_bitrate": "96018",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0173.jpg",
+      "frames\\0174.jpg",
+      "frames\\0175.jpg",
+      "frames\\0176.jpg"
+    ]
+  },
+  {
+    "review_index": 45,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-061.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 600.0,
+    "duration": 10.0,
+    "bytes": 1965287,
+    "vmaf": 72.5314,
+    "audio_codec": "aac",
+    "audio_bitrate": "96130",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0177.jpg",
+      "frames\\0178.jpg",
+      "frames\\0179.jpg",
+      "frames\\0180.jpg"
+    ]
+  },
+  {
+    "review_index": 46,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-063.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 620.0,
+    "duration": 10.0,
+    "bytes": 1976763,
+    "vmaf": 67.556492,
+    "audio_codec": "aac",
+    "audio_bitrate": "96131",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0181.jpg",
+      "frames\\0182.jpg",
+      "frames\\0183.jpg",
+      "frames\\0184.jpg"
+    ]
+  },
+  {
+    "review_index": 47,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-065.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 640.0,
+    "duration": 10.0,
+    "bytes": 1997371,
+    "vmaf": 39.214745,
+    "audio_codec": "aac",
+    "audio_bitrate": "95957",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0185.jpg",
+      "frames\\0186.jpg",
+      "frames\\0187.jpg",
+      "frames\\0188.jpg"
+    ]
+  },
+  {
+    "review_index": 48,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-067.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 660.0,
+    "duration": 10.0,
+    "bytes": 1998662,
+    "vmaf": 56.634444,
+    "audio_codec": "aac",
+    "audio_bitrate": "96040",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0189.jpg",
+      "frames\\0190.jpg",
+      "frames\\0191.jpg",
+      "frames\\0192.jpg"
+    ]
+  },
+  {
+    "review_index": 49,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-069.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 680.0,
+    "duration": 10.0,
+    "bytes": 1991399,
+    "vmaf": 52.424386,
+    "audio_codec": "aac",
+    "audio_bitrate": "96104",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0193.jpg",
+      "frames\\0194.jpg",
+      "frames\\0195.jpg",
+      "frames\\0196.jpg"
+    ]
+  },
+  {
+    "review_index": 50,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-071.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 700.0,
+    "duration": 10.0,
+    "bytes": 1994636,
+    "vmaf": 56.431734,
+    "audio_codec": "aac",
+    "audio_bitrate": "95993",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0197.jpg",
+      "frames\\0198.jpg",
+      "frames\\0199.jpg",
+      "frames\\0200.jpg"
+    ]
+  },
+  {
+    "review_index": 51,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-073.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 720.0,
+    "duration": 10.0,
+    "bytes": 1739457,
+    "vmaf": 58.255883,
+    "audio_codec": "aac",
+    "audio_bitrate": "96019",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0201.jpg",
+      "frames\\0202.jpg",
+      "frames\\0203.jpg",
+      "frames\\0204.jpg"
+    ]
+  },
+  {
+    "review_index": 52,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-075.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 740.0,
+    "duration": 10.0,
+    "bytes": 1998860,
+    "vmaf": 61.622731,
+    "audio_codec": "aac",
+    "audio_bitrate": "96025",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0205.jpg",
+      "frames\\0206.jpg",
+      "frames\\0207.jpg",
+      "frames\\0208.jpg"
+    ]
+  },
+  {
+    "review_index": 53,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-077.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 760.0,
+    "duration": 10.0,
+    "bytes": 1744121,
+    "vmaf": 63.792582,
+    "audio_codec": "aac",
+    "audio_bitrate": "96136",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0209.jpg",
+      "frames\\0210.jpg",
+      "frames\\0211.jpg",
+      "frames\\0212.jpg"
+    ]
+  },
+  {
+    "review_index": 54,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-078.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 770.0,
+    "duration": 10.0,
+    "bytes": 1733320,
+    "vmaf": 26.266809,
+    "audio_codec": "aac",
+    "audio_bitrate": "96105",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0213.jpg",
+      "frames\\0214.jpg",
+      "frames\\0215.jpg",
+      "frames\\0216.jpg"
+    ]
+  },
+  {
+    "review_index": 55,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-079.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 780.0,
+    "duration": 10.0,
+    "bytes": 1992559,
+    "vmaf": 66.069775,
+    "audio_codec": "aac",
+    "audio_bitrate": "96032",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0217.jpg",
+      "frames\\0218.jpg",
+      "frames\\0219.jpg",
+      "frames\\0220.jpg"
+    ]
+  },
+  {
+    "review_index": 56,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-080.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 790.0,
+    "duration": 10.0,
+    "bytes": 1984823,
+    "vmaf": 33.411679,
+    "audio_codec": "aac",
+    "audio_bitrate": "96089",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0221.jpg",
+      "frames\\0222.jpg",
+      "frames\\0223.jpg",
+      "frames\\0224.jpg"
+    ]
+  },
+  {
+    "review_index": 57,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-081.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 800.0,
+    "duration": 10.0,
+    "bytes": 1969332,
+    "vmaf": 75.550215,
+    "audio_codec": "aac",
+    "audio_bitrate": "95999",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0225.jpg",
+      "frames\\0226.jpg",
+      "frames\\0227.jpg",
+      "frames\\0228.jpg"
+    ]
+  },
+  {
+    "review_index": 58,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-082.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 810.0,
+    "duration": 10.0,
+    "bytes": 1960012,
+    "vmaf": 58.724289,
+    "audio_codec": "aac",
+    "audio_bitrate": "96091",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0229.jpg",
+      "frames\\0230.jpg",
+      "frames\\0231.jpg",
+      "frames\\0232.jpg"
+    ]
+  },
+  {
+    "review_index": 59,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-083.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 820.0,
+    "duration": 10.0,
+    "bytes": 1965038,
+    "vmaf": 77.616053,
+    "audio_codec": "aac",
+    "audio_bitrate": "96021",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0233.jpg",
+      "frames\\0234.jpg",
+      "frames\\0235.jpg",
+      "frames\\0236.jpg"
+    ]
+  },
+  {
+    "review_index": 60,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-084.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 830.0,
+    "duration": 10.0,
+    "bytes": 1940587,
+    "vmaf": 69.644704,
+    "audio_codec": "aac",
+    "audio_bitrate": "96182",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0237.jpg",
+      "frames\\0238.jpg",
+      "frames\\0239.jpg",
+      "frames\\0240.jpg"
+    ]
+  },
+  {
+    "review_index": 61,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-085.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 840.0,
+    "duration": 10.0,
+    "bytes": 1983495,
+    "vmaf": 75.058605,
+    "audio_codec": "aac",
+    "audio_bitrate": "96083",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0241.jpg",
+      "frames\\0242.jpg",
+      "frames\\0243.jpg",
+      "frames\\0244.jpg"
+    ]
+  },
+  {
+    "review_index": 62,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-086.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 850.0,
+    "duration": 10.0,
+    "bytes": 1966915,
+    "vmaf": 56.464114,
+    "audio_codec": "aac",
+    "audio_bitrate": "96063",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0245.jpg",
+      "frames\\0246.jpg",
+      "frames\\0247.jpg",
+      "frames\\0248.jpg"
+    ]
+  },
+  {
+    "review_index": 63,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-087.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 860.0,
+    "duration": 10.0,
+    "bytes": 1996073,
+    "vmaf": 78.682691,
+    "audio_codec": "aac",
+    "audio_bitrate": "96020",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0249.jpg",
+      "frames\\0250.jpg",
+      "frames\\0251.jpg",
+      "frames\\0252.jpg"
+    ]
+  },
+  {
+    "review_index": 64,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-088.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 870.0,
+    "duration": 10.0,
+    "bytes": 1963079,
+    "vmaf": 54.191833,
+    "audio_codec": "aac",
+    "audio_bitrate": "96062",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0253.jpg",
+      "frames\\0254.jpg",
+      "frames\\0255.jpg",
+      "frames\\0256.jpg"
+    ]
+  },
+  {
+    "review_index": 65,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-090.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 890.0,
+    "duration": 10.0,
+    "bytes": 1952253,
+    "vmaf": 74.872036,
+    "audio_codec": "aac",
+    "audio_bitrate": "96171",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0257.jpg",
+      "frames\\0258.jpg",
+      "frames\\0259.jpg",
+      "frames\\0260.jpg"
+    ]
+  },
+  {
+    "review_index": 66,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-092.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 910.0,
+    "duration": 10.0,
+    "bytes": 1955496,
+    "vmaf": 59.802822,
+    "audio_codec": "aac",
+    "audio_bitrate": "96087",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0261.jpg",
+      "frames\\0262.jpg",
+      "frames\\0263.jpg",
+      "frames\\0264.jpg"
+    ]
+  },
+  {
+    "review_index": 67,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-094.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 930.0,
+    "duration": 10.0,
+    "bytes": 1952596,
+    "vmaf": 67.835938,
+    "audio_codec": "aac",
+    "audio_bitrate": "96076",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0265.jpg",
+      "frames\\0266.jpg",
+      "frames\\0267.jpg",
+      "frames\\0268.jpg"
+    ]
+  },
+  {
+    "review_index": 68,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-096.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 950.0,
+    "duration": 10.0,
+    "bytes": 1945013,
+    "vmaf": 69.313764,
+    "audio_codec": "aac",
+    "audio_bitrate": "95982",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0269.jpg",
+      "frames\\0270.jpg",
+      "frames\\0271.jpg",
+      "frames\\0272.jpg"
+    ]
+  },
+  {
+    "review_index": 69,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-098.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 970.0,
+    "duration": 10.0,
+    "bytes": 1972504,
+    "vmaf": 60.547239,
+    "audio_codec": "aac",
+    "audio_bitrate": "95962",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0273.jpg",
+      "frames\\0274.jpg",
+      "frames\\0275.jpg",
+      "frames\\0276.jpg"
+    ]
+  },
+  {
+    "review_index": 70,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-100.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 990.0,
+    "duration": 10.0,
+    "bytes": 1980375,
+    "vmaf": 62.105874,
+    "audio_codec": "aac",
+    "audio_bitrate": "96078",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0277.jpg",
+      "frames\\0278.jpg",
+      "frames\\0279.jpg",
+      "frames\\0280.jpg"
+    ]
+  },
+  {
+    "review_index": 71,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-102.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1010.0,
+    "duration": 10.0,
+    "bytes": 1993797,
+    "vmaf": 68.006475,
+    "audio_codec": "aac",
+    "audio_bitrate": "96035",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0281.jpg",
+      "frames\\0282.jpg",
+      "frames\\0283.jpg",
+      "frames\\0284.jpg"
+    ]
+  },
+  {
+    "review_index": 72,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-103.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1020.0,
+    "duration": 10.0,
+    "bytes": 1992087,
+    "vmaf": 33.814495,
+    "audio_codec": "aac",
+    "audio_bitrate": "96054",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0285.jpg",
+      "frames\\0286.jpg",
+      "frames\\0287.jpg",
+      "frames\\0288.jpg"
+    ]
+  },
+  {
+    "review_index": 73,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-104.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1030.0,
+    "duration": 10.0,
+    "bytes": 1994726,
+    "vmaf": 67.738644,
+    "audio_codec": "aac",
+    "audio_bitrate": "96094",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0289.jpg",
+      "frames\\0290.jpg",
+      "frames\\0291.jpg",
+      "frames\\0292.jpg"
+    ]
+  },
+  {
+    "review_index": 74,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-105.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1040.0,
+    "duration": 10.0,
+    "bytes": 1992699,
+    "vmaf": 38.773822,
+    "audio_codec": "aac",
+    "audio_bitrate": "96058",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0293.jpg",
+      "frames\\0294.jpg",
+      "frames\\0295.jpg",
+      "frames\\0296.jpg"
+    ]
+  },
+  {
+    "review_index": 75,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-106.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1050.0,
+    "duration": 10.0,
+    "bytes": 1991677,
+    "vmaf": 70.296721,
+    "audio_codec": "aac",
+    "audio_bitrate": "96009",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0297.jpg",
+      "frames\\0298.jpg",
+      "frames\\0299.jpg",
+      "frames\\0300.jpg"
+    ]
+  },
+  {
+    "review_index": 76,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-107.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1060.0,
+    "duration": 10.0,
+    "bytes": 1987829,
+    "vmaf": 42.419903,
+    "audio_codec": "aac",
+    "audio_bitrate": "96019",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0301.jpg",
+      "frames\\0302.jpg",
+      "frames\\0303.jpg",
+      "frames\\0304.jpg"
+    ]
+  },
+  {
+    "review_index": 77,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-108.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1070.0,
+    "duration": 10.0,
+    "bytes": 1734746,
+    "vmaf": 70.581099,
+    "audio_codec": "aac",
+    "audio_bitrate": "96031",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0305.jpg",
+      "frames\\0306.jpg",
+      "frames\\0307.jpg",
+      "frames\\0308.jpg"
+    ]
+  },
+  {
+    "review_index": 78,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-109.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1080.0,
+    "duration": 10.0,
+    "bytes": 1998668,
+    "vmaf": 49.401718,
+    "audio_codec": "aac",
+    "audio_bitrate": "96088",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0309.jpg",
+      "frames\\0310.jpg",
+      "frames\\0311.jpg",
+      "frames\\0312.jpg"
+    ]
+  },
+  {
+    "review_index": 79,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-110.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1090.0,
+    "duration": 10.0,
+    "bytes": 1737829,
+    "vmaf": 73.859333,
+    "audio_codec": "aac",
+    "audio_bitrate": "96084",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0313.jpg",
+      "frames\\0314.jpg",
+      "frames\\0315.jpg",
+      "frames\\0316.jpg"
+    ]
+  },
+  {
+    "review_index": 80,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-111.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1100.0,
+    "duration": 10.0,
+    "bytes": 1966714,
+    "vmaf": 50.994511,
+    "audio_codec": "aac",
+    "audio_bitrate": "96005",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0317.jpg",
+      "frames\\0318.jpg",
+      "frames\\0319.jpg",
+      "frames\\0320.jpg"
+    ]
+  },
+  {
+    "review_index": 81,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-112.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1110.0,
+    "duration": 10.0,
+    "bytes": 1978390,
+    "vmaf": 78.683414,
+    "audio_codec": "aac",
+    "audio_bitrate": "96033",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0321.jpg",
+      "frames\\0322.jpg",
+      "frames\\0323.jpg",
+      "frames\\0324.jpg"
+    ]
+  },
+  {
+    "review_index": 82,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-113.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1120.0,
+    "duration": 10.0,
+    "bytes": 1987327,
+    "vmaf": 62.597344,
+    "audio_codec": "aac",
+    "audio_bitrate": "95974",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0325.jpg",
+      "frames\\0326.jpg",
+      "frames\\0327.jpg",
+      "frames\\0328.jpg"
+    ]
+  },
+  {
+    "review_index": 83,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-115.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1140.0,
+    "duration": 10.0,
+    "bytes": 1995327,
+    "vmaf": 50.553809,
+    "audio_codec": "aac",
+    "audio_bitrate": "96086",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0329.jpg",
+      "frames\\0330.jpg",
+      "frames\\0331.jpg",
+      "frames\\0332.jpg"
+    ]
+  },
+  {
+    "review_index": 84,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-117.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1160.0,
+    "duration": 10.0,
+    "bytes": 1998653,
+    "vmaf": 51.19771,
+    "audio_codec": "aac",
+    "audio_bitrate": "96021",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0333.jpg",
+      "frames\\0334.jpg",
+      "frames\\0335.jpg",
+      "frames\\0336.jpg"
+    ]
+  },
+  {
+    "review_index": 85,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-118.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1170.0,
+    "duration": 10.0,
+    "bytes": 1755299,
+    "vmaf": 77.934043,
+    "audio_codec": "aac",
+    "audio_bitrate": "96116",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0337.jpg",
+      "frames\\0338.jpg",
+      "frames\\0339.jpg",
+      "frames\\0340.jpg"
+    ]
+  },
+  {
+    "review_index": 86,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-119.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1180.0,
+    "duration": 10.0,
+    "bytes": 1741802,
+    "vmaf": 54.063682,
+    "audio_codec": "aac",
+    "audio_bitrate": "96048",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0341.jpg",
+      "frames\\0342.jpg",
+      "frames\\0343.jpg",
+      "frames\\0344.jpg"
+    ]
+  },
+  {
+    "review_index": 87,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-120.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1190.0,
+    "duration": 10.0,
+    "bytes": 1744256,
+    "vmaf": 78.996898,
+    "audio_codec": "aac",
+    "audio_bitrate": "96039",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0345.jpg",
+      "frames\\0346.jpg",
+      "frames\\0347.jpg",
+      "frames\\0348.jpg"
+    ]
+  },
+  {
+    "review_index": 88,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-121.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1200.0,
+    "duration": 10.0,
+    "bytes": 1982045,
+    "vmaf": 54.123795,
+    "audio_codec": "aac",
+    "audio_bitrate": "95981",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0349.jpg",
+      "frames\\0350.jpg",
+      "frames\\0351.jpg",
+      "frames\\0352.jpg"
+    ]
+  },
+  {
+    "review_index": 89,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-122.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1210.0,
+    "duration": 10.0,
+    "bytes": 1733913,
+    "vmaf": 79.626089,
+    "audio_codec": "aac",
+    "audio_bitrate": "96110",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0353.jpg",
+      "frames\\0354.jpg",
+      "frames\\0355.jpg",
+      "frames\\0356.jpg"
+    ]
+  },
+  {
+    "review_index": 90,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-123.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1220.0,
+    "duration": 10.0,
+    "bytes": 1988800,
+    "vmaf": 58.070661,
+    "audio_codec": "aac",
+    "audio_bitrate": "96188",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0357.jpg",
+      "frames\\0358.jpg",
+      "frames\\0359.jpg",
+      "frames\\0360.jpg"
+    ]
+  },
+  {
+    "review_index": 91,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-125.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1240.0,
+    "duration": 10.0,
+    "bytes": 1745479,
+    "vmaf": 57.079187,
+    "audio_codec": "aac",
+    "audio_bitrate": "96021",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0361.jpg",
+      "frames\\0362.jpg",
+      "frames\\0363.jpg",
+      "frames\\0364.jpg"
+    ]
+  },
+  {
+    "review_index": 92,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-127.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1260.0,
+    "duration": 10.0,
+    "bytes": 1988564,
+    "vmaf": 63.303585,
+    "audio_codec": "aac",
+    "audio_bitrate": "96115",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0365.jpg",
+      "frames\\0366.jpg",
+      "frames\\0367.jpg",
+      "frames\\0368.jpg"
+    ]
+  },
+  {
+    "review_index": 93,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-128.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1270.0,
+    "duration": 10.0,
+    "bytes": 1988766,
+    "vmaf": 37.862179,
+    "audio_codec": "aac",
+    "audio_bitrate": "96092",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0369.jpg",
+      "frames\\0370.jpg",
+      "frames\\0371.jpg",
+      "frames\\0372.jpg"
+    ]
+  },
+  {
+    "review_index": 94,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-129.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1280.0,
+    "duration": 10.0,
+    "bytes": 1986275,
+    "vmaf": 68.368264,
+    "audio_codec": "aac",
+    "audio_bitrate": "95995",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0373.jpg",
+      "frames\\0374.jpg",
+      "frames\\0375.jpg",
+      "frames\\0376.jpg"
+    ]
+  },
+  {
+    "review_index": 95,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-130.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1290.0,
+    "duration": 10.0,
+    "bytes": 1986799,
+    "vmaf": 35.857883,
+    "audio_codec": "aac",
+    "audio_bitrate": "95984",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0377.jpg",
+      "frames\\0378.jpg",
+      "frames\\0379.jpg",
+      "frames\\0380.jpg"
+    ]
+  },
+  {
+    "review_index": 96,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-131.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1300.0,
+    "duration": 10.0,
+    "bytes": 1998281,
+    "vmaf": 67.510158,
+    "audio_codec": "aac",
+    "audio_bitrate": "96131",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0381.jpg",
+      "frames\\0382.jpg",
+      "frames\\0383.jpg",
+      "frames\\0384.jpg"
+    ]
+  },
+  {
+    "review_index": 97,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-132.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1310.0,
+    "duration": 10.0,
+    "bytes": 1971053,
+    "vmaf": 37.964203,
+    "audio_codec": "aac",
+    "audio_bitrate": "96067",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0385.jpg",
+      "frames\\0386.jpg",
+      "frames\\0387.jpg",
+      "frames\\0388.jpg"
+    ]
+  },
+  {
+    "review_index": 98,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-133.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1320.0,
+    "duration": 10.0,
+    "bytes": 1992971,
+    "vmaf": 72.226075,
+    "audio_codec": "aac",
+    "audio_bitrate": "96080",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0389.jpg",
+      "frames\\0390.jpg",
+      "frames\\0391.jpg",
+      "frames\\0392.jpg"
+    ]
+  },
+  {
+    "review_index": 99,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-134.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1330.0,
+    "duration": 10.0,
+    "bytes": 1988302,
+    "vmaf": 43.793206,
+    "audio_codec": "aac",
+    "audio_bitrate": "95940",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0393.jpg",
+      "frames\\0394.jpg",
+      "frames\\0395.jpg",
+      "frames\\0396.jpg"
+    ]
+  },
+  {
+    "review_index": 100,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-135.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1340.0,
+    "duration": 10.0,
+    "bytes": 1971830,
+    "vmaf": 76.05706,
+    "audio_codec": "aac",
+    "audio_bitrate": "96118",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0397.jpg",
+      "frames\\0398.jpg",
+      "frames\\0399.jpg",
+      "frames\\0400.jpg"
+    ]
+  },
+  {
+    "review_index": 101,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-136.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1350.0,
+    "duration": 10.0,
+    "bytes": 1951969,
+    "vmaf": 49.959947,
+    "audio_codec": "aac",
+    "audio_bitrate": "96123",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0401.jpg",
+      "frames\\0402.jpg",
+      "frames\\0403.jpg",
+      "frames\\0404.jpg"
+    ]
+  },
+  {
+    "review_index": 102,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-138.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1370.0,
+    "duration": 10.0,
+    "bytes": 1935334,
+    "vmaf": 71.610778,
+    "audio_codec": "aac",
+    "audio_bitrate": "96101",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0405.jpg",
+      "frames\\0406.jpg",
+      "frames\\0407.jpg",
+      "frames\\0408.jpg"
+    ]
+  },
+  {
+    "review_index": 103,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-140.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1390.0,
+    "duration": 10.0,
+    "bytes": 1965411,
+    "vmaf": 54.947345,
+    "audio_codec": "aac",
+    "audio_bitrate": "96063",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0409.jpg",
+      "frames\\0410.jpg",
+      "frames\\0411.jpg",
+      "frames\\0412.jpg"
+    ]
+  },
+  {
+    "review_index": 104,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-142.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1410.0,
+    "duration": 10.0,
+    "bytes": 1969273,
+    "vmaf": 58.020772,
+    "audio_codec": "aac",
+    "audio_bitrate": "96093",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0413.jpg",
+      "frames\\0414.jpg",
+      "frames\\0415.jpg",
+      "frames\\0416.jpg"
+    ]
+  },
+  {
+    "review_index": 105,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-144.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1430.0,
+    "duration": 10.0,
+    "bytes": 1946042,
+    "vmaf": 70.114605,
+    "audio_codec": "aac",
+    "audio_bitrate": "96092",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0417.jpg",
+      "frames\\0418.jpg",
+      "frames\\0419.jpg",
+      "frames\\0420.jpg"
+    ]
+  },
+  {
+    "review_index": 106,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-146.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1450.0,
+    "duration": 10.0,
+    "bytes": 1984047,
+    "vmaf": 70.897699,
+    "audio_codec": "aac",
+    "audio_bitrate": "96187",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0421.jpg",
+      "frames\\0422.jpg",
+      "frames\\0423.jpg",
+      "frames\\0424.jpg"
+    ]
+  },
+  {
+    "review_index": 107,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-148.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1470.0,
+    "duration": 10.0,
+    "bytes": 1963003,
+    "vmaf": 66.129629,
+    "audio_codec": "aac",
+    "audio_bitrate": "95886",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0425.jpg",
+      "frames\\0426.jpg",
+      "frames\\0427.jpg",
+      "frames\\0428.jpg"
+    ]
+  },
+  {
+    "review_index": 108,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-150.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1490.0,
+    "duration": 10.0,
+    "bytes": 1950344,
+    "vmaf": 65.163011,
+    "audio_codec": "aac",
+    "audio_bitrate": "96006",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0429.jpg",
+      "frames\\0430.jpg",
+      "frames\\0431.jpg",
+      "frames\\0432.jpg"
+    ]
+  },
+  {
+    "review_index": 109,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-152.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1510.0,
+    "duration": 10.0,
+    "bytes": 1974097,
+    "vmaf": 74.604818,
+    "audio_codec": "aac",
+    "audio_bitrate": "96001",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0433.jpg",
+      "frames\\0434.jpg",
+      "frames\\0435.jpg",
+      "frames\\0436.jpg"
+    ]
+  },
+  {
+    "review_index": 110,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-153.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1520.0,
+    "duration": 10.0,
+    "bytes": 1973212,
+    "vmaf": 63.00499,
+    "audio_codec": "aac",
+    "audio_bitrate": "95941",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0437.jpg",
+      "frames\\0438.jpg",
+      "frames\\0439.jpg",
+      "frames\\0440.jpg"
+    ]
+  },
+  {
+    "review_index": 111,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-154.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1530.0,
+    "duration": 10.0,
+    "bytes": 1956318,
+    "vmaf": 68.015374,
+    "audio_codec": "aac",
+    "audio_bitrate": "96130",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0441.jpg",
+      "frames\\0442.jpg",
+      "frames\\0443.jpg",
+      "frames\\0444.jpg"
+    ]
+  },
+  {
+    "review_index": 112,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-155.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1540.0,
+    "duration": 10.0,
+    "bytes": 1932402,
+    "vmaf": 66.4603,
+    "audio_codec": "aac",
+    "audio_bitrate": "96084",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0445.jpg",
+      "frames\\0446.jpg",
+      "frames\\0447.jpg",
+      "frames\\0448.jpg"
+    ]
+  },
+  {
+    "review_index": 113,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-157.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1560.0,
+    "duration": 10.0,
+    "bytes": 1958381,
+    "vmaf": 73.291566,
+    "audio_codec": "aac",
+    "audio_bitrate": "96074",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0449.jpg",
+      "frames\\0450.jpg",
+      "frames\\0451.jpg",
+      "frames\\0452.jpg"
+    ]
+  },
+  {
+    "review_index": 114,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-159.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1580.0,
+    "duration": 10.0,
+    "bytes": 1929958,
+    "vmaf": 77.125256,
+    "audio_codec": "aac",
+    "audio_bitrate": "96112",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0453.jpg",
+      "frames\\0454.jpg",
+      "frames\\0455.jpg",
+      "frames\\0456.jpg"
+    ]
+  },
+  {
+    "review_index": 115,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-160.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1590.0,
+    "duration": 10.0,
+    "bytes": 1957655,
+    "vmaf": 79.917373,
+    "audio_codec": "aac",
+    "audio_bitrate": "96129",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0457.jpg",
+      "frames\\0458.jpg",
+      "frames\\0459.jpg",
+      "frames\\0460.jpg"
+    ]
+  },
+  {
+    "review_index": 116,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-161.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1600.0,
+    "duration": 10.0,
+    "bytes": 1800922,
+    "vmaf": 33.553706,
+    "audio_codec": "aac",
+    "audio_bitrate": "96110",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0461.jpg",
+      "frames\\0462.jpg",
+      "frames\\0463.jpg",
+      "frames\\0464.jpg"
+    ]
+  },
+  {
+    "review_index": 117,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-163.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1620.0,
+    "duration": 10.0,
+    "bytes": 1962583,
+    "vmaf": 68.594453,
+    "audio_codec": "aac",
+    "audio_bitrate": "96163",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0465.jpg",
+      "frames\\0466.jpg",
+      "frames\\0467.jpg",
+      "frames\\0468.jpg"
+    ]
+  },
+  {
+    "review_index": 118,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-165.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1640.0,
+    "duration": 10.0,
+    "bytes": 1956580,
+    "vmaf": 51.729975,
+    "audio_codec": "aac",
+    "audio_bitrate": "96111",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0469.jpg",
+      "frames\\0470.jpg",
+      "frames\\0471.jpg",
+      "frames\\0472.jpg"
+    ]
+  },
+  {
+    "review_index": 119,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-167.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1660.0,
+    "duration": 10.0,
+    "bytes": 1957314,
+    "vmaf": 62.256091,
+    "audio_codec": "aac",
+    "audio_bitrate": "96017",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0473.jpg",
+      "frames\\0474.jpg",
+      "frames\\0475.jpg",
+      "frames\\0476.jpg"
+    ]
+  },
+  {
+    "review_index": 120,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-169.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1680.0,
+    "duration": 10.0,
+    "bytes": 1950961,
+    "vmaf": 69.759848,
+    "audio_codec": "aac",
+    "audio_bitrate": "96042",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0477.jpg",
+      "frames\\0478.jpg",
+      "frames\\0479.jpg",
+      "frames\\0480.jpg"
+    ]
+  },
+  {
+    "review_index": 121,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-171.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1700.0,
+    "duration": 10.0,
+    "bytes": 1987438,
+    "vmaf": 71.49288,
+    "audio_codec": "aac",
+    "audio_bitrate": "95946",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0481.jpg",
+      "frames\\0482.jpg",
+      "frames\\0483.jpg",
+      "frames\\0484.jpg"
+    ]
+  },
+  {
+    "review_index": 122,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-173.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1720.0,
+    "duration": 10.0,
+    "bytes": 1970571,
+    "vmaf": 75.532316,
+    "audio_codec": "aac",
+    "audio_bitrate": "96104",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0485.jpg",
+      "frames\\0486.jpg",
+      "frames\\0487.jpg",
+      "frames\\0488.jpg"
+    ]
+  },
+  {
+    "review_index": 123,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-175.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1740.0,
+    "duration": 10.0,
+    "bytes": 1970221,
+    "vmaf": 71.695447,
+    "audio_codec": "aac",
+    "audio_bitrate": "96009",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0489.jpg",
+      "frames\\0490.jpg",
+      "frames\\0491.jpg",
+      "frames\\0492.jpg"
+    ]
+  },
+  {
+    "review_index": 124,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-177.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1760.0,
+    "duration": 10.0,
+    "bytes": 1966560,
+    "vmaf": 64.921064,
+    "audio_codec": "aac",
+    "audio_bitrate": "95960",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0493.jpg",
+      "frames\\0494.jpg",
+      "frames\\0495.jpg",
+      "frames\\0496.jpg"
+    ]
+  },
+  {
+    "review_index": 125,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-178.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1770.0,
+    "duration": 10.0,
+    "bytes": 1973247,
+    "vmaf": 55.25606,
+    "audio_codec": "aac",
+    "audio_bitrate": "96050",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0497.jpg",
+      "frames\\0498.jpg",
+      "frames\\0499.jpg",
+      "frames\\0500.jpg"
+    ]
+  },
+  {
+    "review_index": 126,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-179.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1780.0,
+    "duration": 10.0,
+    "bytes": 1961457,
+    "vmaf": 75.039579,
+    "audio_codec": "aac",
+    "audio_bitrate": "96209",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0501.jpg",
+      "frames\\0502.jpg",
+      "frames\\0503.jpg",
+      "frames\\0504.jpg"
+    ]
+  },
+  {
+    "review_index": 127,
+    "output": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏_clip-180.mp4",
+    "source": "demo\\input\\शंकर मल्ल र बिपना सिंह ले बझाङ तल्कोट मा मच्चाए देउडा दर्सक दङ्ग परे 🙏.mp4",
+    "source_sha256": "8eecf7c189ecf1d59875eae27e7c8b90643064aed6da56ea14a458ac7924d565",
+    "source_start_seconds": 1790.0,
+    "duration": 10.0,
+    "bytes": 1975166,
+    "vmaf": 45.227508,
+    "audio_codec": "aac",
+    "audio_bitrate": "96078",
+    "av_sync_delta_seconds": 0.0,
+    "frames": [
+      "frames\\0505.jpg",
+      "frames\\0506.jpg",
+      "frames\\0507.jpg",
+      "frames\\0508.jpg"
+    ]
+  }
+]

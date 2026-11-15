@@ -36,6 +36,27 @@
 })(typeof window !== 'undefined' ? window : globalThis, function() {
   const ACTIVE_CATEGORIES = Object.freeze(['देउडा', 'गाउँघर', 'शहर']);
   const DEFAULT_CATEGORY = 'देउडा';
+  const FEED_POST_COLUMNS = 'id,user_id,media_path,media_type,caption,category,created_at';
+
+  async function fetchFeedPosts(client) {
+    if (!client || typeof client.from !== 'function') throw new TypeError('A Supabase client is required to load feed posts.');
+    const { data, error } = await client.from('feed_posts')
+      .select(FEED_POST_COLUMNS)
+      .order('created_at', { ascending: false })
+      .limit(200);
+    if (error) throw error;
+    return Array.isArray(data) ? data : [];
+  }
+
+  async function updateFeedPostCategory(client, postId, category) {
+    if (!ACTIVE_CATEGORIES.includes(category)) return false;
+    if (!client || typeof client.from !== 'function') throw new TypeError('A Supabase client is required to update feed categories.');
+    const { error } = await client.from('feed_posts')
+      .update({ category: category })
+      .eq('id', postId);
+    if (error) throw error;
+    return true;
+  }
 
   function categoryOf(post) {
     return post && (post.feedCategory || post.feed_category || post.category) || DEFAULT_CATEGORY;
@@ -60,5 +81,5 @@
     return nextIndex >= 0 && nextIndex < ACTIVE_CATEGORIES.length ? ACTIVE_CATEGORIES[nextIndex] : null;
   }
 
-  return Object.freeze({ ACTIVE_CATEGORIES, DEFAULT_CATEGORY, categoryOf, filterPosts, swipeDirection, categoryAfterSwipe });
+  return Object.freeze({ ACTIVE_CATEGORIES, DEFAULT_CATEGORY, FEED_POST_COLUMNS, fetchFeedPosts, updateFeedPostCategory, categoryOf, filterPosts, swipeDirection, categoryAfterSwipe });
 });

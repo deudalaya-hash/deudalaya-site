@@ -324,18 +324,8 @@
     if (!cloudClient) { await selectLocalStartupVideo(); return; }
     const requestId = ++remoteFeedRequestId;
     try {
-      let { data, error } = await cloudClient.from('feed_posts')
-        .select('id,user_id,media_path,media_type,caption,category,feed_category,created_at')
-        .order('created_at', { ascending: false }).limit(200);
-      feedCategoriesEnabled = !error;
-      if (error && /feed_category|column .* does not exist/i.test(error.message || '')) {
-        feedCategoriesEnabled = false;
-        console.warn('Feed categories are not enabled in the database yet; apply the feed_categories migration.');
-        ({ data, error } = await cloudClient.from('feed_posts')
-          .select('id,user_id,media_path,media_type,caption,category,created_at')
-          .order('created_at', { ascending: false }).limit(200));
-      }
-      if (error) throw error;
+      const data = await window.DeudalayaFeedCategories.fetchFeedPosts(cloudClient);
+      feedCategoriesEnabled = true;
       const videoRows = (data || []).filter(row => isSupportedFeedVideo(row) && row.media_path);
       const ids = [...new Set(videoRows.map(row => row.user_id).filter(Boolean))];
       const postIds = videoRows.map(row => row.id);
@@ -364,7 +354,7 @@
           avatar: profile.avatar_path ? cloudClient.storage.from('videos').getPublicUrl(profile.avatar_path).data.publicUrl : 'deudalaya-avatar',
           disc: profile.avatar_path ? cloudClient.storage.from('videos').getPublicUrl(profile.avatar_path).data.publicUrl : 'deudalaya-avatar',
           videoSrc: url, mediaType: row.media_type, fit: 'contain',
-          feedCategory: row.feed_category || row.category || 'देउडा',
+          feedCategory: row.category || 'देउडा',
           caption: row.caption || 'देउडालयमा नयाँ पोस्ट', tags: '#देउडालय #कर्णाली',
           music: 'Original sound · ' + (row.category || 'देउडा'),
           likes: likes.length, comments: commentRows.filter(comment => comment.post_id === row.id).length,
@@ -476,15 +466,15 @@
     if (!window.DeudalayaFeedCategories.ACTIVE_CATEGORIES.includes(category)) return;
     select.disabled = true;
     try {
-      const { error } = await cloudClient.from('feed_posts').update({feed_category:category}).eq('id', post.cloudId);
-      if (error) throw error;
+      await window.DeudalayaFeedCategories.updateFeedPostCategory(cloudClient, post.cloudId, category);
+      post.category = category;
       post.feedCategory = category;
       toast('Video category updated');
       applyFeedMode(true);
     } catch (error) {
       console.error('Could not update feed category', error);
       select.value = window.DeudalayaFeedCategories.categoryOf(post);
-      toast('Could not update category. Apply the feed categories migration and check admin permissions.');
+      toast('Could not update category. Check your admin permissions and connection.');
     } finally { select.disabled = false; }
   }
 

@@ -164,14 +164,17 @@ test('the three additional city videos are each bundled once and assigned only t
   }
 });
 
-test('uploads and admin management store a dedicated feed category separately from topic metadata', () => {
+test('feed loading and admin category management use the deployed category column', () => {
   assert.match(html, /id="uploadCategory"[\s\S]*?<option>गाउँघर<\/option>/);
   assert.match(html, /id="uploadCategory"[\s\S]*?<option>शहर<\/option>/);
   assert.match(html, /id="feedCategoryManager"/);
   assert.match(html, /id="feedCategoryManageButton"/);
-  assert.match(social, /select\('id,user_id,media_path,media_type,caption,category,feed_category,created_at'\)/);
-  assert.match(social, /feedCategory:\s*row\.feed_category\s*\|\|\s*row\.category\s*\|\|\s*'देउडा'/);
-  assert.match(social, /update\(\{feed_category:category\}\)/);
+  assert.match(social, /fetchFeedPosts\(cloudClient\)/);
+  assert.match(social, /feedCategory:\s*row\.category\s*\|\|\s*'देउडा'/);
+  assert.match(social, /updateFeedPostCategory\(cloudClient, post\.cloudId, category\)/);
+  assert.match(categoryScript, /FEED_POST_COLUMNS = 'id,user_id,media_path,media_type,caption,category,created_at'/);
+  assert.match(categoryScript, /update\(\{ category: category \}\)/);
+  assert.doesNotMatch(categories.FEED_POST_COLUMNS, /feed_category/);
   assert.match(social, /isDeudalayaAdmin\(\)/);
   assert.deepEqual(categories.ACTIVE_CATEGORIES, ['देउडा', 'गाउँघर', 'शहर']);
 });
