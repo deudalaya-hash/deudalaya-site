@@ -394,9 +394,28 @@ async function saveProfile(event){
 }
 function isDeudalayaAdmin(){return Boolean(cloudUser&&cloudUser.app_metadata&&cloudUser.app_metadata.role==='admin')}function isValidVideoDuration(duration){return Number.isFinite(duration)&&duration>0}
 function openAuth(){document.getElementById('authModal').classList.add('open');document.getElementById('authModal').setAttribute('aria-hidden','false');setAuthMode(authMode);setTimeout(()=>document.getElementById('authEmail').focus(),50)}function closeAuth(){document.getElementById('authModal').classList.remove('open');document.getElementById('authModal').setAttribute('aria-hidden','true')}function setAuthMode(mode){authMode=mode;document.getElementById('authTitle').textContent=mode==='signup'?'Create a देउडालय account':'Sign in to देउडालय';document.getElementById('authSubmit').textContent=mode==='signup'?'Create account':'Sign in';document.getElementById('authModeToggle').textContent=mode==='signup'?'Already have an account? Sign in':'Create an account';document.getElementById('authMessage').textContent=mode==='signup'?'Choose a name and username, then create your account.':'Sign in to like, comment, follow, and post.';const sf=document.getElementById('signupFields');if(sf)sf.hidden=mode!=='signup';const dn=document.getElementById('signupDisplayName'),un=document.getElementById('signupUsername');if(dn)dn.required=mode==='signup';if(un)un.required=mode==='signup'}function toggleAuthMode(){setAuthMode(authMode==='signin'?'signup':'signin')}async function handleAuthAction(){if(cloudUser){const client=await loadSupabaseClient();if(!client)return;const{error}=await client.auth.signOut();if(error)toast(error.message);else toast('Signed out');return}openAuth()}async function submitAuth(event){event.preventDefault();const client=await loadSupabaseClient();if(!client){toast('Could not connect to Supabase');return}const email=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value,button=document.getElementById('authSubmit');const displayName=(document.getElementById('signupDisplayName')&&document.getElementById('signupDisplayName').value||'').trim();const username=(document.getElementById('signupUsername')&&document.getElementById('signupUsername').value||'').trim().replace(/^@/,'');if(authMode==='signup'){if(!displayName){document.getElementById('authMessage').textContent='Please enter your name';return}if(!/^[A-Za-z0-9._]{3,24}$/.test(username)){document.getElementById('authMessage').textContent='Username must be 3–24 letters, numbers, dots, or underscores';return}}button.disabled=true;try{let result;if(authMode==='signup'){result=await client.auth.signUp({email,password,options:{emailRedirectTo:location.origin,data:{display_name:displayName,username:username,full_name:displayName}}});if(!result.error&&displayName){try{localStorage.setItem('deudalaya-profile',JSON.stringify({displayName:displayName,username:username,bio:'',email:email,updatedAt:Date.now()}))}catch(e){}}}else result=await client.auth.signInWithPassword({email,password});if(result.error)throw result.error;if(authMode==='signup'&&!result.data.session){document.getElementById('authMessage').textContent='Account created. Check your email and confirm the address, then sign in.';return}cloudUser=result.data.user||null;updateAuthUI();applyProfileToUI();closeAuth();toast(authMode==='signup'?'Account created':'Signed in');await loadRemotePosts()}catch(error){document.getElementById('authMessage').textContent=error.message||'Could not authenticate';toast(error.message||'Sign in failed')}finally{button.disabled=false}}async function requestVideoUpload(){const client=await loadSupabaseClient();if(!client){toast('Could not connect. Check your internet connection.');return}if(!cloudUser){openAuth();return}if(!isDeudalayaAdmin()){toast('Video uploads are restricted to authorized Deudalaya admins');return}document.getElementById('videoUpload').click()}function render(){
+const nextFeedPreload=feedVideo._nextFeedPreload||(feedVideo._nextFeedPreload={video:null,source:''});
+function clearNextFeedPreload(){if(!nextFeedPreload.video)return;nextFeedPreload.video.pause();nextFeedPreload.video.removeAttribute('src');nextFeedPreload.video.load();nextFeedPreload.video=null;nextFeedPreload.source=''}
+function warmNextFeedVideo(){
+ const connection=navigator.connection||navigator.mozConnection||navigator.webkitConnection;
+ const connectionType=String(connection&&connection.effectiveType||'').toLowerCase();
+ if(document.hidden||(connection&&(connection.saveData||connectionType==='slow-2g'||connectionType==='2g'))){clearNextFeedPreload();return}
+ if(typeof window.fypPeekNext!=='function')return;
+ const nextIndex=window.fypPeekNext(index),nextVideo=videos[nextIndex];
+ if(!isSupportedFeedVideo(nextVideo)||!nextVideo.videoSrc)return;
+ const source=new URL(nextVideo.videoSrc,location.href).href;
+ if(source===feedVideo.currentSrc)return;
+ if(nextFeedPreload.video&&nextFeedPreload.source===source)return;
+ clearNextFeedPreload();
+ const preloader=document.createElement('video');
+ preloader.preload='auto';preloader.muted=true;preloader.playsInline=true;preloader.setAttribute('aria-hidden','true');
+ nextFeedPreload.video=preloader;nextFeedPreload.source=source;preloader.src=nextVideo.videoSrc;preloader.load();
+}
+if(!feedVideo.dataset.prefetchListeners){feedVideo.dataset.prefetchListeners='true';feedVideo.addEventListener('loadeddata',()=>{if(nextFeedPreload.source===feedVideo.currentSrc)clearNextFeedPreload();warmNextFeedVideo()});document.addEventListener('visibilitychange',()=>{if(document.hidden)clearNextFeedPreload()})}
  const v=videos[index];
  const postVideo=document.getElementById('postVideo');
  if(!isSupportedFeedVideo(v)||!v.videoSrc){
+  clearNextFeedPreload();
   postVideo.pause();postVideo.removeAttribute('src');postVideo.load();postVideo.hidden=true;feedMediaMessage.textContent='No supported videos are available.';feedMediaStatus.querySelector('div').hidden=true;feedMediaStatus.hidden=false;
   document.getElementById('caption').textContent='No supported videos are available.';
   return;
@@ -1888,6 +1907,16 @@ html,body{background:#000;overscroll-behavior:none}
     var nextIndex=feedIndexForKey(nextKey);
     return nextIndex>=0?nextIndex:from;
   }
+  function fypPeekNext(from){
+    if(!videos||!videos.length)return 0;
+    var keys=feedKeys();
+    if(playbackShuffle.getState().cursor<0)return videos.length?(from+1)%videos.length:0;
+    var currentKey=videos[from]?window.DeudalayaVideoShuffle.videoKey(videos[from]):null;
+    var nextKey=playbackShuffle.peekNext(keys,currentKey);
+    var nextIndex=feedIndexForKey(nextKey);
+    return nextIndex>=0?nextIndex:from;
+  }
+  window.fypPeekNext=fypPeekNext;
   function fypPickPrev(from){
     if(!videos||!videos.length)return 0;
     if(playbackShuffle.getState().cursor<0)return 0;

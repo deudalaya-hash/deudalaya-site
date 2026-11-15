@@ -23,12 +23,17 @@ test('feed navigation uses the no-repeat shuffle cycle instead of recommendation
   assert.match(html, /if\(pv\.currentTime<threshold\)return;[\s\S]*?fypMarkVideoStarted\(index\)/);
 });
 
-test('the current video loops without advancing and playback avoids preloading the next video', () => {
+test('the current video loops while one upcoming clip is warmed on suitable connections', () => {
   assert.match(html, /<video id="postVideo"[^>]*preload="none"/);
   assert.match(html, /<video id="postVideo"[^>]*\bloop\b/);
   assert.match(html, /if\(!paused\)postVideo\.play\(\)/);
   assert.doesNotMatch(html, /pv\.addEventListener\('ended',[\s\S]*?nextVideo\(\)/);
-  assert.doesNotMatch(html, /preloadNextMetadata|metadataPreloader/);
+  assert.match(html, /function warmNextFeedVideo\(\)[\s\S]*?window\.fypPeekNext\(index\)/);
+  assert.match(html, /playbackShuffle\.peekNext\(keys,currentKey\)/);
+  assert.match(html, /preloader\.preload='auto'/);
+  assert.match(html, /connection\.saveData\|\|connectionType==='slow-2g'\|\|connectionType==='2g'/);
+  assert.match(html, /feedVideo\.addEventListener\('loadeddata',[\s\S]*?warmNextFeedVideo\(\)/);
+  assert.match(html, /function clearNextFeedPreload\(\)[\s\S]*?removeAttribute\('src'\)/);
   assert.match(html, /function nextVideo\(\)[\s\S]*?render\(\)/);
 });
 
