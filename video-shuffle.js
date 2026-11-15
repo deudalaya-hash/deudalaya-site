@@ -7,14 +7,101 @@
 
   var STORAGE_KEY = 'deudalaya-video-shuffle-v1';
   var STARTUP_STORAGE_KEY = 'deudalaya-last-startup-video-v1';
+  var groupingByVideoKey = new Map();
+
+  function normalizedLabel(value) {
+    return String(value == null ? '' : value).normalize('NFKC').replace(/\\/g, '/').replace(/\s+/g, ' ').trim().toLocaleLowerCase();
+  }
+
+  function sourceTitle(value) {
+    return String(value == null ? '' : value)
+      .normalize('NFKC')
+      .replace(/\\/g, '/')
+      .split(/[?#]/, 1)[0]
+      .split('/')
+      .pop()
+      .replace(/\.(?:mp4|webm|mov|m4v|mkv|avi)$/i, '')
+      .replace(/\s*(?:[·|—–-]\s*)?(?:clip|क्लिप|खण्ड|भाग|part|segment)\s*0*\d+\s*$/i, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function firstMetadataValue(video, fields) {
+    for (var i = 0; i < fields.length; i += 1) {
+      var value = video && video[fields[i]];
+      if (typeof value === 'string' && value.trim()) return value.trim();
+    }
+    return '';
+  }
+
+  function inferNamedLocation(video) {
+    var source = [
+      firstMetadataValue(video, ['original_filename', 'originalFilename', 'source_filename', 'sourceFilename', 'file_name', 'fileName']),
+      firstMetadataValue(video, ['caption', 'title'])
+    ].join(' ').normalize('NFKC');
+
+    // These locations are named directly in the corresponding source titles.
+    // No location is inferred from performer names or from an unknown caption.
+    if (/तिला\s*(?:गाउपालिका|गाउँपालिका)/u.test(source)) return 'तिला गाउँपालिका';
+    if (/हुम्ला\s+रोडिकोट/u.test(source)) return 'हुम्ला रोडिकोट';
+    if (/बझाङ\s+तल्कोट/u.test(source)) return 'बझाङ तल्कोट';
+    if (/(?:शङ्खमूल|शंखमूल)/u.test(source)) return 'शङ्खमूल';
+    return '';
+  }
+
+  function resolveVideoGrouping(video, key) {
+    var explicitRecording = firstMetadataValue(video, [
+      'recordingId', 'recording_id', 'sourceRecordingId', 'source_recording_id',
+      'originalRecordingId', 'original_recording_id', 'source_sha256', 'sourceSha256'
+    ]);
+    var filename = firstMetadataValue(video, [
+      'original_filename', 'originalFilename', 'source_filename', 'sourceFilename',
+      'file_name', 'fileName'
+    ]);
+    var caption = firstMetadataValue(video, ['caption', 'title']);
+    var captionTitle = sourceTitle(caption);
+    var captionHasClipNumber = /(?:clip|क्लिप|खण्ड|भाग|part|segment)\s*0*\d+\s*$/iu.test(caption);
+    var localSource = !video?.cloudId ? firstMetadataValue(video, ['videoSrc']) : '';
+    var source = filename
+      ? sourceTitle(filename)
+      : captionHasClipNumber
+        ? captionTitle
+        : localSource
+          ? sourceTitle(localSource)
+          : '';
+    var recordingId = explicitRecording
+      ? 'recording:' + normalizedLabel(explicitRecording)
+      : source
+        ? 'recording:' + normalizedLabel(source)
+        : 'clip:' + key;
+    var location = firstMetadataValue(video, [
+      'locationId', 'location_id', 'location', 'locationName', 'location_name',
+      'sourceLocation', 'source_location', 'place', 'placeName', 'place_name', 'district'
+    ]);
+    if (!location) location = inferNamedLocation(video);
+    return { recordingId: recordingId, locationId: normalizedLabel(location) };
+  }
 
   function videoKey(video) {
     if (typeof video === 'string') return video;
     if (!video || typeof video !== 'object') return '';
-    if (video.localId) return 'local:' + String(video.localId);
-    if (video.videoSrc) return 'source:' + String(video.videoSrc).split(/[?#]/, 1)[0];
-    if (video.cloudId) return 'cloud:' + String(video.cloudId);
-    return '';
+    var key = video.localId
+      ? 'local:' + String(video.localId)
+      : video.cloudId
+        ? 'cloud:' + String(video.cloudId)
+        : video.videoSrc
+          ? 'source:' + String(video.videoSrc).split(/[?#]/, 1)[0]
+          : '';
+    if (key) groupingByVideoKey.set(key, resolveVideoGrouping(video, key));
+    return key;
+  }
+
+  function getVideoGrouping(videoOrKey) {
+    if (typeof videoOrKey === 'string') {
+      return groupingByVideoKey.get(videoOrKey) || { recordingId: 'clip:' + videoOrKey, locationId: '' };
+    }
+    var key = videoKey(videoOrKey);
+    return key ? groupingByVideoKey.get(key) : { recordingId: '', locationId: '' };
   }
 
   function isDuplicatePost(candidate, existingPosts) {
@@ -322,6 +409,23 @@
       return Math.min(max - 1, Math.max(0, Math.floor(value * max)));
     }
 
+    function prioritizedCandidates(candidates, previousId) {
+      if (!previousId || candidates.length < 2) return candidates;
+      var previous = getVideoGrouping(previousId);
+      var differentRecordings = candidates.filter(function (id) {
+        return getVideoGrouping(id).recordingId !== previous.recordingId;
+      });
+      var eligible = differentRecordings.length ? differentRecordings : candidates;
+      if (previous.locationId) {
+        var locationAlternatives = eligible.filter(function (id) {
+          var location = getVideoGrouping(id).locationId;
+          return !location || location !== previous.locationId;
+        });
+        if (locationAlternatives.length) return locationAlternatives;
+      }
+      return eligible;
+    }
+
     function unique(values) {
       var seen = new Set();
       return (Array.isArray(values) ? values : []).map(function (value) {
@@ -364,25 +468,37 @@
       } catch (_) {}
     }
 
-    function shuffle(values) {
-      var result = values.slice();
-      for (var i = result.length - 1; i > 0; i -= 1) {
-        var j = randomIndex(i + 1);
-        var item = result[i];
-        result[i] = result[j];
-        result[j] = item;
-      }
-      if (result.length > 1 && result.every(function (id, index) { return id === previousOrder[index]; })) {
-        var first = result[0];
-        result[0] = result[1];
-        result[1] = first;
+    function shuffle(values, anchorId, alternateFirstChoice) {
+      var remaining = values.slice();
+      var result = [];
+      var previousId = anchorId || null;
+      var usedAlternate = false;
+      while (remaining.length) {
+        var eligible = prioritizedCandidates(remaining, previousId);
+        var selectedAt = randomIndex(eligible.length);
+        if (alternateFirstChoice && !usedAlternate && eligible.length > 1) {
+          selectedAt = (selectedAt + 1) % eligible.length;
+          usedAlternate = true;
+        }
+        var selected = eligible[selectedAt];
+        result.push(selected);
+        remaining.splice(remaining.indexOf(selected), 1);
+        previousId = selected;
       }
       return result;
     }
 
-    function beginCycle() {
-      previousOrder = order.slice();
-      order = shuffle(ids);
+    function makeShuffle(values, anchorId) {
+      var result = shuffle(values, anchorId, false);
+      if (result.length > 1 && result.every(function (id, index) { return id === previousOrder[index]; })) {
+        result = shuffle(values, anchorId, true);
+      }
+      return result;
+    }
+
+    function beginCycle(anchorId) {
+      previousOrder = history.length ? history.slice() : order.slice();
+      order = makeShuffle(ids, anchorId);
       played = new Set();
       cycleNumber += 1;
       save();
@@ -404,9 +520,7 @@
 
       var oldSet = new Set(oldIds);
       var additions = ids.filter(function (id) { return !oldSet.has(id); });
-      additions.forEach(function (id) {
-        order.splice(randomIndex(order.length + 1), 0, id);
-      });
+      if (additions.length) order.push.apply(order, makeShuffle(additions, history[cursor] || null));
 
       if (ids.length && !order.length) beginCycle();
       save();
@@ -436,7 +550,7 @@
 
     function beginStartup(id) {
       previousOrder = order.slice();
-      order = shuffle(ids);
+      order = makeShuffle(ids, id);
       played = new Set();
       history = [];
       cursor = -1;
@@ -471,10 +585,12 @@
         if (skippedAt >= 0) order.push(order.splice(skippedAt, 1)[0]);
       }
 
-      var candidate = order.find(function (id) { return !played.has(id) && id !== currentId; });
+      var candidates = prioritizedCandidates(order.filter(function (id) { return !played.has(id) && id !== currentId; }), currentId);
+      var candidate = candidates[0];
       if (!candidate && ids.every(function (id) { return played.has(id); })) {
-        beginCycle();
-        candidate = order[0] || null;
+        beginCycle(currentId);
+        candidates = prioritizedCandidates(order.filter(function (id) { return id !== currentId; }), currentId);
+        candidate = candidates[0] || order[0] || null;
       }
       if (!candidate) return currentId && ids.indexOf(currentId) >= 0 ? currentId : start(ids);
       return remember(candidate);
@@ -508,7 +624,7 @@
     function peekNext(values, currentId) {
       sync(values);
       if (cursor >= 0 && cursor < history.length - 1 && history[cursor] === currentId) return history[cursor + 1];
-      return order.find(function (id) { return !played.has(id) && id !== currentId; }) || null;
+      return prioritizedCandidates(order.filter(function (id) { return !played.has(id) && id !== currentId; }), currentId)[0] || null;
     }
 
     function current(values) {
@@ -547,5 +663,5 @@
     return { start: start, next: next, previous: previous, select: select, peekNext: peekNext, current: current, sync: sync, markStarted: markStarted, getState: getState, reset: reset };
   }
 
-  return { createShuffleCycle: createShuffleCycle, videoKey: videoKey, isDuplicatePost: isDuplicatePost, selectRandomStartupVideo: selectRandomStartupVideo, selectAndRememberStartupVideo: selectAndRememberStartupVideo, selectValidatedStartupVideo: selectValidatedStartupVideo, createStartupSelection: createStartupSelection, createVideoValidator: createVideoValidator, createFeedVideoRecovery: createFeedVideoRecovery, applyCenteredVideoLayout: applyCenteredVideoLayout, calculateContainedVideoSize: calculateContainedVideoSize, fitCenteredVideo: fitCenteredVideo, hasVideoMetadata: hasVideoMetadata };
+  return { createShuffleCycle: createShuffleCycle, videoKey: videoKey, getVideoGrouping: getVideoGrouping, isDuplicatePost: isDuplicatePost, selectRandomStartupVideo: selectRandomStartupVideo, selectAndRememberStartupVideo: selectAndRememberStartupVideo, selectValidatedStartupVideo: selectValidatedStartupVideo, createStartupSelection: createStartupSelection, createVideoValidator: createVideoValidator, createFeedVideoRecovery: createFeedVideoRecovery, applyCenteredVideoLayout: applyCenteredVideoLayout, calculateContainedVideoSize: calculateContainedVideoSize, fitCenteredVideo: fitCenteredVideo, hasVideoMetadata: hasVideoMetadata };
 });
