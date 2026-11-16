@@ -37,6 +37,7 @@ test('the music screen lists both supplied songs with controlled, non-autoplayin
   assert.match(screen, /src="assets\/chal-gobinde-song\.m4a"/);
   assert.match(screen, /assets\/bhan-saali-cover\.jpg/);
   assert.match(screen, /src="assets\/bhan-saali-song\.m4a"/);
+  assert.match(screen, /<button[^>]*data-song-playback-for="bhanSaaliAudio"[^>]*aria-label="भान साली बजाउनुहोस्"[^>]*aria-pressed="false"[^>]*onclick="toggleDeudaSongPlayback\('bhanSaaliAudio'\)"/);
   assert.match(screen, /<audio[^>]*controls[^>]*preload="none"[^>]*aria-label="चल गोबिन्दे अडियो प्लेयर"/);
   assert.match(screen, /<audio[^>]*controls[^>]*preload="none"[^>]*aria-label="भान साली अडियो प्लेयर"/);
   assert.match(screen, /<audio[^>]*controlsList="nodownload"/);
@@ -64,18 +65,31 @@ test('opening and returning from the music screen use the intended screen states
   let secondSongPauseCount = 0;
   const firstSongHandlers = {};
   const secondSongHandlers = {};
+  const playbackAttributes = { 'data-song-title': 'भान साली' };
+  const playbackIcon = { textContent: '▶' };
+  const playbackButton = {
+    setAttribute: (name, value) => { playbackAttributes[name] = value; },
+    getAttribute: name => playbackAttributes[name],
+    querySelector: selector => selector === '.deuda-song-play-icon' ? playbackIcon : null
+  };
   const main = { classList: { add: name => classes.add(name), remove: name => classes.delete(name) } };
   const screen = { hidden: true, scrollTop: 80, closest: selector => selector === '.main' ? main : null };
   const back = { focus: () => { backFocused = true; } };
   const trigger = { setAttribute: (name, value) => { attributes[name] = value; }, focus: () => { triggerFocused = true; } };
   const feedPlayer = { paused: false, pause: () => { feedPauseCount += 1; feedPlayer.paused = true; } };
-  const songAudio = { pause: () => { songPauseCount += 1; }, addEventListener: (name, handler) => { firstSongHandlers[name] = handler; } };
-  const secondSongAudio = { pause: () => { secondSongPauseCount += 1; }, addEventListener: (name, handler) => { secondSongHandlers[name] = handler; } };
+  const songAudio = { id: 'deudaSongAudio', paused: true, pause: () => { songPauseCount += 1; songAudio.paused = true; }, addEventListener: (name, handler) => { firstSongHandlers[name] = handler; } };
+  const secondSongAudio = {
+    id: 'bhanSaaliAudio',
+    paused: true,
+    play: () => { secondSongAudio.paused = false; return { catch: () => {} }; },
+    pause: () => { secondSongPauseCount += 1; secondSongAudio.paused = true; },
+    addEventListener: (name, handler) => { secondSongHandlers[name] = handler; }
+  };
   const context = {
     document: {
-      getElementById: id => ({ deudaSongScreen: screen, deudaSongBack: back, postVideo: feedPlayer }[id] || null),
+      getElementById: id => ({ deudaSongScreen: screen, deudaSongBack: back, postVideo: feedPlayer, deudaSongAudio: songAudio, bhanSaaliAudio: secondSongAudio }[id] || null),
       querySelectorAll: selector => selector === '.deuda-song-audio' ? [songAudio, secondSongAudio] : [],
-      querySelector: selector => selector === '.mobile-nav [aria-controls="deudaSongScreen"]' ? trigger : null
+      querySelector: selector => selector === '.mobile-nav [aria-controls="deudaSongScreen"]' ? trigger : (selector === '[data-song-playback-for="bhanSaaliAudio"]' ? playbackButton : null)
     }
   };
   vm.runInNewContext(controls, context);
@@ -89,8 +103,17 @@ test('opening and returning from the music screen use the intended screen states
   assert.equal(feedPauseCount, 1, 'the hidden feed video pauses while the song screen is open');
   assert.equal(typeof firstSongHandlers.play, 'function');
   assert.equal(typeof secondSongHandlers.play, 'function');
+  context.toggleDeudaSongPlayback('bhanSaaliAudio');
   secondSongHandlers.play();
+  assert.equal(playbackAttributes['aria-pressed'], 'true');
+  assert.equal(playbackAttributes['aria-label'], 'भान साली रोक्नुहोस्');
+  assert.equal(playbackIcon.textContent, 'Ⅱ');
   assert.equal(songPauseCount, 1, 'starting another song pauses the current library song');
+  context.toggleDeudaSongPlayback('bhanSaaliAudio');
+  secondSongHandlers.pause();
+  assert.equal(playbackAttributes['aria-pressed'], 'false');
+  assert.equal(playbackAttributes['aria-label'], 'भान साली बजाउनुहोस्');
+  assert.equal(playbackIcon.textContent, '▶');
 
   context.closeDeudaSongScreen();
   assert.equal(screen.hidden, true);
@@ -98,5 +121,5 @@ test('opening and returning from the music screen use the intended screen states
   assert.equal(attributes['aria-expanded'], 'false');
   assert.equal(triggerFocused, true);
   assert.equal(songPauseCount, 2, 'the song pauses when returning to the feed');
-  assert.equal(secondSongPauseCount, 1, 'every library song pauses when returning to the feed');
+  assert.equal(secondSongPauseCount, 2, 'the second song pauses on its own toggle and when leaving the library');
 });

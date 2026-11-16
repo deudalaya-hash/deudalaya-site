@@ -247,7 +247,7 @@ html:not(.deudalaya-install-required) #deudalayaInstallLanding{display:none!impo
       <li>
         <article class="deuda-song-card" aria-labelledby="bhanSaaliTitle">
           <span class="deuda-song-cover"><img src="assets/bhan-saali-cover.jpg" alt="भान साली गीतको आधिकारिक आवरण" width="1280" height="720" loading="lazy" decoding="async"></span>
-          <span class="deuda-song-card-copy"><span class="deuda-song-title-row"><span class="deuda-song-title" id="bhanSaaliTitle">भान साली</span><span class="deuda-song-note" aria-hidden="true">🎵</span></span><span class="deuda-song-category">देउडा गीत</span><span class="deuda-song-artists">चक्र बम · लक्ष्मी आचार्य</span></span>
+          <span class="deuda-song-card-copy"><span class="deuda-song-title-row"><span class="deuda-song-title" id="bhanSaaliTitle">भान साली</span><button class="deuda-song-play" type="button" data-song-playback-for="bhanSaaliAudio" data-song-title="भान साली" aria-label="भान साली बजाउनुहोस्" aria-pressed="false" aria-controls="bhanSaaliAudio" onclick="toggleDeudaSongPlayback('bhanSaaliAudio')"><span class="deuda-song-play-icon" aria-hidden="true">▶</span></button></span><span class="deuda-song-category">देउडा गीत</span><span class="deuda-song-artists">चक्र बम · लक्ष्मी आचार्य</span></span>
           <audio class="deuda-song-audio" id="bhanSaaliAudio" controls controlsList="nodownload" preload="none" src="assets/bhan-saali-song.m4a" aria-label="भान साली अडियो प्लेयर"></audio>
         </article>
       </li>
@@ -2609,6 +2609,8 @@ async function uploadToStorage(client,path,file,button){
 .deuda-song-title-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .deuda-song-title{font-family:"Noto Sans Devanagari","Nirmala UI",system-ui,sans-serif;font-size:20px;font-weight:750;line-height:1.4}
 .deuda-song-note{flex:none;font-family:system-ui,sans-serif;font-size:18px;line-height:1}
+.deuda-song-play{display:grid;place-items:center;flex:none;width:44px;height:44px;border:1px solid #f2b33d;border-radius:50%;background:#f2b33d;color:#17171a;font-size:16px;line-height:1;cursor:pointer}
+.deuda-song-play:focus-visible{outline:2px solid #fff;outline-offset:3px}
 .deuda-song-category{display:block;margin-top:5px;color:#92929c;font-size:13px;line-height:1.4}
 .deuda-song-artists{display:block;margin-top:4px;color:#b4b4bc;font-size:12px;line-height:1.4}
 .deuda-song-audio{display:block;width:100%;height:42px;margin-top:12px;color-scheme:dark;accent-color:#f2b33d}
@@ -2631,11 +2633,29 @@ function closeDeudaSongScreen(){
   screen.hidden=true;main.classList.remove('deuda-song-open');
   if(trigger){trigger.setAttribute('aria-expanded','false');trigger.focus({preventScroll:true});}
 }
+function updateDeudaSongPlaybackButton(audio,isPlaying){
+  var button=document.querySelector('[data-song-playback-for="'+audio.id+'"]');if(!button)return;
+  var title=button.getAttribute('data-song-title')||'गीत';
+  button.setAttribute('aria-pressed',isPlaying?'true':'false');
+  button.setAttribute('aria-label',title+(isPlaying?' रोक्नुहोस्':' बजाउनुहोस्'));
+  var icon=button.querySelector('.deuda-song-play-icon');if(icon)icon.textContent=isPlaying?'Ⅱ':'▶';
+}
+function toggleDeudaSongPlayback(audioId){
+  var audio=document.getElementById(audioId);if(!audio)return;
+  if(!audio.paused){audio.pause();return;}
+  try{
+    var attempt=audio.play();
+    if(attempt&&typeof attempt.catch==='function')attempt.catch(function(){updateDeudaSongPlaybackButton(audio,false);if(typeof toast==='function')toast('गीत बज्न सकेन। फेरि प्रयास गर्नुहोस्।');});
+  }catch(error){updateDeudaSongPlaybackButton(audio,false);if(typeof toast==='function')toast('गीत बज्न सकेन। फेरि प्रयास गर्नुहोस्।');}
+}
 document.querySelectorAll('.deuda-song-audio').forEach(function(songAudio){
   songAudio.addEventListener('play',function(){
     document.querySelectorAll('.deuda-song-audio').forEach(function(otherAudio){if(otherAudio!==songAudio)otherAudio.pause();});
     var feedPlayer=document.getElementById('postVideo');if(feedPlayer&&!feedPlayer.paused)feedPlayer.pause();
+    updateDeudaSongPlaybackButton(songAudio,true);
   });
+  songAudio.addEventListener('pause',function(){updateDeudaSongPlaybackButton(songAudio,false);});
+  songAudio.addEventListener('ended',function(){updateDeudaSongPlaybackButton(songAudio,false);});
 });
 </script>
 </body></html>
