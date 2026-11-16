@@ -857,9 +857,6 @@
   document.querySelectorAll('.nav-item').forEach(button => {
     if (button.textContent.trim() === 'Following') button.onclick = () => setFeedMode('following');
   });
-  const friendsTab = document.querySelector('.mobile-nav button:nth-child(2)');
-  if (friendsTab) friendsTab.onclick = () => setFeedMode('following');
-
   document.getElementById('profileAuthButton').onclick = () => cloudUser ? handleAuthAction() : openAuth();
   document.getElementById('commentInput').addEventListener('focus', () => {
     if (!cloudUser) { document.activeElement.blur(); openAuth(); }
