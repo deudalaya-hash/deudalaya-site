@@ -244,6 +244,13 @@ html:not(.deudalaya-install-required) #deudalayaInstallLanding{display:none!impo
           <audio class="deuda-song-audio" id="deudaSongAudio" controls controlsList="nodownload" preload="none" src="assets/chal-gobinde-song.m4a" aria-label="चल गोबिन्दे अडियो प्लेयर"></audio>
         </article>
       </li>
+      <li>
+        <article class="deuda-song-card" aria-labelledby="bhanSaaliTitle">
+          <span class="deuda-song-cover"><img src="assets/bhan-saali-cover.jpg" alt="भान साली गीतको आधिकारिक आवरण" width="1280" height="720" loading="lazy" decoding="async"></span>
+          <span class="deuda-song-card-copy"><span class="deuda-song-title-row"><span class="deuda-song-title" id="bhanSaaliTitle">भान साली</span><span class="deuda-song-note" aria-hidden="true">🎵</span></span><span class="deuda-song-category">देउडा गीत</span><span class="deuda-song-artists">चक्र बम · लक्ष्मी आचार्य</span></span>
+          <audio class="deuda-song-audio" id="bhanSaaliAudio" controls controlsList="nodownload" preload="none" src="assets/bhan-saali-song.m4a" aria-label="भान साली अडियो प्लेयर"></audio>
+        </article>
+      </li>
     </ul>
   </div>
 </section></main>
@@ -2603,6 +2610,7 @@ async function uploadToStorage(client,path,file,button){
 .deuda-song-title{font-family:"Noto Sans Devanagari","Nirmala UI",system-ui,sans-serif;font-size:20px;font-weight:750;line-height:1.4}
 .deuda-song-note{flex:none;font-family:system-ui,sans-serif;font-size:18px;line-height:1}
 .deuda-song-category{display:block;margin-top:5px;color:#92929c;font-size:13px;line-height:1.4}
+.deuda-song-artists{display:block;margin-top:4px;color:#b4b4bc;font-size:12px;line-height:1.4}
 .deuda-song-audio{display:block;width:100%;height:42px;margin-top:12px;color-scheme:dark;accent-color:#f2b33d}
 @media(max-width:700px){.main.deuda-song-open{padding:0!important}.deuda-song-shell{padding:18px 16px 28px}.deuda-song-header{padding:16px 0 20px}.deuda-song-grid{grid-template-columns:minmax(0,1fr);margin-top:18px}.deuda-song-card{max-width:none}.deuda-song-title{font-size:19px}}
 @media(prefers-reduced-motion:reduce){.deuda-song-card{transition:none}.deuda-song-card:hover{transform:none}}
@@ -2619,9 +2627,15 @@ function openDeudaSongScreen(){
 function closeDeudaSongScreen(){
   var screen=document.getElementById('deudaSongScreen'),main=screen&&screen.closest('.main'),trigger=document.querySelector('.mobile-nav [aria-controls="deudaSongScreen"]');
   if(!screen||!main)return;
-  var songAudio=document.getElementById('deudaSongAudio');if(songAudio)songAudio.pause();
+  document.querySelectorAll('.deuda-song-audio').forEach(function(songAudio){songAudio.pause();});
   screen.hidden=true;main.classList.remove('deuda-song-open');
   if(trigger){trigger.setAttribute('aria-expanded','false');trigger.focus({preventScroll:true});}
 }
+document.querySelectorAll('.deuda-song-audio').forEach(function(songAudio){
+  songAudio.addEventListener('play',function(){
+    document.querySelectorAll('.deuda-song-audio').forEach(function(otherAudio){if(otherAudio!==songAudio)otherAudio.pause();});
+    var feedPlayer=document.getElementById('postVideo');if(feedPlayer&&!feedPlayer.paused)feedPlayer.pause();
+  });
+});
 </script>
 </body></html>
