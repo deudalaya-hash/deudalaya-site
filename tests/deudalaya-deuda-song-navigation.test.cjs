@@ -35,6 +35,7 @@ test('the music screen shows the supplied cover and playable M4A without autopla
   assert.match(screen, /assets\/chal-gobinde-cover\.jpg/);
   assert.match(screen, /src="assets\/chal-gobinde-song\.m4a"/);
   assert.match(screen, /<audio[^>]*controls[^>]*preload="none"[^>]*aria-label="चल गोबिन्दे अडियो प्लेयर"/);
+  assert.match(screen, /<audio[^>]*controlsList="nodownload"/);
   assert.doesNotMatch(screen, /COMING SOON|autoplay|<video\b/);
   assert.equal((screen.match(/class="deuda-song-card"/g) || []).length, 1, 'only the requested song is listed');
   assert.ok(fs.statSync(path.join(root, 'assets', 'chal-gobinde-song.m4a')).size > 0, 'the song file is present');
