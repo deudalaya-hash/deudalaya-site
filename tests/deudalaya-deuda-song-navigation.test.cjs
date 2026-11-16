@@ -29,7 +29,8 @@ test('the music screen lists both supplied songs with controlled, non-autoplayin
   const screen = html.match(/<section\b(?=[^>]*id="deudaSongScreen")[\s\S]*?<\/section>/)?.[0];
   assert.ok(screen, 'the dedicated song library screen exists');
   assert.match(screen, /hidden/);
-  assert.match(screen, /aria-labelledby="deudaSongScreenTitle"/);
+  assert.match(screen, /aria-label="देउडा गीत"/);
+  assert.doesNotMatch(screen, /aria-labelledby="deudaSongScreenTitle"|class="deuda-song-header"|देउडालय · संगीत|देउडा गीतहरूको संग्रह/);
   assert.match(screen, /चल गोबिन्दे/);
   assert.match(screen, /भान साली/);
   assert.match(screen, /देउडा गीत/);
@@ -46,6 +47,8 @@ test('the music screen lists both supplied songs with controlled, non-autoplayin
   assert.ok(fs.statSync(path.join(root, 'assets', 'chal-gobinde-song.m4a')).size > 0, 'the song file is present');
   assert.ok(fs.statSync(path.join(root, 'assets', 'bhan-saali-song.m4a')).size > 0, 'the second song file is present');
   assert.match(html, /\.deuda-song-screen\{[^}]*overflow-y:auto/s);
+  assert.match(html, /\.deuda-song-grid\{[^}]*margin:12px 0 0/);
+  assert.match(html, /grid-template-columns:minmax\(0,1fr\);margin-top:12px/);
   assert.match(html, /\.deuda-song-shell\{[^}]*padding-bottom:calc\(72px \+ env\(safe-area-inset-bottom,0px\)\)/);
   assert.match(html, /@media\(max-width:700px\)\{\.main\.deuda-song-open/);
   assert.match(html, /@media\(max-width:700px\)\{\.main\.deuda-song-open\{padding:0!important\}\.deuda-song-shell\{[^}]*padding-bottom:calc\(84px \+ env\(safe-area-inset-bottom,0px\)\)/);
