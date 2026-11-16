@@ -2591,7 +2591,7 @@ async function uploadToStorage(client,path,file,button){
 .main.deuda-song-open #feed,.main.deuda-song-open .comments{display:none!important}
 .deuda-song-screen{display:flex;flex:1;width:100%;height:100%;min-width:0;min-height:0;overflow-y:auto;overscroll-behavior-y:contain;background:#101014;scrollbar-color:#45454d #101014}
 .deuda-song-screen[hidden]{display:none!important}
-.deuda-song-shell{width:min(100%,1040px);min-height:100%;margin:0 auto;padding:clamp(24px,4vw,48px) clamp(20px,4vw,44px) 36px}
+.deuda-song-shell{width:min(100%,1040px);min-height:100%;margin:0 auto;padding:clamp(24px,4vw,48px) clamp(20px,4vw,44px) 36px;padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
 .deuda-song-back{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 12px 0 0;background:transparent;color:#b4b4bc;font-size:14px;font-weight:600}
 .deuda-song-back:hover{color:#fff}
 .deuda-song-back:focus-visible{outline:2px solid #f2b33d;outline-offset:3px}
@@ -2612,7 +2612,7 @@ async function uploadToStorage(client,path,file,button){
 .deuda-song-category{display:block;margin-top:5px;color:#92929c;font-size:13px;line-height:1.4}
 .deuda-song-artists{display:block;margin-top:4px;color:#b4b4bc;font-size:12px;line-height:1.4}
 .deuda-song-audio{display:block;width:100%;height:42px;margin-top:12px;color-scheme:dark;accent-color:#f2b33d}
-@media(max-width:700px){.main.deuda-song-open{padding:0!important}.deuda-song-shell{padding:18px 16px 28px}.deuda-song-header{padding:16px 0 20px}.deuda-song-grid{grid-template-columns:minmax(0,1fr);margin-top:18px}.deuda-song-card{max-width:none}.deuda-song-title{font-size:19px}}
+@media(max-width:700px){.main.deuda-song-open{padding:0!important}.deuda-song-shell{padding:18px 16px 28px;padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}.deuda-song-header{padding:16px 0 20px}.deuda-song-grid{grid-template-columns:minmax(0,1fr);margin-top:18px}.deuda-song-card{max-width:none}.deuda-song-title{font-size:19px}}
 @media(prefers-reduced-motion:reduce){.deuda-song-card{transition:none}.deuda-song-card:hover{transform:none}}
 </style>
 <script>

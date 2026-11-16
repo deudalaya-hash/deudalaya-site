@@ -45,7 +45,9 @@ test('the music screen lists both supplied songs with controlled, non-autoplayin
   assert.ok(fs.statSync(path.join(root, 'assets', 'chal-gobinde-song.m4a')).size > 0, 'the song file is present');
   assert.ok(fs.statSync(path.join(root, 'assets', 'bhan-saali-song.m4a')).size > 0, 'the second song file is present');
   assert.match(html, /\.deuda-song-screen\{[^}]*overflow-y:auto/s);
+  assert.match(html, /\.deuda-song-shell\{[^}]*padding-bottom:calc\(72px \+ env\(safe-area-inset-bottom,0px\)\)/);
   assert.match(html, /@media\(max-width:700px\)\{\.main\.deuda-song-open/);
+  assert.match(html, /@media\(max-width:700px\)\{\.main\.deuda-song-open\{padding:0!important\}\.deuda-song-shell\{[^}]*padding-bottom:calc\(84px \+ env\(safe-area-inset-bottom,0px\)\)/);
   assert.match(html, /\.deuda-song-grid\{display:grid;grid-template-columns:repeat\(auto-fill/);
 });
 
