@@ -5,7 +5,7 @@
 })(typeof window !== 'undefined' ? window : globalThis, function () {
   'use strict';
 
-  var STORAGE_KEY = 'deudalaya-video-shuffle-v1';
+  var STORAGE_KEY = 'deudalaya-video-shuffle-v2';
   var STARTUP_STORAGE_KEY = 'deudalaya-last-startup-video-v1';
   var groupingByVideoKey = new Map();
 
@@ -409,13 +409,20 @@
       return Math.min(max - 1, Math.max(0, Math.floor(value * max)));
     }
 
+    function isSupabaseId(id) {
+      return typeof id === 'string' && id.indexOf('cloud:') === 0;
+    }
+
     function prioritizedCandidates(candidates, previousId) {
-      if (!previousId || candidates.length < 2) return candidates;
+      if (!candidates.length) return candidates;
+      var supabaseCandidates = candidates.filter(isSupabaseId);
+      var sourceCandidates = supabaseCandidates.length ? supabaseCandidates : candidates;
+      if (!previousId || sourceCandidates.length < 2) return sourceCandidates;
       var previous = getVideoGrouping(previousId);
-      var differentRecordings = candidates.filter(function (id) {
+      var differentRecordings = sourceCandidates.filter(function (id) {
         return getVideoGrouping(id).recordingId !== previous.recordingId;
       });
-      var eligible = differentRecordings.length ? differentRecordings : candidates;
+      var eligible = differentRecordings.length ? differentRecordings : sourceCandidates;
       if (previous.locationId) {
         var locationAlternatives = eligible.filter(function (id) {
           var location = getVideoGrouping(id).locationId;
@@ -441,7 +448,7 @@
       if (!storage) return;
       try {
         storage.setItem(storageKey, JSON.stringify({
-          version: 1,
+          version: 2,
           ids: ids,
           order: order,
           played: Array.from(played),
@@ -457,7 +464,7 @@
       if (!storage) return;
       try {
         var state = JSON.parse(storage.getItem(storageKey) || 'null');
-        if (!state || state.version !== 1) return;
+        if (!state || state.version !== 2) return;
         ids = unique(state.ids);
         order = unique(state.order);
         played = new Set(unique(state.played));
@@ -496,9 +503,19 @@
       return result;
     }
 
+    function orderedPool(values, anchorId) {
+      var supabaseIds = values.filter(isSupabaseId);
+      var localIds = values.filter(function (id) { return !isSupabaseId(id); });
+      var supabaseAnchor = anchorId && isSupabaseId(anchorId) ? anchorId : null;
+      var supabaseOrder = makeShuffle(supabaseIds, supabaseAnchor);
+      var localAnchor = supabaseOrder.length ? supabaseOrder[supabaseOrder.length - 1] : anchorId;
+      var localOrder = makeShuffle(localIds, localAnchor);
+      return supabaseOrder.concat(localOrder);
+    }
+
     function beginCycle(anchorId) {
       previousOrder = history.length ? history.slice() : order.slice();
-      order = makeShuffle(ids, anchorId);
+      order = orderedPool(ids, anchorId);
       played = new Set();
       cycleNumber += 1;
       save();
@@ -520,7 +537,12 @@
 
       var oldSet = new Set(oldIds);
       var additions = ids.filter(function (id) { return !oldSet.has(id); });
-      if (additions.length) order.push.apply(order, makeShuffle(additions, history[cursor] || null));
+      if (additions.length) {
+        var anchorId = history[cursor] || null;
+        var completed = order.filter(function (id) { return played.has(id) || id === anchorId; });
+        var pending = ids.filter(function (id) { return !played.has(id) && id !== anchorId; });
+        order = completed.concat(orderedPool(pending, anchorId));
+      }
 
       if (ids.length && !order.length) beginCycle();
       save();
@@ -539,18 +561,20 @@
     function start(values, preferredId) {
       sync(values);
       if (!ids.length) return null;
-      if (preferredId && ids.indexOf(preferredId) >= 0) {
+      var startupPool = ids.filter(isSupabaseId);
+      if (preferredId && ids.indexOf(preferredId) >= 0 && (isSupabaseId(preferredId) || !startupPool.length)) {
         // A deliberate shared-video URL remains a direct navigation target.
         return beginStartup(preferredId);
       }
-      var startupId = selectAndRememberStartupVideo(ids, startupStorage, random, startupStorageKey);
+      if (!startupPool.length) startupPool = ids;
+      var startupId = selectAndRememberStartupVideo(startupPool, startupStorage, random, startupStorageKey);
       if (!startupId) return null;
       return beginStartup(startupId);
     }
 
     function beginStartup(id) {
       previousOrder = order.slice();
-      order = makeShuffle(ids, id);
+      order = orderedPool(ids, id);
       played = new Set();
       history = [];
       cursor = -1;
@@ -580,10 +604,7 @@
       }
       returningForward = false;
 
-      if (currentId && !played.has(currentId)) {
-        var skippedAt = order.indexOf(currentId);
-        if (skippedAt >= 0) order.push(order.splice(skippedAt, 1)[0]);
-      }
+      if (currentId && ids.indexOf(currentId) >= 0 && !played.has(currentId)) markStarted(currentId);
 
       var candidates = prioritizedCandidates(order.filter(function (id) { return !played.has(id) && id !== currentId; }), currentId);
       var candidate = candidates[0];

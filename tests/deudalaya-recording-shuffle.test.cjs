@@ -139,17 +139,69 @@ test('syncing the unchanged feed preserves the in-progress shuffle sequence', ()
   assert.equal(after.cycleNumber, before.cycleNumber);
 });
 
-test('local and Supabase videos share one shuffled cycle', () => {
-  const local = makeRecording('local-event', 'valley', 2, 'local');
-  const remote = makeRecording('remote-event', 'mountain', 2, 'supabase');
+test('all Supabase videos play before local assets, with each source group deduplicated within a cycle', () => {
+  const local = makeRecording('local-event', 'valley', 3, 'local')
+    .map((video, index) => ({ videoSrc: `assets/${index + 1}.mp4`, recordingId: video.recordingId, locationId: video.locationId }));
+  const remote = makeRecording('remote-event', 'mountain', 3, 'supabase');
   const videos = [...local, ...remote];
   const cycle = createShuffleCycle({ random: () => 0.71 });
   const sequence = consumeCycle(cycle, videos, cycle.start(videos));
+  const remoteCount = videos.filter(video => video.cloudId).length;
 
-  assert.equal(sequence.length, 4);
-  assert.ok(sequence.some(key => key.startsWith('local:')));
-  assert.ok(sequence.some(key => key.startsWith('cloud:')));
-  assert.equal(new Set(sequence).size, 4);
+  assert.equal(sequence.length, videos.length);
+  assert.ok(sequence.slice(0, remoteCount).every(key => key.startsWith('cloud:')));
+  assert.ok(sequence.slice(remoteCount).every(key => !key.startsWith('cloud:')));
+  assert.equal(new Set(sequence).size, videos.length);
+});
+
+test('a local startup preference cannot jump ahead of available Supabase videos', () => {
+  const local = { videoSrc: 'assets/local.mp4' };
+  const remote = { cloudId: 'published-1', videoSrc: 'https://feed.example/published-1.mp4' };
+  const cycle = createShuffleCycle({ random: () => 0 });
+
+  assert.equal(cycle.start([local, remote], videoKey(local)), videoKey(remote));
+});
+
+test('a newly published Supabase video enters before the remaining local queue', () => {
+  const remoteOne = { cloudId: 'published-1', videoSrc: 'https://feed.example/published-1.mp4' };
+  const localOne = { videoSrc: 'assets/local-1.mp4' };
+  const localTwo = { videoSrc: 'assets/local-2.mp4' };
+  const remoteTwo = { cloudId: 'published-2', videoSrc: 'https://feed.example/published-2.mp4' };
+  const cycle = createShuffleCycle({ random: () => 0 });
+  const first = cycle.start([remoteOne, localOne, localTwo]);
+  cycle.markStarted(first);
+  const localCurrent = cycle.next([remoteOne, localOne, localTwo], first);
+  assert.ok(!localCurrent.startsWith('cloud:'));
+
+  const next = cycle.next([remoteOne, localOne, localTwo, remoteTwo], localCurrent);
+  assert.equal(next, videoKey(remoteTwo));
+});
+
+test('local assets are randomly sequenced once per cycle and reshuffled only after exhaustion', () => {
+  const videos = makeRecording('asset-event', '', 5, 'local')
+    .map((video, index) => ({ ...video, videoSrc: `assets/${index + 1}.mp4` }));
+  let randomCalls = 0;
+  const cycle = createShuffleCycle({ random: () => { randomCalls += 1; return (randomCalls % 7) / 7; } });
+  const first = cycle.start(videos);
+  const firstOrder = consumeCycle(cycle, videos, first);
+  const callsAfterFirstCycle = randomCalls;
+  cycle.markStarted(firstOrder.at(-1));
+  const secondFirst = cycle.next(videos, firstOrder.at(-1));
+  const stateAfterRollover = cycle.getState();
+  const secondOrder = [secondFirst];
+  let current = secondFirst;
+  for (let index = 1; index < videos.length; index += 1) {
+    cycle.markStarted(current);
+    current = cycle.next(videos, current);
+    secondOrder.push(current);
+  }
+
+  assert.equal(new Set(firstOrder).size, videos.length);
+  assert.equal(new Set(secondOrder).size, videos.length);
+  assert.deepEqual(new Set(firstOrder), new Set(videos.map(videoKey)));
+  assert.deepEqual(new Set(secondOrder), new Set(videos.map(videoKey)));
+  assert.equal(stateAfterRollover.cycleNumber, 2);
+  assert.ok(randomCalls > callsAfterFirstCycle, 'a fresh random ordering is generated after the local pool is exhausted');
 });
 
 test('actual Tila and Humla source captions group their clips and expose only named locations', () => {

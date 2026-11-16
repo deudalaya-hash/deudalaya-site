@@ -6,11 +6,13 @@ const test = require('node:test');
 const social = fs.readFileSync(path.join(__dirname, '..', 'social.js'), 'utf8');
 const categories = fs.readFileSync(path.join(__dirname, '..', 'feed-categories.js'), 'utf8');
 
-test('startup validates the combined published category pool and remembers only a playable result', () => {
-  assert.match(social, /const startupCandidates = \[\.\.\.newSharedPosts, \.\.\.localCandidates\]/);
+test('startup validates the Supabase-first published pool and uses local videos only as a fallback', () => {
+  assert.match(social, /const availableStartupCandidates = \[\.\.\.newSharedPosts, \.\.\.localCandidates\]/);
+  assert.match(social, /const remoteStartupCandidates = availableStartupCandidates\.filter\(post => post\.cloudPost && post\.cloudId\)/);
+  assert.match(social, /const startupCandidates = remoteStartupCandidates\.length \? remoteStartupCandidates : availableStartupCandidates/);
   assert.match(social, /ACTIVE_CATEGORIES\.includes\(window\.DeudalayaFeedCategories\.categoryOf\(post\)\)/);
   assert.match(social, /startupSelection\.select\(\s*candidates, videoValidator, startupStorage\(\), Math\.random, 'deudalaya-last-startup-video-v1'/);
-  assert.match(social, /startupVideoKey = await chooseStartupVideo\(startupCandidates\)/);
+  assert.match(social, /startupVideoKey = await chooseStartupVideo\(startupCandidates, 'remote'\)/);
   assert.match(social, /async function selectLocalStartupVideo\(\)/);
   assert.match(social, /if \(!client\) \{ await selectLocalStartupVideo\(\); return; \}/);
   assert.match(categories, /\['देउडा', 'गाउँघर', 'शहर'\]/);

@@ -369,10 +369,12 @@
       let startupVideoKey = null;
       if ((!startupSelectionDone || startupSelectionPool !== 'remote') && window.DeudalayaVideoShuffle && typeof window.DeudalayaVideoShuffle.selectValidatedStartupVideo === 'function') {
         const localCandidates = mergeLocalPosts(localPosts, videos).filter(isSupportedFeedVideo);
-        const startupCandidates = [...newSharedPosts, ...localCandidates]
+        const availableStartupCandidates = [...newSharedPosts, ...localCandidates]
           .filter(isSupportedFeedVideo)
           .filter(post => !videoValidator || !videoValidator.isKnownBroken(feedVideoSource(post)))
           .filter(post => window.DeudalayaFeedCategories.ACTIVE_CATEGORIES.includes(window.DeudalayaFeedCategories.categoryOf(post)));
+        const remoteStartupCandidates = availableStartupCandidates.filter(post => post.cloudPost && post.cloudId);
+        const startupCandidates = remoteStartupCandidates.length ? remoteStartupCandidates : availableStartupCandidates;
         startupVideoKey = await chooseStartupVideo(startupCandidates, 'remote');
         if (requestId !== remoteFeedRequestId) return;
         const startupVideo = startupCandidates.find(post => window.DeudalayaVideoShuffle.videoKey(post) === startupVideoKey);

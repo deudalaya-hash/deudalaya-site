@@ -48,8 +48,10 @@ test('shared feed posts duplicating the bundled cultural clip are excluded from 
   assert.match(html, /देउडालयको सांस्कृतिक झलक — नयाँ प्रस्तुति/);
 });
 
-test('remote startup chooses after combining Supabase and local videos, then refreshes preserve the current item', () => {
-  assert.match(social, /const startupCandidates = \[\.\.\.newSharedPosts, \.\.\.localCandidates\]/);
+test('remote startup prefers Supabase videos and refreshes preserve the current item', () => {
+  assert.match(social, /const availableStartupCandidates = \[\.\.\.newSharedPosts, \.\.\.localCandidates\]/);
+  assert.match(social, /const remoteStartupCandidates = availableStartupCandidates\.filter\(post => post\.cloudPost && post\.cloudId\)/);
+  assert.match(social, /const startupCandidates = remoteStartupCandidates\.length \? remoteStartupCandidates : availableStartupCandidates/);
   assert.match(social, /chooseStartupVideo\(startupCandidates, ['"]remote['"]\)/);
   assert.match(social, /const captureFeedPosition\s*=\s*\(\)\s*=>\s*\(\{\s*key:\s*categoryPositionKey\(currentPost\(\)\),\s*index\s*\}\)/);
   assert.match(social, /applyFeedMode\(startupVideoKey !== null, startupVideoKey, captureFeedPosition\(\)\)/);

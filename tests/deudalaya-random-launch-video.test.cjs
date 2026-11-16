@@ -22,13 +22,13 @@ test('startup validation runs once and has a validated local fallback when Supab
   assert.ok(social.includes('window.DeudalayaVideoShuffle?.createStartupSelection?.()'));
   assert.ok(social.includes('async function selectLocalStartupVideo()'));
   assert.ok(social.includes('if (!client) { await selectLocalStartupVideo(); return; }'));
-  assert.ok(social.includes('startupVideoKey = await chooseStartupVideo(startupCandidates)'));
+  assert.ok(social.includes("startupVideoKey = await chooseStartupVideo(startupCandidates, 'remote')"));
   assert.ok(social.includes('if (startupVideoKey && typeof window.fypStartAt === \'function\') window.fypStartAt(startupVideoKey)'));
 });
 
 test('startup selection waits until the mandatory installation gate releases the feed', () => {
   assert.match(social, /function waitForInstallationAccess\(\)/);
-  assert.match(social, /async function chooseStartupVideo\(candidates\)[\s\S]*?await waitForInstallationAccess\(\)/);
+  assert.match(social, /async function chooseStartupVideo\(candidates, pool = 'remote'\)[\s\S]*?await waitForInstallationAccess\(\)/);
   assert.match(social, /deudalaya-install-required/);
   assert.match(social, /deudalaya-installstatechange/);
 });
@@ -38,9 +38,11 @@ test('the startup selection uses the shuffle helper and the ordinary feed cycle'
   assert.match(fyp, /window\.fypStartAt=function\(key\)[\s\S]*?playbackShuffle\.start\(keys,key\)/);
   assert.match(fyp, /function fypSelectCurrent\(i\)[\s\S]*?playbackShuffle\.getState\(\)/);
   assert.match(html, /sessionStorage/);
-  assert.ok(social.includes("startupSelection.select(\n      candidates, videoValidator, startupStorage(), Math.random, 'deudalaya-last-startup-video-v1'"));
-  assert.match(social, /const startupCandidates = \[\.\.\.newSharedPosts, \.\.\.localCandidates\]/);
+  assert.match(social, /startupSelection\.select\(\s*candidates, videoValidator, startupStorage\(\), Math\.random, 'deudalaya-last-startup-video-v1'/);
+  assert.match(social, /const availableStartupCandidates = \[\.\.\.newSharedPosts, \.\.\.localCandidates\]/);
+  assert.match(social, /const remoteStartupCandidates = availableStartupCandidates\.filter\(post => post\.cloudPost && post\.cloudId\)/);
+  assert.match(social, /const startupCandidates = remoteStartupCandidates\.length \? remoteStartupCandidates : availableStartupCandidates/);
   assert.match(social, /activeFeedCategory = startupCategory/);
-  assert.match(social, /applyFeedMode\(true, startupVideoKey\)/);
-  assert.match(social, /if \(!startupSelectionDone &&/);
+  assert.match(social, /applyFeedMode\(startupVideoKey !== null, startupVideoKey, captureFeedPosition\(\)\)/);
+  assert.match(social, /if \(\(!startupSelectionDone \|\| startupSelectionPool !== 'remote'\) &&/);
 });

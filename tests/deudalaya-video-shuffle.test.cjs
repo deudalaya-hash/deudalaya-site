@@ -30,18 +30,23 @@ test('twenty videos play exactly once in each of two shuffled cycles', () => {
   assert.notDeepEqual(firstCycle, secondCycle);
 });
 
-test('an unstarted skipped video is deferred until the other videos have played', () => {
+test('skipping consumes the current video and does not repeat it before the next cycle', () => {
   const videos = ids(4);
   const cycle = createShuffleCycle({ random: () => 0.5 });
   const first = cycle.start(videos);
   const second = cycle.next(videos, first);
   assert.notEqual(second, first);
+  assert.ok(cycle.getState().played.includes(first), 'swiping away consumes the current clip even before natural completion');
   cycle.markStarted(second);
   const third = cycle.next(videos, second);
   cycle.markStarted(third);
   const fourth = cycle.next(videos, third);
   cycle.markStarted(fourth);
-  assert.equal(cycle.next(videos, fourth), first);
+  assert.equal(new Set(cycle.getState().history).size, videos.length);
+  assert.equal(cycle.getState().cycleNumber, 1);
+  const nextCycleVideo = cycle.next(videos, fourth);
+  assert.notEqual(nextCycleVideo, fourth);
+  assert.equal(cycle.getState().cycleNumber, 2);
 });
 
 test('returning to a played video does not count it again', () => {
