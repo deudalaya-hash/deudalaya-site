@@ -17,12 +17,12 @@ test('the shared bottom navigation opens the Deuda song library', () => {
   assert.ok(songItem, 'the second bottom navigation item exists');
   assert.match(songItem, /onclick="openDeudaSongScreen\(\)"/);
   assert.match(songItem, /aria-label="देउडा गीत"/);
-  assert.match(songItem, /<img[^>]*class="nav-deudalaya-icon"[^>]*src="assets\/deudalaya-icon-192\.png"[^>]*alt=""/);
+  assert.match(songItem, /<span class="nav-music-icon" aria-hidden="true">🎵<\/span>/);
   assert.match(songItem, /देउडा गीत/);
-  assert.doesNotMatch(songItem, /Friends|nav-music-icon|🎵|<svg|<i>|href|nextVideo|setFeedMode/);
-  assert.match(html, /\.mobile-nav \.nav-deudalaya-icon\{[^}]*width:21px;height:21px/);
-  assert.match(html, /@media\(max-width:700px\)\{\.mobile-nav \.nav-deudalaya-icon\{width:27px;height:27px/);
-  assert.match(html, /aria-expanded="true"\] \.nav-deudalaya-icon,[^}]*filter:drop-shadow\(0 0 4px #f2b33d\)/);
+  assert.doesNotMatch(songItem, /Friends|nav-deudalaya-icon|<img|<svg|<i>|href|nextVideo|setFeedMode/);
+  assert.match(html, /\.mobile-nav \.nav-music-icon\{[^}]*width:21px;height:21px/);
+  assert.match(html, /@media\(max-width:700px\)\{\.mobile-nav \.nav-music-icon\{width:27px;height:27px/);
+  assert.match(html, /aria-expanded="true"\] \.nav-music-icon,[^}]*filter:drop-shadow\(0 0 4px #f2b33d\)/);
   assert.doesNotMatch(social, /friendsTab|document\.querySelector\('\.mobile-nav button:nth-child\(2\)'\)/);
   assert.match(social, /button\.textContent\.trim\(\) === 'Following'.*setFeedMode\('following'\)/);
   assert.match(html, /function openDeudaSongScreen\(\)/);
