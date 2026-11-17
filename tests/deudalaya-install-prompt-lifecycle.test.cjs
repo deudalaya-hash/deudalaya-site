@@ -5,6 +5,7 @@ const vm = require('node:vm');
 const test = require('node:test');
 
 const root = path.resolve(__dirname, '..');
+const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const gatewaySource = fs.readFileSync(path.join(root, 'ecosystem-gateway.js'), 'utf8');
 
 function createInstallHarness() {
