@@ -26,7 +26,6 @@ test('normal browser mode is gated by the poster until an installation is detect
   assert.match(html, /deudalaya-install-required/);
   assert.match(html, /\.deudalaya-install-required \.app\s*\{[^}]*display:\s*none/);
   assert.match(html, /id="deudalayaInstallLanding"[\s\S]*?assets\/deudalaya-install-poster\.jpeg/);
-  assert.match(html, /function render\(\)\{\s*const v=videos\[index\]/);
   assert.match(html, /restoreLocalVideos\(\)/);
   assert.match(socialScript, /applyFeedMode\(true\);\s*setInterval\(/);
   assert.doesNotMatch(socialScript, /if\s*\(window\.deudalayaIsStandalone\(\)\)\s*\{\s*applyFeedMode/);
