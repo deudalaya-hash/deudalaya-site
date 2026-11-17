@@ -15,7 +15,7 @@ test('startup validates the Supabase-first published pool and uses local videos 
   assert.match(social, /startupVideoKey = await chooseStartupVideo\(startupCandidates, 'remote'\)/);
   assert.match(social, /async function selectLocalStartupVideo\(\)/);
   assert.match(social, /if \(!client\) \{ await selectLocalStartupVideo\(\); return; \}/);
-  assert.match(categories, /\['देउडा', 'गाउँघर', 'शहर'\]/);
+  assert.match(categories, /\['देउडा', 'गाउँघर', 'शहर', 'अन्तरिक्ष'\]/);
 });
 
 test('feed playback validates metadata, hides unvalidated media, and recovers after errors', () => {

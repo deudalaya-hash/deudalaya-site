@@ -34,7 +34,7 @@
     }
   }
 })(typeof window !== 'undefined' ? window : globalThis, function() {
-  const ACTIVE_CATEGORIES = Object.freeze(['देउडा', 'गाउँघर', 'शहर']);
+  const ACTIVE_CATEGORIES = Object.freeze(['देउडा', 'गाउँघर', 'शहर', 'अन्तरिक्ष']);
   const DEFAULT_CATEGORY = 'देउडा';
   const FEED_POST_COLUMNS = 'id,user_id,media_path,media_type,caption,category,created_at';
 

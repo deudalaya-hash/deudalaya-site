@@ -44,17 +44,19 @@ test('feed loader surfaces query errors without retrying a missing feed_category
   assert.equal(client.calls.filter(call => call[0] === 'select').length, 1);
 });
 
-test('feed category filter accepts only the three active categories', () => {
-  assert.deepEqual(categories.ACTIVE_CATEGORIES, ['देउडा', 'गाउँघर', 'शहर']);
+test('feed category filter includes अन्तरिक्ष through the existing category field', () => {
+  assert.deepEqual(categories.ACTIVE_CATEGORIES, ['देउडा', 'गाउँघर', 'शहर', 'अन्तरिक्ष']);
   const posts = [
     { id: 1, category: 'देउडा' },
     { id: 2, category: 'गाउँघर' },
     { id: 3, category: 'शहर' },
-    { id: 4, category: 'लोकगीत' }
+    { id: 4, category: 'अन्तरिक्ष' },
+    { id: 5, category: 'लोकगीत' }
   ];
   assert.deepEqual(categories.filterPosts(posts, 'देउडा').map(post => post.id), [1]);
   assert.deepEqual(categories.filterPosts(posts, 'गाउँघर').map(post => post.id), [2]);
   assert.deepEqual(categories.filterPosts(posts, 'शहर').map(post => post.id), [3]);
+  assert.deepEqual(categories.filterPosts(posts, 'अन्तरिक्ष').map(post => post.id), [4]);
 });
 
 test('category updates write the existing category field and reject unsupported categories', async () => {
@@ -71,10 +73,10 @@ test('category updates write the existing category field and reject unsupported 
       };
     }
   };
-  assert.equal(await categories.updateFeedPostCategory(client, 'post-1', 'शहर'), true);
+  assert.equal(await categories.updateFeedPostCategory(client, 'post-1', 'अन्तरिक्ष'), true);
   assert.deepEqual(calls, [
     ['from', 'feed_posts'],
-    ['update', { category: 'शहर' }],
+    ['update', { category: 'अन्तरिक्ष' }],
     ['eq', 'id', 'post-1']
   ]);
   assert.equal(await categories.updateFeedPostCategory(client, 'post-1', 'लोकगीत'), false);
@@ -82,7 +84,7 @@ test('category updates write the existing category field and reject unsupported 
 });
 
 test('base publisher is loaded before inline upload wrappers', () => {
-  const publisherTag = html.indexOf('src="feed-publisher.js?v=2026.11.16.1"');
+  const publisherTag = html.indexOf('src="feed-publisher.js?v=2026.11.18.1"');
   const socialTag = html.indexOf('src="social.js');
   const firstWrapper = html.indexOf('originalPublishUpload=publishUpload');
   assert.ok(publisherTag >= 0, 'the page must load the base publisher');
@@ -107,7 +109,7 @@ test('non-admin publishing is rejected before storage or database writes', async
     getUser: () => ({ id: 'ordinary-user' }),
     isAdmin: () => false,
     getFile: () => ({ name: 'clip.mp4', type: 'video/mp4', size: 1000 }),
-    getCategory: () => 'देउडा',
+    getCategory: () => 'अन्तरिक्ष',
     hasRights: () => true,
     upload() { calls.push('upload'); },
     toast() {}
@@ -148,10 +150,10 @@ test('authorized publisher uploads to videos and inserts metadata using category
     getUser: () => ({ id: 'admin-1' }),
     isAdmin: () => true,
     getFile: () => file,
-    getCategory: () => 'देउडा',
+    getCategory: () => 'अन्तरिक्ष',
     getCaption: () => 'Test clip',
     hasRights: () => true,
-    allowedCategories: ['देउडा', 'गाउँघर', 'शहर'],
+    allowedCategories: ['देउडा', 'गाउँघर', 'शहर', 'अन्तरिक्ष'],
     randomUUID: () => 'safe-id',
     getButton: () => button,
     upload: async (_client, objectPath, selectedFile) => operations.push(['upload', objectPath, selectedFile]),
@@ -161,10 +163,10 @@ test('authorized publisher uploads to videos and inserts metadata using category
   await handler({ preventDefault() {} });
   assert.deepEqual(operations.slice(0, 2), [
     ['upload', 'admin-1/safe-id.mp4', file],
-    ['insert', { user_id: 'admin-1', media_path: 'admin-1/safe-id.mp4', media_type: 'video/mp4', caption: 'Test clip', category: 'देउडा' }]
+    ['insert', { user_id: 'admin-1', media_path: 'admin-1/safe-id.mp4', media_type: 'video/mp4', caption: 'Test clip', category: 'अन्तरिक्ष' }]
   ]);
   assert.equal(published[0].cloudId, 'post-1');
-  assert.equal(published[0].feedCategory, 'देउडा');
+  assert.equal(published[0].feedCategory, 'अन्तरिक्ष');
   assert.equal(published[0].videoSrc, 'https://storage.example/admin-1/safe-id.mp4');
   assert.equal(button.disabled, false);
 });
@@ -186,7 +188,7 @@ test('publisher rejects invalid categories, unsupported files, missing rights, a
       getFile: () => current.file,
       getCategory: () => current.category,
       hasRights: () => current.rights !== false,
-      allowedCategories: ['देउडा', 'गाउँघर', 'शहर'],
+      allowedCategories: ['देउडा', 'गाउँघर', 'शहर', 'अन्तरिक्ष'],
       upload: async () => { uploads += 1; },
       toast() {}
     });

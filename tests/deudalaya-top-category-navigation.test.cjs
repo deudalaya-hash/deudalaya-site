@@ -15,10 +15,11 @@ test('the feed has no top header or header search UI', () => {
   assert.match(html, /id="uploadCategory"[\s\S]*?<option>कला तथा संस्कृति<\/option>/);
 });
 
-test('the video feed loads exactly the three core categories in their required order', () => {
+test('the video feed loads exactly four categories in their required order', () => {
   const tabs = html.match(/<nav class="feed-category-tabs"[^>]*>[\s\S]*?<\/nav>/);
   assert.ok(tabs, 'category tabs float inside the feed');
-  assert.deepEqual(categories.ACTIVE_CATEGORIES, ['देउडा', 'गाउँघर', 'शहर']);
+  assert.deepEqual(categories.ACTIVE_CATEGORIES, ['देउडा', 'गाउँघर', 'शहर', 'अन्तरिक्ष']);
+  assert.match(tabs[0], /अन्तरिक्ष/);
   assert.match(html, /<script src="feed-categories\.js\?/);
   assert.match(html, /\.feed-category-tabs\{[^}]*position:absolute[^}]*left:50%[^}]*transform:translateX\(-50%\)/);
   assert.match(html, /\.feed-category\.selected::after\{[^}]*background:#fff/);

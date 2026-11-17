@@ -31,7 +31,8 @@
   const INTEREST_FIELDS = [
     ['creatorInterestDeuda', 'देउडा / Deuda'],
     ['creatorInterestVillage', 'गाउँघर / Village'],
-    ['creatorInterestCity', 'शहर / City']
+    ['creatorInterestCity', 'शहर / City'],
+    ['creatorInterestSpace', 'अन्तरिक्ष / Science, technology & universe']
   ];
 
   function createApplicationMessage(consentGranted, socialLinks = {}, interests = {}) {

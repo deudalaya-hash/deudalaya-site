@@ -35,6 +35,7 @@ function creatorDocument() {
     creatorInterestDeuda: fakeElement({ value: '' }),
     creatorInterestVillage: fakeElement({ value: '' }),
     creatorInterestCity: fakeElement({ value: '' }),
+    creatorInterestSpace: fakeElement({ value: '' }),
     creatorFacebook: fakeElement({ value: '' }),
     creatorTiktok: fakeElement({ value: '' }),
     creatorYoutube: fakeElement({ value: '' }),
@@ -98,11 +99,13 @@ test('WhatsApp application includes each category interest answer', () => {
   elements.creatorInterestDeuda.value = 'Yes';
   elements.creatorInterestVillage.value = 'No';
   elements.creatorInterestCity.value = 'Yes';
+  elements.creatorInterestSpace.value = 'Yes';
   elements.creatorInterestDeuda.dispatch('change');
   const message = decodeURIComponent(elements.creatorApplyWhatsApp.href);
   assert.match(message, /देउडा \/ Deuda: Yes/);
   assert.match(message, /गाउँघर \/ Village: No/);
   assert.match(message, /शहर \/ City: Yes/);
+  assert.match(message, /अन्तरिक्ष \/ Science, technology & universe: Yes/);
 });
 
 test('category answers start unselected and are not assumed', () => {
@@ -112,15 +115,17 @@ test('category answers start unselected and are not assumed', () => {
   assert.match(message, /देउडा \/ Deuda: Not answered/);
   assert.match(message, /गाउँघर \/ Village: Not answered/);
   assert.match(message, /शहर \/ City: Not answered/);
+  assert.match(message, /अन्तरिक्ष \/ Science, technology & universe: Not answered/);
 });
 
-test('short bilingual creator questions collect yes/no interest for all three categories', () => {
+test('short bilingual creator questions collect yes/no interest for all four categories', () => {
   assert.match(html, /देउडालयसँग काम गरौँ \/ Work with Deudalaya/);
   assert.match(html, /creatorInterestDeuda/);
   assert.match(html, /creatorInterestVillage/);
   assert.match(html, /creatorInterestCity/);
-  assert.equal((html.match(/>हो \/ Yes</g) || []).length, 3);
-  assert.equal((html.match(/>होइन \/ No</g) || []).length, 3);
+  assert.match(html, /creatorInterestSpace/);
+  assert.equal((html.match(/>हो \/ Yes</g) || []).length, 4);
+  assert.equal((html.match(/>होइन \/ No</g) || []).length, 4);
   assert.match(html, /तपाईं कुन प्रकारका भिडियो बनाउनुहुन्छ\? \/ What videos do you make\?/);
 });
 
@@ -147,9 +152,10 @@ test('compact social links and consent retain optional use permission and owners
   assert.match(html, /class="mobile-add"[^>]*id="creatorApplyButton"/);
   assert.match(html, /<script src="creator-application\.js\?v=/);
   assert.match(css, /@media \(max-width: 560px\)/);
+  assert.match(css, /\.creator-interest-grid\s*\{[^}]*grid-template-columns: repeat\(4, minmax\(0, 1fr\)\)/);
   assert.match(css, /creator-interest-grid/);
   assert.match(css, /creator-social-grid/);
-  assert.match(html, /creator-application\.js\?v=2026\.11\.10\.2/);
+  assert.match(html, /creator-application\.js\?v=2026\.11\.18\.1/);
   assert.match(css, /max-height: min\(92dvh, 860px\)/);
   assert.match(css, /prefers-reduced-motion: reduce/);
 });

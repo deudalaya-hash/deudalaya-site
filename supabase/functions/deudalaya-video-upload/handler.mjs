@@ -1,7 +1,7 @@
 const PROJECT_REF = 'bxzkclqanpuvxyhsrpog';
 const BUCKET = 'videos';
 const MAX_BYTES_EXCLUSIVE = 4_000_000;
-const CATEGORIES = Object.freeze(['देउडा', 'गाउँघर', 'शहर']);
+const CATEGORIES = Object.freeze(['देउडा', 'गाउँघर', 'शहर', 'अन्तरिक्ष']);
 const FEED_FIELDS = Object.freeze(['id', 'user_id', 'media_path', 'media_type', 'caption', 'category']);
 const encoder = new TextEncoder();
 

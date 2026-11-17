@@ -27,6 +27,9 @@ def media_info(duration_seconds="0.932", video_codec="h264", audio_codec="aac"):
 
 
 class UploadOnlyValidationTests(unittest.TestCase):
+    def test_new_category_is_supported_by_upload_only_mode(self):
+        self.assertEqual(pipeline.CATEGORIES, ("देउडा", "गाउँघर", "शहर", "अन्तरिक्ष"))
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)

@@ -143,6 +143,20 @@ test('uploads once and inserts only the permitted feed fields for the official p
   });
 });
 
+test('accepts अन्तरिक्ष and stores it in the existing feed_posts category field', async () => {
+  const bytes = sampleMp4();
+  const { repository, state } = makeRepository();
+  const handler = makeHandler(repository);
+
+  const response = await handler(makeRequest(bytes, { category: 'अन्तरिक्ष' }));
+  const result = await response.json();
+
+  assert.equal(response.status, 201);
+  assert.equal(result.status, 'uploaded');
+  assert.equal(state.inserts[0].category, 'अन्तरिक्ष');
+  assert.equal(state.uploads.length, 1);
+});
+
 test('returns an existing matching feed post as a duplicate without writing again', async () => {
   const bytes = sampleMp4();
   const digest = digestOf(bytes);
@@ -189,7 +203,7 @@ test('serves an authenticated read-only preflight without performing writes', as
   assert.equal(response.status, 200);
   assert.equal(result.ready, true);
   assert.equal(result.bucket, 'videos');
-  assert.deepEqual(result.categories, ['देउडा', 'गाउँघर', 'शहर']);
+  assert.deepEqual(result.categories, ['देउडा', 'गाउँघर', 'शहर', 'अन्तरिक्ष']);
   assert.equal(state.preflights, 1);
   assert.equal(state.uploads.length, 0);
   assert.equal(state.inserts.length, 0);

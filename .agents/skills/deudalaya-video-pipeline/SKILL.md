@@ -15,7 +15,7 @@ Use this skill for the Deudalaya batch workflow. Read the current Deudalaya, Sup
 - Each output must be an MP4 with H.264 video, AAC audio when the source has audio, and a duration of exactly 10 seconds (allow at most 0.05 seconds of container rounding in validation). Preserve aspect ratio and never crop. Cut longer sources to their first 10 seconds. Reject shorter sources rather than inventing or freezing frames. Record source and output durations in the report.
 - Final output must be strictly below 4,000,000 bytes. Re-encode with the highest quality settings that pass the byte and decode checks. Never upload a failed or unvalidated output.
 - Copy each unchanged source into the batch backup directory before encoding. Never overwrite or remove an input or prior batch artifact.
-- Require a per-video JSON sidecar named `<video filename>.json` (for example, `clip.mp4.json`) with `category` set to exactly `देउडा`, `गाउँघर`, or `शहर`. A `caption` is optional; if omitted, use the input basename and record that fallback.
+- Require a per-video JSON sidecar named `<video filename>.json` (for example, `clip.mp4.json`) with `category` set to exactly `देउडा`, `गाउँघर`, `शहर`, or `अन्तरिक्ष`. Use `अन्तरिक्ष` for science, technology, atoms, life, nature, space exploration, and the universe. A `caption` is optional; if omitted, use the input basename and record that fallback.
 
 Example sidecar for `clip.mp4`:
 

@@ -15,6 +15,7 @@ test('feed category filtering keeps each video in exactly its stored category', 
     { id: 'village', feedCategory: 'गाउँघर' },
     { id: 'city', feed_category: 'शहर' },
     { id: 'city-database-category', category: 'शहर' },
+    { id: 'space', category: 'अन्तरिक्ष' },
     { id: 'sudur', feed_category: 'सुदूर कर्णाली' },
     { id: 'unknown', feedCategory: 'गीत' }
   ];
@@ -22,9 +23,10 @@ test('feed category filtering keeps each video in exactly its stored category', 
   assert.deepEqual(categories.filterPosts(posts, 'देउडा').map(post => post.id), ['default']);
   assert.deepEqual(categories.filterPosts(posts, 'गाउँघर').map(post => post.id), ['village']);
   assert.deepEqual(categories.filterPosts(posts, 'शहर').map(post => post.id), ['city', 'city-database-category']);
+  assert.deepEqual(categories.filterPosts(posts, 'अन्तरिक्ष').map(post => post.id), ['space']);
   assert.deepEqual(categories.filterPosts(posts, 'सुदूर कर्णाली'), []);
   assert.deepEqual(categories.filterPosts(posts, 'गीत'), []);
-  assert.deepEqual(categories.ACTIVE_CATEGORIES, ['देउडा', 'गाउँघर', 'शहर']);
+  assert.deepEqual(categories.ACTIVE_CATEGORIES, ['देउडा', 'गाउँघर', 'शहर', 'अन्तरिक्ष']);
 });
 
 test('horizontal feed swipes navigate adjacent categories without wrapping or stealing vertical swipes', () => {
@@ -34,7 +36,9 @@ test('horizontal feed swipes navigate adjacent categories without wrapping or st
   assert.equal(categories.swipeDirection(0, 0, -40, 2), null, 'short movements are taps');
   assert.equal(categories.categoryAfterSwipe('देउडा', 'left'), 'गाउँघर');
   assert.equal(categories.categoryAfterSwipe('गाउँघर', 'left'), 'शहर');
-  assert.equal(categories.categoryAfterSwipe('शहर', 'left'), null, 'last category does not wrap');
+  assert.equal(categories.categoryAfterSwipe('शहर', 'left'), 'अन्तरिक्ष');
+  assert.equal(categories.categoryAfterSwipe('अन्तरिक्ष', 'left'), null, 'last category does not wrap');
+  assert.equal(categories.categoryAfterSwipe('अन्तरिक्ष', 'right'), 'शहर');
   assert.equal(categories.categoryAfterSwipe('शहर', 'right'), 'गाउँघर');
   assert.equal(categories.categoryAfterSwipe('गाउँघर', 'right'), 'देउडा');
   assert.equal(categories.categoryAfterSwipe('देउडा', 'right'), null, 'first category does not wrap');
@@ -48,11 +52,11 @@ test('category swipe listener delegates to category switching and remembers feed
   assert.match(social, /\.animate\(/);
 });
 
-test('category navigation exposes exactly three feeds, defaults to देउडा, and routes each click to its own feed', () => {
+test('category navigation exposes exactly four feeds, defaults to देउडा, and routes each click to its own feed', () => {
   const selectedCategories = [];
   const comingSoonCategories = [];
   const readyListeners = [];
-  const labels = ['देउडा', 'गाउँघर', 'शहर', 'सुदूर कर्णाली', 'गीत'];
+  const labels = ['देउडा', 'गाउँघर', 'शहर', 'अन्तरिक्ष', 'सुदूर कर्णाली', 'गीत'];
   const buttons = labels.map(label => {
     const classNames = new Set(label === 'देउडा' ? ['selected'] : []);
     return {
@@ -94,9 +98,10 @@ test('category navigation exposes exactly three feeds, defaults to देउड�
 
   vm.runInNewContext(categoryScript, { window, document, module: undefined });
   const visibleButtons = buttons.filter(button => !button.removed);
-  assert.deepEqual(visibleButtons.map(button => button.textContent), ['देउडा', 'गाउँघर', 'शहर']);
-  assert.deepEqual(visibleButtons.map(button => button.dataset.feedCategory), ['देउडा', 'गाउँघर', 'शहर']);
+  assert.deepEqual(visibleButtons.map(button => button.textContent), ['देउडा', 'गाउँघर', 'शहर', 'अन्तरिक्ष']);
+  assert.deepEqual(visibleButtons.map(button => button.dataset.feedCategory), ['देउडा', 'गाउँघर', 'शहर', 'अन्तरिक्ष']);
   assert.deepEqual(visibleButtons.map(button => button.style.fontSize), [
+    'clamp(16px, calc(4vw + 2px), 19px)',
     'clamp(16px, calc(4vw + 2px), 19px)',
     'clamp(16px, calc(4vw + 2px), 19px)',
     'clamp(16px, calc(4vw + 2px), 19px)'
@@ -106,7 +111,7 @@ test('category navigation exposes exactly three feeds, defaults to देउड�
   assert.deepEqual(selectedCategories, ['देउडा']);
   selectedCategories.length = 0;
   visibleButtons.forEach(button => button.onclick());
-  assert.deepEqual(selectedCategories, ['देउडा', 'गाउँघर', 'शहर']);
+  assert.deepEqual(selectedCategories, ['देउडा', 'गाउँघर', 'शहर', 'अन्तरिक्ष']);
   assert.deepEqual(comingSoonCategories, []);
 });
 
@@ -167,6 +172,8 @@ test('the three additional city videos are each bundled once and assigned only t
 test('feed loading and admin category management use the deployed category column', () => {
   assert.match(html, /id="uploadCategory"[\s\S]*?<option>गाउँघर<\/option>/);
   assert.match(html, /id="uploadCategory"[\s\S]*?<option>शहर<\/option>/);
+  assert.match(html, /id="uploadCategory"[\s\S]*?<option value="अन्तरिक्ष" title="[^"]+">अन्तरिक्ष[^<]*<\/option>/);
+  assert.match(html, /data-feed-category="अन्तरिक्ष" aria-label="अन्तरिक्ष: विज्ञान, प्रविधि, परमाणु, जीवन, प्रकृति, अन्तरिक्ष अन्वेषण र सम्पूर्ण ब्रह्माण्ड"/);
   assert.match(html, /id="feedCategoryManager"/);
   assert.match(html, /id="feedCategoryManageButton"/);
   assert.match(social, /fetchFeedPosts\(cloudClient\)/);
@@ -176,7 +183,7 @@ test('feed loading and admin category management use the deployed category colum
   assert.match(categoryScript, /update\(\{ category: category \}\)/);
   assert.doesNotMatch(categories.FEED_POST_COLUMNS, /feed_category/);
   assert.match(social, /isDeudalayaAdmin\(\)/);
-  assert.deepEqual(categories.ACTIVE_CATEGORIES, ['देउडा', 'गाउँघर', 'शहर']);
+  assert.deepEqual(categories.ACTIVE_CATEGORIES, ['देउडा', 'गाउँघर', 'शहर', 'अन्तरिक्ष']);
 });
 
 test('feed category metadata migration is additive, admin-gated, and keeps existing placements', () => {

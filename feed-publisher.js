@@ -13,7 +13,7 @@
       getCaption: function () { return document.getElementById('uploadCaption').value.trim(); },
       hasRights: function () { return document.getElementById('uploadRights').checked; },
       allowedCategories: function () {
-        return root.DeudalayaFeedCategories ? root.DeudalayaFeedCategories.ACTIVE_CATEGORIES : ['देउडा', 'गाउँघर', 'शहर'];
+        return root.DeudalayaFeedCategories ? root.DeudalayaFeedCategories.ACTIVE_CATEGORIES : ['देउडा', 'गाउँघर', 'शहर', 'अन्तरिक्ष'];
       },
       randomUUID: function () { return crypto.randomUUID(); },
       getButton: function () { return document.getElementById('publishButton'); },
