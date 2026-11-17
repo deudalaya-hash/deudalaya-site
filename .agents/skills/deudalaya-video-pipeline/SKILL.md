@@ -12,7 +12,7 @@ Use this skill for the Deudalaya batch workflow. Read the current Deudalaya, Sup
 ## Fixed media requirements
 
 - Process video files placed directly in `~/DeudalayaVideoPipeline/inbox` (or the user-designated input directory). Supported source extensions: MP4, WebM, MOV, M4V, MKV, and AVI. Use `ffprobe` for actual stream inspection; never trust the extension alone.
-- Each output must be an MP4 with H.264 video, AAC audio when the source has audio, and a duration of exactly 10 seconds (allow at most 0.05 seconds of container rounding in validation). Preserve aspect ratio and never crop. Cut longer sources to their first 10 seconds. Reject shorter sources rather than inventing or freezing frames. Record source and output durations in the report.
+- Each output must be an MP4 with H.264 video, AAC audio when the source has audio, and a duration of at most 10 seconds. Preserve aspect ratio and never crop. The standard `pipeline.py` mode makes one 10-second cut per source. When a user asks to split a complete recording, use `scripts/split_batch.py`: it divides the full timeline into consecutive segments and retains the final remainder only when it is longer than five seconds. Clips under ten seconds from that splitter are permitted by `--upload-only`. Record source and output durations in the report.
 - Final output must be strictly below 4,000,000 bytes. Re-encode with the highest quality settings that pass the byte and decode checks. Never upload a failed or unvalidated output.
 - Copy each unchanged source into the batch backup directory before encoding. Never overwrite or remove an input or prior batch artifact.
 - Require a per-video JSON sidecar named `<video filename>.json` (for example, `clip.mp4.json`) with `category` set to exactly `देउडा`, `गाउँघर`, `शहर`, or `अन्तरिक्ष`. Use `अन्तरिक्ष` for science, technology, atoms, life, nature, space exploration, and the universe. A `caption` is optional; if omitted, use the input basename and record that fallback.
@@ -32,6 +32,14 @@ python .agents/skills/deudalaya-video-pipeline/scripts/pipeline.py --help
 python .agents/skills/deudalaya-video-pipeline/scripts/pipeline.py --input "$HOME/DeudalayaVideoPipeline/inbox"
 python .agents/skills/deudalaya-video-pipeline/scripts/pipeline.py --input demo/input
 ```
+
+For a complete source recording split into consecutive feed clips, use `scripts/split_batch.py`. It writes to a new or empty output directory, backs up originals, creates category sidecars, targets roughly 1.5–2 MB per ten seconds, validates H.264/AAC, size, duration, aspect ratio, audio/video timing, and full decode, and emits `processing-report.json`. The default output ceiling is 2,000,000 bytes:
+
+```powershell
+python .agents/skills/deudalaya-video-pipeline/scripts/split_batch.py --input "C:\deudalaya\video-library\originals\batch" --output "C:\deudalaya\video-library\runs\batch-id\processed" --category अन्तरिक्ष
+```
+
+Only after processing and rights authorization, pass the resulting `processed` directory to `pipeline.py --upload-only --category अन्तरिक्ष`. That mode never re-encodes the processed clips, and the publisher de-duplicates identical hashes.
 
 For already-processed MP4 files, use `--upload-only --category <category>`. This mode probes and fully decodes each MP4 in place, requires a matching category in its JSON sidecar, enforces the strict byte limit, and writes a per-file report without re-encoding or copying media. Without `--publish`, it performs local validation only:
 
