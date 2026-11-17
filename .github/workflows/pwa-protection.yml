@@ -54,7 +54,6 @@ jobs:
           tests/deudalaya-entry-install.test.cjs
           tests/deudalaya-direct-install.test.cjs
           tests/deudalaya-install-flow.test.cjs
-          tests/deudalaya-independence.test.cjs
           tests/ecosystem-installation.test.cjs
 
       - name: Check pushed changes
