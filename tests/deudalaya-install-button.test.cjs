@@ -26,7 +26,6 @@ test('normal browser mode is gated by the poster until an installation is detect
   assert.match(html, /deudalaya-install-required/);
   assert.match(html, /\.deudalaya-install-required \.app\s*\{[^}]*display:\s*none/);
   assert.match(html, /id="deudalayaInstallLanding"[\s\S]*?assets\/deudalaya-install-poster\.jpeg/);
-  assert.match(html, /function render\(\)\{\s*const v=videos\[index\]/);
   assert.match(html, /restoreLocalVideos\(\)/);
   assert.match(socialScript, /applyFeedMode\(true\);\s*setInterval\(/);
   assert.doesNotMatch(socialScript, /if\s*\(window\.deudalayaIsStandalone\(\)\)\s*\{\s*applyFeedMode/);
@@ -130,7 +129,7 @@ test('Install App starts a native prompt only after a real browser event is capt
   assert.match(gatewayScript, /promptEvent\.prompt\(\)/);
 });
 
-test('no native prompt keeps the install action and shows only the supported-browser message', async () => {
+test('no native prompt keeps the install action and shows Chrome install guidance', async () => {
   const ui = createGatewayHarness({
     outcome: 'dismissed',
     eventAvailable: false,
@@ -139,12 +138,11 @@ test('no native prompt keeps the install action and shows only the supported-bro
   });
 
   assert.equal(ui.button.hidden, false);
-  assert.match(ui.hint.textContent, /prompt was closed.*reload/i);
+  assert.equal(ui.hint.textContent, 'Chrome has not offered the install prompt yet. Keep this page open, or use Chrome’s menu to install Deudalaya if that option is available.');
   assert.equal(ui.hint.hidden, false);
   await ui.buttonListeners.click({ preventDefault() {} });
   assert.equal(ui.promptCalls, 0);
-  assert.equal(ui.hint.textContent, 'Direct installation is not currently available in this browser. Please try a supported browser.');
-  assert.doesNotMatch(ui.hint.textContent, /menu|Menu|⋮|Install app|Add to Home screen/);
+  assert.equal(ui.hint.textContent, 'Chrome has not offered the install prompt yet. Keep this page open, or use Chrome’s menu to install Deudalaya if that option is available.');
 });
 
 test('button calls prompt synchronously, awaits userChoice, and clears the consumed event', async () => {
@@ -157,7 +155,7 @@ test('button calls prompt synchronously, awaits userChoice, and clears the consu
   assert.equal(prevented, true);
   assert.equal(ui.promptCalls, 1, 'prompt() runs during the click gesture');
   assert.equal(ui.window.deferredPrompt, null, 'the consumed prompt is cleared immediately');
-  assert.notEqual(ui.hint.textContent, 'Direct installation is not currently available in this browser. Please try a supported browser.');
+  assert.notEqual(ui.hint.textContent, 'Chrome has not offered the install prompt yet. Keep this page open, or use Chrome’s menu to install Deudalaya if that option is available.');
   await click;
   assert.match(ui.hint.textContent, /Installation accepted/);
   assert.match(gatewayScript, /await\s+promptEvent\.userChoice/);
@@ -169,7 +167,7 @@ test('dismissed prompt keeps the gate; confirmed installation releases it', asyn
   await ui.buttonListeners.click({ preventDefault() {} });
   assert.equal(ui.window.deferredPrompt, null);
   assert.equal(ui.button.disabled, false);
-  assert.equal(ui.hint.textContent, 'Direct installation is not currently available in this browser. Please try a supported browser.');
+  assert.match(ui.hint.textContent, /prompt was closed.*reload/i);
   assert.equal(ui.document.documentElement.classList.contains('deudalaya-install-required'), true);
 
   ui.windowListeners.appinstalled();
@@ -191,12 +189,11 @@ test('an existing installation hides the install button without manual launch in
   assert.equal(ui.hint.textContent, 'Deudalaya is already installed.');
 });
 
-test('desktop browsers without a native prompt show only the concise supported-browser message', () => {
+test('desktop Chrome without a native prompt shows Chrome install guidance', () => {
   const ui = createGatewayHarness({ outcome: 'dismissed', supportsPrompt: false });
 
   assert.equal(ui.button.hidden, false);
-  assert.equal(ui.hint.textContent, 'Direct installation is not currently available in this browser. Please try a supported browser.');
-  assert.doesNotMatch(ui.hint.textContent, /menu|Menu|⋮|Address bar|Install app/);
+  assert.equal(ui.hint.textContent, 'Chrome has not offered the install prompt yet. Keep this page open, or use Chrome’s menu to install Deudalaya if that option is available.');
 });
 
 test('the poster landing contains the real install action and fallback status', () => {

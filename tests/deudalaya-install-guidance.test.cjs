@@ -7,7 +7,7 @@ const vm = require('node:vm');
 const root = path.resolve(__dirname, '..');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const script = fs.readFileSync(path.join(root, 'ecosystem-gateway.js'), 'utf8');
-const fallback = 'Direct installation is not currently available in this browser. Please try a supported browser.';
+const fallback = 'Chrome has not offered the install prompt yet. Keep this page open, or use Chrome’s menu to install Deudalaya if that option is available.';
 
 test('the landing poster fills the screen with the real install button over its printed CTA', () => {
   assert.match(html, /id="deudalayaInstallLanding"[\s\S]*?assets\/deudalaya-install-poster\.jpeg/);
