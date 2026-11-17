@@ -21,17 +21,17 @@ test('PWA identity and service worker remain configured for the required install
   assert.equal(manifest.name, 'देउडालय');
   assert.equal(manifest.start_url, '/?app=deudalaya');
   assert.equal(manifest.display, 'standalone');
-  assert.match(html, /<link rel="manifest" href="manifest\.webmanifest">/);
-  assert.match(html, /navigator\.serviceWorker\.register\('sw\.js'/);
+  assert.match(html, /<link rel="manifest" href="\/manifest\.webmanifest">/);
+  assert.match(html, /navigator\.serviceWorker\.register\('\/sw\.js',\s*\{\s*scope:\s*'\/'\s*\}\)/);
 });
 
 test('the refreshed logo is used for every declared PWA icon size', () => {
   const manifest = JSON.parse(fs.readFileSync(path.join(root, 'manifest.webmanifest'), 'utf8'));
-  const expected = new Map([['assets/deudalaya-icon-192.png', 192], ['assets/deudalaya-icon-512.png', 512], ['assets/deudalaya-maskable-512.png', 512]]);
+  const expected = new Map([['/assets/deudalaya-icon-192.png', 192], ['/assets/deudalaya-icon-512.png', 512], ['/assets/deudalaya-maskable-512.png', 512]]);
   for (const icon of manifest.icons) {
     const size = expected.get(icon.src);
     assert.ok(size, `unexpected manifest icon ${icon.src}`);
-    const png = fs.readFileSync(path.join(root, icon.src));
+    const png = fs.readFileSync(path.join(root, icon.src.replace(/^\//, '')));
     assert.equal(png.readUInt32BE(16), size);
     assert.equal(png.readUInt32BE(20), size);
   }

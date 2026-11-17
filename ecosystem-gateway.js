@@ -10,6 +10,7 @@
   let deferredPrompt = window.deferredPrompt || null;
   let promptPending = window.deudalayaInstallationStatus === 'installation-pending';
   let installationAccepted = promptPending;
+  let promptConsumed = false;
   let installed = window.deudalayaInstallState === 'installed' || window.deudalayaInstallState === 'standalone';
 
   function isStandaloneMode() {
@@ -42,6 +43,7 @@
     installButton.textContent = 'Install App';
     if (deferredPrompt) setHint('');
     else if (installationAccepted) setHint('Installation accepted. Open Deudalaya from the installed app to continue.');
+    else if (promptConsumed) setHint('The install prompt was closed. Reload this page to request a new prompt.');
     else setHint(INSTALL_UNAVAILABLE_MESSAGE);
   }
 
@@ -54,6 +56,7 @@
     window.deudalayaInstallationStatus = 'prompt-available';
     window.deudalayaInstallSource = null;
     installationAccepted = false;
+    promptConsumed = false;
     updateButton();
   });
 
@@ -87,7 +90,7 @@
     event.preventDefault();
     if (promptPending || installationAccepted || installed) return;
     if (!deferredPrompt) {
-      setHint(INSTALL_UNAVAILABLE_MESSAGE);
+      setHint(promptConsumed ? 'The install prompt was closed. Reload this page to request a new prompt.' : INSTALL_UNAVAILABLE_MESSAGE);
       return;
     }
 
@@ -101,6 +104,7 @@
       const promptResult = promptEvent.prompt();
       deferredPrompt = null;
       window.deferredPrompt = null;
+      promptConsumed = true;
       await Promise.resolve(promptResult);
       const choice = await promptEvent.userChoice;
       installationAccepted = !!(choice && choice.outcome === 'accepted');
@@ -110,7 +114,12 @@
       window.deferredPrompt = null;
       installationAccepted = false;
       window.deudalayaInstallationStatus = 'not-installed';
-      setHint(INSTALL_UNAVAILABLE_MESSAGE);
+      setHint('The install prompt could not be opened. Reload this page and try again.');
+      const safeErrorNames = ['AbortError', 'NotAllowedError', 'SecurityError', 'TypeError'];
+      const errorName = error && safeErrorNames.includes(error.name) ? error.name : 'Error';
+      if (typeof console !== 'undefined' && typeof console.warn === 'function') {
+        console.warn('[Deudalaya install] Native prompt failed.', { name: errorName });
+      }
     } finally {
       promptPending = false;
       updateButton();

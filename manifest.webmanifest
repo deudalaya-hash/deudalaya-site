@@ -1,11 +1,11 @@
 {
-  "id": "./",
+  "id": "/",
   "name": "देउडालय",
   "short_name": "देउडालय",
   "description": "देउडालय",
   "lang": "ne",
   "start_url": "/?app=deudalaya",
-  "scope": "./",
+  "scope": "/",
   "display": "standalone",
   "prefer_related_applications": false,
   "background_color": "#0b0b10",
@@ -15,19 +15,19 @@
   ],
   "icons": [
     {
-      "src": "assets/deudalaya-icon-192.png",
+      "src": "/assets/deudalaya-icon-192.png",
       "purpose": "any",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "assets/deudalaya-icon-512.png",
+      "src": "/assets/deudalaya-icon-512.png",
       "purpose": "any",
       "type": "image/png",
       "sizes": "512x512"
     },
     {
-      "src": "assets/deudalaya-maskable-512.png",
+      "src": "/assets/deudalaya-maskable-512.png",
       "purpose": "maskable",
       "type": "image/png",
       "sizes": "512x512"

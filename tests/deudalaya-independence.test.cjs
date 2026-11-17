@@ -10,8 +10,8 @@ const otherAppNames = /लयपुर|शब्दलय|चलचित्र�
 test('Deudalaya root keeps its own feed and installation identity without app cross-links', () => {
   const html = read('index.html');
   assert.match(html, /<div class="app">[\s\S]*?id="feed"/);
-  assert.match(html, /<link rel="manifest" href="manifest\.webmanifest">/);
-  assert.match(html, /navigator\.serviceWorker\.register\('sw\.js'/);
+  assert.match(html, /<link rel="manifest" href="\/manifest\.webmanifest">/);
+  assert.match(html, /navigator\.serviceWorker\.register\('\/sw\.js',\s*\{\s*scope:\s*'\/'\s*\}\)/);
   assert.match(html, /id="deudalayaInstallLanding"[\s\S]*?id="deudalayaInstallAction"/);
   assert.match(html, /assets\/deudalaya-install-poster\.jpeg/);
   assert.doesNotMatch(html, /id="ecosystemGateway"|deudalayaStandaloneFeedGate/);
@@ -27,7 +27,8 @@ test('Deudalaya manifest has only its own PWA identity', () => {
   assert.equal(manifest.name, 'देउडालय');
   assert.equal(manifest.short_name, 'देउडालय');
   assert.equal(manifest.start_url, '/?app=deudalaya');
-  assert.equal(manifest.scope, './');
+  assert.equal(manifest.id, '/');
+  assert.equal(manifest.scope, '/');
   assert.equal(manifest.display, 'standalone');
   assert.deepEqual(manifest.related_applications, [
     { platform: 'webapp', id: 'https://deudalaya.com/', url: 'https://deudalaya.com/manifest.webmanifest' }

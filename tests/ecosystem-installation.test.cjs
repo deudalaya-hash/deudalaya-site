@@ -22,8 +22,8 @@ test('root entry requires installation before the feed and preserves separate ap
 test('Deudalaya keeps its manifest and service worker behind the required installation landing', () => {
   const html = read('index.html');
   const manifest = JSON.parse(read('manifest.webmanifest'));
-  assert.match(html, /<link rel="manifest" href="manifest\.webmanifest">/);
-  assert.match(html, /navigator\.serviceWorker\.register\('sw\.js'/);
+  assert.match(html, /<link rel="manifest" href="\/manifest\.webmanifest">/);
+  assert.match(html, /navigator\.serviceWorker\.register\('\/sw\.js',\s*\{\s*scope:\s*'\/'\s*\}\)/);
   assert.equal(manifest.display, 'standalone');
   assert.equal(manifest.start_url, '/?app=deudalaya');
   assert.deepEqual(manifest.related_applications, [

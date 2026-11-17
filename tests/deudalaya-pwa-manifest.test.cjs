@@ -17,12 +17,18 @@ test('Deudalaya declares a favicon media type that matches the linked file', () 
 test('Deudalaya manifest has install identity, scope, display, and downloadable PNG icons', () => {
   assert.ok(manifest.name || manifest.short_name);
   assert.equal(manifest.start_url, '/?app=deudalaya');
-  assert.equal(manifest.scope, './');
+  assert.equal(manifest.id, '/');
+  assert.equal(manifest.scope, '/');
   assert.equal(manifest.display, 'standalone');
   for (const size of ['192x192', '512x512']) {
     const icon = manifest.icons.find((item) => item.sizes === size && item.type === 'image/png');
     assert.ok(icon, `manifest needs a ${size} PNG icon`);
-    assert.ok(fs.existsSync(path.join(root, icon.src)), `${icon.src} must exist`);
+    const iconPath = icon.src.replace(/^\//, '');
+    assert.ok(fs.existsSync(path.join(root, iconPath)), `${icon.src} must exist`);
+    const png = fs.readFileSync(path.join(root, iconPath));
+    const expectedPixels = Number.parseInt(size, 10);
+    assert.equal(png.readUInt32BE(16), expectedPixels);
+    assert.equal(png.readUInt32BE(20), expectedPixels);
   }
 });
 
