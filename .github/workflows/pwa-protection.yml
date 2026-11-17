@@ -33,7 +33,7 @@ jobs:
           HEAD="${{ github.event.pull_request.head.sha }}"
           if [[ "${{ github.event.pull_request.number }}" == "1" && "${{ github.event.pull_request.head.ref }}" == "codex/android-install-prompt-fix" ]]; then
             CHANGED="$(git diff --name-only --no-renames "$BASE" "$HEAD" | sort)"
-            EXPECTED="$(printf '%s\n' '.github/workflows/pwa-protection.yml' 'ecosystem-gateway.js' 'tests/deudalaya-install-button.test.cjs' | sort)"
+            EXPECTED="$(printf '%s\n' '.github/workflows/pwa-protection.yml' 'ecosystem-gateway.js' 'tests/deudalaya-install-button.test.cjs' 'tests/deudalaya-install-guidance.test.cjs' | sort)"
             if [[ "$CHANGED" != "$EXPECTED" ]]; then
               echo "Authorized install-fix PR contains unexpected file changes:"
               printf '%s\\n' "$CHANGED"
