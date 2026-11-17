@@ -36,7 +36,7 @@ test('a saved browser prompt is called directly by the button and dismissal reta
   assert.equal(ui.window.deferredPrompt, null);
   await clickPromise;
   assert.equal(ui.classes.has('deudalaya-install-required'), true);
-  assert.equal(ui.hint.textContent, fallback);
+  assert.match(ui.hint.textContent, /prompt was closed.*reload/i);
 });
 
 test('accepted installation remains gated until appinstalled confirms completion', async () => {
