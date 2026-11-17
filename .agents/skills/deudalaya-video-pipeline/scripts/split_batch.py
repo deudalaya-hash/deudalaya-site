@@ -161,13 +161,14 @@ def encode_clip(source: Path, output: Path, start: float, length: float,
         f"fps={fps:.6f},"
         "scale=w=720:h=720:force_original_aspect_ratio=decrease:force_divisible_by=2"
     )
+    encode_length = max(0.1, length - 0.04)
     command = [
         ffmpeg, "-hide_banner", "-loglevel", "error", "-y", "-ss", f"{start:.6f}",
-        "-i", str(source), "-t", f"{length:.6f}", "-map", "0:v:0", "-map", "0:a:0",
+        "-i", str(source), "-t", f"{encode_length:.6f}", "-map", "0:v:0", "-map", "0:a:0",
         "-vf", video_filter, "-fps_mode", "cfr", "-c:v", "libx264", "-preset", "slow",
         "-profile:v", "main", "-b:v", TARGET_VIDEO_BITRATE, "-maxrate", MAX_VIDEO_BITRATE,
         "-bufsize", BUFFER_SIZE, "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "128k",
-        "-ar", "48000", "-af", f"aresample=async=1:first_pts=0,atrim=duration={length:.6f},asetpts=PTS-STARTPTS",
+        "-ar", "48000", "-af", f"aresample=async=1:first_pts=0,atrim=duration={encode_length:.6f},asetpts=PTS-STARTPTS",
         "-avoid_negative_ts", "make_zero", "-movflags", "+faststart", str(output),
     ]
     run(command)
@@ -189,6 +190,8 @@ def validate_output(output: Path, expected_duration: float, source_video: dict[s
         raise PipelineError("Output does not contain AAC audio")
     if abs(seconds - expected_duration) > 0.12:
         raise PipelineError(f"Output duration {seconds:.3f}s differs from expected {expected_duration:.3f}s")
+    if seconds > SEGMENT_SECONDS:
+        raise PipelineError(f"Output duration {seconds:.3f}s exceeds the strict 10-second maximum")
     if abs(aspect(source_video) - aspect(video)) / aspect(source_video) > 0.015:
         raise PipelineError("Output aspect ratio differs from source")
     video_seconds = float(video.get("duration") or seconds)
@@ -245,8 +248,9 @@ def process_source(source: Path, output_dir: Path, backup_dir: Path, category: s
             "clip_number": index, "start_seconds": start, "expected_duration_seconds": length,
             "output": str(output), "category": category, "caption": caption_for(source, index),
         }
+        reusing_existing = output.exists() or sidecar.exists()
         try:
-            if output.exists() or sidecar.exists():
+            if reusing_existing:
                 if not output.is_file() or not sidecar.is_file():
                     raise PipelineError("Existing output or sidecar is incomplete; refusing to overwrite")
                 sidecar_metadata = json.loads(sidecar.read_text(encoding="utf-8"))
@@ -266,7 +270,7 @@ def process_source(source: Path, output_dir: Path, backup_dir: Path, category: s
                 seen_clips[clip["sha256"]] = str(output)
             sidecar.write_text(json.dumps({"category": category, "caption": clip["caption"]}, ensure_ascii=False) + "\n", encoding="utf-8")
         except Exception as exc:
-            if output.exists():
+            if output.exists() and not reusing_existing:
                 output.unlink()
             clip["status"] = "failed"
             clip["error"] = str(exc)[:1200]

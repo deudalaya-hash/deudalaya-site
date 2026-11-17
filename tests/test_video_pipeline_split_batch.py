@@ -92,7 +92,24 @@ class BatchPreflightTests(unittest.TestCase):
 
             self.assertTrue(result["valid"])
             self.assertLess(commands[0].index("-ss"), commands[0].index("-i"))
+            self.assertLess(float(commands[0][commands[0].index("-t") + 1]), 10)
             self.assertEqual(result["audio_codec"], "aac")
+
+    def test_rejects_muxed_duration_over_ten_seconds_from_aac_padding(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            output = Path(temp_dir) / "padded.mp4"
+            output.write_bytes(b"media")
+            info = {
+                "format": {"duration": "10.021", "format_name": "mov,mp4,m4a"},
+                "streams": [
+                    {"codec_type": "video", "codec_name": "h264", "width": 720, "height": 404, "duration": "10"},
+                    {"codec_type": "audio", "codec_name": "aac", "duration": "10.021"},
+                ],
+            }
+            source_video = {"codec_type": "video", "width": 1280, "height": 720}
+            with patch.object(split_batch, "probe", return_value=info):
+                with self.assertRaisesRegex(split_batch.PipelineError, "strict 10-second maximum"):
+                    split_batch.validate_output(output, 10, source_video, "ffmpeg", "ffprobe", 2_000_000)
 
 
 if __name__ == "__main__":
