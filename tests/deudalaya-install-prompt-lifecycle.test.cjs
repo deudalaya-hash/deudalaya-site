@@ -111,3 +111,28 @@ test('root manifest identity and service-worker registration use the same instal
   assert.match(html, /<link[^>]+rel="manifest"[^>]+href="\/manifest\.webmanifest"/);
   assert.match(html, /serviceWorker\.register\('\/sw\.js',\s*\{\s*scope:\s*'\/'\s*\}\)/);
 });
+
+test('head captures beforeinstallprompt before the deferred install UI loads', () => {
+  const capture = html.match(/<script id="deudalayaPwaCapture">([\s\S]*?)<\/script>/);
+  assert.ok(capture, 'early PWA capture script is present');
+  assert.ok(html.indexOf(capture[0]) < html.indexOf('<body'), 'capture runs before the page body and deferred UI');
+  const listeners = new Map();
+  const window = {
+    matchMedia() { return { matches: false }; },
+    addEventListener(type, listener) { listeners.set(type, listener); },
+    dispatchEvent() {}
+  };
+  const document = {
+    hidden: false,
+    documentElement: { classList: { add() {}, remove() {} } },
+    addEventListener() {}
+  };
+  const navigator = { standalone: false };
+  vm.runInNewContext(capture[1], { window, document, navigator, Event: class Event {} });
+  const event = { prevented: false, preventDefault() { this.prevented = true; } };
+  listeners.get('beforeinstallprompt')(event);
+
+  assert.equal(event.prevented, true);
+  assert.equal(window.deferredPrompt, event);
+  assert.equal(window.deudalayaInstallState, 'available');
+});
