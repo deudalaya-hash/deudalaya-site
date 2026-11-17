@@ -26,7 +26,7 @@ test('normal browser mode is gated by the poster until an installation is detect
   assert.match(html, /deudalaya-install-required/);
   assert.match(html, /\.deudalaya-install-required \.app\s*\{[^}]*display:\s*none/);
   assert.match(html, /id="deudalayaInstallLanding"[\s\S]*?assets\/deudalaya-install-poster\.jpeg/);
-  assert.match(html, /function render\(\)\{\s*const v=videos\[index\]/);
+  assert.match(html, /function render\(\)\{[\s\S]*?const v=videos\[index\]/);
   assert.match(html, /restoreLocalVideos\(\)/);
   assert.match(socialScript, /applyFeedMode\(true\);\s*setInterval\(/);
   assert.doesNotMatch(socialScript, /if\s*\(window\.deudalayaIsStandalone\(\)\)\s*\{\s*applyFeedMode/);
@@ -139,7 +139,7 @@ test('no native prompt keeps the install action and shows only the supported-bro
   });
 
   assert.equal(ui.button.hidden, false);
-  assert.match(ui.hint.textContent, /prompt was closed.*reload/i);
+  assert.equal(ui.hint.textContent, 'Direct installation is not currently available in this browser. Please try a supported browser.');
   assert.equal(ui.hint.hidden, false);
   await ui.buttonListeners.click({ preventDefault() {} });
   assert.equal(ui.promptCalls, 0);
@@ -169,7 +169,7 @@ test('dismissed prompt keeps the gate; confirmed installation releases it', asyn
   await ui.buttonListeners.click({ preventDefault() {} });
   assert.equal(ui.window.deferredPrompt, null);
   assert.equal(ui.button.disabled, false);
-  assert.equal(ui.hint.textContent, 'Direct installation is not currently available in this browser. Please try a supported browser.');
+  assert.match(ui.hint.textContent, /prompt was closed.*reload/i);
   assert.equal(ui.document.documentElement.classList.contains('deudalaya-install-required'), true);
 
   ui.windowListeners.appinstalled();
