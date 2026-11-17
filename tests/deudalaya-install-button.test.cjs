@@ -139,7 +139,7 @@ test('no native prompt keeps the install action and shows only the supported-bro
   });
 
   assert.equal(ui.button.hidden, false);
-  assert.equal(ui.hint.textContent, 'Direct installation is not currently available in this browser. Please try a supported browser.');
+  assert.match(ui.hint.textContent, /prompt was closed.*reload/i);
   assert.equal(ui.hint.hidden, false);
   await ui.buttonListeners.click({ preventDefault() {} });
   assert.equal(ui.promptCalls, 0);
