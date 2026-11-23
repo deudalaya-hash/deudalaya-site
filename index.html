@@ -233,37 +233,41 @@ html:not(.deudalaya-install-required) #deudalayaInstallLanding{display:none!impo
   <div class="shabdalaya-shell">
     <button class="shabdalaya-back" id="shabdalayaBack" type="button" onclick="closeShabdalayaScreen()" aria-label="भिडियो फिडमा फर्कनुहोस्"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6M9 12h12"/></svg><span>भिडियो फिडमा फर्कनुहोस्</span></button>
     <div class="shabdalaya-poetry-list" aria-label="अडियो कविता फिड">
-    <article class="shabdalaya-poetry-post" aria-labelledby="shabdalayaPoemTitle">
-      <div class="shabdalaya-poetry-profile">
-        <img src="assets/shabdalaya-girl-profile.jpg" alt="a girl's profile portrait" width="52" height="52" loading="lazy" decoding="async">
-        <div><strong>a girl</strong><span>काठमाडौं · २ घण्टा अघि</span></div>
-        <span class="shabdalaya-post-kind"><span aria-hidden="true">🎙️</span> शब्दलय</span>
-      </div>
-      <div class="shabdalaya-poetry-copy">
-        <p class="shabdalaya-poetry-eyebrow">अडियो कविता</p>
-        <h2 id="shabdalayaPoemTitle">काठमाडौंको साँझ</h2>
-        <p class="shabdalaya-poem-lines">यो सहरको भीडभित्र,<br>मनले आफ्नै बाटो खोज्छ।<br>शब्दहरू चुप लाग्दा पनि,<br>मौनले कथा सुनाइरहन्छ।</p>
-        <p class="shabdalaya-poem-description">सहरको आवाजबीच मनले सुन्ने आफ्नै कविता।</p>
-        <p class="shabdalaya-poem-tags">#शब्दलय <span>#नेपालीकविता</span> <span>#काठमाडौं</span> <span>#मनका_कुरा</span></p>
-      </div>
-      <div class="shabdalaya-audio-player" role="group" aria-label="काठमाडौंको साँझ अडियो प्लेयर">
-        <div class="shabdalaya-audio-visualizer" aria-hidden="true"><span class="shabdalaya-visualizer-ring shabdalaya-visualizer-ring-one"></span><span class="shabdalaya-visualizer-ring shabdalaya-visualizer-ring-two"></span><span class="shabdalaya-visualizer-mic">🎙️</span></div>
-        <div class="shabdalaya-audio-details"><span class="shabdalaya-audio-label">कविता सुन्नुहोस्</span><div class="shabdalaya-poetry-waves" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
-        <button class="shabdalaya-audio-toggle" type="button" aria-label="Play audio poem" aria-pressed="false"><span aria-hidden="true">▶</span></button>
-        <audio class="shabdalaya-poetry-audio" id="shabdalayaPoemAudio" preload="none" src="assets/shabdalaya-kathmandu-poem.m4a"></audio>
-      </div>
-      <div class="shabdalaya-progress-row"><span class="shabdalaya-current-time">0:00</span><input class="shabdalaya-poetry-progress" type="range" min="0" max="100" step="0.1" value="0" aria-label="Audio poem progress"><span class="shabdalaya-duration">0:00</span></div>
-      <div class="shabdalaya-poetry-actions" aria-label="Poem actions">
-        <button type="button" class="shabdalaya-poetry-action" aria-label="Like poem" aria-pressed="false"><span aria-hidden="true">♡</span><span class="shabdalaya-like-count">0</span></button>
-        <button type="button" class="shabdalaya-poetry-action" aria-label="Comment on poem"><span aria-hidden="true">▢</span><span>टिप्पणी</span></button>
-        <button type="button" class="shabdalaya-poetry-action" aria-label="Bookmark poem" aria-pressed="false"><span aria-hidden="true">♧</span><span>सङ्ग्रह</span></button>
-        <button type="button" class="shabdalaya-poetry-action" aria-label="Share poem"><span aria-hidden="true">↗</span><span>सेयर</span></button>
-      </div>
-      <p class="shabdalaya-poetry-status" role="status" aria-live="polite" hidden></p>
-    </article>
+
     </div>
+    <p class="shabdalaya-empty-state" role="status" hidden>अहिलेसम्म अडियो कविता उपलब्ध छैन।</p>
   </div>
 </section>
+<template id="shabdalayaPoetryPostTemplate">
+  <article class="shabdalaya-poetry-post" aria-labelledby="">
+    <div class="shabdalaya-poetry-profile">
+      <img class="shabdalaya-profile-image" src="" alt="" width="52" height="52" loading="lazy" decoding="async">
+      <div><strong class="shabdalaya-author"></strong><span class="shabdalaya-post-meta"></span></div>
+      <span class="shabdalaya-post-kind"><span aria-hidden="true">🎙️</span> <span class="shabdalaya-kind-label"></span></span>
+    </div>
+    <div class="shabdalaya-poetry-copy">
+      <p class="shabdalaya-poetry-eyebrow">अडियो कविता</p>
+      <h2 class="shabdalaya-poetry-title"></h2>
+      <p class="shabdalaya-poem-lines"></p>
+      <p class="shabdalaya-poem-description"></p>
+      <p class="shabdalaya-poem-tags"></p>
+    </div>
+    <div class="shabdalaya-audio-player" role="group" aria-label="">
+      <div class="shabdalaya-audio-visualizer" aria-hidden="true"><span class="shabdalaya-visualizer-ring shabdalaya-visualizer-ring-one"></span><span class="shabdalaya-visualizer-ring shabdalaya-visualizer-ring-two"></span><span class="shabdalaya-visualizer-mic">🎙️</span></div>
+      <div class="shabdalaya-audio-details"><span class="shabdalaya-audio-label">कविता सुन्नुहोस्</span><div class="shabdalaya-poetry-waves" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+      <button class="shabdalaya-audio-toggle" type="button" aria-label="Play audio poem" aria-pressed="false"><span aria-hidden="true">▶</span></button>
+      <audio class="shabdalaya-poetry-audio" preload="none"></audio>
+    </div>
+    <div class="shabdalaya-progress-row"><span class="shabdalaya-current-time">0:00</span><input class="shabdalaya-poetry-progress" type="range" min="0" max="100" step="0.1" value="0" aria-label="Audio poem progress"><span class="shabdalaya-duration">0:00</span></div>
+    <div class="shabdalaya-poetry-actions" aria-label="Poem actions">
+      <button type="button" class="shabdalaya-poetry-action" aria-label="Like poem" aria-pressed="false"><span aria-hidden="true">♡</span><span class="shabdalaya-like-count">0</span></button>
+      <button type="button" class="shabdalaya-poetry-action" aria-label="Comment on poem"><span aria-hidden="true">▢</span><span>टिप्पणी</span></button>
+      <button type="button" class="shabdalaya-poetry-action" aria-label="Bookmark poem" aria-pressed="false"><span aria-hidden="true">♧</span><span>सङ्ग्रह</span></button>
+      <button type="button" class="shabdalaya-poetry-action" aria-label="Share poem"><span aria-hidden="true">↗</span><span>सेयर</span></button>
+    </div>
+    <p class="shabdalaya-poetry-status" role="status" aria-live="polite" hidden></p>
+  </article>
+</template>
 <section class="deuda-song-screen" id="deudaSongScreen" aria-label="देउडा गीत" hidden>
   <div class="deuda-song-shell">
     <button class="deuda-song-back" id="deudaSongBack" type="button" onclick="closeDeudaSongScreen()" aria-label="भिडियो फिडमा फर्कनुहोस्"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6M9 12h12"/></svg><span>भिडियो फिडमा फर्कनुहोस्</span></button>
@@ -2641,7 +2645,7 @@ var deudaSongTrigger=null,shabdalayaTrigger=null;
 function openDeudaSongScreen(){
   var screen=document.getElementById('deudaSongScreen'),main=screen&&screen.closest('.main'),active=document.activeElement,trigger=active&&active.getAttribute&&active.getAttribute('aria-controls')==='deudaSongScreen'?active:document.querySelector('.mobile-nav [aria-controls="deudaSongScreen"]');
   if(!screen||!main)return;
-  var poetryScreen=document.getElementById('shabdalayaScreen'),poetryAudio=document.getElementById('shabdalayaPoemAudio');if(poetryScreen)poetryScreen.hidden=true;main.classList.remove('shabdalaya-open');if(shabdalayaTrigger)shabdalayaTrigger.setAttribute('aria-expanded','false');shabdalayaTrigger=null;if(poetryAudio)poetryAudio.pause();
+  var poetryScreen=document.getElementById('shabdalayaScreen');if(poetryScreen)poetryScreen.hidden=true;main.classList.remove('shabdalaya-open');if(shabdalayaTrigger)shabdalayaTrigger.setAttribute('aria-expanded','false');shabdalayaTrigger=null;document.querySelectorAll('.shabdalaya-poetry-audio').forEach(function(poetryAudio){poetryAudio.pause();});
   var feedPlayer=document.getElementById('postVideo');if(feedPlayer&&!feedPlayer.paused)feedPlayer.pause();
   deudaSongTrigger=trigger;screen.hidden=false;main.classList.add('deuda-song-open');screen.scrollTop=0;
   if(trigger)trigger.setAttribute('aria-expanded','true');
@@ -2666,7 +2670,7 @@ function openShabdalayaScreen(){
 function closeShabdalayaScreen(){
   var screen=document.getElementById('shabdalayaScreen'),main=screen&&screen.closest('.main'),trigger=shabdalayaTrigger||document.querySelector('.mobile-nav [aria-controls="shabdalayaScreen"]');
   if(!screen||!main)return;
-  var audio=document.getElementById('shabdalayaPoemAudio');if(audio)audio.pause();
+  document.querySelectorAll('.shabdalaya-poetry-audio').forEach(function(audio){audio.pause();});
   screen.hidden=true;main.classList.remove('shabdalaya-open');shabdalayaTrigger=null;
   if(trigger){trigger.setAttribute('aria-expanded','false');trigger.focus({preventScroll:true});}
 }
@@ -2677,5 +2681,6 @@ document.querySelectorAll('.deuda-song-audio').forEach(function(songAudio){
   });
 });
 </script>
+<script src="shabdalaya-poetry-data.js"></script>
 <script src="shabdalaya-poetry.js"></script>
 </body></html>
