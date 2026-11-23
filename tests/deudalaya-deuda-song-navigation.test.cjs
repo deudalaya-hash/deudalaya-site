@@ -58,7 +58,7 @@ test('the music screen places each nameless song profile directly above its non-
 });
 
 test('opening and returning from the music screen use the intended screen states', () => {
-  const controls = html.match(/<script>\s*(?:var deudaSongTrigger=null;\s*)?(function openDeudaSongScreen\([\s\S]*?function closeDeudaSongScreen\([\s\S]*?)<\/script>/)?.[1];
+  const controls = html.match(/<script>\s*((?:var deudaSongTrigger=null(?:,shabdalayaTrigger=null)?;\s*)?function openDeudaSongScreen\([\s\S]*?function closeDeudaSongScreen\([\s\S]*?)<\/script>/)?.[1];
   assert.ok(controls, 'music screen controls are present');
 
   const attributes = {};

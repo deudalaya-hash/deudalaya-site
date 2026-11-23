@@ -11,8 +11,8 @@ test('the शब्दलय microphone item opens the poetry screen instead of 
   const items = [...nav[0].matchAll(/<button\b[\s\S]*?<\/button>/g)].map(match => match[0]);
   const shabdalayaItem = items[1];
   assert.match(shabdalayaItem, /class="shabdalaya-nav-item"/);
-  assert.match(shabdalayaItem, /aria-controls="deudaSongScreen"/);
-  assert.match(shabdalayaItem, /onclick="openDeudaSongScreen\(\)"/);
+  assert.match(shabdalayaItem, /aria-controls="shabdalayaScreen"/);
+  assert.match(shabdalayaItem, /onclick="openShabdalayaScreen\(\)"/);
   assert.match(shabdalayaItem, /<span class="notification-mic-icon" aria-hidden="true">🎙️<\/span><span class="mobile-notification-label">शब्दलय<\/span>/);
   assert.doesNotMatch(shabdalayaItem, /notification-nav-item|notif-badge|<i>/);
   assert.match(html, /\.mobile-nav \.mobile-notification-label\{[^}]*display:block/);
@@ -21,12 +21,12 @@ test('the शब्दलय microphone item opens the poetry screen instead of 
   const desktop = html.match(/<nav class="nav">([\s\S]*?)<\/nav>/)?.[1];
   assert.ok(desktop);
   const desktopShabdalayaItem = desktop.match(/<button class="nav-item shabdalaya-nav-item"[^>]*>[\s\S]*?<\/button>/)?.[0];
-  assert.match(desktopShabdalayaItem, /aria-controls="deudaSongScreen"/);
-  assert.match(desktopShabdalayaItem, /onclick="openDeudaSongScreen\(\)"/);
+  assert.match(desktopShabdalayaItem, /aria-controls="shabdalayaScreen"/);
+  assert.match(desktopShabdalayaItem, /onclick="openShabdalayaScreen\(\)"/);
   assert.match(desktopShabdalayaItem, /notification-mic-icon[^>]*>🎙️<\/span>शब्दलय/);
 
   assert.match(html, /function openNotifications\(\)/, 'notification handling remains available');
   assert.match(html, /<section class="notif-panel" id="notifPanel"/);
-  assert.match(html, /aria-label="देउडा गीत"[^>]*hidden/);
+  assert.match(html, /id="shabdalayaScreen"[^>]*aria-label="शब्दलय"[^>]*hidden/);
   assert.doesNotMatch(html, /indexOf\('Inbox'\)/);
 });

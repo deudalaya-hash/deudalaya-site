@@ -9,9 +9,12 @@ const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const script = fs.readFileSync(path.join(root, 'shabdalaya-poetry.js'), 'utf8');
 const styles = fs.readFileSync(path.join(root, 'shabdalaya-poetry.css'), 'utf8');
 
-test('the music screen contains an audio-first Shabdalaya poetry post with profile, poem, and social actions', () => {
-  const screen = html.match(/<section\b(?=[^>]*id="deudaSongScreen")[\s\S]*?<\/section>/)?.[0];
-  assert.ok(screen, 'the existing full-screen music view exists');
+test('the Shabdalaya navigation opens its own audio-poetry screen, separate from the Deuda song library', () => {
+  const screen = html.match(/<section\b(?=[^>]*id="shabdalayaScreen")[\s\S]*?<\/section>/)?.[0];
+  const musicScreen = html.match(/<section\b(?=[^>]*id="deudaSongScreen")[\s\S]*?<\/section>/)?.[0];
+  assert.ok(screen, 'the dedicated full-screen Shabdalaya view exists');
+  assert.ok(musicScreen, 'the Deuda song library remains separate');
+  assert.doesNotMatch(musicScreen, /shabdalaya-poetry-post/);
   const post = screen.match(/<article\b(?=[^>]*class="shabdalaya-poetry-post")[\s\S]*?<\/article>/)?.[0];
   assert.ok(post, 'the sample audio poem is part of the existing music screen');
   assert.match(post, /assets\/shabdalaya-girl-profile\.jpg/);
@@ -40,6 +43,8 @@ test('the audio-poetry presentation is responsive and respects reduced motion', 
   assert.match(styles, /shabdalaya-poetry-waves/);
   assert.match(styles, /shabdalaya-audio-visualizer/);
   assert.match(html, /\.deuda-song-screen\{[^}]*overflow-y:auto/);
+  assert.match(html, /function openShabdalayaScreen\(\)/);
+  assert.match(html, /function closeShabdalayaScreen\(\)/);
 });
 
 test('the audio controller starts only from the explicit play button and updates accessible playback state', () => {
