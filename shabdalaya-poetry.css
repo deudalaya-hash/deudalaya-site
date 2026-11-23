@@ -1,0 +1,46 @@
+.shabdalaya-poetry-post{position:relative;width:min(100%,680px);margin:22px auto 28px;padding:clamp(18px,3vw,30px);overflow:hidden;border:1px solid #ffffff19;border-radius:24px;background:radial-gradient(ellipse at 86% 12%,#46332466,transparent 42%),linear-gradient(150deg,#201d22 0%,#15151b 62%,#19171b 100%);color:#f8f5f2;box-shadow:0 18px 48px #0005}
+.shabdalaya-poetry-post:before{position:absolute;top:0;left:12%;width:42%;height:1px;background:linear-gradient(90deg,transparent,#f1bd68aa,transparent);content:""}
+.shabdalaya-poetry-profile{display:flex;align-items:center;gap:12px;min-width:0}
+.shabdalaya-poetry-profile>img{width:52px;height:52px;flex:0 0 52px;border:2px solid #f2c273;border-radius:50%;object-fit:cover;object-position:center 26%;box-shadow:0 0 0 4px #f2c2731a}
+.shabdalaya-poetry-profile>div{display:flex;flex-direction:column;gap:4px;min-width:0}
+.shabdalaya-poetry-profile strong{font-size:15px;font-weight:750;letter-spacing:.01em}
+.shabdalaya-poetry-profile>div span{color:#a7a2a1;font-size:12px}
+.shabdalaya-post-kind{display:inline-flex;align-items:center;gap:6px;margin-left:auto;padding:7px 10px;border:1px solid #e4b96635;border-radius:999px;background:#e4b96612;color:#efca85;font-size:11px;font-weight:700;white-space:nowrap}
+.shabdalaya-post-kind>span{font-size:14px}
+.shabdalaya-poetry-copy{padding:clamp(20px,4vw,32px) 0 18px}
+.shabdalaya-poetry-eyebrow{margin:0 0 8px;color:#e8bd71;font-size:11px;font-weight:750;letter-spacing:.14em;text-transform:uppercase}
+.shabdalaya-poetry-copy h2{margin:0 0 14px;color:#fff8eb;font-size:clamp(25px,5vw,36px);line-height:1.18;letter-spacing:-.025em}
+.shabdalaya-poem-lines{margin:0;color:#eee5dc;font-size:clamp(17px,3.5vw,21px);font-weight:550;line-height:1.8;letter-spacing:.015em}
+.shabdalaya-poem-description{margin:15px 0 0;color:#aaa4a4;font-size:13px;line-height:1.65}
+.shabdalaya-poem-tags{display:flex;flex-wrap:wrap;gap:6px 10px;margin:13px 0 0;color:#d7ad62;font-size:12px;line-height:1.6}
+.shabdalaya-audio-player{display:flex;align-items:center;gap:18px;min-height:104px;margin-top:2px;padding:14px 16px;border:1px solid #ffffff12;border-radius:20px;background:linear-gradient(110deg,#29262a,#222228);}
+.shabdalaya-audio-visualizer{position:relative;display:grid;width:72px;height:72px;flex:0 0 72px;place-items:center}
+.shabdalaya-visualizer-ring{position:absolute;inset:7px;border:1px solid #edbd6a66;border-radius:50%;box-shadow:0 0 18px #e9b75e16;transition:transform .3s ease,border-color .3s ease}
+.shabdalaya-visualizer-ring-two{inset:0;border-color:#edbd6a2e}
+.shabdalaya-visualizer-mic{position:relative;display:grid;width:45px;height:45px;place-items:center;border-radius:50%;background:radial-gradient(circle at 35% 30%,#57442d,#211c1c);font-size:23px;box-shadow:0 4px 18px #0008}
+.shabdalaya-audio-details{flex:1;min-width:0}
+.shabdalaya-audio-label{display:block;margin-bottom:12px;color:#ded7d0;font-size:12px;font-weight:650}
+.shabdalaya-poetry-waves{display:flex;align-items:center;gap:3px;height:26px;color:#e7b75e}
+.shabdalaya-poetry-waves i{width:3px;height:8px;border-radius:99px;background:currentColor;opacity:.68;transform-origin:center;animation:shabdalaya-wave 850ms ease-in-out infinite alternate}
+.shabdalaya-poetry-waves i:nth-child(4n+1){height:13px;animation-delay:-420ms}.shabdalaya-poetry-waves i:nth-child(4n+2){height:21px;animation-delay:-180ms}.shabdalaya-poetry-waves i:nth-child(4n+3){height:16px;animation-delay:-620ms}.shabdalaya-poetry-waves i:nth-child(5n){height:10px;animation-delay:-300ms}
+.shabdalaya-audio-toggle{display:grid;width:48px;height:48px;flex:0 0 48px;place-items:center;border:1px solid #f1c66d55;border-radius:50%;background:linear-gradient(145deg,#f3c676,#d99a43);color:#211912;font-size:17px;box-shadow:0 5px 18px #d99a4333;transition:transform .16s ease,filter .16s ease}
+.shabdalaya-audio-toggle:hover{filter:brightness(1.08);transform:scale(1.04)}
+.shabdalaya-audio-toggle:focus-visible,.shabdalaya-poetry-action:focus-visible,.shabdalaya-poetry-progress:focus-visible{outline:2px solid #f4cc7c;outline-offset:3px}
+.shabdalaya-poetry-audio{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.shabdalaya-progress-row{display:flex;align-items:center;gap:10px;margin:8px 4px 0;color:#a9a2a0;font-variant-numeric:tabular-nums;font-size:11px}
+.shabdalaya-poetry-progress{width:100%;height:4px;flex:1;accent-color:#e7b75e;cursor:pointer}
+.shabdalaya-poetry-actions{display:flex;justify-content:space-between;gap:8px;margin-top:17px;padding-top:14px;border-top:1px solid #ffffff12}
+.shabdalaya-poetry-action{display:flex;min-height:42px;align-items:center;justify-content:center;gap:7px;padding:6px 10px;border:0;border-radius:10px;background:transparent;color:#c9c4c1;font-size:12px;transition:background .16s ease,color .16s ease}
+.shabdalaya-poetry-action>span:first-child{font-size:19px;line-height:1}
+.shabdalaya-poetry-action:hover{background:#ffffff0a;color:#fff}
+.shabdalaya-poetry-action[aria-pressed="true"]{color:#f1bd68}
+.shabdalaya-poetry-action[aria-label="Like poem"][aria-pressed="true"]{color:#fa7096}
+.shabdalaya-poetry-status{margin:10px 0 0;color:#efca85;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+.shabdalaya-poetry-status[hidden]{display:none}
+.shabdalaya-poetry-post.is-playing .shabdalaya-visualizer-ring-one{transform:scale(1.12);border-color:#efc473aa}
+.shabdalaya-poetry-post.is-playing .shabdalaya-visualizer-ring-two{transform:scale(1.19);border-color:#efc47366}
+.shabdalaya-poetry-post.is-playing .shabdalaya-poetry-waves i{opacity:1;animation-duration:440ms}
+@keyframes shabdalaya-wave{from{transform:scaleY(.55)}to{transform:scaleY(1.55)}}
+@media(max-width:700px){.shabdalaya-poetry-post{width:100%;margin:14px auto 22px;padding:19px 17px 15px;border-radius:20px}.shabdalaya-poetry-profile>img{width:48px;height:48px;flex-basis:48px}.shabdalaya-audio-player{gap:13px;min-height:92px;padding:11px 12px;border-radius:17px}.shabdalaya-audio-visualizer{width:62px;height:62px;flex-basis:62px}.shabdalaya-visualizer-mic{width:40px;height:40px;font-size:21px}.shabdalaya-audio-toggle{width:44px;height:44px;flex-basis:44px}.shabdalaya-poetry-actions{gap:2px}.shabdalaya-poetry-action{gap:5px;padding:6px 7px;font-size:11px}}
+@media(max-width:370px){.shabdalaya-poetry-post{padding-right:13px;padding-left:13px}.shabdalaya-post-kind{padding:6px 8px;font-size:10px}.shabdalaya-poetry-action{flex-direction:column;gap:3px;font-size:10px}}
+@media(prefers-reduced-motion:reduce){.shabdalaya-poetry-post *, .shabdalaya-poetry-post *:before, .shabdalaya-poetry-post *:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}

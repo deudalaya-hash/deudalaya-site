@@ -57,6 +57,7 @@
 </script>
 <link rel="apple-touch-icon" sizes="180x180" href="assets/deudalaya-icon-180.png">
 <link rel="stylesheet" href="deudalaya-audio.css">
+<link rel="stylesheet" href="shabdalaya-poetry.css">
 <meta property="og:site_name" content="देउडालय">
 <meta property="og:title" content="देउडालय">
 <meta name="description" content="कर्णाली र सुदूरपश्चिमको कला, संस्कृति, भाषा र पहिचानका लागि साझा अभियान। One Circle • One Nepal">
@@ -231,6 +232,34 @@ html:not(.deudalaya-install-required) #deudalayaInstallLanding{display:none!impo
  <main class="main"><div class="feed-wrap paused" id="feed"><nav class="feed-category-tabs" aria-label="Feed categories"><button class="feed-category selected" type="button" data-feed-category="देउडा" aria-current="page" aria-pressed="true" onclick="setFeedCategory('देउडा')">देउडा</button><button class="feed-category" type="button" data-feed-category="गाउँघर" aria-pressed="false" onclick="setFeedCategory('गाउँघर')">गाउँघर</button><button class="feed-category" type="button" aria-pressed="false" onclick="showFeedCategoryComingSoon('शहर')">शहर</button><button class="feed-category" type="button" data-feed-category="अन्तरिक्ष" aria-label="अन्तरिक्ष: विज्ञान, प्रविधि, परमाणु, जीवन, प्रकृति, अन्तरिक्ष अन्वेषण र सम्पूर्ण ब्रह्माण्ड" aria-pressed="false" onclick="setFeedCategory('अन्तरिक्ष')">अन्तरिक्ष</button><button class="feed-category" type="button" data-feed-category="सुदूर कर्णाली" aria-pressed="false" onclick="setFeedCategory('सुदूर कर्णाली')">सुदूर कर्णाली</button><button class="feed-category" type="button" aria-pressed="false" onclick="showFeedCategoryComingSoon('गीत')">गीत</button></nav><div class="video" id="video"><video id="postVideo" playsinline loop preload="none" controlsList="nodownload" hidden></video><div class="feed-media-status" id="feedMediaStatus" role="status" aria-live="polite" hidden><p id="feedMediaMessage">Loading video…</p><div><button type="button" onclick="retryCurrentVideo()">Retry</button><button type="button" onclick="nextVideo()">Next video</button></div></div></div><div class="vignette"></div><button id="playPauseButton" class="play" type="button" aria-label="Play video" onclick="togglePlay()"><span class="play-icon" aria-hidden="true">▶</span><span class="pause-icon" aria-hidden="true">Ⅱ</span></button><div class="video-copy"><div class="creator"><img class="avatar" id="avatar"/><span id="handle" role="link" tabindex="0"></span><button class="follow" id="follow" onclick="toggleFollow()">Follow</button></div><div class="caption" id="caption"></div><div class="mobile-music">♫ <span>Contains:</span> <span id="musicTitle">देउडालय — मौलिक धुन</span></div></div><div class="actions"><div class="creator-disc" id="creatorDisc" role="button" tabindex="0" aria-label="Follow"><img class="avatar" id="disc" alt="Creator"><span id="followPlus" aria-hidden="true">+</span></div><button class="action like" id="like" onclick="toggleLike()" aria-label="Like post" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8z"/></svg><span id="likes"></span></button><button class="action" onclick="toggleComments()"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8z"/></svg><span id="commentCount"></span></button><button class="action bookmark" id="bookmark" onclick="toggleBookmark()"><svg viewBox="0 0 24 24"><path d="M6 4h12v17l-6-4-6 4z"/></svg><span>Save</span></button><button class="action" onclick="shareCurrentVideo()"><svg viewBox="0 0 24 24"><path d="M4 11.5 20 4l-4.5 16-4.2-6.1L4 11.5Zm7.3 2.4L20 4"/></svg><span>Share</span></button></div><div class="progress" id="progressTrack" role="slider" tabindex="0" aria-label="Video progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="progress"></i></div></div><section class="comments" id="comments"><div class="comments-head"><div>Comments <span id="commentTitle"></span></div><button onclick="toggleComments()">✕</button></div><div class="comment-list" id="commentList"></div><form class="comment-input" onsubmit="addComment(event)"><input id="commentInput" placeholder="Add a comment…"/><button>Post</button></form></section><section class="deuda-song-screen" id="deudaSongScreen" aria-label="देउडा गीत" hidden>
   <div class="deuda-song-shell">
     <button class="deuda-song-back" id="deudaSongBack" type="button" onclick="closeDeudaSongScreen()" aria-label="भिडियो फिडमा फर्कनुहोस्"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6M9 12h12"/></svg><span>भिडियो फिडमा फर्कनुहोस्</span></button>
+    <article class="shabdalaya-poetry-post" aria-labelledby="shabdalayaPoemTitle">
+      <div class="shabdalaya-poetry-profile">
+        <img src="assets/shabdalaya-girl-profile.jpg" alt="a girl's profile portrait" width="52" height="52" loading="lazy" decoding="async">
+        <div><strong>a girl</strong><span>काठमाडौं · २ घण्टा अघि</span></div>
+        <span class="shabdalaya-post-kind"><span aria-hidden="true">🎙️</span> शब्दलय</span>
+      </div>
+      <div class="shabdalaya-poetry-copy">
+        <p class="shabdalaya-poetry-eyebrow">अडियो कविता</p>
+        <h2 id="shabdalayaPoemTitle">काठमाडौंको साँझ</h2>
+        <p class="shabdalaya-poem-lines">यो सहरको भीडभित्र,<br>मनले आफ्नै बाटो खोज्छ।<br>शब्दहरू चुप लाग्दा पनि,<br>मौनले कथा सुनाइरहन्छ।</p>
+        <p class="shabdalaya-poem-description">सहरको आवाजबीच मनले सुन्ने आफ्नै कविता।</p>
+        <p class="shabdalaya-poem-tags">#शब्दलय <span>#नेपालीकविता</span> <span>#काठमाडौं</span> <span>#मनका_कुरा</span></p>
+      </div>
+      <div class="shabdalaya-audio-player" role="group" aria-label="काठमाडौंको साँझ अडियो प्लेयर">
+        <div class="shabdalaya-audio-visualizer" aria-hidden="true"><span class="shabdalaya-visualizer-ring shabdalaya-visualizer-ring-one"></span><span class="shabdalaya-visualizer-ring shabdalaya-visualizer-ring-two"></span><span class="shabdalaya-visualizer-mic">🎙️</span></div>
+        <div class="shabdalaya-audio-details"><span class="shabdalaya-audio-label">कविता सुन्नुहोस्</span><div class="shabdalaya-poetry-waves" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+        <button class="shabdalaya-audio-toggle" type="button" aria-label="Play audio poem" aria-pressed="false"><span aria-hidden="true">▶</span></button>
+        <audio class="shabdalaya-poetry-audio" id="shabdalayaPoemAudio" preload="none" src="assets/shabdalaya-kathmandu-poem.m4a"></audio>
+      </div>
+      <div class="shabdalaya-progress-row"><span class="shabdalaya-current-time">0:00</span><input class="shabdalaya-poetry-progress" type="range" min="0" max="100" step="0.1" value="0" aria-label="Audio poem progress"><span class="shabdalaya-duration">0:00</span></div>
+      <div class="shabdalaya-poetry-actions" aria-label="Poem actions">
+        <button type="button" class="shabdalaya-poetry-action" aria-label="Like poem" aria-pressed="false"><span aria-hidden="true">♡</span><span class="shabdalaya-like-count">0</span></button>
+        <button type="button" class="shabdalaya-poetry-action" aria-label="Comment on poem"><span aria-hidden="true">▢</span><span>टिप्पणी</span></button>
+        <button type="button" class="shabdalaya-poetry-action" aria-label="Bookmark poem" aria-pressed="false"><span aria-hidden="true">♧</span><span>सङ्ग्रह</span></button>
+        <button type="button" class="shabdalaya-poetry-action" aria-label="Share poem"><span aria-hidden="true">↗</span><span>सेयर</span></button>
+      </div>
+      <p class="shabdalaya-poetry-status" role="status" aria-live="polite" hidden></p>
+    </article>
     <ul class="deuda-song-grid" aria-label="देउडा गीतहरू">
       <li>
         <article class="deuda-song-card">
@@ -2623,4 +2652,5 @@ document.querySelectorAll('.deuda-song-audio').forEach(function(songAudio){
   });
 });
 </script>
+<script src="shabdalaya-poetry.js"></script>
 </body></html>
