@@ -12,9 +12,9 @@ const mobileNav = html.match(/<nav class="mobile-nav"[\s\S]*?<\/nav>/)?.[0];
 test('the shared bottom navigation opens the Deuda song library', () => {
   assert.ok(mobileNav, 'shared bottom navigation exists');
   const items = [...mobileNav.matchAll(/<button\b[\s\S]*?<\/button>/g)].map(match => match[0]);
-  const songItem = items[1];
+  const songItem = items[3];
 
-  assert.ok(songItem, 'the second bottom navigation item exists');
+  assert.ok(songItem, 'the fourth bottom navigation item exists');
   assert.match(songItem, /onclick="openDeudaSongScreen\(\)"/);
   assert.match(songItem, /aria-label="देउडा गीत"/);
   assert.match(songItem, /<span class="nav-music-icon" aria-hidden="true">🎵<\/span>/);
