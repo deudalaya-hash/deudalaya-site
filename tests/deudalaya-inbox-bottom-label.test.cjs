@@ -13,6 +13,7 @@ test('the शब्दलय microphone item keeps notification behavior, positi
   assert.match(notificationItem, /class="[^"]*notification-nav-item[^"]*"/);
   assert.match(notificationItem, /onclick="toggleComments\(\)"/);
   assert.match(notificationItem, /<span class="notification-mic-icon" aria-hidden="true">🎙️<\/span><span class="nav-label-badge"><span class="mobile-notification-label">शब्दलय<\/span>\s*<i>99\+<\/i><\/span>/);
+  assert.match(html, /\.notification-nav-item \.nav-label-badge i,\.notification-nav-item \.notif-badge\{display:none!important\}/);
   assert.match(html, /\.mobile-nav \.mobile-notification-label\{[^}]*display:block/);
   assert.match(html, /\.mobile-nav button:nth-child\(2\) \.nav-label-badge\{[^}]*overflow:visible/);
   assert.match(html, /@media\(min-width:701px\)\{\.mobile-nav\{position:fixed;display:flex/);
