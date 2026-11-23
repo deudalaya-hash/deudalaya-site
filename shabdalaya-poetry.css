@@ -1,3 +1,15 @@
+.main.shabdalaya-open{align-items:stretch;justify-content:flex-start;overflow:hidden;padding:0}
+.main.shabdalaya-open #feed,.main.shabdalaya-open .comments{display:none!important}
+.shabdalaya-screen{display:flex;flex:1;width:100%;height:100%;min-width:0;min-height:0;overflow-y:auto;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch;background:#101014;scrollbar-color:#45454d #101014}
+.shabdalaya-screen[hidden]{display:none!important}
+.shabdalaya-shell{width:min(100%,1040px);min-height:100%;margin:0 auto;padding:clamp(24px,4vw,48px) clamp(20px,4vw,44px) 36px;padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
+.shabdalaya-back{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 12px 0 0;border:0;background:transparent;color:#b4b4bc;font-size:14px;font-weight:600;cursor:pointer}
+.shabdalaya-back:hover{color:#fff}
+.shabdalaya-back:focus-visible{outline:2px solid #f2b33d;outline-offset:3px}
+.shabdalaya-back svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8}
+.shabdalaya-poetry-list{display:flex;flex-direction:column;gap:18px;min-height:100%;margin-top:12px}
+.shabdalaya-poetry-list>.shabdalaya-poetry-post{flex:0 0 auto;width:100%;margin:0 auto 10px}
+@media(max-width:700px){.main.shabdalaya-open{padding:0!important}.shabdalaya-shell{padding:18px 16px 28px;padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}.shabdalaya-poetry-list{gap:14px;margin-top:12px}}
 .shabdalaya-poetry-post{position:relative;width:min(100%,680px);margin:22px auto 28px;padding:clamp(18px,3vw,30px);overflow:hidden;border:1px solid #ffffff19;border-radius:24px;background:radial-gradient(ellipse at 86% 12%,#46332466,transparent 42%),linear-gradient(150deg,#201d22 0%,#15151b 62%,#19171b 100%);color:#f8f5f2;box-shadow:0 18px 48px #0005}
 .shabdalaya-poetry-post:before{position:absolute;top:0;left:12%;width:42%;height:1px;background:linear-gradient(90deg,transparent,#f1bd68aa,transparent);content:""}
 .shabdalaya-poetry-profile{display:flex;align-items:center;gap:12px;min-width:0}

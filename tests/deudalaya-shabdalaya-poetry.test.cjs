@@ -14,9 +14,14 @@ test('the Shabdalaya navigation opens its own audio-poetry screen, separate from
   const musicScreen = html.match(/<section\b(?=[^>]*id="deudaSongScreen")[\s\S]*?<\/section>/)?.[0];
   assert.ok(screen, 'the dedicated full-screen Shabdalaya view exists');
   assert.ok(musicScreen, 'the Deuda song library remains separate');
+  assert.match(screen, /class="shabdalaya-screen"/);
+  assert.doesNotMatch(screen, /deuda-song-screen|deudaSongScreen|deuda-song-shell|deuda-song-grid|deuda-song-audio|देउडा गीत|चल गोबिन्दे|भान साली/);
   assert.doesNotMatch(musicScreen, /shabdalaya-poetry-post/);
+  const postList = screen.match(/<div class="shabdalaya-poetry-list"[\s\S]*?<\/div>\s*<\/div>\s*<\/section>/)?.[0];
+  assert.ok(postList, 'poetry posts have a single vertical list container');
+  assert.equal((screen.match(/class="shabdalaya-poetry-list"/g) || []).length, 1, 'all poetry posts share one list');
   const post = screen.match(/<article\b(?=[^>]*class="shabdalaya-poetry-post")[\s\S]*?<\/article>/)?.[0];
-  assert.ok(post, 'the sample audio poem is part of the existing music screen');
+  assert.ok(post, 'the sample audio poem is part of the Shabdalaya screen');
   assert.match(post, /assets\/shabdalaya-girl-profile\.jpg/);
   assert.match(post, /alt="a girl/);
   assert.match(post, />a girl</);
@@ -42,9 +47,73 @@ test('the audio-poetry presentation is responsive and respects reduced motion', 
   assert.match(styles, /@media\s*\(prefers-reduced-motion:\s*reduce\)/);
   assert.match(styles, /shabdalaya-poetry-waves/);
   assert.match(styles, /shabdalaya-audio-visualizer/);
-  assert.match(html, /\.deuda-song-screen\{[^}]*overflow-y:auto/);
+  assert.match(styles, /\.shabdalaya-screen\{[^}]*overflow-y:auto/);
+  assert.match(styles, /\.shabdalaya-poetry-list\{[^}]*display:flex;flex-direction:column/);
+  assert.doesNotMatch(styles, /\.shabdalaya-poetry-list\{[^}]*overflow-y\s*:/);
+  assert.match(styles, /\.main\.shabdalaya-open #feed,[^}]*display:none!important/);
+  assert.match(musicScreenMarkup(), /deuda-song-audio/);
   assert.match(html, /function openShabdalayaScreen\(\)/);
   assert.match(html, /function closeShabdalayaScreen\(\)/);
+});
+
+function musicScreenMarkup() {
+  return html.match(/<section\b(?=[^>]*id="deudaSongScreen")[\s\S]*?<\/section>/)?.[0] || '';
+}
+
+test('Shabdalaya and Deuda Geet open separate screens and pause the other screen audio', () => {
+  const controls = html.match(/<script>\s*(var deudaSongTrigger=null,shabdalayaTrigger=null;[\s\S]*?function closeShabdalayaScreen\([\s\S]*?\n\})/)?.[1];
+  assert.ok(controls, 'independent screen controls are present');
+
+  const classes = new Set();
+  const main = { classList: { add: name => classes.add(name), remove: name => classes.delete(name) } };
+  const screen = () => ({ hidden: true, scrollTop: 20, closest: () => main });
+  const shabdalayaScreen = screen();
+  const songScreen = screen();
+  const attrs = new Map();
+  const trigger = name => ({
+    getAttribute: attr => attr === 'aria-controls' ? name : null,
+    setAttribute: (attr, value) => attrs.set(name + ':' + attr, value),
+    focus() { this.focused = true; }
+  });
+  const shabdalayaButton = trigger('shabdalayaScreen');
+  const songButton = trigger('deudaSongScreen');
+  const makeAudio = () => ({ paused: false, pauseCount: 0, pause() { this.paused = true; this.pauseCount += 1; } });
+  const poemAudio = makeAudio();
+  const songAudio = makeAudio();
+  const feedVideo = makeAudio();
+  const back = { focus() { this.focused = true; } };
+  const context = {
+    document: {
+      activeElement: shabdalayaButton,
+      getElementById: id => ({
+        shabdalayaScreen, deudaSongScreen: songScreen, shabdalayaPoemAudio: poemAudio,
+        deudaSongAudio: songAudio, postVideo: feedVideo, shabdalayaBack: back
+      }[id] || null),
+      querySelector: selector => selector.includes('shabdalayaScreen') ? shabdalayaButton : songButton,
+      querySelectorAll: selector => selector === '.deuda-song-audio' ? [songAudio] : []
+    }
+  };
+
+  vm.runInNewContext(controls, context);
+  context.openShabdalayaScreen();
+  assert.equal(shabdalayaScreen.hidden, false);
+  assert.equal(songScreen.hidden, true);
+  assert.equal(classes.has('shabdalaya-open'), true);
+  assert.equal(classes.has('deuda-song-open'), false);
+  assert.equal(attrs.get('shabdalayaScreen:aria-expanded'), 'true');
+  assert.equal(feedVideo.paused, true);
+  assert.equal(back.focused, true);
+
+  context.document.activeElement = songButton;
+  context.openDeudaSongScreen();
+  assert.equal(shabdalayaScreen.hidden, true);
+  assert.equal(songScreen.hidden, false);
+  assert.equal(classes.has('shabdalaya-open'), false);
+  assert.equal(classes.has('deuda-song-open'), true);
+  assert.equal(attrs.get('shabdalayaScreen:aria-expanded'), 'false');
+  assert.equal(attrs.get('deudaSongScreen:aria-expanded'), 'true');
+  assert.equal(poemAudio.paused, true);
+  assert.equal(songAudio.pauseCount, 1);
 });
 
 test('the audio controller starts only from the explicit play button and updates accessible playback state', () => {
