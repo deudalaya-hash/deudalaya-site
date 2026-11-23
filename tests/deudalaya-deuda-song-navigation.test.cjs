@@ -58,7 +58,7 @@ test('the music screen places each nameless song profile directly above its non-
 });
 
 test('opening and returning from the music screen use the intended screen states', () => {
-  const controls = html.match(/<script>\s*(function openDeudaSongScreen\([\s\S]*?function closeDeudaSongScreen\([\s\S]*?)<\/script>/)?.[1];
+  const controls = html.match(/<script>\s*(?:var deudaSongTrigger=null;\s*)?(function openDeudaSongScreen\([\s\S]*?function closeDeudaSongScreen\([\s\S]*?)<\/script>/)?.[1];
   assert.ok(controls, 'music screen controls are present');
 
   const attributes = {};
@@ -73,7 +73,7 @@ test('opening and returning from the music screen use the intended screen states
   const main = { classList: { add: name => classes.add(name), remove: name => classes.delete(name) } };
   const screen = { hidden: true, scrollTop: 80, closest: selector => selector === '.main' ? main : null };
   const back = { focus: () => { backFocused = true; } };
-  const trigger = { setAttribute: (name, value) => { attributes[name] = value; }, focus: () => { triggerFocused = true; } };
+  const trigger = { getAttribute: name => name === 'aria-controls' ? 'deudaSongScreen' : null, setAttribute: (name, value) => { attributes[name] = value; }, focus: () => { triggerFocused = true; } };
   const feedPlayer = { paused: false, pause: () => { feedPauseCount += 1; feedPlayer.paused = true; } };
   const songAudio = { id: 'deudaSongAudio', paused: true, pause: () => { songPauseCount += 1; songAudio.paused = true; }, addEventListener: (name, handler) => { firstSongHandlers[name] = handler; } };
   const secondSongAudio = {
@@ -85,6 +85,7 @@ test('opening and returning from the music screen use the intended screen states
   };
   const context = {
     document: {
+      activeElement: trigger,
       getElementById: id => ({ deudaSongScreen: screen, deudaSongBack: back, postVideo: feedPlayer, deudaSongAudio: songAudio, bhanSaaliAudio: secondSongAudio }[id] || null),
       querySelectorAll: selector => selector === '.deuda-song-audio' ? [songAudio, secondSongAudio] : [],
       querySelector: selector => selector === '.mobile-nav [aria-controls="deudaSongScreen"]' ? trigger : null
