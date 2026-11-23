@@ -8,10 +8,12 @@ const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
 test('the Inbox icon keeps its handler and renders its label below the icon', () => {
   const nav = html.match(/<nav class="mobile-nav"[\s\S]*?<\/nav>/);
   assert.ok(nav);
+  const items = [...nav[0].matchAll(/<button\b[\s\S]*?<\/button>/g)].map(match => match[0]);
   const inbox = nav[0].match(/<button[^>]*onclick="toggleComments\(\)"[^>]*>[\s\S]*?<\/button>/);
   assert.ok(inbox, 'Inbox remains on its original navigation button');
+  assert.equal(items[1], inbox[0], 'Inbox occupies the former music item position');
   assert.match(inbox[0], /<svg viewBox="0 0 24 24">[\s\S]*?<\/svg><span class="nav-label-badge"><span class="mobile-inbox-label">Inbox<\/span>\s*<i>99\+<\/i><\/span>/);
   assert.match(html, /\.mobile-nav \.mobile-inbox-label\{[^}]*display:block/);
-  assert.match(html, /\.mobile-nav button:nth-child\(4\) \.nav-label-badge\{[^}]*overflow:visible/);
+  assert.match(html, /\.mobile-nav button:nth-child\(2\) \.nav-label-badge\{[^}]*overflow:visible/);
   assert.match(html, /@media\(min-width:701px\)\{\.mobile-nav\{position:fixed;display:flex/);
 });
